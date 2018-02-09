@@ -1,39 +1,11 @@
 /**
-# COMPONENT **LogicRotationalMovement**
-This component changes the (x, y) position of an object according to its current speed and heading. It maintains its own heading information independent of other components allowing it to be used simultaneously with other logic components like [[Logic-Pushable]]. It accepts directional messages that can stand alone, or come from a mapped controller, in which case it checks the `pressed` value of the message before changing its course accordingly.
-
-## Dependencies:
-- [[HandlerLogic]] (on entity's parent) - This component listens for a logic tick message to maintain and update its location.
-
-## Messages
-
-### Listens for:
-- **handle-logic** - On a `tick` logic message, the component updates its location according to its current state.
-  - @param message.delta - To determine how far to move the entity, the component checks the length of the tick.
-- **[directional message]** - Directional messages include `turn-left`, `turn-right`, `go-forward`, and `go-backward`. On receiving one of these messages, the entity adjusts its movement and orientation.
-  - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new orientation.
-- **stop** - Stops rotational and linear motion movement messages are again received.
-  - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: a value of false will not stop the entity.
-- **stop-turning** - Stops rotational motion until movement messages are again received.
-  - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: a value of false will not stop the entity.
-- **stop-moving** - Stops linear motion until movement messages are again received.
-  - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: a value of false will not stop the entity.
-
-## JSON Definition:
-    {
-      "type": "LogicRotationalMovement",
-      
-      "speed": 4.5,
-      // Optional. Defines the distance in world units that the entity should be moved per millisecond. Defaults to 0.3.
-      
-      "angle": 0,
-      // Optional: Radian orientation that entity should begin in. Defaults to 0 (facing right).
-      
-      "degree": 0.1
-      // Optional: Unit in radian that the angle should change per millisecond.
-    }
-*/
-/*global platypus */
+ * This component changes the (x, y) position of an object according to its current speed and heading. It maintains its own heading information independent of other components allowing it to be used simultaneously with other logic components like [[Logic-Pushable]]. It accepts directional messages that can stand alone, or come from a mapped controller, in which case it checks the `pressed` value of the message before changing its course accordingly.
+ *
+ * @namespace platypus.components
+ * @class LogicRotationalMovement
+ * @uses platypus.Component
+ */
+/* global platypus */
 (function () {
     'use strict';
 
@@ -48,13 +20,40 @@ This component changes the (x, y) position of an object according to its current
     
     return platypus.createComponentClass({
         id: 'LogicRotationalMovement',
-        initialize: function (definition) {
+
+        properties: {
+            /**
+             * Defines the distance in world units that the entity should be moved per millisecond.
+             *
+             * @property speed
+             * @type Number
+             * @default 0.3
+             */
+            "speed": 0.3,
+            
+            /**
+             * Radian orientation that entity should begin in. Defaults to 0 (facing right).
+             *
+             * @property angle
+             * @type Number
+             * @default 0
+             */
+            "angle": 0,
+            
+            /**
+             * Unit in radians that the angle should change per millisecond.
+             *
+             * @property degree
+             * @type Number
+             * @default 1
+             */
+            "degree": 1
+        },
+
+        initialize: function () {
             var state = this.owner.state;
             
-            this.speed = definition.speed || 0.3;
             this.magnitude = 0;
-            this.degree = definition.degree || 1;
-            this.angle = definition.angle || 0;
             
             this.state = state;
             state.set('moving', false);
@@ -68,20 +67,26 @@ This component changes the (x, y) position of an object according to its current
             this.turningLeft = false;
         },
         events: {
-            "handle-logic": function (resp) {
+            /**
+             * On receiving this event, the component updates its location according to its current state.
+             *
+             * @method 'handle-logic'
+             * @param tick.delta {Number} To determine how far to move the entity, the component checks the length of the tick.
+             */
+            "handle-logic": function (tick) {
                 var state = this.state;
                 
                 if (this.turningRight) {
-                    this.angle += this.degree * resp.delta / 15;
+                    this.angle += this.degree * tick.delta / 15;
                 }
         
                 if (this.turningLeft) {
-                    this.angle -= this.degree * resp.delta / 15;
+                    this.angle -= this.degree * tick.delta / 15;
                 }
                 
                 if (this.moving) {
-                    this.owner.x += (polarToCartesianX(this.magnitude, this.angle) * resp.delta);
-                    this.owner.y += (polarToCartesianY(this.magnitude, this.angle) * resp.delta);
+                    this.owner.x += (polarToCartesianX(this.magnitude, this.angle) * tick.delta);
+                    this.owner.y += (polarToCartesianY(this.magnitude, this.angle) * tick.delta);
                 }
                 
                 state.set('moving', this.moving);
@@ -93,9 +98,23 @@ This component changes the (x, y) position of an object according to its current
                     this.owner.triggerEvent('orientation-updated');
                 }
             },
+
+            /**
+             * This rotates the entity by a delta in radians.
+             *
+             * @method 'rotate'
+             * @param angleDelta {Number} The change in angle.
+             */
             "rotate": function (angleDelta) {
                 this.angle += angleDelta;
             },
+
+            /**
+             * On receiving this event, the entity turns right.
+             *
+             * @method 'turn-right'
+             * @param [state.pressed] {boolean} If `state` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new orientation.
+             */
             "turn-right": function (state) {
                 if (state) {
                     this.turningRight = state.pressed;
@@ -103,6 +122,13 @@ This component changes the (x, y) position of an object according to its current
                     this.turningRight = true;
                 }
             },
+
+            /**
+             * On receiving this event, the entity turns left.
+             *
+             * @method 'turn-left'
+             * @param [state.pressed] {boolean} If `state` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new orientation.
+             */
             "turn-left": function (state) {
                 if (state) {
                     this.turningLeft = state.pressed;
@@ -110,6 +136,13 @@ This component changes the (x, y) position of an object according to its current
                     this.turningLeft = true;
                 }
             },
+
+            /**
+             * On receiving this event, the entity goes forward.
+             *
+             * @method 'go-forward'
+             * @param [state.pressed] {boolean} If `state` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new orientation.
+             */
             "go-forward": function (state) {
                 if (!state || state.pressed) {
                     this.moving = true;
@@ -118,6 +151,13 @@ This component changes the (x, y) position of an object according to its current
                     this.moving = false;
                 }
             },
+
+            /**
+             * On receiving this event, the entity goes backward.
+             *
+             * @method 'go-backward'
+             * @param [state.pressed] {boolean} If `state` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new orientation.
+             */
             "go-backward": function (state) {
                 if (!state || state.pressed) {
                     this.moving = true;
@@ -126,6 +166,13 @@ This component changes the (x, y) position of an object according to its current
                     this.moving = false;
                 }
             },
+
+            /**
+             * Stops rotational and linear motion until movement messages are again received.
+             *
+             * @method 'stop'
+             * @param [state.pressed] {Boolean} If `state` is included, the component checks the value of `pressed`: a value of false will not stop the entity.
+             */
             "stop": function (state) {
                 if (!state || state.pressed) {
                     this.moving = false;
@@ -133,11 +180,25 @@ This component changes the (x, y) position of an object according to its current
                     this.turningRight = false;
                 }
             },
+
+            /**
+             * Stops linear motion until movement messages are again received.
+             *
+             * @method 'stop-moving'
+             * @param [state.pressed] {Boolean} If `state` is included, the component checks the value of `pressed`: a value of false will not stop the entity.
+             */
             "stop-moving": function (state) {
                 if (!state || state.pressed) {
                     this.moving = false;
                 }
             },
+
+            /**
+             * Stops rotational motion until movement messages are again received.
+             *
+             * @method 'stop-turning'
+             * @param [state.pressed] {Boolean} If `state` is included, the component checks the value of `pressed`: a value of false will not stop the entity.
+             */
             "stop-turning": function (state) {
                 if (!state || state.pressed) {
                     this.turningLeft = false;
