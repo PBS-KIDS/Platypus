@@ -1,7 +1,7 @@
 {
     "project": {
         "name": "platypus",
-        "version": "0.11.8",
+        "version": "0.11.9",
         "description": "Platypus Docs",
         "url": "https://github.com/PBS-KIDS/Platypus",
         "logo": "assets/platypus-title.png"
@@ -363,9 +363,13 @@
         "src\\components\\LogicRotationalMovement.js": {
             "name": "src\\components\\LogicRotationalMovement.js",
             "modules": {},
-            "classes": {},
+            "classes": {
+                "platypus.components.LogicRotationalMovement": 1
+            },
             "fors": {},
-            "namespaces": {}
+            "namespaces": {
+                "platypus.components": 1
+            }
         },
         "src\\components\\LogicSpawner.js": {
             "name": "src\\components\\LogicSpawner.js",
@@ -619,6 +623,17 @@
             "modules": {},
             "classes": {
                 "platypus.components.RenderSprite": 1
+            },
+            "fors": {},
+            "namespaces": {
+                "platypus.components": 1
+            }
+        },
+        "src\\components\\RenderText.js": {
+            "name": "src\\components\\RenderText.js",
+            "modules": {},
+            "classes": {
+                "platypus.components.RenderText": 1
             },
             "fors": {},
             "namespaces": {
@@ -991,6 +1006,7 @@
                 "platypus.components.LogicDestroyMe": 1,
                 "platypus.components.LogicDirectionalMovement": 1,
                 "platypus.components.LogicPortable": 1,
+                "platypus.components.LogicRotationalMovement": 1,
                 "platypus.components.LogicWindUpRacer": 1,
                 "platypus.components.Motion": 1,
                 "platypus.components.Mover": 1,
@@ -1010,6 +1026,7 @@
                 "platypus.components.RenderProgress": 1,
                 "platypus.components.RenderSpine": 1,
                 "platypus.components.RenderSprite": 1,
+                "platypus.components.RenderText": 1,
                 "platypus.components.RenderTiles": 1,
                 "platypus.components.SceneChanger": 1,
                 "platypus.components.StateRender": 1,
@@ -1530,6 +1547,23 @@
                 "platypus.Component"
             ]
         },
+        "platypus.components.LogicRotationalMovement": {
+            "name": "platypus.components.LogicRotationalMovement",
+            "shortname": "platypus.components.LogicRotationalMovement",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "platypus",
+            "namespace": "platypus.components",
+            "file": "src\\components\\LogicRotationalMovement.js",
+            "line": 1,
+            "description": "This component changes the (x, y) position of an object according to its current speed and heading. It maintains its own heading information independent of other components allowing it to be used simultaneously with other logic components like [[Logic-Pushable]]. It accepts directional messages that can stand alone, or come from a mapped controller, in which case it checks the `pressed` value of the message before changing its course accordingly.",
+            "uses": [
+                "platypus.Component"
+            ]
+        },
         "platypus.components.LogicWindUpRacer": {
             "name": "platypus.components.LogicWindUpRacer",
             "shortname": "platypus.components.LogicWindUpRacer",
@@ -1854,6 +1888,24 @@
             "uses": [
                 "platypus.Component"
             ]
+        },
+        "platypus.components.RenderText": {
+            "name": "platypus.components.RenderText",
+            "shortname": "platypus.components.RenderText",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "platypus",
+            "namespace": "platypus.components",
+            "file": "src\\components\\RenderText.js",
+            "line": 1,
+            "description": "This component is attached to entities that should display text.",
+            "uses": [
+                "platypus.Component"
+            ],
+            "since": "v0.11.9"
         },
         "platypus.components.RenderTiles": {
             "name": "platypus.components.RenderTiles",
@@ -2362,6 +2414,7 @@
                 "platypus.components.LogicDestroyMe",
                 "platypus.components.LogicDirectionalMovement",
                 "platypus.components.LogicPortable",
+                "platypus.components.LogicRotationalMovement",
                 "platypus.components.LogicWindUpRacer",
                 "platypus.components.Motion",
                 "platypus.components.Mover",
@@ -2381,6 +2434,7 @@
                 "platypus.components.RenderProgress",
                 "platypus.components.RenderSpine",
                 "platypus.components.RenderSprite",
+                "platypus.components.RenderText",
                 "platypus.components.RenderTiles",
                 "platypus.components.StateRender",
                 "platypus.components.TiledLoader",
@@ -3582,7 +3636,7 @@
         },
         {
             "file": "src\\components\\Camera.js",
-            "line": 460,
+            "line": 461,
             "description": "This component fires \"camera-update\" when the position of the camera in the world has changed. This event is triggered on both the entity (typically a layer) as well as children of the entity.",
             "itemtype": "event",
             "name": "'camera-update'",
@@ -3630,7 +3684,7 @@
         },
         {
             "file": "src\\components\\Camera.js",
-            "line": 493,
+            "line": 494,
             "description": "The camera listens for this event to change its world viewport size.",
             "itemtype": "method",
             "name": "'resize-camera'",
@@ -3658,7 +3712,7 @@
         },
         {
             "file": "src\\components\\Camera.js",
-            "line": 507,
+            "line": 508,
             "description": "The camera listens for this event to change its position in the world.",
             "itemtype": "method",
             "name": "'relocate'",
@@ -3698,7 +3752,7 @@
         },
         {
             "file": "src\\components\\Camera.js",
-            "line": 540,
+            "line": 541,
             "description": "On receiving this message, the camera begins following the requested object.",
             "itemtype": "method",
             "name": "'follow'",
@@ -3781,7 +3835,7 @@
         },
         {
             "file": "src\\components\\Camera.js",
-            "line": 561,
+            "line": 562,
             "description": "On receiving this message, the camera will shake around its target location.",
             "itemtype": "method",
             "name": "'shake'",
@@ -3829,7 +3883,7 @@
         },
         {
             "file": "src\\components\\Camera.js",
-            "line": 997,
+            "line": 998,
             "description": "Returns whether a particular display object intersects the camera's viewport on the canvas.",
             "itemtype": "method",
             "name": "isOnCanvas",
@@ -3872,7 +3926,7 @@
         },
         {
             "file": "src\\components\\Camera.js",
-            "line": 1015,
+            "line": 1016,
             "description": "Returns a world coordinate corresponding to a provided window coordinate.",
             "itemtype": "method",
             "name": "windowToWorld",
@@ -3902,7 +3956,7 @@
         },
         {
             "file": "src\\components\\Camera.js",
-            "line": 1038,
+            "line": 1039,
             "description": "Returns a window coordinate corresponding to a provided world coordinate.",
             "itemtype": "method",
             "name": "worldToWindow",
@@ -8287,35 +8341,212 @@
             "file": "src\\components\\LogicPortal.js",
             "line": 1,
             "description": "# COMPONENT **LogicPortal**\nA component which changes the scene when activated. When the portal receives an occupied message it sends the entity in that message notifying it. This message is meant to give the entity a chance to activate the portal in the manner it wants. The portal can also be activated by simply telling it to activate.\n\n## Dependencies\n- [[HandlerLogic]] (on entity's parent) - This component listens for a \"handle-logic\" message it then checks to see if it should change the scene if the portal is activated.\n- [[SceneChanger]] (on entity) - This component listens for the \"new-scene\" message that the LogicPortal sends and actually handles the scene changing.\n- [[CollisionBasic]] (on entity) - Not required, but if we want the 'occupied-portal' call to fire on collision you'll need to have a CollisionBasic component on the portal.\n\n## Messages\n\n### Listens for:\n- **handle-logic** - Checks to see if we should change scene if the portal is activated.\n- **occupied-portal** - This message takes an entity and then sends the entity a 'portal-waiting' message. The idea behind this was that you could use it with collision. When an entity gets in front of the portal the collision sends this message, we then tell the entity that collided to do whatever it needs and then it calls back to activate the portal.\n  - @param message.entity (entity Object) - The entity that will receive the 'portal-waiting' message.\n- **activate-portal** - This message turns the portal on. The next 'handle-logic' call will cause a change of scene.\n\n### Local Broadcasts:\n- **new-scene** - Calls the 'SceneChanger' component to tell it to change scenes.\n  - @param object.destination (string) - The id of the scene that we want to go to.\n\n### Peer Broadcasts:\n- **portal-waiting** - Informs another object that the portal is waiting on it to send the activate message.\n  - @param entity - This is the portal entity. To be used so that the object can communicate with it directly.\n\n## JSON Definition\n    {\n      \"type\": \"name-of-component\",\n      \"destination\" : \"level-2\"\n      //Required - The destination scene to which the portal will take us. In most cases this will come into the portal from Tiled where you'll set a property on the portal you place.\n    }",
-            "class": "platypus.components.LogicWindUpRacer",
+            "class": "platypus.components.LogicRotationalMovement",
             "namespace": "platypus.components"
         },
         {
             "file": "src\\components\\LogicPushable.js",
             "line": 1,
             "description": "# COMPONENT **LogicPushable**\nA component that enables an entity to be pushed.\n\n## Dependencies\n- [[HandlerLogic]] (on entity's parent) - This component listens for a \"handle-logic\" message. It then moves the entity if it's being pushed.\n- [[CollisionBasic]] (on entity) - This component listens for messages from the CollisionBasic component. In particular 'hit-solid' and 'push-entity' are coming from collision.\n\n## Messages\n\n### Listens for:\n- **handle-logic** - Checks to see if we're being pushed. If so, we get pushed. Then resets values.\n  - @param resp.delta (number) - The time since the last tick.\n- **push-entity** - Received when we collide with an object that can push us. We resolve which side we're colliding on and set up the currentPushX and currentPushY values so we'll move on the handle-logic call.\n  - @param collisionInfo.x (number) - Either 1,0, or -1. 1 if we're colliding with an object on our right. -1 if on our left. 0 if not at all.\n  - @param collisionInfo.y (number) - Either 1,0, or -1. 1 if we're colliding with an object on our bottom. -1 if on our top. 0 if not at all.\n- **hit-solid** - Called when the entity collides with a solid object. Stops the object from being pushed further in that direction.\n  - @param collisionInfo.x (number) - Either 1,0, or -1. 1 if we're colliding with an object on our right. -1 if on our left. 0 if not at all.\n  - @param collisionInfo.y (number) - Either 1,0, or -1. 1 if we're colliding with an object on our bottom. -1 if on our top. 0 if not at all.\n\n## JSON Definition\n    {\n      \"type\": \"LogicPushable\",\n       \"xPush\" : .01,\n      //Optional - The distance per millisecond this object can be pushed in x. Defaults to .01.\n      \"yPush\" : .01,\n      //Optional - The distance per millisecond this object can be pushed in y. Defaults to .01.\n      \"push\" : .01\n      //Optional - The distance per millisecond this object can be pushed in x and y. Overwritten by the more specific values xPush and yPush. Defaults to .01.\n    }",
-            "class": "platypus.components.LogicWindUpRacer",
+            "class": "platypus.components.LogicRotationalMovement",
             "namespace": "platypus.components"
         },
         {
             "file": "src\\components\\LogicRebounder.js",
             "line": 1,
             "description": "# COMPONENT **LogicRebounder**\nThis component works with `CollisionBasic` to cause entities to bounce away on solid collisions.\n\n## Dependencies\n- [[CollisionBasic]] - Relies on collision messages to perform rebounding movement.\n\n## Messages\n\n### Listens for:\n- **handle-logic** - On receiving this message, `LogicRebounder` clears its stored collision information.\n- **hit-static** - On receiving this message, `LogicRebounder` rebounds.\n  - @param message.direction (2d vector) - This is the direction in which the collision occurred, tangental to the impact interface.\n- **hit-non-static** - On receiving this message, `LogicRebounder` rebounds.\n  - @param message.direction (2d vector) - This is the direction in which the collision occurred, tangental to the impact interface.\n  - @param message.entity ([[entity]]) - This is the entity with which this entity is colliding.\n- **share-velocity** - On receiving this message, `LogicRebounder` stores collision information.\n  - @param entity ([[entity]]) - This is the entity with which this entity is colliding.\n\n### Peer Broadcasts:\n- **share-velocity** - This component triggers this message to prevent double collision calls.\n  - @param entity ([[entity]]) - This entity.\n\n## JSON Definition\n    {\n      \"type\": \"LogicRebounder\",\n      \n      \"mass\": 12,\n      // Optional. Relative size of the entity. Defaults to 1.\n      \n      \"elasticity\": 0.4\n      // Optional. Bounciness of the entity. Defaults to 0.8.\n    }\n\nRequires: [\"../Vector.js\"]",
-            "class": "platypus.components.LogicWindUpRacer",
+            "class": "platypus.components.LogicRotationalMovement",
             "namespace": "platypus.components"
         },
         {
             "file": "src\\components\\LogicRegionSpawner.js",
             "line": 1,
             "description": "# COMPONENT **LogicRegionSpawner**\nThis component spawns new entities within a given area at set intervals.\n\n## Dependencies\n- [[HandlerLogic]] (on entity's parent) - This component listens for a logic tick message to determine whether to spawn another entity.\n\n## Messages\n\n### Listens for:\n- **handle-logic** - On a `tick` logic message, the component determines whether to spawn another entity.\n  - @param message.delta - To determine whether to spawn, the component keeps a running count of tick lengths.\n\n## JSON Definition\n    {\n      \"type\": \"LogicRegionSpawner\",\n      // List all additional parameters and their possible values here.\n      \n      \"spawn\": \"teddy-bear\",\n      // Required. String identifying the type of entity to spawn.\n      \n      \"interval\": 30000,\n      // Optional. Time in milliseconds between spawning an entity. Defaults to 1000.\n      \n      \"regions\": {\n      // If spawning entity covers a large area, the spawned entities can be randomly spawned over a regional grid, so that the whole area gets a somewhat uniform coverage of spawned entities\n\n        \"width\": 4000,\n        \"height\": 5000,\n        // Optional. Dimensions of a spawning region in world units. Defaults to entity's dimensions. The entity's dimensions are sliced into chunks of this size for spawn distribution.\n      }\n    }",
-            "class": "platypus.components.LogicWindUpRacer",
+            "class": "platypus.components.LogicRotationalMovement",
             "namespace": "platypus.components"
         },
         {
             "file": "src\\components\\LogicRotationalMovement.js",
-            "line": 1,
-            "description": "# COMPONENT **LogicRotationalMovement**\nThis component changes the (x, y) position of an object according to its current speed and heading. It maintains its own heading information independent of other components allowing it to be used simultaneously with other logic components like [[Logic-Pushable]]. It accepts directional messages that can stand alone, or come from a mapped controller, in which case it checks the `pressed` value of the message before changing its course accordingly.\n\n## Dependencies:\n- [[HandlerLogic]] (on entity's parent) - This component listens for a logic tick message to maintain and update its location.\n\n## Messages\n\n### Listens for:\n- **handle-logic** - On a `tick` logic message, the component updates its location according to its current state.\n  - @param message.delta - To determine how far to move the entity, the component checks the length of the tick.\n- **[directional message]** - Directional messages include `turn-left`, `turn-right`, `go-forward`, and `go-backward`. On receiving one of these messages, the entity adjusts its movement and orientation.\n  - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new orientation.\n- **stop** - Stops rotational and linear motion movement messages are again received.\n  - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: a value of false will not stop the entity.\n- **stop-turning** - Stops rotational motion until movement messages are again received.\n  - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: a value of false will not stop the entity.\n- **stop-moving** - Stops linear motion until movement messages are again received.\n  - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: a value of false will not stop the entity.\n\n## JSON Definition:\n    {\n      \"type\": \"LogicRotationalMovement\",\n      \n      \"speed\": 4.5,\n      // Optional. Defines the distance in world units that the entity should be moved per millisecond. Defaults to 0.3.\n      \n      \"angle\": 0,\n      // Optional: Radian orientation that entity should begin in. Defaults to 0 (facing right).\n      \n      \"degree\": 0.1\n      // Optional: Unit in radian that the angle should change per millisecond.\n    }",
-            "class": "platypus.components.LogicWindUpRacer",
+            "line": 25,
+            "description": "Defines the distance in world units that the entity should be moved per millisecond.",
+            "itemtype": "property",
+            "name": "speed",
+            "type": "Number",
+            "default": "0.3",
+            "class": "platypus.components.LogicRotationalMovement",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\LogicRotationalMovement.js",
+            "line": 34,
+            "description": "Radian orientation that entity should begin in. Defaults to 0 (facing right).",
+            "itemtype": "property",
+            "name": "angle",
+            "type": "Number",
+            "default": "0",
+            "class": "platypus.components.LogicRotationalMovement",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\LogicRotationalMovement.js",
+            "line": 43,
+            "description": "Unit in radians that the angle should change per millisecond.",
+            "itemtype": "property",
+            "name": "degree",
+            "type": "Number",
+            "default": "1",
+            "class": "platypus.components.LogicRotationalMovement",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\LogicRotationalMovement.js",
+            "line": 70,
+            "description": "On receiving this event, the component updates its location according to its current state.",
+            "itemtype": "method",
+            "name": "'handle-logic'",
+            "params": [
+                {
+                    "name": "tick.delta",
+                    "description": "To determine how far to move the entity, the component checks the length of the tick.",
+                    "type": "Number"
+                }
+            ],
+            "class": "platypus.components.LogicRotationalMovement",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\LogicRotationalMovement.js",
+            "line": 102,
+            "description": "This rotates the entity by a delta in radians.",
+            "itemtype": "method",
+            "name": "'rotate'",
+            "params": [
+                {
+                    "name": "angleDelta",
+                    "description": "The change in angle.",
+                    "type": "Number"
+                }
+            ],
+            "class": "platypus.components.LogicRotationalMovement",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\LogicRotationalMovement.js",
+            "line": 112,
+            "description": "On receiving this event, the entity turns right.",
+            "itemtype": "method",
+            "name": "'turn-right'",
+            "params": [
+                {
+                    "name": "state.pressed",
+                    "description": "If `state` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new orientation.",
+                    "type": "Boolean",
+                    "optional": true
+                }
+            ],
+            "class": "platypus.components.LogicRotationalMovement",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\LogicRotationalMovement.js",
+            "line": 126,
+            "description": "On receiving this event, the entity turns left.",
+            "itemtype": "method",
+            "name": "'turn-left'",
+            "params": [
+                {
+                    "name": "state.pressed",
+                    "description": "If `state` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new orientation.",
+                    "type": "Boolean",
+                    "optional": true
+                }
+            ],
+            "class": "platypus.components.LogicRotationalMovement",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\LogicRotationalMovement.js",
+            "line": 140,
+            "description": "On receiving this event, the entity goes forward.",
+            "itemtype": "method",
+            "name": "'go-forward'",
+            "params": [
+                {
+                    "name": "state.pressed",
+                    "description": "If `state` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new orientation.",
+                    "type": "Boolean",
+                    "optional": true
+                }
+            ],
+            "class": "platypus.components.LogicRotationalMovement",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\LogicRotationalMovement.js",
+            "line": 155,
+            "description": "On receiving this event, the entity goes backward.",
+            "itemtype": "method",
+            "name": "'go-backward'",
+            "params": [
+                {
+                    "name": "state.pressed",
+                    "description": "If `state` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new orientation.",
+                    "type": "Boolean",
+                    "optional": true
+                }
+            ],
+            "class": "platypus.components.LogicRotationalMovement",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\LogicRotationalMovement.js",
+            "line": 170,
+            "description": "Stops rotational and linear motion until movement messages are again received.",
+            "itemtype": "method",
+            "name": "'stop'",
+            "params": [
+                {
+                    "name": "state.pressed",
+                    "description": "If `state` is included, the component checks the value of `pressed`: a value of false will not stop the entity.",
+                    "type": "Boolean",
+                    "optional": true
+                }
+            ],
+            "class": "platypus.components.LogicRotationalMovement",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\LogicRotationalMovement.js",
+            "line": 184,
+            "description": "Stops linear motion until movement messages are again received.",
+            "itemtype": "method",
+            "name": "'stop-moving'",
+            "params": [
+                {
+                    "name": "state.pressed",
+                    "description": "If `state` is included, the component checks the value of `pressed`: a value of false will not stop the entity.",
+                    "type": "Boolean",
+                    "optional": true
+                }
+            ],
+            "class": "platypus.components.LogicRotationalMovement",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\LogicRotationalMovement.js",
+            "line": 196,
+            "description": "Stops rotational motion until movement messages are again received.",
+            "itemtype": "method",
+            "name": "'stop-turning'",
+            "params": [
+                {
+                    "name": "state.pressed",
+                    "description": "If `state` is included, the component checks the value of `pressed`: a value of false will not stop the entity.",
+                    "type": "Boolean",
+                    "optional": true
+                }
+            ],
+            "class": "platypus.components.LogicRotationalMovement",
             "namespace": "platypus.components"
         },
         {
@@ -10023,7 +10254,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 59,
+            "line": 68,
             "description": "Optional. A mask definition that determines where the image should clip. A string can also be used to create more complex shapes via the PIXI graphics API like: \"mask\": \"r(10,20,40,40).dc(30,10,12)\". Defaults to no mask or, if simply set to true, a rectangle using the entity's dimensions.\n\n \"mask\": {\n     \"x\": 10,\n     \"y\": 10,\n     \"width\": 40,\n     \"height\": 40\n },\n\n -OR-\n\n \"mask\": \"r(10,20,40,40).dc(30,10,12)\"",
             "itemtype": "property",
             "name": "mask",
@@ -10034,7 +10265,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 79,
+            "line": 88,
             "description": "Defines whether the entity will respond to touch and click events. Setting this value will create an Interactive component on this entity with these properties. For example:\n\n \"interactive\": {\n     \"hover\": false,\n     \"hitArea\": {\n         \"x\": 10,\n         \"y\": 10,\n         \"width\": 40,\n         \"height\": 40\n     }\n }",
             "itemtype": "property",
             "name": "interactive",
@@ -10046,7 +10277,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 99,
+            "line": 108,
             "description": "Optional. Whether this object can be rotated. It's rotational angle is set by setting the this.owner.rotation value on the entity.",
             "itemtype": "property",
             "name": "rotate",
@@ -10057,7 +10288,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 108,
+            "line": 117,
             "description": "Whether this object can be mirrored over X. To mirror it over X set the this.owner.rotation value to be > 90  and < 270.",
             "itemtype": "property",
             "name": "mirror",
@@ -10068,7 +10299,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 117,
+            "line": 126,
             "description": "Optional. Whether this object can be flipped over Y. To flip it over Y set the this.owner.rotation to be > 180.",
             "itemtype": "property",
             "name": "flip",
@@ -10079,7 +10310,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 126,
+            "line": 135,
             "description": "Optional. Whether this object is visible or not. To change the visible value dynamically set this.owner.state.visible to true or false.",
             "itemtype": "property",
             "name": "visible",
@@ -10090,7 +10321,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 135,
+            "line": 144,
             "description": "Optional. Whether this sprite should be cached into an entity with a `RenderTiles` component (like \"render-layer\"). The `RenderTiles` component must have its \"entityCache\" property set to `true`. Warning! This is a one-direction setting and will remove this component from the entity once the current frame has been cached.",
             "itemtype": "property",
             "name": "cache",
@@ -10101,7 +10332,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 144,
+            "line": 153,
             "description": "Optional. Ignores the opacity of the owner.",
             "itemtype": "property",
             "name": "ignoreOpacity",
@@ -10112,7 +10343,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 155,
+            "line": 164,
             "description": "Prevents sprite from becoming invisible out of frame and losing mouse input connection.",
             "itemtype": "property",
             "name": "dragMode",
@@ -10124,7 +10355,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 165,
+            "line": 174,
             "description": "Optional. The rotation of the sprite in degrees. All sprites on the same entity are rotated the same amount unless they ignore the rotation value by setting 'rotate' to false.",
             "itemtype": "property",
             "name": "rotation",
@@ -10135,7 +10366,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 174,
+            "line": 183,
             "description": "Optional. The X scaling factor for the image. Defaults to 1.",
             "itemtype": "property",
             "name": "scaleX",
@@ -10146,7 +10377,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 183,
+            "line": 192,
             "description": "Optional. The Y scaling factor for the image. Defaults to 1.",
             "itemtype": "property",
             "name": "scaleY",
@@ -10157,7 +10388,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 192,
+            "line": 201,
             "description": "Optional. The X skew factor of the sprite. Defaults to 0.",
             "itemtype": "property",
             "name": "skewX",
@@ -10168,7 +10399,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 201,
+            "line": 210,
             "description": "Optional. The Y skew factor for the image. Defaults to 0.",
             "itemtype": "property",
             "name": "skewY",
@@ -10179,18 +10410,18 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 210,
-            "description": "Optional. The tint applied to the sprite. Defaults to no tint.",
+            "line": 219,
+            "description": "Optional. The tint applied to the sprite. Tint may be specified by number or text. For example, to give the sprite a red tint, set to 0xff0000 or \"#ff0000\". Tint will be stored as a number even when set using text. Defaults to no tint.",
             "itemtype": "property",
             "name": "tint",
-            "type": "Number",
+            "type": "Number|String",
             "default": "null",
             "class": "platypus.components.RenderContainer",
             "namespace": "platypus.components"
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 219,
+            "line": 228,
             "description": "Optional. The x position of the entity. Defaults to 0.",
             "itemtype": "property",
             "name": "x",
@@ -10201,7 +10432,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 228,
+            "line": 237,
             "description": "Optional. The y position of the entity. Defaults to 0.",
             "itemtype": "property",
             "name": "y",
@@ -10212,7 +10443,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 237,
+            "line": 246,
             "description": "Optional. The z position of the entity. Defaults to 0.",
             "itemtype": "property",
             "name": "z",
@@ -10223,7 +10454,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 315,
+            "line": 339,
             "description": "On receiving a \"cache\" event, this component triggers \"cache-sprite\" to cache its rendering into the background. This is an optimization for static images to reduce render calls.",
             "itemtype": "method",
             "name": "'cache'",
@@ -10232,7 +10463,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 325,
+            "line": 349,
             "description": "On receiving a \"cache\" event, this component triggers \"cache-sprite\" to cache its rendering into the background. This is an optimization for static images to reduce render calls.",
             "itemtype": "event",
             "name": "'cache-sprite'",
@@ -10248,7 +10479,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 337,
+            "line": 361,
             "description": "Listens for this event to determine whether this sprite is visible.",
             "itemtype": "method",
             "name": "'camera-update'",
@@ -10264,7 +10495,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 350,
+            "line": 374,
             "description": "A setup message used to add the sprite to the stage. On receiving this message, the component sets its parent container to the stage contained in the message if it doesn't already have one.",
             "itemtype": "method",
             "name": "'handle-render-load'",
@@ -10287,7 +10518,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 364,
+            "line": 388,
             "description": "The render update message updates the sprite. If a sprite doesn't have a container, it's removed.",
             "itemtype": "method",
             "name": "'handle-render'",
@@ -10310,7 +10541,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 381,
+            "line": 405,
             "description": "This event makes the sprite invisible.",
             "itemtype": "method",
             "name": "'hide-sprite'",
@@ -10319,7 +10550,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 390,
+            "line": 414,
             "description": "This event makes the sprite visible.",
             "itemtype": "method",
             "name": "'show-sprite'",
@@ -10328,7 +10559,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 399,
+            "line": 423,
             "description": "Defines the mask on the container/sprite. If no mask is specified, the mask is set to null.",
             "itemtype": "method",
             "name": "'set-mask'",
@@ -10344,7 +10575,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 421,
+            "line": 445,
             "description": "This event is triggered once the RenderSprite is ready to handle interactivity.",
             "itemtype": "event",
             "name": "'input-on'",
@@ -11252,6 +11483,77 @@
             "namespace": "platypus.components"
         },
         {
+            "file": "src\\components\\RenderText.js",
+            "line": 35,
+            "description": "The offset of the x-axis position of the text from the entity's x-axis position.",
+            "itemtype": "property",
+            "name": "offsetX",
+            "type": "Number",
+            "default": "0",
+            "class": "platypus.components.RenderText",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\RenderText.js",
+            "line": 44,
+            "description": "The offset of the y-axis position of the text from the entity's y-axis position.",
+            "itemtype": "property",
+            "name": "offsetY",
+            "type": "Number",
+            "default": "0",
+            "class": "platypus.components.RenderText",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\RenderText.js",
+            "line": 53,
+            "description": "The z-index relative to other render components on the entity.",
+            "itemtype": "property",
+            "name": "offsetZ",
+            "type": "Number",
+            "default": "0",
+            "class": "platypus.components.RenderText",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\RenderText.js",
+            "line": 62,
+            "description": "This is the text to display.",
+            "itemtype": "property",
+            "name": "text",
+            "type": "String",
+            "default": "\"\"",
+            "class": "platypus.components.RenderText",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\RenderText.js",
+            "line": 71,
+            "description": "This is the text style to use. Use the following specification to define the style:\n\n    {\n        \"fontSize\": \"64px\",\n        \"fill\": \"#ffffff\",\n        \"align\": \"center\", // Can be `left`, `center`, or `right`\n        \"fontFamily\": \"arial\", // Any CSS font that has been loaded by the browser\n        \"verticalAlign\": \"bottom\" // Can be `top`, `center`, or `bottom`\n    }\n\nSee [PIXI.TextStyle documentation](http://pixijs.download/dev/docs/PIXI.TextStyle.html) for a full list of available options.",
+            "itemtype": "property",
+            "name": "style",
+            "type": "Object",
+            "default": "null",
+            "class": "platypus.components.RenderText",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\RenderText.js",
+            "line": 108,
+            "description": "Sets the copy of the text.",
+            "itemtype": "method",
+            "name": "'set-text'",
+            "params": [
+                {
+                    "name": "text",
+                    "description": "The text to insert.",
+                    "type": "String"
+                }
+            ],
+            "class": "platypus.components.RenderText",
+            "namespace": "platypus.components"
+        },
+        {
             "file": "src\\components\\RenderTiles.js",
             "line": 124,
             "description": "The amount of space in pixels around the edge of the camera that we include in the buffered image. If not set, largest buffer allowed by maximumBuffer is used.",
@@ -11790,7 +12092,7 @@
         },
         {
             "file": "src\\components\\TiledLoader.js",
-            "line": 365,
+            "line": 367,
             "description": "This causes the entire map to be offset automatically by an order of magnitude higher than the height and width of the world so that the number of digits below zero is constant throughout the world space. This fixes potential floating point issues when, for example, 97 is added to 928.0000000000001 giving 1025 since a significant digit was lost when going into the thousands.",
             "itemtype": "property",
             "name": "offsetMap",
@@ -11802,7 +12104,7 @@
         },
         {
             "file": "src\\components\\TiledLoader.js",
-            "line": 375,
+            "line": 377,
             "description": "If set to `true` and if the game is running in debug mode, this causes the collision layer to appear.",
             "itemtype": "property",
             "name": "showCollisionTiles",
@@ -11813,7 +12115,7 @@
         },
         {
             "file": "src\\components\\TiledLoader.js",
-            "line": 384,
+            "line": 386,
             "description": "If specified, the referenced images are used as the game sprite sheets instead of the images referenced in the Tiled map. This is useful for using different or better quality art from the art used in creating the Tiled map.",
             "itemtype": "property",
             "name": "images",
@@ -11824,7 +12126,7 @@
         },
         {
             "file": "src\\components\\TiledLoader.js",
-            "line": 393,
+            "line": 395,
             "description": "Adds a number to each additional Tiled layer's z coordinate to maintain z-order. Defaults to 1000.",
             "itemtype": "property",
             "name": "layerIncrement",
@@ -11835,7 +12137,7 @@
         },
         {
             "file": "src\\components\\TiledLoader.js",
-            "line": 402,
+            "line": 404,
             "description": "Keeps the tile maps in separate render layers. Default is 'false' to for better optimization.",
             "itemtype": "property",
             "name": "separateTiles",
@@ -11846,7 +12148,7 @@
         },
         {
             "file": "src\\components\\TiledLoader.js",
-            "line": 411,
+            "line": 413,
             "description": "If a particular sprite sheet should be used that's not defined by the level images themselves. This is useful for making uniquely-themed variations of the same level. This is overridden by `\"spriteSheet\": \"import\"` in the \"render-layer\" Entity definition, so be sure to remove that when setting this property.",
             "itemtype": "property",
             "name": "spriteSheet",
@@ -11858,7 +12160,7 @@
         },
         {
             "file": "src\\components\\TiledLoader.js",
-            "line": 423,
+            "line": 425,
             "description": "Specifies the JSON level to load. Available on the entity as `entity.level`.",
             "itemtype": "property",
             "name": "level",
@@ -11869,7 +12171,7 @@
         },
         {
             "file": "src\\components\\TiledLoader.js",
-            "line": 432,
+            "line": 434,
             "description": "Sets how many world units in width and height correspond to a single pixel in the Tiled map. Default is 1: One pixel is one world unit. Available on the entity as `entity.unitsPerPixel`.",
             "itemtype": "property",
             "name": "unitsPerPixel",
@@ -11880,18 +12182,20 @@
         },
         {
             "file": "src\\components\\TiledLoader.js",
-            "line": 441,
+            "line": 443,
             "description": "If images are provided, this property sets the scale of the art relative to world coordinates. Available on the entity as `entity.imagesScale`.",
             "itemtype": "property",
             "name": "imagesScale",
             "type": "number",
             "default": "1",
+            "deprecated": true,
+            "deprecationMessage": "since v0.11.9",
             "class": "platypus.components.TiledLoader",
             "namespace": "platypus.components"
         },
         {
             "file": "src\\components\\TiledLoader.js",
-            "line": 450,
+            "line": 453,
             "description": "Can be \"left\", \"right\", or \"center\". Defines where entities registered X position should be when spawned. Available on the entity as `entity.entityPositionX`.",
             "itemtype": "property",
             "name": "entityPositionX",
@@ -11902,7 +12206,7 @@
         },
         {
             "file": "src\\components\\TiledLoader.js",
-            "line": 459,
+            "line": 462,
             "description": "Can be \"top\", \"bottom\", or \"center\". Defines where entities registered Y position should be when spawned. Available on the entity as `entity.entityPositionY`.",
             "itemtype": "property",
             "name": "entityPositionY",
@@ -11913,7 +12217,7 @@
         },
         {
             "file": "src\\components\\TiledLoader.js",
-            "line": 468,
+            "line": 471,
             "description": "Whether to wait for a \"load-level\" event before before loading. Available on the entity as `entity.manuallyLoad`.",
             "itemtype": "property",
             "name": "manuallyLoad",
@@ -11924,7 +12228,7 @@
         },
         {
             "file": "src\\components\\TiledLoader.js",
-            "line": 486,
+            "line": 489,
             "description": "On receiving this message, the component commences loading the Tiled map JSON definition. Once finished, it removes itself from the entity's list of components.",
             "itemtype": "method",
             "name": "'scene-loaded'",
@@ -11964,7 +12268,7 @@
         },
         {
             "file": "src\\components\\TiledLoader.js",
-            "line": 506,
+            "line": 509,
             "description": "If `manuallyLoad` is set, the component will wait for this message before loading the Tiled map JSON definition.",
             "itemtype": "method",
             "name": "'load-level'",
@@ -11998,7 +12302,7 @@
         },
         {
             "file": "src\\components\\TiledLoader.js",
-            "line": 1082,
+            "line": 1127,
             "description": "As a level is loaded, this event is triggered to show progress.",
             "itemtype": "event",
             "name": "'level-loading-progress'",
@@ -12032,7 +12336,7 @@
         },
         {
             "file": "src\\components\\TiledLoader.js",
-            "line": 1105,
+            "line": 1150,
             "description": "This method decodes a Tiled layer and sets its data to CSV format.",
             "itemtype": "method",
             "name": "decodeLayer",
@@ -14479,7 +14783,7 @@
         },
         {
             "file": "src\\Game.js",
-            "line": 227,
+            "line": 229,
             "description": "This method will return the first entity it finds with a matching id.",
             "itemtype": "method",
             "name": "getEntityById",
@@ -14499,7 +14803,7 @@
         },
         {
             "file": "src\\Game.js",
-            "line": 242,
+            "line": 244,
             "description": "This method will return all game entities that match the provided type.",
             "itemtype": "method",
             "name": "getEntitiesByType",
@@ -14519,7 +14823,7 @@
         },
         {
             "file": "src\\Game.js",
-            "line": 257,
+            "line": 259,
             "description": "This method destroys the game.",
             "itemtype": "method",
             "name": "destroy",
@@ -15242,7 +15546,7 @@
         },
         {
             "file": "src\\Vector.js",
-            "line": 104,
+            "line": 106,
             "description": "Sets the coordinates of the vector.",
             "itemtype": "method",
             "name": "setXYZ",
@@ -15272,7 +15576,7 @@
         },
         {
             "file": "src\\Vector.js",
-            "line": 124,
+            "line": 126,
             "description": "Sets the coordinates of the vector.",
             "itemtype": "method",
             "name": "setVector",
@@ -15296,7 +15600,7 @@
         },
         {
             "file": "src\\Vector.js",
-            "line": 137,
+            "line": 139,
             "description": "Sets the coordinates of the vector.",
             "itemtype": "method",
             "name": "setArray",
@@ -15320,7 +15624,7 @@
         },
         {
             "file": "src\\Vector.js",
-            "line": 157,
+            "line": 159,
             "description": "Determines whether two vectors are equal.",
             "itemtype": "method",
             "name": "equals",
@@ -15353,7 +15657,7 @@
         },
         {
             "file": "src\\Vector.js",
-            "line": 194,
+            "line": 196,
             "description": "Returns the magnitude of the vector.",
             "itemtype": "method",
             "name": "magnitude",
@@ -15374,7 +15678,7 @@
         },
         {
             "file": "src\\Vector.js",
-            "line": 214,
+            "line": 216,
             "description": "Returns the direction of the vector from the z-axis",
             "return": {
                 "description": "The direction of the vector in radians.",
@@ -15385,7 +15689,7 @@
         },
         {
             "file": "src\\Vector.js",
-            "line": 232,
+            "line": 234,
             "description": "Returns a normalized copy of the vector.",
             "itemtype": "method",
             "name": "getUnit",
@@ -15398,7 +15702,7 @@
         },
         {
             "file": "src\\Vector.js",
-            "line": 242,
+            "line": 244,
             "description": "Returns a copy of the Vector inverted.",
             "itemtype": "method",
             "name": "getInverse",
@@ -15411,7 +15715,7 @@
         },
         {
             "file": "src\\Vector.js",
-            "line": 252,
+            "line": 254,
             "description": "Normalizes the vector.",
             "itemtype": "method",
             "name": "normalize",
@@ -15421,7 +15725,7 @@
         },
         {
             "file": "src\\Vector.js",
-            "line": 269,
+            "line": 271,
             "description": "Crosses this vector with the parameter vector.",
             "itemtype": "method",
             "name": "cross",
@@ -15438,7 +15742,7 @@
         },
         {
             "file": "src\\Vector.js",
-            "line": 294,
+            "line": 296,
             "description": "Crosses this vector with the parameter vector and returns the cross product.",
             "itemtype": "method",
             "name": "getCrossProduct",
@@ -15458,7 +15762,7 @@
         },
         {
             "file": "src\\Vector.js",
-            "line": 305,
+            "line": 307,
             "description": "Rotates the vector by the given amount.",
             "itemtype": "method",
             "name": "rotate",
@@ -15482,7 +15786,7 @@
         },
         {
             "file": "src\\Vector.js",
-            "line": 354,
+            "line": 356,
             "description": "Scales the vector by the given factor or performs a transform if a matrix is provided.",
             "itemtype": "method",
             "name": "multiply",
@@ -15504,7 +15808,7 @@
         },
         {
             "file": "src\\Vector.js",
-            "line": 388,
+            "line": 390,
             "description": "Adds the given components to this vector.",
             "itemtype": "method",
             "name": "add",
@@ -15533,7 +15837,7 @@
         },
         {
             "file": "src\\Vector.js",
-            "line": 421,
+            "line": 423,
             "description": "Adds the given vector to this vector.",
             "itemtype": "method",
             "name": "addVector",
@@ -15550,7 +15854,7 @@
         },
         {
             "file": "src\\Vector.js",
-            "line": 432,
+            "line": 434,
             "description": "Subtracts the given vector from this vector.",
             "itemtype": "method",
             "name": "subtractVector",
@@ -15567,7 +15871,7 @@
         },
         {
             "file": "src\\Vector.js",
-            "line": 443,
+            "line": 445,
             "description": "Scales the vector by the given factor.",
             "itemtype": "method",
             "name": "multiply",
@@ -15589,7 +15893,7 @@
         },
         {
             "file": "src\\Vector.js",
-            "line": 455,
+            "line": 457,
             "description": "Finds the dot product of the two vectors.",
             "itemtype": "method",
             "name": "dot",
@@ -15614,7 +15918,7 @@
         },
         {
             "file": "src\\Vector.js",
-            "line": 478,
+            "line": 480,
             "description": "Finds the shortest angle between the two vectors.",
             "itemtype": "method",
             "name": "angleTo",
@@ -15634,7 +15938,7 @@
         },
         {
             "file": "src\\Vector.js",
-            "line": 503,
+            "line": 505,
             "description": "Finds the shortest signed angle between the two vectors.",
             "itemtype": "method",
             "name": "signedAngleTo",
@@ -15659,7 +15963,7 @@
         },
         {
             "file": "src\\Vector.js",
-            "line": 530,
+            "line": 534,
             "description": "Find the scalar value of projecting this vector onto the parameter vector or onto a vector at the specified angle away.",
             "itemtype": "method",
             "name": "scalerProjection",
@@ -15679,7 +15983,7 @@
         },
         {
             "file": "src\\Vector.js",
-            "line": 551,
+            "line": 555,
             "description": "Returns a copy of this vector.",
             "itemtype": "method",
             "name": "copy",
@@ -15692,7 +15996,7 @@
         },
         {
             "file": "src\\Vector.js",
-            "line": 561,
+            "line": 565,
             "description": "Adds properties to an object that describe the coordinates of a vector.",
             "itemtype": "method",
             "name": "Vector.assign",
@@ -15719,7 +16023,7 @@
         },
         {
             "file": "src\\Vector.js",
-            "line": 619,
+            "line": 623,
             "description": "Returns a Vector from cache or creates a new one if none are available.",
             "itemtype": "method",
             "name": "Vector.setUp",
@@ -15733,7 +16037,7 @@
         },
         {
             "file": "src\\Vector.js",
-            "line": 626,
+            "line": 630,
             "description": "Returns a Vector back to the cache. Prefer the Vector's recycle method since it recycles property objects as well.",
             "itemtype": "method",
             "name": "Vector.recycle",
@@ -15750,7 +16054,7 @@
         },
         {
             "file": "src\\Vector.js",
-            "line": 633,
+            "line": 637,
             "description": "Relinquishes properties of the vector and recycles it.",
             "itemtype": "method",
             "name": "recycle",
@@ -15878,10 +16182,6 @@
             "line": " src\\components\\LogicRegionSpawner.js:1"
         },
         {
-            "message": "Missing item type\n# COMPONENT **LogicRotationalMovement**\nThis component changes the (x, y) position of an object according to its current speed and heading. It maintains its own heading information independent of other components allowing it to be used simultaneously with other logic components like [[Logic-Pushable]]. It accepts directional messages that can stand alone, or come from a mapped controller, in which case it checks the `pressed` value of the message before changing its course accordingly.\n\n## Dependencies:\n- [[HandlerLogic]] (on entity's parent) - This component listens for a logic tick message to maintain and update its location.\n\n## Messages\n\n### Listens for:\n- **handle-logic** - On a `tick` logic message, the component updates its location according to its current state.\n  - @param message.delta - To determine how far to move the entity, the component checks the length of the tick.\n- **[directional message]** - Directional messages include `turn-left`, `turn-right`, `go-forward`, and `go-backward`. On receiving one of these messages, the entity adjusts its movement and orientation.\n  - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new orientation.\n- **stop** - Stops rotational and linear motion movement messages are again received.\n  - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: a value of false will not stop the entity.\n- **stop-turning** - Stops rotational motion until movement messages are again received.\n  - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: a value of false will not stop the entity.\n- **stop-moving** - Stops linear motion until movement messages are again received.\n  - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: a value of false will not stop the entity.\n\n## JSON Definition:\n    {\n      \"type\": \"LogicRotationalMovement\",\n      \n      \"speed\": 4.5,\n      // Optional. Defines the distance in world units that the entity should be moved per millisecond. Defaults to 0.3.\n      \n      \"angle\": 0,\n      // Optional: Radian orientation that entity should begin in. Defaults to 0 (facing right).\n      \n      \"degree\": 0.1\n      // Optional: Unit in radian that the angle should change per millisecond.\n    }",
-            "line": " src\\components\\LogicRotationalMovement.js:1"
-        },
-        {
             "message": "Missing item type\n# COMPONENT **LogicSpawner**\nThis component creates an entity and propels it away. This is useful for casting, firing, tossing, and related behaviors.\n\n## Dependencies:\n- [[HandlerLogic]] (on entity's parent) - This component listens for a logic tick message to determine whether it should be spawning or not.\n\n## Messages\n\n### Listens for:\n- **handle-logic** - On a `tick` logic message, the component checks its current state to decide whether to spawn entities.\n- **spawn** - creates an entity on the following tick message.\n  - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: false results in no entities being created. Is this primarily for controller input.\n\n## JSON Definition\n    {\n      \"type\": \"LogicSpawner\"\n      // List all additional parameters and their possible values here.\n\n      \"spawneeClass\": \"wet-noodle\",\n      // Required: string identifying the type of entity to create.\n      \n      \"state\": \"tossing\",\n      // Optional. The entity state that should be true while entities are being created. Defaults to \"firing\".\n      \n      \"speed\": 4,\n      // Optional. The velocity with which the entity should start. Initial direction is determined by this entity's facing states (\"top\", \"right\", etc).\n      \n      \"offsetX\": 45,\n      \"offsetY\": -20,\n      // Optional. Location relative to the entity where the should be located once created. Defaults to (0, 0).\n    }",
             "line": " src\\components\\LogicSpawner.js:1"
         },
@@ -15955,7 +16255,7 @@
         },
         {
             "message": "Missing item type\nReturns the direction of the vector from the z-axis",
-            "line": " src\\Vector.js:214"
+            "line": " src\\Vector.js:216"
         },
         {
             "message": "Missing item type\nThe component factory takes in component definitions and creates component classes that can be used to create components by entities.  It adds properties and methods that are common to all components so that component definitions can focus on unique properties and methods.\n\nTo create an extended component class, use the following syntax:\n\n     platypus.createComponentClass(componentDefinition, prototype);\n\n * `componentDefinition` is list of key/value pairs that describe the component's behavior.\n * `prototype` is an optional prototype that this component extends.\nSee ComponentExample.js for an example componentDefinition that can be sent into this component class factory.",

@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.11.9 API Documentation : platypus.components.Counter</title>
+	<title>platypus v0.11.9 API Documentation : platypus.components.LogicRotationalMovement</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -149,7 +149,7 @@
                 </div>            <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>platypus.components.Counter Class</h1>
+                        <h1>platypus.components.LogicRotationalMovement Class</h1>
                         <div class="box meta">
                                 <div class="uses">
                                     Uses
@@ -160,7 +160,7 @@
                         
                         
                                 <div class="foundat">
-                                    Defined in: <a href="../files/src_components_Counter.js.html#l1"><code>platypus.components.Counter:1</code></a>
+                                    Defined in: <a href="../files/src_components_LogicRotationalMovement.js.html#l1"><code>platypus.components.LogicRotationalMovement:1</code></a>
                                 </div>
                         
                                     Module: <a href="../modules/platypus.html">platypus</a>
@@ -169,7 +169,7 @@
                         
                         
                         <div class="box intro">
-                            <p>A simple component that keeps count of something and sends messages each time the count changes. Can also have a total. When it does it will display 'count / total'.</p>
+                            <p>This component changes the (x, y) position of an object according to its current speed and heading. It maintains its own heading information independent of other components allowing it to be used simultaneously with other logic components like [[Logic-Pushable]]. It accepts directional messages that can stand alone, or come from a mapped controller, in which case it checks the <code>pressed</code> value of the message before changing its course accordingly.</p>
                         
                         </div>
                         
@@ -180,7 +180,6 @@
                         
                                     <li class="api-class-tab methods"><a href="#methods">Methods</a></li>
                                     <li class="api-class-tab properties"><a href="#properties">Properties</a></li>
-                                    <li class="api-class-tab events"><a href="#events">Events</a></li>
                             </ul>
                         
                             <div>
@@ -192,11 +191,11 @@
                         
                                             <ul class="index-list methods">
                                                     <li class="index-item method">
-                                                        <a href="#method_&#x27;change-count&#x27;">&#x27;change-count&#x27;</a>
+                                                        <a href="#method_&#x27;go-backward&#x27;">&#x27;go-backward&#x27;</a>
                         
                                                     </li>
                                                     <li class="index-item method">
-                                                        <a href="#method_&#x27;change-total&#x27;">&#x27;change-total&#x27;</a>
+                                                        <a href="#method_&#x27;go-forward&#x27;">&#x27;go-forward&#x27;</a>
                         
                                                     </li>
                                                     <li class="index-item method">
@@ -204,7 +203,27 @@
                         
                                                     </li>
                                                     <li class="index-item method">
-                                                        <a href="#method_&#x27;increment-count&#x27;">&#x27;increment-count&#x27;</a>
+                                                        <a href="#method_&#x27;rotate&#x27;">&#x27;rotate&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;stop&#x27;">&#x27;stop&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;stop-moving&#x27;">&#x27;stop-moving&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;stop-turning&#x27;">&#x27;stop-turning&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;turn-left&#x27;">&#x27;turn-left&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;turn-right&#x27;">&#x27;turn-right&#x27;</a>
                         
                                                     </li>
                                                     <li class="index-item method private inherited">
@@ -255,35 +274,33 @@
                         
                                             <ul class="index-list properties">
                                                     <li class="index-item property">
-                                                        <a href="#property_total">total</a>
+                                                        <a href="#property_angle">angle</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_degree">degree</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_speed">speed</a>
                         
                                                     </li>
                                             </ul>
                                         </div>
                         
                         
-                                        <div class="index-section events">
-                                            <h3>Events</h3>
-                        
-                                            <ul class="index-list events">
-                                                    <li class="index-item event">
-                                                        <a href="#event_&#x27;update-content&#x27;">&#x27;update-content&#x27;</a>
-                        
-                                                    </li>
-                                            </ul>
-                                        </div>
                                 </div>
                         
                                     <div id="methods" class="api-class-tabpanel">
                                         <h2 class="off-left">Methods</h2>
                         
-                                            <div id="method_&#x27;change-count&#x27;" class="method item">
-                                                <h3 class="name"><code>&#x27;change-count&#x27;</code></h3>
+                                            <div id="method_&#x27;go-backward&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;go-backward&#x27;</code></h3>
                                             
                                                     <div class="args">
                                                         <span class="paren">(</span><ul class="args-list inline commas">
                                                             <li class="arg">
-                                                                    <code>data.count</code>
+                                                                    <code class="optional">[state.pressed]</code>
                                                             </li>
                                                         </ul><span class="paren">)</span>
                                                     </div>
@@ -298,7 +315,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Counter.js.html#l85"><code>&#x27;change-count&#x27;:85</code></a>
+                                                    <a href="../files/src_components_LogicRotationalMovement.js.html#l155"><code>&#x27;go-backward&#x27;:155</code></a>
                                                     </p>
                                             
                                             
@@ -306,7 +323,7 @@
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>Changes the count to the given value.</p>
+                                                    <p>On receiving this event, the entity goes backward.</p>
                                             
                                                 </div>
                                             
@@ -315,12 +332,13 @@
                                             
                                                         <ul class="params-list">
                                                             <li class="param">
-                                                                    <code class="param-name">data.count</code>
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                                                    <code class="param-name optional">[state.pressed]</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                                                    <span class="flag optional" title="This parameter is optional.">optional</span>
                                             
                                             
                                                                 <div class="param-description">
-                                                                    <p>The new count value.</p>
+                                                                    <p>If <code>state</code> is included, the component checks the value of <code>pressed</code>: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger <code>stop</code> on the entity before progressing in a new orientation.</p>
                                             
                                                                 </div>
                                             
@@ -330,13 +348,13 @@
                                             
                                             
                                             </div>
-                                            <div id="method_&#x27;change-total&#x27;" class="method item">
-                                                <h3 class="name"><code>&#x27;change-total&#x27;</code></h3>
+                                            <div id="method_&#x27;go-forward&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;go-forward&#x27;</code></h3>
                                             
                                                     <div class="args">
                                                         <span class="paren">(</span><ul class="args-list inline commas">
                                                             <li class="arg">
-                                                                    <code>data.total</code>
+                                                                    <code class="optional">[state.pressed]</code>
                                                             </li>
                                                         </ul><span class="paren">)</span>
                                                     </div>
@@ -351,7 +369,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Counter.js.html#l75"><code>&#x27;change-total&#x27;:75</code></a>
+                                                    <a href="../files/src_components_LogicRotationalMovement.js.html#l140"><code>&#x27;go-forward&#x27;:140</code></a>
                                                     </p>
                                             
                                             
@@ -359,7 +377,7 @@
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>Changes the total to the given value.</p>
+                                                    <p>On receiving this event, the entity goes forward.</p>
                                             
                                                 </div>
                                             
@@ -368,12 +386,13 @@
                                             
                                                         <ul class="params-list">
                                                             <li class="param">
-                                                                    <code class="param-name">data.total</code>
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                                                    <code class="param-name optional">[state.pressed]</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                                                    <span class="flag optional" title="This parameter is optional.">optional</span>
                                             
                                             
                                                                 <div class="param-description">
-                                                                    <p>The new total value.</p>
+                                                                    <p>If <code>state</code> is included, the component checks the value of <code>pressed</code>: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger <code>stop</code> on the entity before progressing in a new orientation.</p>
                                             
                                                                 </div>
                                             
@@ -386,7 +405,13 @@
                                             <div id="method_&#x27;handle-logic&#x27;" class="method item">
                                                 <h3 class="name"><code>&#x27;handle-logic&#x27;</code></h3>
                                             
-                                                    <span class="paren">()</span>
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>tick.delta</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
                                             
                                             
                                             
@@ -398,7 +423,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Counter.js.html#l39"><code>&#x27;handle-logic&#x27;:39</code></a>
+                                                    <a href="../files/src_components_LogicRotationalMovement.js.html#l70"><code>&#x27;handle-logic&#x27;:70</code></a>
                                                     </p>
                                             
                                             
@@ -406,17 +431,40 @@
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>Each step, this component detects whether the count has changed and triggers an 'update-content' event if so.</p>
+                                                    <p>On receiving this event, the component updates its location according to its current state.</p>
                                             
                                                 </div>
                                             
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">tick.delta</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>To determine how far to move the entity, the component checks the length of the tick.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
                                             
                                             
                                             </div>
-                                            <div id="method_&#x27;increment-count&#x27;" class="method item">
-                                                <h3 class="name"><code>&#x27;increment-count&#x27;</code></h3>
+                                            <div id="method_&#x27;rotate&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;rotate&#x27;</code></h3>
                                             
-                                                    <span class="paren">()</span>
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>angleDelta</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
                                             
                                             
                                             
@@ -428,7 +476,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Counter.js.html#l95"><code>&#x27;increment-count&#x27;:95</code></a>
+                                                    <a href="../files/src_components_LogicRotationalMovement.js.html#l102"><code>&#x27;rotate&#x27;:102</code></a>
                                                     </p>
                                             
                                             
@@ -436,10 +484,297 @@
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>Increments the count by 1.</p>
+                                                    <p>This rotates the entity by a delta in radians.</p>
                                             
                                                 </div>
                                             
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">angleDelta</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The change in angle.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;stop&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;stop&#x27;</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code class="optional">[state.pressed]</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_LogicRotationalMovement.js.html#l170"><code>&#x27;stop&#x27;:170</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Stops rotational and linear motion until movement messages are again received.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name optional">[state.pressed]</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>If <code>state</code> is included, the component checks the value of <code>pressed</code>: a value of false will not stop the entity.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;stop-moving&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;stop-moving&#x27;</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code class="optional">[state.pressed]</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_LogicRotationalMovement.js.html#l184"><code>&#x27;stop-moving&#x27;:184</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Stops linear motion until movement messages are again received.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name optional">[state.pressed]</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>If <code>state</code> is included, the component checks the value of <code>pressed</code>: a value of false will not stop the entity.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;stop-turning&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;stop-turning&#x27;</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code class="optional">[state.pressed]</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_LogicRotationalMovement.js.html#l196"><code>&#x27;stop-turning&#x27;:196</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Stops rotational motion until movement messages are again received.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name optional">[state.pressed]</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>If <code>state</code> is included, the component checks the value of <code>pressed</code>: a value of false will not stop the entity.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;turn-left&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;turn-left&#x27;</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code class="optional">[state.pressed]</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_LogicRotationalMovement.js.html#l126"><code>&#x27;turn-left&#x27;:126</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>On receiving this event, the entity turns left.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name optional">[state.pressed]</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>If <code>state</code> is included, the component checks the value of <code>pressed</code>: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger <code>stop</code> on the entity before progressing in a new orientation.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;turn-right&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;turn-right&#x27;</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code class="optional">[state.pressed]</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_LogicRotationalMovement.js.html#l112"><code>&#x27;turn-right&#x27;:112</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>On receiving this event, the entity turns right.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name optional">[state.pressed]</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>If <code>state</code> is included, the component checks the value of <code>pressed</code>: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger <code>stop</code> on the entity before progressing in a new orientation.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
                                             
                                             
                                             </div>
@@ -1020,8 +1355,8 @@
                                     <div id="properties" class="api-class-tabpanel">
                                         <h2 class="off-left">Properties</h2>
                         
-                                            <div id="property_total" class="property item">
-                                                <h3 class="name"><code>total</code></h3>
+                                            <div id="property_angle" class="property item">
+                                                <h3 class="name"><code>angle</code></h3>
                                                 <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
                                             
                                             
@@ -1031,14 +1366,14 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Counter.js.html#l19"><code>total:19</code></a>
+                                                    <a href="../files/src_components_LogicRotationalMovement.js.html#l34"><code>angle:34</code></a>
                                                     </p>
                                             
                                             
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>A total the counter is incrementing toward.</p>
+                                                    <p>Radian orientation that entity should begin in. Defaults to 0 (facing right).</p>
                                             
                                                 </div>
                                             
@@ -1046,15 +1381,9 @@
                                             
                                             
                                             </div>
-                                    </div>
-                        
-                        
-                                    <div id="events" class="api-class-tabpanel">
-                                        <h2 class="off-left">Events</h2>
-                        
-                                            <div id="event_&#x27;update-content&#x27;" class="events item">
-                                                <h3 class="name"><code>&#x27;update-content&#x27;</code></h3>
-                                                <span class="type"></span>
+                                            <div id="property_degree" class="property item">
+                                                <h3 class="name"><code>degree</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
                                             
                                             
                                             
@@ -1063,38 +1392,50 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Counter.js.html#l65"><code>&#x27;update-content&#x27;:65</code></a>
+                                                    <a href="../files/src_components_LogicRotationalMovement.js.html#l43"><code>degree:43</code></a>
                                                     </p>
                                             
                                             
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>A call used to notify other components that the count or total has changed.</p>
+                                                    <p>Unit in radians that the angle should change per millisecond.</p>
                                             
                                                 </div>
                                             
-                                                    <div class="params">
-                                                        <h4>Event Payload:</h4>
-                                            
-                                                        <ul class="params-list">
-                                                            <li class="param">
-                                                                    <code class="param-name">update.text</code>
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                                                    <p><strong>Default:</strong> 1</p>
                                             
                                             
-                                                                <div class="param-description">
-                                                                    <p>String describing the current count.</p>
+                                            </div>
+                                            <div id="property_speed" class="property item">
+                                                <h3 class="name"><code>speed</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
                                             
-                                                                </div>
                                             
-                                                            </li>
-                                                        </ul>
-                                                    </div>
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_LogicRotationalMovement.js.html#l25"><code>speed:25</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Defines the distance in world units that the entity should be moved per millisecond.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> 0.3</p>
                                             
                                             
                                             </div>
                                     </div>
+                        
+                        
                             </div>
                         </div>
                     </div>

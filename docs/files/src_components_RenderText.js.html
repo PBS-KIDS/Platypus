@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.11.9 API Documentation : src\components\LogicPacingPlatform.js</title>
+	<title>platypus v0.11.9 API Documentation : src\components\RenderText.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -150,76 +150,142 @@
                 <div id="docs-main">
                     <div class="content">
                         <script>
-                        	var name = src\components\LogicPacingPlatform.js      
+                        	var name = src\components\RenderText.js      
                         </script>
-                        <h1 class="file-heading">File:src\components\LogicPacingPlatform.js</h1>
+                        <h1 class="file-heading">File:src\components\RenderText.js</h1>
                         
                         <div class="file">
                             <pre class="code prettyprint linenums">
                         /**
-                        # COMPONENT **LogicPacingPlatform**
-                        This component changes the (x, y) position of an object according to its speed and heading and alternates back and forth. This is useful for in-place moving platforms.
-                        
-                        ## Dependencies:
-                        - [[HandlerLogic]] (on entity&#x27;s parent) - This component listens for a logic tick message to maintain and update its location.
-                        
-                        ## Messages
-                        
-                        ### Listens for:
-                        - **handle-logic** - On a &#x60;tick&#x60; logic message, the component updates its location according to its current state.
-                          - @param message.delta - To determine how far to move the entity, the component checks the length of the tick.
-                        
-                        ## JSON Definition:
-                            {
-                              &quot;type&quot;: &quot;LogicDirectionalMovement&quot;,
-                              
-                              &quot;angle&quot;: 3.14,
-                              // Optional. Defines the angle of movement in radians. Defaults to 0 (horizontal, starts moving right).
-                              
-                              &quot;distance&quot;: 440,
-                              // Optional. Declares distance in world units that the entity should move back and forth across. Defaults to 128.
-                              
-                              &quot;period&quot;: 6000,
-                              // Optional. Sets the time in milliseconds that the entity should take to make a complete movement cycle. Defaults to 4 seconds (4000).
-                              
-                              &quot;startPos&quot;: 0
-                              // Optional. Position in the cycle that the movement should begin. Defaults in the middle at 0; PI/2 and -PI/2 will put you at the extremes.
-                            }
-                        */
-                        /*global platypus */
+                         * This component is attached to entities that should display text.
+                         *
+                         * @namespace platypus.components
+                         * @class RenderText
+                         * @uses platypus.Component
+                         * @since v0.11.9
+                         */
+                        /*global include, platypus */
                         (function () {
-                            &#x27;use strict&#x27;;
-                        
+                            &quot;use strict&quot;;
+                            
+                            var RenderContainer = include(&#x27;platypus.components.RenderContainer&#x27;),
+                                Text = include(&#x27;PIXI.Text&#x27;),
+                                alignments = {
+                                    horizontal: {
+                                        top: 0,
+                                        middle: 0.5,
+                                        center: 0.5,
+                                        bottom: 1
+                                    },
+                                    vertical: {
+                                        left: 0,
+                                        middle: 0.5,
+                                        center: 0.5,
+                                        right: 1
+                                    }
+                                };
+                            
                             return platypus.createComponentClass({
                                 
-                                id: &#x27;LogicPacingPlatform&#x27;,
+                                id: &#x27;RenderText&#x27;,
+                                
+                                properties: {
+                                    /**
+                                     * The offset of the x-axis position of the text from the entity&#x27;s x-axis position.
+                                     *
+                                     * @property offsetX
+                                     * @type Number
+                                     * @default 0
+                                     */
+                                    offsetX: 0,
+                        
+                                    /**
+                                     * The offset of the y-axis position of the text from the entity&#x27;s y-axis position.
+                                     *
+                                     * @property offsetY
+                                     * @type Number
+                                     * @default 0
+                                     */
+                                    offsetY: 0,
+                        
+                                    /**
+                                     * The z-index relative to other render components on the entity.
+                                     *
+                                     * @property offsetZ
+                                     * @type Number
+                                     * @default 0
+                                     */
+                                    offsetZ: 0,
+                        
+                                    /**
+                                     * This is the text to display.
+                                     *
+                                     * @property text
+                                     * @type String
+                                     * @default &quot;&quot;
+                                     */
+                                    text: &quot;&quot;,
+                                    
+                                    /**
+                                     * This is the text style to use. Use the following specification to define the style:
+                                     *
+                                     *     {
+                                     *         &quot;fontSize&quot;: &quot;64px&quot;,
+                                     *         &quot;fill&quot;: &quot;#ffffff&quot;,
+                                     *         &quot;align&quot;: &quot;center&quot;, // Can be &#x60;left&#x60;, &#x60;center&#x60;, or &#x60;right&#x60;
+                                     *         &quot;fontFamily&quot;: &quot;arial&quot;, // Any CSS font that has been loaded by the browser
+                                     *         &quot;verticalAlign&quot;: &quot;bottom&quot; // Can be &#x60;top&#x60;, &#x60;center&#x60;, or &#x60;bottom&#x60;
+                                     *     }
+                                     *
+                                     * See [PIXI.TextStyle documentation](http://pixijs.download/dev/docs/PIXI.TextStyle.html) for a full list of available options.
+                                     *
+                                     * @property style
+                                     * @type Object
+                                     * @default null
+                                     */
+                                    style: null
+                                },
                                 
                                 initialize: function (definition) {
-                                    this.ang      = this.owner.angle      || definition.angle     || 0; //PI/2 makes it go down first
-                                    this.dist     = this.owner.distance || definition.distance || 128; //Distance in pixels
-                                    this.dX       = this.dist * Math.cos(this.ang);
-                                    this.dY       = this.dist * Math.sin(this.ang);
-                                    this.period   = this.owner.period    || definition.period     || 4000;
-                                    this.time     = 0;
-                                    this.startPos = this.owner.startPos || definition.startPos || 0; //PI/2 and -PI/2 will put you at the extremes
-                                    this.offset   = 0;
-                                    this.originX  = this.owner.x;
-                                    this.originY  = this.owner.y;
-                                },
+                                    this.sprite = new Text(this.text, this.style);
+                                    
+                                    this.sprite.anchor.x = alignments.horizontal[this.style.align] || 0.5;
+                                    this.sprite.anchor.y = alignments.vertical[this.style.verticalAlign] || 1;
+                                    this.sprite.x = this.offsetX;
+                                    this.sprite.y = this.offsetY;
+                                    this.sprite.z = this.offsetZ;
                         
-                                events: {// These are messages that this component listens for
-                                    &quot;handle-logic&quot;: function (update) {
-                                        var period = this.period,
-                                            delta = update.delta;
-                                        
-                                        this.time += delta;
-                                        if (this.time &gt; period) {
-                                            this.time = this.time % period;
-                                        }
-                                        this.offset = (this.time / period) * (2 * Math.PI);
-                                        
-                                        this.owner.x = this.originX + Math.sin(this.offset + this.startPos) * this.dX;
-                                        this.owner.y = this.originY + Math.sin(this.offset + this.startPos) * this.dY;
+                                    if (!this.owner.container) {
+                                        this.owner.addComponent(new RenderContainer(this.owner, definition, this.addToContainer.bind(this)));
+                                    } else {
+                                        this.addToContainer();
+                                    }
+                                },
+                                
+                                events: {
+                                    /**
+                                     * Sets the copy of the text.
+                                     *
+                                     * @method &#x27;set-text&#x27;
+                                     * @param text {String} The text to insert.
+                                     */
+                                    &quot;set-text&quot;: function (text) {
+                                        this.sprite.text = text;
+                                    }
+                                },
+                                
+                                methods: {
+                                    addToContainer: function () {
+                                        var container = this.owner.container;
+                        
+                                        container.addChild(this.sprite);
+                                        container.reorder = true;
+                                    },
+                                    
+                                    destroy: function () {
+                                        this.owner.container.removeChild(this.sprite);
+                                        this.sprite.destroy();
+                                        this.sprite = null;
                                     }
                                 }
                             });

@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.11.9 API Documentation : platypus.components.Counter</title>
+	<title>platypus v0.11.9 API Documentation : platypus.components.RenderText</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -149,7 +149,7 @@
                 </div>            <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>platypus.components.Counter Class</h1>
+                        <h1>platypus.components.RenderText Class</h1>
                         <div class="box meta">
                                 <div class="uses">
                                     Uses
@@ -160,16 +160,17 @@
                         
                         
                                 <div class="foundat">
-                                    Defined in: <a href="../files/src_components_Counter.js.html#l1"><code>platypus.components.Counter:1</code></a>
+                                    Defined in: <a href="../files/src_components_RenderText.js.html#l1"><code>platypus.components.RenderText:1</code></a>
                                 </div>
                         
                                     Module: <a href="../modules/platypus.html">platypus</a>
                         
+                                <p>Available since v0.11.9</p>
                         </div>
                         
                         
                         <div class="box intro">
-                            <p>A simple component that keeps count of something and sends messages each time the count changes. Can also have a total. When it does it will display 'count / total'.</p>
+                            <p>This component is attached to entities that should display text.</p>
                         
                         </div>
                         
@@ -180,7 +181,6 @@
                         
                                     <li class="api-class-tab methods"><a href="#methods">Methods</a></li>
                                     <li class="api-class-tab properties"><a href="#properties">Properties</a></li>
-                                    <li class="api-class-tab events"><a href="#events">Events</a></li>
                             </ul>
                         
                             <div>
@@ -192,19 +192,7 @@
                         
                                             <ul class="index-list methods">
                                                     <li class="index-item method">
-                                                        <a href="#method_&#x27;change-count&#x27;">&#x27;change-count&#x27;</a>
-                        
-                                                    </li>
-                                                    <li class="index-item method">
-                                                        <a href="#method_&#x27;change-total&#x27;">&#x27;change-total&#x27;</a>
-                        
-                                                    </li>
-                                                    <li class="index-item method">
-                                                        <a href="#method_&#x27;handle-logic&#x27;">&#x27;handle-logic&#x27;</a>
-                        
-                                                    </li>
-                                                    <li class="index-item method">
-                                                        <a href="#method_&#x27;increment-count&#x27;">&#x27;increment-count&#x27;</a>
+                                                        <a href="#method_&#x27;set-text&#x27;">&#x27;set-text&#x27;</a>
                         
                                                     </li>
                                                     <li class="index-item method private inherited">
@@ -255,35 +243,41 @@
                         
                                             <ul class="index-list properties">
                                                     <li class="index-item property">
-                                                        <a href="#property_total">total</a>
+                                                        <a href="#property_offsetX">offsetX</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_offsetY">offsetY</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_offsetZ">offsetZ</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_style">style</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_text">text</a>
                         
                                                     </li>
                                             </ul>
                                         </div>
                         
                         
-                                        <div class="index-section events">
-                                            <h3>Events</h3>
-                        
-                                            <ul class="index-list events">
-                                                    <li class="index-item event">
-                                                        <a href="#event_&#x27;update-content&#x27;">&#x27;update-content&#x27;</a>
-                        
-                                                    </li>
-                                            </ul>
-                                        </div>
                                 </div>
                         
                                     <div id="methods" class="api-class-tabpanel">
                                         <h2 class="off-left">Methods</h2>
                         
-                                            <div id="method_&#x27;change-count&#x27;" class="method item">
-                                                <h3 class="name"><code>&#x27;change-count&#x27;</code></h3>
+                                            <div id="method_&#x27;set-text&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;set-text&#x27;</code></h3>
                                             
                                                     <div class="args">
                                                         <span class="paren">(</span><ul class="args-list inline commas">
                                                             <li class="arg">
-                                                                    <code>data.count</code>
+                                                                    <code>text</code>
                                                             </li>
                                                         </ul><span class="paren">)</span>
                                                     </div>
@@ -298,7 +292,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Counter.js.html#l85"><code>&#x27;change-count&#x27;:85</code></a>
+                                                    <a href="../files/src_components_RenderText.js.html#l108"><code>&#x27;set-text&#x27;:108</code></a>
                                                     </p>
                                             
                                             
@@ -306,7 +300,7 @@
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>Changes the count to the given value.</p>
+                                                    <p>Sets the copy of the text.</p>
                                             
                                                 </div>
                                             
@@ -315,131 +309,18 @@
                                             
                                                         <ul class="params-list">
                                                             <li class="param">
-                                                                    <code class="param-name">data.count</code>
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                                                    <code class="param-name">text</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
                                             
                                             
                                                                 <div class="param-description">
-                                                                    <p>The new count value.</p>
+                                                                    <p>The text to insert.</p>
                                             
                                                                 </div>
                                             
                                                             </li>
                                                         </ul>
                                                     </div>
-                                            
-                                            
-                                            </div>
-                                            <div id="method_&#x27;change-total&#x27;" class="method item">
-                                                <h3 class="name"><code>&#x27;change-total&#x27;</code></h3>
-                                            
-                                                    <div class="args">
-                                                        <span class="paren">(</span><ul class="args-list inline commas">
-                                                            <li class="arg">
-                                                                    <code>data.total</code>
-                                                            </li>
-                                                        </ul><span class="paren">)</span>
-                                                    </div>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/src_components_Counter.js.html#l75"><code>&#x27;change-total&#x27;:75</code></a>
-                                                    </p>
-                                            
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>Changes the total to the given value.</p>
-                                            
-                                                </div>
-                                            
-                                                    <div class="params">
-                                                        <h4>Parameters:</h4>
-                                            
-                                                        <ul class="params-list">
-                                                            <li class="param">
-                                                                    <code class="param-name">data.total</code>
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <p>The new total value.</p>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                            
-                                            
-                                            </div>
-                                            <div id="method_&#x27;handle-logic&#x27;" class="method item">
-                                                <h3 class="name"><code>&#x27;handle-logic&#x27;</code></h3>
-                                            
-                                                    <span class="paren">()</span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/src_components_Counter.js.html#l39"><code>&#x27;handle-logic&#x27;:39</code></a>
-                                                    </p>
-                                            
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>Each step, this component detects whether the count has changed and triggers an 'update-content' event if so.</p>
-                                            
-                                                </div>
-                                            
-                                            
-                                            
-                                            </div>
-                                            <div id="method_&#x27;increment-count&#x27;" class="method item">
-                                                <h3 class="name"><code>&#x27;increment-count&#x27;</code></h3>
-                                            
-                                                    <span class="paren">()</span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/src_components_Counter.js.html#l95"><code>&#x27;increment-count&#x27;:95</code></a>
-                                                    </p>
-                                            
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>Increments the count by 1.</p>
-                                            
-                                                </div>
-                                            
                                             
                                             
                                             </div>
@@ -1020,8 +901,8 @@
                                     <div id="properties" class="api-class-tabpanel">
                                         <h2 class="off-left">Properties</h2>
                         
-                                            <div id="property_total" class="property item">
-                                                <h3 class="name"><code>total</code></h3>
+                                            <div id="property_offsetX" class="property item">
+                                                <h3 class="name"><code>offsetX</code></h3>
                                                 <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
                                             
                                             
@@ -1031,14 +912,14 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Counter.js.html#l19"><code>total:19</code></a>
+                                                    <a href="../files/src_components_RenderText.js.html#l35"><code>offsetX:35</code></a>
                                                     </p>
                                             
                                             
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>A total the counter is incrementing toward.</p>
+                                                    <p>The offset of the x-axis position of the text from the entity's x-axis position.</p>
                                             
                                                 </div>
                                             
@@ -1046,15 +927,9 @@
                                             
                                             
                                             </div>
-                                    </div>
-                        
-                        
-                                    <div id="events" class="api-class-tabpanel">
-                                        <h2 class="off-left">Events</h2>
-                        
-                                            <div id="event_&#x27;update-content&#x27;" class="events item">
-                                                <h3 class="name"><code>&#x27;update-content&#x27;</code></h3>
-                                                <span class="type"></span>
+                                            <div id="property_offsetY" class="property item">
+                                                <h3 class="name"><code>offsetY</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
                                             
                                             
                                             
@@ -1063,38 +938,111 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Counter.js.html#l65"><code>&#x27;update-content&#x27;:65</code></a>
+                                                    <a href="../files/src_components_RenderText.js.html#l44"><code>offsetY:44</code></a>
                                                     </p>
                                             
                                             
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>A call used to notify other components that the count or total has changed.</p>
+                                                    <p>The offset of the y-axis position of the text from the entity's y-axis position.</p>
                                             
                                                 </div>
                                             
-                                                    <div class="params">
-                                                        <h4>Event Payload:</h4>
-                                            
-                                                        <ul class="params-list">
-                                                            <li class="param">
-                                                                    <code class="param-name">update.text</code>
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                                                    <p><strong>Default:</strong> 0</p>
                                             
                                             
-                                                                <div class="param-description">
-                                                                    <p>String describing the current count.</p>
+                                            </div>
+                                            <div id="property_offsetZ" class="property item">
+                                                <h3 class="name"><code>offsetZ</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
                                             
-                                                                </div>
                                             
-                                                            </li>
-                                                        </ul>
-                                                    </div>
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_RenderText.js.html#l53"><code>offsetZ:53</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The z-index relative to other render components on the entity.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> 0</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_style" class="property item">
+                                                <h3 class="name"><code>style</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_RenderText.js.html#l71"><code>style:71</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This is the text style to use. Use the following specification to define the style:</p>
+                                            <pre class="code prettyprint"><code>{
+                                                "fontSize": "64px",
+                                                "fill": "#ffffff",
+                                                "align": "center", // Can be <code>left</code>, <code>center</code>, or <code>right</code>
+                                                "fontFamily": "arial", // Any CSS font that has been loaded by the browser
+                                                "verticalAlign": "bottom" // Can be <code>top</code>, <code>center</code>, or <code>bottom</code>
+                                            }
+                                            </code></pre>
+                                            <p>See <a href="http://pixijs.download/dev/docs/PIXI.TextStyle.html">PIXI.TextStyle documentation</a> for a full list of available options.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> null</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_text" class="property item">
+                                                <h3 class="name"><code>text</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_RenderText.js.html#l62"><code>text:62</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This is the text to display.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> &quot;&quot;</p>
                                             
                                             
                                             </div>
                                     </div>
+                        
+                        
                             </div>
                         </div>
                     </div>
