@@ -217,10 +217,10 @@
             skewY: 0,
 
             /**
-             * Optional. The tint applied to the sprite. Defaults to no tint.
+             * Optional. The tint applied to the sprite. Tint may be specified by number or text. For example, to give the sprite a red tint, set to 0xff0000 or "#ff0000". Tint will be stored as a number even when set using text. Defaults to no tint.
              *
              * @property tint
-             * @type Number
+             * @type Number|String
              * @default null
              */
             tint: null,
