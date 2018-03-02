@@ -40,22 +40,33 @@
         },
 
         publicProperties: {
-
             /**
-             * This is the container holding all children's disply objects for this layer. It's an available proeprty on the layer entity.
+             * This is the container holding all children's disply objects for this layer. It's an available property on the layer entity.
              *
              * @property worldContainer
              * @type PIXI.Container
              * @default null
              * @since 0.11.0
              */
-            worldContainer: null
+            worldContainer: null,
+
+            /**
+             * This is a read-only list of the world container and subcontainers for entities that should be rendered together.
+             *
+             * @property renderGroups
+             * @type Array
+             * @default null
+             * @since 0.11.10
+             */
         },
 
         initialize: function () {
-            var definition = null;
+            var definition = null,
+                renderGroups = this.owner.renderGroups = this.renderGroups = Array.setUp();
 
             this.worldContainer = this.worldContainer || new Container();
+            this.worldContainer.name = '';
+            renderGroups.push(this.worldContainer);
 
             if (this.interactive) {
                 definition = Data.setUp(
@@ -70,7 +81,8 @@
 
             this.renderMessage = Data.setUp(
                 'delta', 0,
-                'container', this.worldContainer
+                'container', this.worldContainer,
+                'renderGroups', renderGroups
             );
         },
 
@@ -87,9 +99,11 @@
                  * @event 'render-world'
                  * @param data {Object}
                  * @param data.world {PIXI.Container} Contains entities to be rendered.
+                 * @param data.renderGroups {Array of PIXI.Container} Containers to categorize display of groups of entities.
                  */
                 this.owner.triggerEvent('render-world', {
-                    world: this.worldContainer
+                    world: this.worldContainer,
+                    renderGroups: this.renderGroups
                 });
 
                 /**
@@ -114,6 +128,7 @@
                  * @param data {Object}
                  * @param data.delta {Number} The delta time for this tick.
                  * @param data.container {PIXI.Container} The display Container the entities display objects should be added to.
+                 * @param data.renderGroups {Array of PIXI.Container} Containers to categorize display of groups of entities.
                  */
                 entity.triggerEvent('handle-render-load', this.renderMessage);
             },
@@ -173,7 +188,9 @@
 
                 return function (tick) {
                     var message = this.renderMessage,
-                        worldContainer = this.worldContainer;
+                        renderGroup = null,
+                        renderGroups = this.renderGroups,
+                        i = renderGroups.length;
 
                     message.delta = tick.delta;
 
@@ -192,13 +209,17 @@
                          * @param data {Object}
                          * @param data.delta {Number} The delta time for this tick.
                          * @param data.container {PIXI.Container} The display Container the entities display objects should be added to.
+                         * @param data.renderGroups {Array of PIXI.Container} Containers to categorize display of groups of entities.
                          */
                         this.owner.triggerEventOnChildren('handle-render', message);
                     }
 
-                    if (worldContainer && worldContainer.reorder) {
-                        worldContainer.reorder = false;
-                        worldContainer.children.sort(sort);
+                    while (i--) {
+                        renderGroup = renderGroups[i];
+                        if (renderGroup.reorder) {
+                            renderGroup.reorder = false;
+                            renderGroup.children.sort(sort);
+                        }
                     }
                 };
             }())
@@ -206,6 +227,8 @@
         methods: {
             destroy: function () {
                 this.worldContainer = null;
+                this.renderGroups.recycle();
+                this.renderGroups = null;
                 this.renderMessage.recycle();
             }
         }

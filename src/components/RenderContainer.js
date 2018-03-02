@@ -172,6 +172,16 @@
             dragMode: false,
 
             /**
+             * Determines the container this entity should use for rendering. Defaults to the top-most layer.
+             *
+             * @property renderGroup
+             * @type String
+             * @default ""
+             * @since 0.11.10
+             */
+            renderGroup: '',
+
+            /**
              * Optional. The rotation of the sprite in degrees. All sprites on the same entity are rotated the same amount unless they ignore the rotation value by setting 'rotate' to false.
              *
              * @property rotation
@@ -258,7 +268,9 @@
                 definition = null,
                 initialTint = this.tint;
 
+            this.rootContainer = null;
             this.parentContainer = null;
+            this.renderGroups = null;
             this.wasVisible = this.visible;
             this.lastX = this.owner.x;
             this.lastY = this.owner.y;
@@ -314,7 +326,54 @@
                     }.bind(this)
                 });
             }
-            
+
+            this.storedRenderGroup = this.renderGroup;
+            this._renderGroup = null;
+            Object.defineProperty(this.owner, 'renderGroup', {
+                get: function () {
+                    return this._renderGroup;
+                }.bind(this),
+                set: function (value) {
+                    var groups = this.renderGroups,
+                        i = groups.length,
+                        container = null,
+                        mask = null;
+
+                    if (value === this._renderGroup) {
+                        return;
+                    }
+
+                    this._renderGroup = value;
+
+                    if (this.mask) {
+                        mask = this.mask;
+                        this.setMask();
+                    }
+
+                    while (i--) {
+                        if (groups[i].name === value) {
+                            groups[i].addChild(this.container);
+                            groups[i].reorder = true;
+                            if (mask) {
+                                this.setMask(mask);
+                            }
+                            return;
+                        }
+                    }
+
+                    container = new Container();
+                    container.name = value;
+                    container.z = this.owner.z;
+                    groups.push(container);
+                    this.rootContainer.addChild(container);
+                    this.rootContainer.reorder = true;
+                    container.addChild(this.container);
+                    if (mask) {
+                        this.setMask(mask);
+                    }
+                }.bind(this)
+            });
+        
             if (initialTint !== null) {
                 this.tint = initialTint; // feed initial tint through setter.
             }
@@ -379,8 +438,8 @@
              * @param handlerData.container {PIXI.Container} The parent container.
              */
             "handle-render-load": function (handlerData) {
-                if (!this.parentContainer && handlerData && handlerData.container) {
-                    this.addStage(handlerData.container);
+                if (!this.rootContainer && handlerData && handlerData.container) {
+                    this.addStage(handlerData.container, handlerData.renderGroups);
                     this.updateSprite(true); // Initial set up in case position, etc is needed prior to the first "render" event.
                 }
             },
@@ -395,8 +454,8 @@
             "handle-render": function (renderData) {
                 if (!this.container) { // If this component's removal is pending
                     return;
-                } else if (!this.parentContainer && renderData && renderData.container) {
-                    this.addStage(renderData.container);
+                } else if (!this.rootContainer && renderData && renderData.container) {
+                    this.addStage(renderData.container, renderData.renderGroups);
                 }
 
                 this.updateSprite(true);
@@ -432,10 +491,11 @@
         },
         
         methods: {
-            addStage: function (stage) {
+            addStage: function (stage, renderGroups) {
                 if (stage) {
-                    this.parentContainer = stage;
-                    this.parentContainer.addChild(this.container);
+                    this.rootContainer = stage;
+                    this.renderGroups = renderGroups;
+                    this.renderGroup = this.storedRenderGroup;
 
                     //Handle mask
                     if (this.mask) {
