@@ -303,13 +303,20 @@
                             return;
                         }
 
-                        if (!filters) {
-                            filters = this.container.filters = Array.setUp(new ColorMatrixFilter());
+                        if (color === null) {
+                            if (filters) {
+                                delete this.container.filters;
+                            }
+                        } else {
+                            if (!filters) {
+                                filters = this.container.filters = Array.setUp(new ColorMatrixFilter());
+                            }
+                            matrix = filters[0].matrix;
+                            matrix[0] = (color & 0xff0000) / 0xff0000; // Red
+                            matrix[6] = (color & 0xff00) / 0xff00; // Green
+                            matrix[12] = (color & 0xff) / 0xff; // Blue
                         }
-                        matrix = filters[0].matrix;
-                        matrix[0] = (color & 0xff0000) / 0xff0000; // Red
-                        matrix[6] = (color & 0xff00) / 0xff00; // Green
-                        matrix[12] = (color & 0xff) / 0xff; // Blue
+
                         this._tint = color;
                     }.bind(this)
                 });
