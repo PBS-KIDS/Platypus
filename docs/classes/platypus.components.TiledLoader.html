@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.11.7 API Documentation : platypus.components.TiledLoader</title>
+	<title>platypus v0.11.9 API Documentation : platypus.components.TiledLoader</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.11.7</em>
+            <em>API Documentation for: 0.11.9</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -72,6 +72,7 @@
                                 <li><a href="../classes/platypus.components.LogicDestroyMe.html">platypus.components.LogicDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.LogicDirectionalMovement.html">platypus.components.LogicDirectionalMovement</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
+                                <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
                                 <li><a href="../classes/platypus.components.Motion.html">platypus.components.Motion</a></li>
                                 <li><a href="../classes/platypus.components.Mover.html">platypus.components.Mover</a></li>
@@ -91,6 +92,7 @@
                                 <li><a href="../classes/platypus.components.RenderProgress.html">platypus.components.RenderProgress</a></li>
                                 <li><a href="../classes/platypus.components.RenderSpine.html">platypus.components.RenderSpine</a></li>
                                 <li><a href="../classes/platypus.components.RenderSprite.html">platypus.components.RenderSprite</a></li>
+                                <li><a href="../classes/platypus.components.RenderText.html">platypus.components.RenderText</a></li>
                                 <li><a href="../classes/platypus.components.RenderTiles.html">platypus.components.RenderTiles</a></li>
                                 <li><a href="../classes/platypus.components.SceneChanger.html">platypus.components.SceneChanger</a></li>
                                 <li><a href="../classes/platypus.components.StateRender.html">platypus.components.StateRender</a></li>
@@ -288,9 +290,10 @@
                                                         <a href="#property_images">images</a>
                         
                                                     </li>
-                                                    <li class="index-item property">
+                                                    <li class="index-item property deprecated">
                                                         <a href="#property_imagesScale">imagesScale</a>
                         
+                                                            <span class="flag deprecated">deprecated</span>
                                                     </li>
                                                     <li class="index-item property">
                                                         <a href="#property_layerIncrement">layerIncrement</a>
@@ -371,7 +374,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l506"><code>&#x27;load-level&#x27;:506</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l509"><code>&#x27;load-level&#x27;:509</code></a>
                                                     </p>
                                             
                                             
@@ -460,7 +463,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l486"><code>&#x27;scene-loaded&#x27;:486</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l489"><code>&#x27;scene-loaded&#x27;:489</code></a>
                                                     </p>
                                             
                                             
@@ -703,7 +706,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l1105"><code>decodeLayer:1105</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l1150"><code>decodeLayer:1150</code></a>
                                                     </p>
                                             
                                             
@@ -1192,7 +1195,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l450"><code>entityPositionX:450</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l453"><code>entityPositionX:453</code></a>
                                                     </p>
                                             
                                             
@@ -1218,7 +1221,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l459"><code>entityPositionY:459</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l462"><code>entityPositionY:462</code></a>
                                                     </p>
                                             
                                             
@@ -1244,7 +1247,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l384"><code>images:384</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l386"><code>images:386</code></a>
                                                     </p>
                                             
                                             
@@ -1259,10 +1262,11 @@
                                             
                                             
                                             </div>
-                                            <div id="property_imagesScale" class="property item">
+                                            <div id="property_imagesScale" class="property item deprecated">
                                                 <h3 class="name"><code>imagesScale</code></h3>
                                                 <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
                                             
+                                                    <span class="flag deprecated" title="since v0.11.9">deprecated</span>
                                             
                                             
                                             
@@ -1270,9 +1274,10 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l441"><code>imagesScale:441</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l443"><code>imagesScale:443</code></a>
                                                     </p>
                                             
+                                                        <p>Deprecated: since v0.11.9</p>
                                             
                                                 </div>
                                             
@@ -1296,7 +1301,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l393"><code>layerIncrement:393</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l395"><code>layerIncrement:395</code></a>
                                                     </p>
                                             
                                             
@@ -1322,7 +1327,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l423"><code>level:423</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l425"><code>level:425</code></a>
                                                     </p>
                                             
                                             
@@ -1348,7 +1353,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l468"><code>manuallyLoad:468</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l471"><code>manuallyLoad:471</code></a>
                                                     </p>
                                             
                                             
@@ -1374,7 +1379,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l365"><code>offsetMap:365</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l367"><code>offsetMap:367</code></a>
                                                     </p>
                                             
                                             
@@ -1401,7 +1406,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l402"><code>separateTiles:402</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l404"><code>separateTiles:404</code></a>
                                                     </p>
                                             
                                             
@@ -1427,7 +1432,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l375"><code>showCollisionTiles:375</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l377"><code>showCollisionTiles:377</code></a>
                                                     </p>
                                             
                                             
@@ -1453,7 +1458,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l411"><code>spriteSheet:411</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l413"><code>spriteSheet:413</code></a>
                                                     </p>
                                             
                                             
@@ -1480,7 +1485,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l432"><code>unitsPerPixel:432</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l434"><code>unitsPerPixel:434</code></a>
                                                     </p>
                                             
                                             
@@ -1512,7 +1517,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l1082"><code>&#x27;level-loading-progress&#x27;:1082</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l1127"><code>&#x27;level-loading-progress&#x27;:1127</code></a>
                                                     </p>
                                             
                                             
