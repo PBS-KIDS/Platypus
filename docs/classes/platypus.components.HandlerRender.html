@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.11.9 API Documentation : platypus.components.HandlerRender</title>
+	<title>platypus v0.11.10 API Documentation : platypus.components.HandlerRender</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.11.9</em>
+            <em>API Documentation for: 0.11.10</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -263,6 +263,10 @@
                         
                                                     </li>
                                                     <li class="index-item property">
+                                                        <a href="#property_renderGroups">renderGroups</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
                                                         <a href="#property_worldContainer">worldContainer</a>
                         
                                                     </li>
@@ -326,7 +330,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_HandlerRender.js.html#l103"><code>&#x27;child-entity-added&#x27;:103</code></a>
+                                                    <a href="../files/src_components_HandlerRender.js.html#l117"><code>&#x27;child-entity-added&#x27;:117</code></a>
                                                     </p>
                                             
                                             
@@ -373,7 +377,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_HandlerRender.js.html#l78"><code>&#x27;load&#x27;:78</code></a>
+                                                    <a href="../files/src_components_HandlerRender.js.html#l90"><code>&#x27;load&#x27;:90</code></a>
                                                     </p>
                                             
                                             
@@ -409,7 +413,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_HandlerRender.js.html#l121"><code>&#x27;pause-render&#x27;:121</code></a>
+                                                    <a href="../files/src_components_HandlerRender.js.html#l136"><code>&#x27;pause-render&#x27;:136</code></a>
                                                     </p>
                                             
                                             
@@ -474,7 +478,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_HandlerRender.js.html#l163"><code>&#x27;tick&#x27;:163</code></a>
+                                                    <a href="../files/src_components_HandlerRender.js.html#l178"><code>&#x27;tick&#x27;:178</code></a>
                                                     </p>
                                             
                                             
@@ -521,7 +525,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_HandlerRender.js.html#l145"><code>&#x27;unpause-render&#x27;:145</code></a>
+                                                    <a href="../files/src_components_HandlerRender.js.html#l160"><code>&#x27;unpause-render&#x27;:160</code></a>
                                                     </p>
                                             
                                             
@@ -1149,6 +1153,33 @@
                                             
                                             
                                             </div>
+                                            <div id="property_renderGroups" class="property item">
+                                                <h3 class="name"><code>renderGroups</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_HandlerRender.js.html#l53"><code>renderGroups:53</code></a>
+                                                    </p>
+                                            
+                                            
+                                                        <p>Available since 0.11.10</p>
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This is a read-only list of the world container and subcontainers for entities that should be rendered together.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> null</p>
+                                            
+                                            
+                                            </div>
                                             <div id="property_worldContainer" class="property item">
                                                 <h3 class="name"><code>worldContainer</code></h3>
                                                 <span class="type">PIXI.Container</span>
@@ -1160,7 +1191,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_HandlerRender.js.html#l44"><code>worldContainer:44</code></a>
+                                                    <a href="../files/src_components_HandlerRender.js.html#l43"><code>worldContainer:43</code></a>
                                                     </p>
                                             
                                             
@@ -1168,7 +1199,7 @@
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>This is the container holding all children's disply objects for this layer. It's an available proeprty on the layer entity.</p>
+                                                    <p>This is the container holding all children's disply objects for this layer. It's an available property on the layer entity.</p>
                                             
                                                 </div>
                                             
@@ -1193,7 +1224,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_HandlerRender.js.html#l188"><code>&#x27;handle-render&#x27;:188</code></a>
+                                                    <a href="../files/src_components_HandlerRender.js.html#l205"><code>&#x27;handle-render&#x27;:205</code></a>
                                                     </p>
                                             
                                             
@@ -1238,6 +1269,16 @@
                                                                             </div>
                                             
                                                                         </li>
+                                                                        <li class="param">
+                                                                                <code class="param-name">renderGroups</code>
+                                                                                <span class="type">Array of PIXI.Container</span>
+                                            
+                                                                            <div class="param-description">
+                                                                                <p>Containers to categorize display of groups of entities.</p>
+                                            
+                                                                            </div>
+                                            
+                                                                        </li>
                                                                     </ul>
                                                             </li>
                                                         </ul>
@@ -1256,7 +1297,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_HandlerRender.js.html#l110"><code>&#x27;handle-render-load&#x27;:110</code></a>
+                                                    <a href="../files/src_components_HandlerRender.js.html#l124"><code>&#x27;handle-render-load&#x27;:124</code></a>
                                                     </p>
                                             
                                             
@@ -1301,6 +1342,16 @@
                                                                             </div>
                                             
                                                                         </li>
+                                                                        <li class="param">
+                                                                                <code class="param-name">renderGroups</code>
+                                                                                <span class="type">Array of PIXI.Container</span>
+                                            
+                                                                            <div class="param-description">
+                                                                                <p>Containers to categorize display of groups of entities.</p>
+                                            
+                                                                            </div>
+                                            
+                                                                        </li>
                                                                     </ul>
                                                             </li>
                                                         </ul>
@@ -1319,7 +1370,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_HandlerRender.js.html#l95"><code>&#x27;input-on&#x27;:95</code></a>
+                                                    <a href="../files/src_components_HandlerRender.js.html#l109"><code>&#x27;input-on&#x27;:109</code></a>
                                                     </p>
                                             
                                             
@@ -1344,7 +1395,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_HandlerRender.js.html#l135"><code>&#x27;render-paused&#x27;:135</code></a>
+                                                    <a href="../files/src_components_HandlerRender.js.html#l150"><code>&#x27;render-paused&#x27;:150</code></a>
                                                     </p>
                                             
                                             
@@ -1370,7 +1421,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_HandlerRender.js.html#l153"><code>&#x27;render-unpaused&#x27;:153</code></a>
+                                                    <a href="../files/src_components_HandlerRender.js.html#l168"><code>&#x27;render-unpaused&#x27;:168</code></a>
                                                     </p>
                                             
                                             
@@ -1396,7 +1447,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_HandlerRender.js.html#l84"><code>&#x27;render-world&#x27;:84</code></a>
+                                                    <a href="../files/src_components_HandlerRender.js.html#l96"><code>&#x27;render-world&#x27;:96</code></a>
                                                     </p>
                                             
                                             
@@ -1427,6 +1478,16 @@
                                             
                                                                             <div class="param-description">
                                                                                 <p>Contains entities to be rendered.</p>
+                                            
+                                                                            </div>
+                                            
+                                                                        </li>
+                                                                        <li class="param">
+                                                                                <code class="param-name">renderGroups</code>
+                                                                                <span class="type">Array of PIXI.Container</span>
+                                            
+                                                                            <div class="param-description">
+                                                                                <p>Containers to categorize display of groups of entities.</p>
                                             
                                                                             </div>
                                             

@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.11.9 API Documentation : src\components\HandlerRender.js</title>
+	<title>platypus v0.11.10 API Documentation : src\components\HandlerRender.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.11.9</em>
+            <em>API Documentation for: 0.11.10</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -198,22 +198,33 @@
                                 },
                         
                                 publicProperties: {
-                        
                                     /**
-                                     * This is the container holding all children&#x27;s disply objects for this layer. It&#x27;s an available proeprty on the layer entity.
+                                     * This is the container holding all children&#x27;s disply objects for this layer. It&#x27;s an available property on the layer entity.
                                      *
                                      * @property worldContainer
                                      * @type PIXI.Container
                                      * @default null
                                      * @since 0.11.0
                                      */
-                                    worldContainer: null
+                                    worldContainer: null,
+                        
+                                    /**
+                                     * This is a read-only list of the world container and subcontainers for entities that should be rendered together.
+                                     *
+                                     * @property renderGroups
+                                     * @type Array
+                                     * @default null
+                                     * @since 0.11.10
+                                     */
                                 },
                         
                                 initialize: function () {
-                                    var definition = null;
+                                    var definition = null,
+                                        renderGroups = this.owner.renderGroups = this.renderGroups = Array.setUp();
                         
                                     this.worldContainer = this.worldContainer || new Container();
+                                    this.worldContainer.name = &#x27;&#x27;;
+                                    renderGroups.push(this.worldContainer);
                         
                                     if (this.interactive) {
                                         definition = Data.setUp(
@@ -228,7 +239,8 @@
                         
                                     this.renderMessage = Data.setUp(
                                         &#x27;delta&#x27;, 0,
-                                        &#x27;container&#x27;, this.worldContainer
+                                        &#x27;container&#x27;, this.worldContainer,
+                                        &#x27;renderGroups&#x27;, renderGroups
                                     );
                                 },
                         
@@ -245,9 +257,11 @@
                                          * @event &#x27;render-world&#x27;
                                          * @param data {Object}
                                          * @param data.world {PIXI.Container} Contains entities to be rendered.
+                                         * @param data.renderGroups {Array of PIXI.Container} Containers to categorize display of groups of entities.
                                          */
                                         this.owner.triggerEvent(&#x27;render-world&#x27;, {
-                                            world: this.worldContainer
+                                            world: this.worldContainer,
+                                            renderGroups: this.renderGroups
                                         });
                         
                                         /**
@@ -272,6 +286,7 @@
                                          * @param data {Object}
                                          * @param data.delta {Number} The delta time for this tick.
                                          * @param data.container {PIXI.Container} The display Container the entities display objects should be added to.
+                                         * @param data.renderGroups {Array of PIXI.Container} Containers to categorize display of groups of entities.
                                          */
                                         entity.triggerEvent(&#x27;handle-render-load&#x27;, this.renderMessage);
                                     },
@@ -331,7 +346,9 @@
                         
                                         return function (tick) {
                                             var message = this.renderMessage,
-                                                worldContainer = this.worldContainer;
+                                                renderGroup = null,
+                                                renderGroups = this.renderGroups,
+                                                i = renderGroups.length;
                         
                                             message.delta = tick.delta;
                         
@@ -350,13 +367,17 @@
                                                  * @param data {Object}
                                                  * @param data.delta {Number} The delta time for this tick.
                                                  * @param data.container {PIXI.Container} The display Container the entities display objects should be added to.
+                                                 * @param data.renderGroups {Array of PIXI.Container} Containers to categorize display of groups of entities.
                                                  */
                                                 this.owner.triggerEventOnChildren(&#x27;handle-render&#x27;, message);
                                             }
                         
-                                            if (worldContainer &amp;&amp; worldContainer.reorder) {
-                                                worldContainer.reorder = false;
-                                                worldContainer.children.sort(sort);
+                                            while (i--) {
+                                                renderGroup = renderGroups[i];
+                                                if (renderGroup.reorder) {
+                                                    renderGroup.reorder = false;
+                                                    renderGroup.children.sort(sort);
+                                                }
                                             }
                                         };
                                     }())
@@ -364,6 +385,8 @@
                                 methods: {
                                     destroy: function () {
                                         this.worldContainer = null;
+                                        this.renderGroups.recycle();
+                                        this.renderGroups = null;
                                         this.renderMessage.recycle();
                                     }
                                 }

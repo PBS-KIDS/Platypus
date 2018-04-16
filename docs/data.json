@@ -1,7 +1,7 @@
 {
     "project": {
         "name": "platypus",
-        "version": "0.11.9",
+        "version": "0.11.10",
         "description": "Platypus Docs",
         "url": "https://github.com/PBS-KIDS/Platypus",
         "logo": "assets/platypus-title.png"
@@ -6187,8 +6187,8 @@
         },
         {
             "file": "src\\components\\HandlerRender.js",
-            "line": 44,
-            "description": "This is the container holding all children's disply objects for this layer. It's an available proeprty on the layer entity.",
+            "line": 43,
+            "description": "This is the container holding all children's disply objects for this layer. It's an available property on the layer entity.",
             "itemtype": "property",
             "name": "worldContainer",
             "type": "PIXI.Container",
@@ -6199,7 +6199,19 @@
         },
         {
             "file": "src\\components\\HandlerRender.js",
-            "line": 78,
+            "line": 53,
+            "description": "This is a read-only list of the world container and subcontainers for entities that should be rendered together.",
+            "itemtype": "property",
+            "name": "renderGroups",
+            "type": "Array",
+            "default": "null",
+            "since": "0.11.10",
+            "class": "platypus.components.HandlerRender",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\HandlerRender.js",
+            "line": 90,
             "description": "Once the entity is loaded, this component triggers \"render-world\" to notify other components about the entities' display container.",
             "itemtype": "method",
             "name": "'load'",
@@ -6208,7 +6220,7 @@
         },
         {
             "file": "src\\components\\HandlerRender.js",
-            "line": 84,
+            "line": 96,
             "description": "Once the entity is loaded, this component triggers \"render-world\" to notify other components about the entities' display container.",
             "itemtype": "event",
             "name": "'render-world'",
@@ -6222,6 +6234,11 @@
                             "name": "world",
                             "description": "Contains entities to be rendered.",
                             "type": "PIXI.Container"
+                        },
+                        {
+                            "name": "renderGroups",
+                            "description": "Containers to categorize display of groups of entities.",
+                            "type": "Array of PIXI.Container"
                         }
                     ]
                 }
@@ -6231,7 +6248,7 @@
         },
         {
             "file": "src\\components\\HandlerRender.js",
-            "line": 95,
+            "line": 109,
             "description": "This event is triggered once HandlerRender is ready to handle interactivity.",
             "itemtype": "event",
             "name": "'input-on'",
@@ -6240,7 +6257,7 @@
         },
         {
             "file": "src\\components\\HandlerRender.js",
-            "line": 103,
+            "line": 117,
             "description": "Called when a new entity has been added to the parent and should be considered for addition to the handler. Entities are sent a reference the Container that we're rendering to, so they can add their display objects to it and the delta from the lastest tick.",
             "itemtype": "method",
             "name": "'child-entity-added'",
@@ -6256,7 +6273,7 @@
         },
         {
             "file": "src\\components\\HandlerRender.js",
-            "line": 110,
+            "line": 124,
             "description": "Triggered on an entity added to the parent.",
             "itemtype": "event",
             "name": "'handle-render-load'",
@@ -6275,6 +6292,11 @@
                             "name": "container",
                             "description": "The display Container the entities display objects should be added to.",
                             "type": "PIXI.Container"
+                        },
+                        {
+                            "name": "renderGroups",
+                            "description": "Containers to categorize display of groups of entities.",
+                            "type": "Array of PIXI.Container"
                         }
                     ]
                 }
@@ -6284,7 +6306,7 @@
         },
         {
             "file": "src\\components\\HandlerRender.js",
-            "line": 121,
+            "line": 136,
             "description": "Pauses the children of this render Container. If a pause time is not provided. It remains paused until 'unpause-render' is called.",
             "itemtype": "method",
             "name": "'pause-render'",
@@ -6308,7 +6330,7 @@
         },
         {
             "file": "src\\components\\HandlerRender.js",
-            "line": 135,
+            "line": 150,
             "description": "Notifies children entities that rendering updates have been paused.",
             "itemtype": "event",
             "name": "'render-paused'",
@@ -6318,7 +6340,7 @@
         },
         {
             "file": "src\\components\\HandlerRender.js",
-            "line": 145,
+            "line": 160,
             "description": "Unpauses the children of this render Container.",
             "itemtype": "method",
             "name": "'unpause-render'",
@@ -6327,7 +6349,7 @@
         },
         {
             "file": "src\\components\\HandlerRender.js",
-            "line": 153,
+            "line": 168,
             "description": "Notifies children entities that rendering updates have been unpaused.",
             "itemtype": "event",
             "name": "'render-unpaused'",
@@ -6337,7 +6359,7 @@
         },
         {
             "file": "src\\components\\HandlerRender.js",
-            "line": 163,
+            "line": 178,
             "description": "Sends a 'handle-render' message to all the children in the Container. The children in the Container are also paused/unpaused if needed and sorted according to their z value.",
             "itemtype": "method",
             "name": "'tick'",
@@ -6353,7 +6375,7 @@
         },
         {
             "file": "src\\components\\HandlerRender.js",
-            "line": 188,
+            "line": 205,
             "description": "Triggered every tick on the children entities.",
             "itemtype": "event",
             "name": "'handle-render'",
@@ -6372,6 +6394,11 @@
                             "name": "container",
                             "description": "The display Container the entities display objects should be added to.",
                             "type": "PIXI.Container"
+                        },
+                        {
+                            "name": "renderGroups",
+                            "description": "Containers to categorize display of groups of entities.",
+                            "type": "Array of PIXI.Container"
                         }
                     ]
                 }
@@ -10356,6 +10383,18 @@
         {
             "file": "src\\components\\RenderContainer.js",
             "line": 174,
+            "description": "Determines the container this entity should use for rendering. Defaults to the top-most layer.",
+            "itemtype": "property",
+            "name": "renderGroup",
+            "type": "String",
+            "default": "\"\"",
+            "since": "0.11.10",
+            "class": "platypus.components.RenderContainer",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\RenderContainer.js",
+            "line": 184,
             "description": "Optional. The rotation of the sprite in degrees. All sprites on the same entity are rotated the same amount unless they ignore the rotation value by setting 'rotate' to false.",
             "itemtype": "property",
             "name": "rotation",
@@ -10366,7 +10405,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 183,
+            "line": 193,
             "description": "Optional. The X scaling factor for the image. Defaults to 1.",
             "itemtype": "property",
             "name": "scaleX",
@@ -10377,7 +10416,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 192,
+            "line": 202,
             "description": "Optional. The Y scaling factor for the image. Defaults to 1.",
             "itemtype": "property",
             "name": "scaleY",
@@ -10388,7 +10427,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 201,
+            "line": 211,
             "description": "Optional. The X skew factor of the sprite. Defaults to 0.",
             "itemtype": "property",
             "name": "skewX",
@@ -10399,7 +10438,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 210,
+            "line": 220,
             "description": "Optional. The Y skew factor for the image. Defaults to 0.",
             "itemtype": "property",
             "name": "skewY",
@@ -10410,7 +10449,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 219,
+            "line": 229,
             "description": "Optional. The tint applied to the sprite. Tint may be specified by number or text. For example, to give the sprite a red tint, set to 0xff0000 or \"#ff0000\". Tint will be stored as a number even when set using text. Defaults to no tint.",
             "itemtype": "property",
             "name": "tint",
@@ -10421,7 +10460,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 228,
+            "line": 238,
             "description": "Optional. The x position of the entity. Defaults to 0.",
             "itemtype": "property",
             "name": "x",
@@ -10432,7 +10471,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 237,
+            "line": 247,
             "description": "Optional. The y position of the entity. Defaults to 0.",
             "itemtype": "property",
             "name": "y",
@@ -10443,7 +10482,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 246,
+            "line": 256,
             "description": "Optional. The z position of the entity. Defaults to 0.",
             "itemtype": "property",
             "name": "z",
@@ -10454,7 +10493,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 339,
+            "line": 405,
             "description": "On receiving a \"cache\" event, this component triggers \"cache-sprite\" to cache its rendering into the background. This is an optimization for static images to reduce render calls.",
             "itemtype": "method",
             "name": "'cache'",
@@ -10463,7 +10502,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 349,
+            "line": 415,
             "description": "On receiving a \"cache\" event, this component triggers \"cache-sprite\" to cache its rendering into the background. This is an optimization for static images to reduce render calls.",
             "itemtype": "event",
             "name": "'cache-sprite'",
@@ -10479,7 +10518,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 361,
+            "line": 427,
             "description": "Listens for this event to determine whether this sprite is visible.",
             "itemtype": "method",
             "name": "'camera-update'",
@@ -10495,7 +10534,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 374,
+            "line": 440,
             "description": "A setup message used to add the sprite to the stage. On receiving this message, the component sets its parent container to the stage contained in the message if it doesn't already have one.",
             "itemtype": "method",
             "name": "'handle-render-load'",
@@ -10518,7 +10557,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 388,
+            "line": 454,
             "description": "The render update message updates the sprite. If a sprite doesn't have a container, it's removed.",
             "itemtype": "method",
             "name": "'handle-render'",
@@ -10541,7 +10580,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 405,
+            "line": 471,
             "description": "This event makes the sprite invisible.",
             "itemtype": "method",
             "name": "'hide-sprite'",
@@ -10550,7 +10589,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 414,
+            "line": 480,
             "description": "This event makes the sprite visible.",
             "itemtype": "method",
             "name": "'show-sprite'",
@@ -10559,7 +10598,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 423,
+            "line": 489,
             "description": "Defines the mask on the container/sprite. If no mask is specified, the mask is set to null.",
             "itemtype": "method",
             "name": "'set-mask'",
@@ -10575,7 +10614,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 445,
+            "line": 512,
             "description": "This event is triggered once the RenderSprite is ready to handle interactivity.",
             "itemtype": "event",
             "name": "'input-on'",
