@@ -317,7 +317,7 @@
 
                         if (color === null) {
                             if (filters) {
-                                delete this.container.filters;
+                                this.container.filters = null;
                             }
                         } else {
                             if (!filters) {
