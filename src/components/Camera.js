@@ -356,8 +356,8 @@
                         this.mouseWorldOrigin = Vector.setUp();
                     }
                     this.mouse = this.mouseVector;
-                    this.mouse.x = event.event.x;
-                    this.mouse.y = event.event.y;
+                    this.mouse.x = event.event.clientX;
+                    this.mouse.y = event.event.clientY;
                     this.mouseWorldOrigin.x = worldVP.x;
                     this.mouseWorldOrigin.y = worldVP.y;
                     event.pixiEvent.stopPropagation();
@@ -373,7 +373,7 @@
              **/
             "pressmove": function (event) {
                 if (this.mouse) {
-                    if (this.move(this.mouseWorldOrigin.x + (this.mouse.x - event.event.x) / this.world.transform.worldTransform.a, this.mouseWorldOrigin.y + (this.mouse.y - event.event.y) / this.world.transform.worldTransform.d)) {
+                    if (this.move(this.mouseWorldOrigin.x + (this.mouse.x - event.event.clientX) / this.world.transform.worldTransform.a, this.mouseWorldOrigin.y + (this.mouse.y - event.event.clientY) / this.world.transform.worldTransform.d)) {
                         this.viewportUpdate = true;
                         this.movedCamera = true;
                         event.pixiEvent.stopPropagation();
