@@ -1072,7 +1072,6 @@
                             properties.z = this.layerZ;
                         }
 
-                        properties.parent = this.owner;
                         entity = this.owner.addEntity(new Entity(entityDefinition, {
                             properties: properties
                         }, this.updateLoadingProgress.bind(this, progress)));

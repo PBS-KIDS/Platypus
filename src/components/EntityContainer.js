@@ -317,7 +317,6 @@
                             entities = this.entities,
                             i = entities.length;
 
-                        entity.parent = owner;
                         entity.triggerEvent('adopted', entity);
                         
                         while (i--) {
@@ -337,10 +336,12 @@
                     };
 
                 return function (newEntity, callback) {
-                    var entity = null;
+                    var entity = null,
+                        owner = this.owner;
                     
                     if (newEntity instanceof Entity) {
                         entity = newEntity;
+                        entity.parent = owner;
                         whenReady.call(this, callback, entity);
                     } else {
                         if (typeof newEntity === 'string') {
@@ -350,6 +351,7 @@
                         } else {
                             entity = new Entity(platypus.game.settings.entities[newEntity.type], newEntity, whenReady.bind(this, callback));
                         }
+                        entity.parent = owner;
                         this.owner.triggerEvent('entity-created', entity);
                     }
                     return entity;
