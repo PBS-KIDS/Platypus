@@ -411,7 +411,7 @@
                 this.updateSprite(false);
                 this.owner.cacheRender = this.container;
                 this.cache = true;
-                if (this.owner.parent && this.owner.parent.triggerEventOnChildren) {
+                if (this.owner.parent.triggerEventOnChildren) {
                     /**
                      * On receiving a "cache" event, this component triggers "cache-sprite" to cache its rendering into the background. This is an optimization for static images to reduce render calls.
                      *

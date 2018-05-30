@@ -85,11 +85,6 @@
                 linkId: this.linkId,
                 reciprocate: false
             };
-            
-            // In case linker is added after adoption
-            if (this.owner.parent) {
-                this.resolveAdoption();
-            }
         },
         
         events: {
@@ -97,11 +92,16 @@
             /**
              * Called when the object is added to its parent, on receiving this message, the component tries to link itself with objects with the same link id.
              *
-             * @method 'adopted'
-             * @param owner {platypus.Entity} The owner of this component.
+             * @method 'load'
              */
-            "adopted": function (owner) {
-                this.resolveAdoption(owner);
+            "load": function () {
+                var grandparent = this.owner.parent;
+
+                while (grandparent.parent) {
+                    grandparent = grandparent.parent;
+                }
+                this.linkMessage.reciprocate = true;
+                grandparent.triggerOnChildren('link-entity', this.linkMessage);
             },
             
             /**
@@ -139,15 +139,6 @@
         },
         
         methods: {
-            resolveAdoption: function () {
-                var grandparent = this.owner.parent;
-                while (grandparent.parent) {
-                    grandparent = grandparent.parent;
-                }
-                this.linkMessage.reciprocate = true;
-                grandparent.triggerOnChildren('link-entity', this.linkMessage);
-            },
-            
             destroy: function () {
                 var i = 0;
                 

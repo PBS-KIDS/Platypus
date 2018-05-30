@@ -125,9 +125,7 @@ This component creates an entity and propels it away. This is useful for casting
                         delete this.spawneeProperties.dy;
                     }
                     
-                    if (this.parent) {
-                        this.parent.addEntity(this.propertiesContainer);
-                    }
+                    this.parent.addEntity(this.propertiesContainer);
                 }
                 
                 state.set(this.stateName, this.firing);

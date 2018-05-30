@@ -125,15 +125,14 @@
                     }
                 }
                 
-                if (owner.parent) {
-                    /**
-                    * This message is triggered on the parent when the entity's components change.
-                    *
-                    * @event 'child-entity-updated'
-                    * @param entity {platypus.Entity} This is the entity itself.
-                    */
-                    owner.parent.triggerEvent('child-entity-updated', owner);
-                }
+                /**
+                * This message is triggered on the parent when the entity's components change.
+                *
+                * @event 'child-entity-updated'
+                * @param entity {platypus.Entity} This is the entity itself.
+                */
+                owner.parent.triggerEvent('child-entity-updated', owner);
+
                 /**
                 * This message is triggered on the entity itself when its components change.
                 *
