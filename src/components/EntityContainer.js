@@ -345,13 +345,12 @@
                         whenReady.call(this, callback, entity);
                     } else {
                         if (typeof newEntity === 'string') {
-                            entity = new Entity(platypus.game.settings.entities[newEntity], null, whenReady.bind(this, callback));
+                            entity = new Entity(platypus.game.settings.entities[newEntity], null, whenReady.bind(this, callback), owner);
                         } else if (newEntity.id) {
-                            entity = new Entity(newEntity, null, whenReady.bind(this, callback));
+                            entity = new Entity(newEntity, null, whenReady.bind(this, callback), owner);
                         } else {
-                            entity = new Entity(platypus.game.settings.entities[newEntity.type], newEntity, whenReady.bind(this, callback));
+                            entity = new Entity(platypus.game.settings.entities[newEntity.type], newEntity, whenReady.bind(this, callback), owner);
                         }
-                        entity.parent = owner;
                         this.owner.triggerEvent('entity-created', entity);
                     }
                     return entity;

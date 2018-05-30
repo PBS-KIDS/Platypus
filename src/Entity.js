@@ -32,6 +32,7 @@
  * @param [instanceDefinition] {Object} Specific instance definition including properties that override the base definition properties.
  * @param [instanceDefinition.properties] {Object} This is a list of key/value pairs that are added directly to the Entity as `entity.key = value`.
  * @param [callback] {Function} A function to run once all of the components on the Entity have been loaded. The first parameter is the entity itself.
+ * @param [parent] {Entity} Presets the parent of the entity so that the parent entity is available during component instantiation. Overrides `parent` in properties definitions.
  * @return {Entity} Returns the new entity made up of the provided components.
 **/
 
@@ -45,7 +46,7 @@ platypus.Entity = (function () {
             this.addComponent(new Component(this, componentDefinition, callback));
         },
         entityIds = {},
-        entity = function (definition, instanceDefinition, callback) {
+        entity = function (definition, instanceDefinition, callback, parent) {
             var i                    = 0,
                 componentDefinition  = null,
                 componentInits       = Array.setUp(),
@@ -88,6 +89,8 @@ platypus.Entity = (function () {
             this.state = StateMap.setUp(this.state); //starts with no state information. This expands with boolean value properties entered by various logic components.
             this.lastState = StateMap.setUp(); //This is used to determine if the state of the entity has changed.
             
+            this.parent = parent || null;
+
             this.trigger = this.triggerEvent = function (event, message) {
                 savedEvents.push(event);
                 savedMessages.push(message);
