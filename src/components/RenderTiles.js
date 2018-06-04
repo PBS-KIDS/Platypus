@@ -22,8 +22,9 @@
         Container         = include('PIXI.Container'),
         Graphics          = include('PIXI.Graphics'),
         ParticleContainer = Container, //Excluding ParticleContainer atm due to https://github.com/pixijs/pixi.js/issues/4008 -- include('PIXI.particles.ParticleContainer'),
-        Rectangle         = include('PIXI.Rectangle'),
-        RenderTexture     = include('PIXI.RenderTexture'),
+        Rectangle = include('PIXI.Rectangle'),
+        RenderContainer = include('platypus.components.RenderContainer'),
+        RenderTexture = include('PIXI.RenderTexture'),
         Sprite            = include('PIXI.Sprite'),
         clearRenderTexture = function (renderer, renderTexture, clearColor) { // This is pulled from https://github.com/pixijs/pixi.js/pull/3647 and should be in a future build of PIXI
             var baseTexture = renderTexture.baseTexture,
@@ -244,7 +245,7 @@
             left: 0
         },
 
-        initialize: function () {
+        initialize: function (definition) {
             var imgMap = this.imageMap;
 
             this.doMap            = null; //list of display objects that should overlay tile map.
@@ -293,94 +294,15 @@
             }
 
             this.ready = false;
+
+            if (!this.owner.container) {
+                this.owner.addComponent(new RenderContainer(this.owner, definition, this.addToContainer.bind(this)));
+            } else {
+                this.addToContainer();
+            }
         },
 
         events: {
-            /**
-             * This event is triggered before `handle-render` and provides the container that this component will require to display. In this case it compiles the array of tiles that make up the map and adds the tilesSprite displayObject to the stage.
-             *
-             * @method 'handle-render-load'
-             * @param data.container {PIXI.Container} Container to contain this tile-rendering.
-             */
-            "handle-render-load": function (resp) {
-                var extrusionMargin = 2,
-                    mapContainer = this.mapContainer,
-                    parentContainer = null,
-                    sprite = null,
-                    z = this.owner.z;
-
-                if (resp && resp.container) {
-                    this.ready = true;
-                    parentContainer = this.parentContainer = resp.container;
-
-                    if (parentContainer && !this.reorderedStage) {
-                        parentContainer.reorder = true;
-                        this.reorderedStage = true;
-                    }
-
-                    this.updateRegion(0);
-
-                    if (!this.tileCache) {
-                        this.render = doNothing;
-
-                        mapContainer.scale.x = this.scaleX;
-                        mapContainer.scale.y = this.scaleY;
-                        mapContainer.x = this.left;
-                        mapContainer.y = this.top;
-                        mapContainer.z = z;
-                        parentContainer.addChild(mapContainer);
-                    } else {
-                        this.mapContainerWrapper = new Container();
-                        this.mapContainerWrapper.addChild(mapContainer);
-
-                        if ((this.layerWidth <= this.cacheWidth) && (this.layerHeight <= this.cacheHeight)) { // We never need to recache.
-                            this.cacheAll   = true;
-
-                            this.render = this.renderCache;
-                            this.cacheTexture = RenderTexture.create(this.cacheWidth, this.cacheHeight);
-
-                            this.tilesSprite = sprite = new Sprite(this.cacheTexture);
-                            sprite.scale.x = this.scaleX;
-                            sprite.scale.y = this.scaleY;
-                            sprite.z = z;
-
-                            this.cache.setBounds(0, 0, this.tilesWidth - 1, this.tilesHeight - 1);
-                            this.update(this.cacheTexture, this.cache);
-                            parentContainer.addChild(sprite);
-                        } else if (this.cacheAll || ((this.layerWidth <= this.cacheWidth * 2) && (this.layerHeight <= this.cacheHeight)) || ((this.layerWidth <= this.cacheWidth) && (this.layerHeight <= this.cacheHeight * 2))) { // We cache everything across several textures creating a cache grid.
-                            this.cacheAll = true;
-
-                            // Make sure there's room for the one-pixel extrusion around edges of caches
-                            this.cacheWidth = Math.min(getPowerOfTwo(this.layerWidth + extrusionMargin), this.maximumBuffer);
-                            this.cacheHeight = Math.min(getPowerOfTwo(this.layerHeight + extrusionMargin), this.maximumBuffer);
-                            this.updateRegion(extrusionMargin);
-
-                            this.render = this.renderCacheWithExtrusion;
-                            this.cacheGrid = this.createGrid(parentContainer);
-
-                            this.updateCache = true;
-                        } else {
-                            this.render = this.renderCache;
-                            this.cacheAll = false;
-
-                            this.cacheTexture = RenderTexture.create(this.cacheWidth, this.cacheHeight);
-
-                            this.tilesSprite = new Sprite(this.cacheTexture);
-                            this.tilesSprite.scale.x = this.scaleX;
-                            this.tilesSprite.scale.y = this.scaleY;
-                            this.tilesSprite.z = z;
-
-                            // Set up copy buffer and circular pointers
-                            this.cacheTexture.alternate = RenderTexture.create(this.cacheWidth, this.cacheHeight);
-                            this.tilesSpriteCache = new Sprite(this.cacheTexture.alternate);
-
-                            this.cacheTexture.alternate.alternate = this.cacheTexture;
-                            parentContainer.addChild(this.tilesSprite);
-                        }
-                    }
-                }
-            },
-
             /**
              * If this component should cache entities, it checks peers for a "renderCache" display object and adds the display object to its list of objects to render on top of the tile set.
              *
@@ -482,6 +404,79 @@
         },
 
         methods: {
+            addToContainer: function () {
+                var container = this.container = this.owner.container,
+                    extrusionMargin = 2,
+                    mapContainer = this.mapContainer,
+                    sprite = null,
+                    z = this.owner.z;
+
+                container.reorder = true;
+
+                this.ready = true;
+
+                this.updateRegion(0);
+
+                if (!this.tileCache) {
+                    this.render = doNothing;
+
+                    mapContainer.scale.x = this.scaleX;
+                    mapContainer.scale.y = this.scaleY;
+                    mapContainer.x = this.left;
+                    mapContainer.y = this.top;
+                    mapContainer.z = z;
+                    container.addChild(mapContainer);
+                } else {
+                    this.mapContainerWrapper = new Container();
+                    this.mapContainerWrapper.addChild(mapContainer);
+
+                    if ((this.layerWidth <= this.cacheWidth) && (this.layerHeight <= this.cacheHeight)) { // We never need to recache.
+                        this.cacheAll   = true;
+
+                        this.render = this.renderCache;
+                        this.cacheTexture = RenderTexture.create(this.cacheWidth, this.cacheHeight);
+
+                        this.tilesSprite = sprite = new Sprite(this.cacheTexture);
+                        sprite.scale.x = this.scaleX;
+                        sprite.scale.y = this.scaleY;
+                        sprite.z = z;
+
+                        this.cache.setBounds(0, 0, this.tilesWidth - 1, this.tilesHeight - 1);
+                        this.update(this.cacheTexture, this.cache);
+                        container.addChild(sprite);
+                    } else if (this.cacheAll || ((this.layerWidth <= this.cacheWidth * 2) && (this.layerHeight <= this.cacheHeight)) || ((this.layerWidth <= this.cacheWidth) && (this.layerHeight <= this.cacheHeight * 2))) { // We cache everything across several textures creating a cache grid.
+                        this.cacheAll = true;
+
+                        // Make sure there's room for the one-pixel extrusion around edges of caches
+                        this.cacheWidth = Math.min(getPowerOfTwo(this.layerWidth + extrusionMargin), this.maximumBuffer);
+                        this.cacheHeight = Math.min(getPowerOfTwo(this.layerHeight + extrusionMargin), this.maximumBuffer);
+                        this.updateRegion(extrusionMargin);
+
+                        this.render = this.renderCacheWithExtrusion;
+                        this.cacheGrid = this.createGrid(container);
+
+                        this.updateCache = true;
+                    } else {
+                        this.render = this.renderCache;
+                        this.cacheAll = false;
+
+                        this.cacheTexture = RenderTexture.create(this.cacheWidth, this.cacheHeight);
+
+                        this.tilesSprite = new Sprite(this.cacheTexture);
+                        this.tilesSprite.scale.x = this.scaleX;
+                        this.tilesSprite.scale.y = this.scaleY;
+                        this.tilesSprite.z = z;
+
+                        // Set up copy buffer and circular pointers
+                        this.cacheTexture.alternate = RenderTexture.create(this.cacheWidth, this.cacheHeight);
+                        this.tilesSpriteCache = new Sprite(this.cacheTexture.alternate);
+
+                        this.cacheTexture.alternate.alternate = this.cacheTexture;
+                        container.addChild(this.tilesSprite);
+                    }
+                }
+            },
+
             cacheSprite: function (entity) {
                 var x = 0,
                     y = 0,
@@ -684,7 +679,7 @@
                 map[x][y] = tile;
             },
 
-            createGrid: function (parentContainer) {
+            createGrid: function (container) {
                 var ch = this.cacheHeight,
                     cw = this.cacheWidth,
                     cth = this.cacheTilesHeight,
@@ -722,7 +717,7 @@
                         ct.scale.x = sx;
                         ct.scale.y = sy;
                         col.push(ct);
-                        parentContainer.addChild(ct);
+                        container.addChild(ct);
 
                         z -= 0.000001; // so that tiles of large caches overlap consistently.
                     }
@@ -988,7 +983,7 @@
                     for (x = 0; x < grid.length; x++) {
                         for (y = 0; y < grid[x].length; y++) {
                             grid[x][y].texture.destroy(true);
-                            this.parentContainer.removeChild(grid[x][y]);
+                            this.container.removeChild(grid[x][y]);
                         }
                     }
                     grid.recycle(2);
@@ -998,9 +993,9 @@
                         this.tilesSprite.texture.alternate.destroy(true);
                     }
                     this.tilesSprite.texture.destroy(true);
-                    this.parentContainer.removeChild(this.tilesSprite);
+                    this.container.removeChild(this.tilesSprite);
                 } else {
-                    this.parentContainer.removeChild(this.mapContainer);
+                    this.container.removeChild(this.mapContainer);
                 }
                 
                 img.recycle(2);
@@ -1011,7 +1006,7 @@
                     }
                 }
                 this.tiles = null;
-                this.parentContainer = null;
+                this.container = null;
                 this.tilesSprite = null;
                 this.spriteSheet.recycleSpriteSheet();
                 
