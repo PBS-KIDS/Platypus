@@ -1121,7 +1121,10 @@
             },
 
             setupLayer: function (layer, layerCollides, combineRenderLayer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, images, progress) {
-                var entity = 'render-layer'; // default
+                var canCombine = false,
+                    entity = 'render-layer', // default
+                    entityDefinition = null,
+                    i = 0;
                 
                 // First determine which type of entity this layer should behave as:
                 if (layer.properties && layer.properties.entity) {
@@ -1144,7 +1147,24 @@
                     this.createLayer('collision-layer', layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, images, combineRenderLayer, progress);
                     return null;
                 } else {
-                    return this.createLayer(entity, layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, images, combineRenderLayer, progress);
+                    // Need to check whether the entity can be combined for optimization. This combining of tile layers might be a nice addition to the compilation tools so it's not happening here.
+                    entityDefinition = platypus.game.settings.entities[entity];
+                    if (entityDefinition) {
+                        i = entityDefinition.components.length;
+                        while (i--) {
+                            if (entityDefinition.components[i].type === "RenderTiles") {
+                                canCombine = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (canCombine) {
+                        return this.createLayer(entity, layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, images, combineRenderLayer, progress);
+                    } else {
+                        this.createLayer(entity, layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, images, combineRenderLayer, progress);
+                        return null;
+                    }
                 }
             },
             
