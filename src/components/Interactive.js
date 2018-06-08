@@ -38,14 +38,18 @@
              *         "height": 40
              *     }
              *
-             * A string can also be used to create more complex shapes via the PIXI graphics API like:
+             * Or:
              *
-             *     "hitArea": "r(10,20,40,40).dc(30,10,12)"
+             *     "hitArea": {
+             *         "x": 10,
+             *         "y": 10,
+             *         "radius": 40
+             *     }
              *
-             * Defaults to the container if not specified or, if simply set to `true`, a rectangle using the entity's dimensions.
+             * Defaults to the container if not specified.
              *
              * @property hitArea
-             * @type Object|String|Boolean
+             * @type Object
              * @default null
              */
             "hitArea": null,
