@@ -1075,6 +1075,9 @@
                                 properties.shape.type = 'circle';//'ellipse';
                                 properties.shape.width = properties.width * this.unitsPerPixel;
                                 properties.shape.height = properties.height * this.unitsPerPixel;
+
+                                // Tiled has ellipses, but Platypus only accepts circles. Setting a radius based on the average of width and height in case a non-circular ellipse is imported.
+                                properties.shape.radius = (properties.width + properties.height) * this.unitsPerPixel / 4;
                             } else if (entity.width && entity.height) {
                                 properties.shape = {};
                                 properties.shape.type = 'rectangle';
