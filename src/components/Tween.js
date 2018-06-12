@@ -1,40 +1,10 @@
 /**
-# COMPONENT **Tween**
-Tween takes a list of tween definitions and plays them as needed.
-
-## Dependencies
-- [[TweenJS]] - This component requires the CreateJS TweenJS module.
-
-## Messages
-
-### Listens for:
-- **[Messages specified in definition]** - Listens for messages and on receiving them, begins playing the corresponding tween.
-
-### Local Broadcasts:
-- **[Messages specified in definition]** - Broadcasts messages from a given tween definition.
-
-## JSON Definition
-    {
-      "type": "Tween",
-
-      "events": {
-      // Required. A key/value list of events and an array representing the tween they should trigger.
-
-            "begin-flying": [
-            // When "begin-flying" is triggered on this entity, the following tween begins. Tween definitions adhere to a similar structure outlined by the TweenJS documentation. Each milestone on the tween is an item in this array.
-
-                ["to", {
-                    "scaleY": 1,
-                    "y": 400
-                }, 500],
-                // If the definition is an array, the first parameter is the type of milestone, in this case "to", with all following parameters passed directly to the equivalent Tween function.
-                
-                ["call", "fly"],
-                // "call" milestones can take a function or a string. If it's a string, the string will be triggered as an event on the entity. In this case, the component will trigger "fly".
-            ]
-        }
-    }
-*/
+ * This component takes a list of tween definitions and plays them as needed. This component requires CreateJS Tween.
+ *
+ * @namespace platypus.components
+ * @class Tween
+ * @uses platypus.Component
+ */
 /* global createjs, platypus */
 (function () {
     'use strict';
@@ -147,64 +117,118 @@ Tween takes a list of tween definitions and plays them as needed.
              *          ],
              *
              *          "stop-flying": { // Alternatively, an object can be used to include properties. It must include a `tween` property with an array of tween values like above. It may include any properties that the Tween component accepts and overrides the component's properties.
-             *              "tween": ["to", {"y": 0}, 250],
+             *              "tween": [["to", {"y": 0}, 250]],
              *              "loop": 2 // This overrides this component's `loop` property value.
              *          }
              *      }
              */
 
             /**
-             * 
+             * Sets `useTicks` on the tween as defined here: https://www.createjs.com/docs/tweenjs/classes/Tween.html
+             *
+             * @property useTicks
+             * @type Boolean
+             * @default false
              */
             useTicks: false,
             
             /**
-             * 
+             * Sets `ignoreGlobalPause` on the tween as defined here: https://www.createjs.com/docs/tweenjs/classes/Tween.html
+             *
+             * @property ignoreGlobalPause
+             * @type Boolean
+             * @default false
              */
             ignoreGlobalPause: false,
             
             /**
-             * 
+             * Sets `loop` on the tween as defined here: https://www.createjs.com/docs/tweenjs/classes/Tween.html
+             *
+             * @property loop
+             * @type Number|Boolean
+             * @default 0
              */
             loop: 0,
             
             /**
-             * 
+             * Sets `reversed` on the tween as defined here: https://www.createjs.com/docs/tweenjs/classes/Tween.html
+             *
+             * @property reversed
+             * @type Boolean
+             * @default false
              */
             reversed: false,
             
             /**
-             * 
+             * Sets `bounce` on the tween as defined here: https://www.createjs.com/docs/tweenjs/classes/Tween.html
+             *
+             * @property bounce
+             * @type Boolean
+             * @default false
              */
             bounce: false,
             
             /**
-             * 
+             * Sets `timeScale` on the tween as defined here: https://www.createjs.com/docs/tweenjs/classes/Tween.html
+             *
+             * @property timeScale
+             * @type Number
+             * @default 1
              */
             timeScale: 1,
 
             /**
-             * 
+             * Sets `pluginData` on the tween as defined here: https://www.createjs.com/docs/tweenjs/classes/Tween.html
+             *
+             * @property pluginData
+             * @type Object
+             * @default null
              */
             pluginData: null,
             
             /**
-             * 
+             * Sets `paused` on the tween as defined here: https://www.createjs.com/docs/tweenjs/classes/Tween.html
+             *
+             * @property paused
+             * @type Boolean
+             * @default false
              */
             paused: false,
 
             /**
-             * 
+             * Sets `position` on the tween as defined here: https://www.createjs.com/docs/tweenjs/classes/Tween.html
+             *
+             * @property position
+             * @type Number
+             * @default false
              */
             position: 0,
             
             /**
-             * 
+             * Sets `onChange` on the tween as defined here: https://www.createjs.com/docs/tweenjs/classes/Tween.html. If a string is specified, it is triggered as an event on the entity.
+             *
+             * @property onChange
+             * @type Function|String
+             * @default ''
              */
             onChange: '',
             
+            /**
+             * Sets `onComplete` on the tween as defined here: https://www.createjs.com/docs/tweenjs/classes/Tween.html. If a string is specified, it is triggered as an event on the entity.
+             *
+             * @property onComplete
+             * @type Function|String
+             * @default ''
+             */
             onComplete: '',
             
+            /**
+             * Sets `override` on the tween as defined here: https://www.createjs.com/docs/tweenjs/classes/Tween.html
+             *
+             * @property override
+             * @type Boolean
+             * @default false
+             */
             override: false
         },
         
