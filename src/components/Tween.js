@@ -39,23 +39,39 @@ Tween takes a list of tween definitions and plays them as needed.
 (function () {
     'use strict';
 
-    var createTrigger = function (entity, event, message, debug) {
+    var empty = {},
+        createEvent = function (dictionary, key, defaults, entity) {
+            var event = getProperty(dictionary, key, defaults);
+
+            if (event) {
+                if (typeof event === 'string') {
+                    return createTrigger(entity, event);
+                } else {
+                    return event;
+                }
+            } else {
+                return null;
+            }
+        },
+        createTrigger = function (entity, event, message, debug) {
             return function () {
                 entity.trigger(event, message, debug);
             };
         },
-        createTween = function (definition) {
+        createTween = function (definition, componentProperties) {
             return function (values) {
                 var i  = 0,
-                    tweens = definition,
+                    simpleDef = Array.isArray(definition),
+                    tweens = simpleDef ? definition : definition.tween,
                     tweenDef = null,
                     arr = null,
                     arr2 = null,
-                    tween = createjs.Tween.get(this.owner);
+                    tween = createjs.Tween.get(this.owner, mergeProperties(simpleDef ? empty : definition, componentProperties, this.owner));
 
                 if (Array.isArray(values)) {
                     tweens = values;
                 } else if (!Array.isArray(tweens)) {
+                    platypus.debug.warn('Tween: no array was supplied for this tween.');
                     return;
                 }
 
@@ -89,10 +105,108 @@ Tween takes a list of tween definitions and plays them as needed.
                     }
                 }
             };
+        },
+        getProperty = function (dictionary, key, defaults) {
+            if (dictionary[key] !== 'undefined') {
+                return dictionary[key];
+            } else {
+                return defaults[key];
+            }
+        },
+        mergeProperties = function (overrides, defaults, entity) {
+            return {
+                useTicks: getProperty(overrides, 'useTicks', defaults),
+                ignoreGlobalPause: getProperty(overrides, 'ignoreGlobalPause', defaults),
+                loop: getProperty(overrides, 'loop', defaults),
+                reversed: getProperty(overrides, 'reversed', defaults),
+                bounce: getProperty(overrides, 'bounce', defaults),
+                timeScale: getProperty(overrides, 'timeScale', defaults),
+                pluginData: getProperty(overrides, 'pluginData', defaults),
+                paused: getProperty(overrides, 'paused', defaults),
+                position: getProperty(overrides, 'position', defaults),
+                onChange: createEvent(overrides, 'onChange', defaults, entity),
+                onComplete: createEvent(overrides, 'onComplete', defaults, entity),
+                override: getProperty(overrides, 'override', defaults)
+            };
         };
 
     return platypus.createComponentClass({
         id: 'Tween',
+
+        properties: {
+            /**
+             * Required. A key/value list of events and an array or object representing the tween they should trigger.
+             *
+             *      {
+             *          "begin-flying": [ // When "begin-flying" is triggered on this entity, the following tween begins. Tween definitions adhere to a similar structure outlined by the TweenJS documentation. Each milestone on the tween is an item in this array.
+             *              ["to", { // If the definition is an array, the first parameter is the type of milestone, in this case "to", with all following parameters passed directly to the equivalent Tween function.
+             *                  "scaleY": 1,
+             *                  "y": 400
+             *              }, 500],
+             *              ["call", "fly"], // "call" milestones can take a function or a string. If it's a string, the string will be triggered as an event on the entity. In this case, the component will trigger "fly".
+             *          ],
+             *
+             *          "stop-flying": { // Alternatively, an object can be used to include properties. It must include a `tween` property with an array of tween values like above. It may include any properties that the Tween component accepts and overrides the component's properties.
+             *              "tween": ["to", {"y": 0}, 250],
+             *              "loop": 2 // This overrides this component's `loop` property value.
+             *          }
+             *      }
+             */
+
+            /**
+             * 
+             */
+            useTicks: false,
+            
+            /**
+             * 
+             */
+            ignoreGlobalPause: false,
+            
+            /**
+             * 
+             */
+            loop: 0,
+            
+            /**
+             * 
+             */
+            reversed: false,
+            
+            /**
+             * 
+             */
+            bounce: false,
+            
+            /**
+             * 
+             */
+            timeScale: 1,
+
+            /**
+             * 
+             */
+            pluginData: null,
+            
+            /**
+             * 
+             */
+            paused: false,
+
+            /**
+             * 
+             */
+            position: 0,
+            
+            /**
+             * 
+             */
+            onChange: '',
+            
+            onComplete: '',
+            
+            override: false
+        },
         
         initialize: function (definition) {
             var event = '';
@@ -100,7 +214,7 @@ Tween takes a list of tween definitions and plays them as needed.
             if (definition.events) {
                 for (event in definition.events) {
                     if (definition.events.hasOwnProperty(event)) {
-                        this.addEventListener(event, createTween(definition.events[event]));
+                        this.addEventListener(event, createTween(definition.events[event], this));
                     }
                 }
             }
