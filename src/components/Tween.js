@@ -28,53 +28,52 @@
                 entity.trigger(event, message, debug);
             };
         },
-        createTween = function (definition, componentProperties) {
-            return function (values) {
-                var i  = 0,
-                    simpleDef = Array.isArray(definition),
-                    tweens = simpleDef ? definition : definition.tween,
-                    tweenDef = null,
-                    arr = null,
-                    arr2 = null,
-                    tween = createjs.Tween.get(this.owner, mergeProperties(simpleDef ? empty : definition, componentProperties, this.owner));
+        tween = function (definition, values) {
+            var i  = 0,
+                owner = this.owner,
+                simpleDef = Array.isArray(definition),
+                tweens = simpleDef ? definition : definition.tween,
+                tweenDef = null,
+                arr = null,
+                arr2 = null,
+                tween = createjs.Tween.get(owner, mergeProperties(simpleDef ? empty : definition, this, owner));
 
-                if (Array.isArray(values)) {
-                    tweens = values;
-                } else if (!Array.isArray(tweens)) {
-                    platypus.debug.warn('Tween: no array was supplied for this tween.');
-                    return;
-                }
+            if (Array.isArray(values)) {
+                tweens = values;
+            } else if (!Array.isArray(tweens)) {
+                platypus.debug.warn('Tween: no array was supplied for this tween.');
+                return;
+            }
 
-                for (i = 0; i < tweens.length; i++) {
-                    tweenDef = tweens[i];
-                    if (typeof tweenDef === 'string') {
-                        tween.call(createTrigger(this.owner, tweenDef));
-                    } else if (Array.isArray(tweenDef)) {
-                        if (tweenDef[0] === 'call' && typeof tweenDef[1] === 'string') {
-                            tween.call(createTrigger(this.owner, tweenDef[1]));
-                        } else {
-                            arr = tweenDef.greenSlice();
-                            if (arr.greenSplice(0) === 'to' && arr[2] && createjs.Ease[arr[2]]) {
-                                if (arr.length > 3) {
-                                    arr2 = arr.greenSlice();
-                                    arr2.greenSplice(0);
-                                    arr2.greenSplice(0);
-                                    arr[2] = createjs.Ease[arr2.greenSplice(0)].apply(null, arr2);
-                                    arr2.recycle();
-                                } else {
-                                    arr[2] = createjs.Ease[arr[2]];
-                                }
-                            }
-                            tween[tweenDef[0]].apply(tween, arr);
-                            arr.recycle();
-                        }
-                    } else if (tweenDef.method === 'call' && typeof tweenDef.params === 'string') {
-                        tween.call(createTrigger(this.owner, tweenDef.params));
+            for (i = 0; i < tweens.length; i++) {
+                tweenDef = tweens[i];
+                if (typeof tweenDef === 'string') {
+                    tween.call(createTrigger(owner, tweenDef));
+                } else if (Array.isArray(tweenDef)) {
+                    if (tweenDef[0] === 'call' && typeof tweenDef[1] === 'string') {
+                        tween.call(createTrigger(owner, tweenDef[1]));
                     } else {
-                        tween[tweenDef.method].apply(tween, tweenDef.params);
+                        arr = tweenDef.greenSlice();
+                        if (arr.greenSplice(0) === 'to' && arr[2] && createjs.Ease[arr[2]]) {
+                            if (arr.length > 3) {
+                                arr2 = arr.greenSlice();
+                                arr2.greenSplice(0);
+                                arr2.greenSplice(0);
+                                arr[2] = createjs.Ease[arr2.greenSplice(0)].apply(null, arr2);
+                                arr2.recycle();
+                            } else {
+                                arr[2] = createjs.Ease[arr[2]];
+                            }
+                        }
+                        tween[tweenDef[0]].apply(tween, arr);
+                        arr.recycle();
                     }
+                } else if (tweenDef.method === 'call' && typeof tweenDef.params === 'string') {
+                    tween.call(createTrigger(owner, tweenDef.params));
+                } else {
+                    tween[tweenDef.method].apply(tween, tweenDef.params);
                 }
-            };
+            }
         },
         getProperty = function (dictionary, key, defaults) {
             if (dictionary[key] !== 'undefined') {
@@ -244,7 +243,7 @@
             if (events) {
                 for (event in events) {
                     if (events.hasOwnProperty(event)) {
-                        this.addEventListener(event, createTween(events[event], this));
+                        this.addEventListener(event, tween.bind(this, events[event]));
                     }
                 }
             }
