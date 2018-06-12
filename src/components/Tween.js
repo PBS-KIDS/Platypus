@@ -121,7 +121,12 @@
              *              "loop": 2 // This overrides this component's `loop` property value.
              *          }
              *      }
+             *
+             * @property events
+             * @type Object
+             * @default null
              */
+            events: null,
 
             /**
              * Sets `useTicks` on the tween as defined here: https://www.createjs.com/docs/tweenjs/classes/Tween.html
@@ -232,13 +237,14 @@
             override: false
         },
         
-        initialize: function (definition) {
-            var event = '';
+        initialize: function () {
+            var event = '',
+                events = this.events;
             
-            if (definition.events) {
-                for (event in definition.events) {
-                    if (definition.events.hasOwnProperty(event)) {
-                        this.addEventListener(event, createTween(definition.events[event], this));
+            if (events) {
+                for (event in events) {
+                    if (events.hasOwnProperty(event)) {
+                        this.addEventListener(event, createTween(events[event], this));
                     }
                 }
             }
