@@ -360,7 +360,7 @@ platypus.AABB = (function () {
     };
     
     /**
-     * Expresses whether this AABB collides with the given AABB. This is similar to `intersects` but returns true for overlapping or touching edges.
+     * Expresses whether this AABB collides with the given AABB. This is similar to `intersects` but returns true for overlapping only, not touching edges.
      *
      * @method collides
      * @param aabb {platypus.AABB} The AABB to check against
@@ -385,7 +385,7 @@ platypus.AABB = (function () {
     };
     
     /**
-     * Expresses whether this AABB intersects the given AABB. This is similar to `collides` but returns true for overlapping only, not touching edges.
+     * Expresses whether this AABB intersects the given AABB. This is similar to `collides` but returns true for overlapping or touching edges.
      *
      * @method intersects
      * @param aabb {platypus.AABB} The AABB to check against
