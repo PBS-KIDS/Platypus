@@ -35,7 +35,7 @@
                 getStyle = function (title, version) {
                     var max = 0,
                         min = 0,
-                        style = 'color: #ffffff; padding:3px 0; border-radius: 6px;',
+                        style = 'color: #ffffff; line-height: 1.5em; border-radius: 6px;',
                         r = 0,
                         g = 0,
                         b = 0,
@@ -65,16 +65,16 @@
                     
                     max = Math.max(r, g, b, 1);
 
-                    return style + ' background: rgb(' + getPortion(r, max) + ',' + getPortion(g, max) + ',' + getPortion(b, max) + ');';
+                    return style + ' background-color: rgb(' + getPortion(r, max) + ',' + getPortion(g, max) + ',' + getPortion(b, max) + ');';
                 },
                 getVersions = function (text, title, arr) {
                     var i = 0,
                         str = '',
-                        versions = Array.setUp(text, getStyle(title, title.substr(title.lastIndexOf(' ') - title.length + 1)), '');
+                        versions = Array.setUp(text);
                     
                     for (i = 0; i < arr.length; i++) {
                         str = arr[i];
-                        versions.push(getStyle(str, str.substr(str.lastIndexOf(' ') - str.length + 1)), '');
+                        versions.push(getStyle(str, str.substr(str.lastIndexOf(' ') - str.length + 1)), 'line-height: 1.5em;');
                     }
                     
                     return versions;
@@ -89,7 +89,8 @@
                     engine  = 'Platypus ' + platypus.version,
                     version = options.version || '(?)',
                     using   = Array.setUp(),
-                    usingV  = Array.setUp();
+                    usingV  = Array.setUp(),
+                    supports = platypus.supports;
                 
                 if (!options.hideHello) {
                     using   = Array.setUp('SpringRoll ' + Application.version);
@@ -119,9 +120,10 @@
                         title += ' ' + version;
                     }
                     
-                    if (platypus.supports.firefox || platypus.supports.chrome) {
+                    if (supports.firefox || supports.chrome) {
+                        console.log('%c ' + title + ' %c ' + author, getStyle(title, title.substr(title.lastIndexOf(' ') - title.length + 1)), 'line-height: 1.5em;');
                         using.push(engine);
-                        usingV = getVersions('\n%c ' + title + ' %c ' + author + ' \n\nUsing %c ' + using.join(' %c %c ') + ' %c\n\n', title, using);
+                        usingV = getVersions('Using %c ' + using.join(' %c %c ') + ' %c ', title, using);
                         console.log.apply(console, usingV);
                         usingV.recycle();
                     } else {
