@@ -8,7 +8,8 @@
 (function () {
     'use strict';
     
-    var BaseTexture = include('PIXI.BaseTexture'),
+    var MAX_KEY_LENGTH_PER_IMAGE = 128,
+        BaseTexture = include('PIXI.BaseTexture'),
         CanvasTinter = include('PIXI.CanvasTinter'),
         Data = include('platypus.Data'),
         Point = include('PIXI.Point'),
@@ -566,6 +567,20 @@
                     ));
                 }
             },
+            createId = function (images) {
+                var i = images.length,
+                    id = '',
+                    segment = '',
+                    separator = '';
+
+                while (i--) {
+                    segment = images[i].src || images[i];
+                    id += separator + segment.substring(0, MAX_KEY_LENGTH_PER_IMAGE);
+                    separator = ',';
+                }
+
+                return id;
+            },
             format = function (source, destination) {
                 var bases = null,
                     dAnims = destination.animations,
@@ -583,9 +598,9 @@
                 
                 // Set up id
                 if (destination.id) {
-                    destination.id += ';' + (source.id || source.images.join(','));
+                    destination.id += ';' + (source.id || createId(source.images));
                 } else {
-                    destination.id = source.id || source.images.join(',');
+                    destination.id = source.id || createId(source.images);
                 }
                 
                 // Set up images array
