@@ -249,14 +249,16 @@
             },
 
             destroy: function () {
-                var i = this.entities.length,
+                var entities = this.entities.greenSlice(), // Make a copy to handle entities being destroyed while processing list.
+                    i = entities.length,
                     entity = null;
                 
                 while (i--) {
-                    entity = this.entities[i];
+                    entity = entities[i];
                     this.removeChildEventListeners(entity);
                     entity.destroy();
                 }
+                entities.recycle();
                 this.entities.recycle();
                 delete this.owner.entities;
                 this.childEvents.recycle();
