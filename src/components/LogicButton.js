@@ -212,6 +212,7 @@
                          * @param buttonState.pressed {Boolean} This is `true` for the 'pressed' event.
                          * @param buttonState.released {Boolean} This is `false` for the 'pressed' event.
                          * @param buttonState.triggered {Boolean} This is `true` for the 'pressed' event.
+                         * @param buttonState.entity {platypus.Entity} The entity for which the original event occurred.
                          * @since 0.9.1
                          */
                         this.updateStateAndTrigger('pressed');
@@ -249,6 +250,7 @@
                          * @param buttonState.pressed {Boolean} This is `false` for the 'cancelled' event.
                          * @param buttonState.released {Boolean} This is `true` for the 'cancelled' event.
                          * @param buttonState.triggered {Boolean} This is `false` for the 'cancelled' event.
+                         * @param buttonState.entity {platypus.Entity} The entity for which the original event occurred.
                          * @since 0.9.1
                          */
                         this.updateStateAndTrigger('cancelled');
@@ -273,6 +275,7 @@
                          * @param buttonState.pressed {Boolean} This is `false` for the 'released' event.
                          * @param buttonState.released {Boolean} This is `true` for the 'released' event.
                          * @param buttonState.triggered {Boolean} This is `false` for the 'released' event.
+                         * @param buttonState.entity {platypus.Entity} The entity for which the original event occurred.
                          * @since 0.9.1
                          */
                         this.updateStateAndTrigger('released');
@@ -406,6 +409,7 @@
 
             updateStateAndTrigger: function (event) {
                 var message = null,
+                    owner = this.owner,
                     state = this.state,
                     pressed = state.get('pressed'),
                     released = state.get('released'),
@@ -425,9 +429,10 @@
                     message = Data.setUp(
                         'released', pressed,
                         'pressed', released,
-                        'triggered', released
+                        'triggered', released,
+                        'entity', owner
                     );
-                    this.owner.triggerEvent(event, message);
+                    owner.triggerEvent(event, message);
                     message.recycle();
                 }
             },
