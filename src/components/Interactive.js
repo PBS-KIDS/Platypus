@@ -12,6 +12,7 @@
     var AABB = include('platypus.AABB'),
         Circle = include('PIXI.Circle'),
         Data = include('platypus.Data'),
+        Polygon = include('PIXI.Polygon'),
         Rectangle = include('PIXI.Rectangle'),
         pointerInstances = {};
     
@@ -38,13 +39,17 @@
              *         "height": 40
              *     }
              *
-             * Or:
+             * Or a circle:
              *
              *     "hitArea": {
              *         "x": 10,
              *         "y": 10,
              *         "radius": 40
              *     }
+             *
+             * Or use an array of numbers to define a polygon: [x1, y1, x2, y2, ...]
+             *
+             *     "hitArea": [-10, -10, 30, -10, 30, 30, -5, 30]
              *
              * Defaults to the container if not specified.
              *
@@ -485,7 +490,9 @@
                     ha = savedHitAreas[sav];
 
                     if (!ha) {
-                        if (shape.radius) {
+                        if (Array.isArray(shape)) {
+                            ha = new Polygon(shape);
+                        } else if (shape.radius) {
                             ha = new Circle(shape.x || 0, shape.y || 0, shape.radius);
                         } else {
                             ha = new Rectangle(shape.x || 0, shape.y || 0, shape.width || this.owner.width || 0, shape.height || this.owner.height || 0);
