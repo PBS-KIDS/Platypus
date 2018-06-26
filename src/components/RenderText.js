@@ -14,16 +14,16 @@
         Text = include('PIXI.Text'),
         alignments = {
             horizontal: {
-                top: 0,
-                middle: 0.5,
-                center: 0.5,
-                bottom: 1
-            },
-            vertical: {
                 left: 0,
                 middle: 0.5,
                 center: 0.5,
                 right: 1
+            },
+            vertical: {
+                top: 0,
+                middle: 0.5,
+                center: 0.5,
+                bottom: 1
             }
         };
     
@@ -89,10 +89,13 @@
         },
         
         initialize: function (definition) {
+            var hAlign = alignments.horizontal[this.style.align],
+                vAlign = alignments.vertical[this.style.verticalAlign];
+
             this.sprite = new Text(this.text, this.style);
             
-            this.sprite.anchor.x = alignments.horizontal[this.style.align] || 0.5;
-            this.sprite.anchor.y = alignments.vertical[this.style.verticalAlign] || 1;
+            this.sprite.anchor.x = typeof hAlign === 'number' ? hAlign : 0.5;
+            this.sprite.anchor.y = typeof vAlign === 'number' ? hAlign : 1;
             this.sprite.x = this.offsetX;
             this.sprite.y = this.offsetY;
             this.sprite.z = this.offsetZ;
