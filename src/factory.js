@@ -137,7 +137,7 @@
         }
         
         // Have to copy rather than replace so definition is not corrupted
-        proto.initialize = componentDefinition.initialize || (componentDefinition.hasOwnProperty('constructor') ? componentDefinition.constructor /* deprecated function name */: doNothing);
+        proto.initialize = componentDefinition.initialize || doNothing;
 
         // This can be overridden by a "toJSON" method in the component definition. This is by design.
         proto.toJSON = (function () {
@@ -262,11 +262,6 @@
                 };
             }
         }());
-
-        // Throw deprecation warning if needed (deprecated as of v0.10.1)
-        if (componentDefinition.hasOwnProperty('constructor')) {
-            platypus.debug.warn(componentDefinition.id + ': "constructor" has been deprecated in favor of "initialize" for a component\'s initializing function definition.');
-        }
 
         if (componentDefinition.methods) {
             for (func in componentDefinition.methods) {

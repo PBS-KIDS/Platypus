@@ -398,7 +398,6 @@
              * @param [options.tween] {Function} A function describing the transition. Performs a linear transition by default. See CreateJS Ease for other options.
              * @param [options.beforeTick] {Function} A function that should be processed before each tick as the tween occurs. This function should return `true`, otherwise the tween doesn't take a step.
              * @param [options.afterTick] {Function} A function that should be processed after each tick as the tween occurs.
-             * @param [options.onTick] {Function} Deprecated in favor of `beforeTick` and `afterTick`.
              * @param [options.onFinished] {Function} A function that should be run once the transition is complete.
              */
             "tween-transform": (function () {
@@ -424,7 +423,7 @@
                             "tween", props.tween || linearEase,
                             "onFinished", props.onFinished || doNothing,
                             "beforeTick", props.beforeTick || returnTrue,
-                            "afterTick", props.onTick || props.afterTick || doNothing
+                            "afterTick", props.afterTick || doNothing
                         );
                     
                     if (!matrix) {

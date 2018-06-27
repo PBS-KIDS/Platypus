@@ -207,21 +207,6 @@
                          */
                         trigger.call(this, 'pointerdown', event);
 
-                        if (!this.pressed) {
-                            /**
-                             * This event is triggered on mouse down.
-                             *
-                             * @event 'mousedown'
-                             * @param event {DOMEvent} The original DOM pointer event.
-                             * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
-                             * @param x {Number} The x coordinate in world units.
-                             * @param y {Number} The y coordinate in world units.
-                             * @param entity {platypus.Entity} The entity receiving this event.
-                             * @deprecated since v0.10.6 - superceded by the "pointerdown" event.
-                             */
-                            trigger.call(this, 'mousedown', event);
-                        }
-
                         event.currentTarget.mouseTarget = true;
                         this.pressed = true;
                     },
@@ -254,19 +239,6 @@
                                  */
                                 trigger.call(this, 'pressmove', event);
                                 event.currentTarget.mouseTarget = true;
-                            } else {
-                                /**
-                                 * This event is triggered on mouse move.
-                                 *
-                                 * @event 'mousemove'
-                                 * @param event {DOMEvent} The original DOM pointer event.
-                                 * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
-                                 * @param x {Number} The x coordinate in world units.
-                                 * @param y {Number} The y coordinate in world units.
-                                 * @param entity {platypus.Entity} The entity receiving this event.
-                                 * @deprecated since v0.10.6 - superceded by the "pointermove" event.
-                                 */
-                                trigger.call(this, 'mousemove', event); // deprecated in v0.10.6
                             }
                         }
                     },
@@ -283,19 +255,6 @@
                          * @since v0.10.6
                          */
                         trigger.call(this, 'pointertap', event);
-
-                        /**
-                         * This event is triggered on click.
-                         *
-                         * @event 'click'
-                         * @param event {DOMEvent} The original DOM pointer event.
-                         * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
-                         * @param x {Number} The x coordinate in world units.
-                         * @param y {Number} The y coordinate in world units.
-                         * @param entity {platypus.Entity} The entity receiving this event.
-                         * @deprecated since v0.10.6 - superceded by the "pointertap" event.
-                         */
-                        trigger.call(this, 'click', event); // deprecated in v0.10.6
                     },
                     triggerPointerOut = function (event) {
 
@@ -311,19 +270,6 @@
                          * @since v0.10.6
                          */
                         trigger.call(this, 'pointerout', event);
-
-                        /**
-                         * This event is triggered on mouse out.
-                         *
-                         * @event 'mouseout'
-                         * @param event {DOMEvent} The original DOM pointer event.
-                         * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
-                         * @param x {Number} The x coordinate in world units.
-                         * @param y {Number} The y coordinate in world units.
-                         * @param entity {platypus.Entity} The entity receiving this event.
-                         * @deprecated since v0.10.6 - superceded by the "pointerout" event.
-                         */
-                        trigger.call(this, 'mouseout', event); // deprecated in v0.10.6
                     },
                     triggerPointerOver = function (event) {
                         /**
@@ -338,19 +284,6 @@
                          * @since v0.10.6
                          */
                         trigger.call(this, 'pointerover', event);
-
-                        /**
-                         * This event is triggered on mouse over.
-                         *
-                         * @event 'mouseover'
-                         * @param event {DOMEvent} The original DOM pointer event.
-                         * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
-                         * @param x {Number} The x coordinate in world units.
-                         * @param y {Number} The y coordinate in world units.
-                         * @param entity {platypus.Entity} The entity receiving this event.
-                         * @deprecated since v0.10.6 - superceded by the "pointerover" event.
-                         */
-                        trigger.call(this, 'mouseover', event); // deprecated in v0.10.6
                     },
                     triggerPointerUp = function (event) {
                         var id = getId(event);
