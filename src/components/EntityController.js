@@ -5,55 +5,6 @@
  * @class EntityController
  * @uses platypus.Component
  */
-/*
-## Dependencies:
-- [[Handler-Controller]] (on entity's parent) - This component listens for a controller "tick" message in order to trigger messages regarding the state of its inputs.
-
-## Messages
-
-### Listens for:
-- **handle-controller** - On each `handle-controller` message, this component checks its list of actions and if any of their states are currently true or were true on the last call, that action message is triggered.
-- **mousedown** - This message triggers a new message on the entity that includes what button on the mouse was pressed: "mouse:left-button:down", "mouse:middle-button:down", or "mouse:right-button:down".
-  - @param message.event (DOM Event object) - This event object is passed along with the new message.
-- **mouseup** - This message triggers a new message on the entity that includes what button on the mouse was released: "mouse:left-button:up", "mouse:middle-button:up", or "mouse:right-button:up".
-  - @param message.event (DOM Event object) - This event object is passed along with the new message.
-- **mousemove** - Updates mouse action states with whether the mouse is currently over the entity.
-  - @param message.over (boolean) - Whether the mouse is over the input entity.
-- **pause-controls** - This message will stop the controller from triggering messages until "unpause-controls" is triggered on the entity.
-- **unpause-controls** - This message will allow the controller to trigger messages until "pause-controls" is triggered on the entity.
-- **[Messages specified in definition]** - Listens for additional messages and on receiving them, sets the appropriate state and broadcasts the associated message on the next `handle-controller` message. These messages come in pairs and typically have the form of "keyname:up" and "keyname:down" specifying the current state of the input.
-  
-### Local Broadcasts:
-- **mouse:mouse-left:down, mouse:mouse-left:up, mouse:mouse-middle:down, mouse:mouse-middle:up, mouse:mouse-right:down, mouse:mouse-right:up** - This component triggers the state of mouse inputs on the entity if a render component of the entity accepts mouse input (for example [[Render-Animation]]).
-  - @param message (DOM Event object) - The original mouse event object is passed along with the control message.
-- **north, north-northeast, northeast, east-northeast, east, east-southeast, southeast, south-southeast, south, south-southwest, southwest, west-southwest, west, west-northwest, northwest, north-northwest** - If the soft joystick is enabled on this component, it will broadcast these directional messages if the joystick is in use.
-  - @param message (DOM Event object) - Mirrors the mouse event object that moved the joystick.
-- **joystick-orientation** - If the soft joystick is enabled on this component, this message will trigger to provide the current orientation of the joystick.
-  - @param orientation (number) - A number in radians representing the orientation of the joystick.
-- **[Messages specified in definition]** - Broadcasts active states using the JSON-defined message on each `handle-controller` message. Active states include `pressed` being true or `released` being true. If both of these states are false, the message is not broadcasted.
-  - @param message.pressed (boolean) - Whether the current input is active.
-  - @param message.released (boolean) - Whether the current input was active last tick but is no longer active.
-  - @param message.triggered (boolean) - Whether the current input is active but was not active last tick.
-  - @param message.over (boolean) - Whether the mouse was over the entity when pressed, released, or triggered. This value is always false for non-mouse input messages.
-
-## JSON Definition:
-    {
-      "type": "EntityController",
-      
-      "joystick":{
-      // Optional. Determines whether this entity should listen for mouse events to trigger directional events. Can be set simply to "true" to accept all joystick defaults
-          
-          "directions": 8,
-          // Optional: 4, 8, or 16. Determines how many directions to broadcast. Default is 4 ("north", "east", "south", and "west").
-          
-          "innerRadius": 30,
-          // Optional. Number determining how far the mouse must be from the entity's position before joystick events should be triggered. Default is 0.
-          
-          "outerRadius": 60
-          // Optional. Number determining how far the mouse can move away from the entity's position before the joystick stops triggering events. Default is Infinity.
-      }
-    }
-*/
 /* global include, platypus */
 (function () {
     'use strict';
@@ -88,7 +39,7 @@
             ['east', 'south', 'west', 'north'], null, null, null,
             ['east', 'southeast', 'south', 'southwest', 'west', 'northwest', 'north', 'northeast'], null, null, null, null, null, null, null,
             ['east', 'east-southeast', 'southeast', 'south-southeast', 'south', 'south-southwest', 'southwest', 'west-southwest', 'west', 'west-northwest', 'northwest', 'north-northwest', 'north', 'north-northeast', 'northeast', 'east-northeast']
-            ],
+        ],
         mouseMap = ['left-button', 'middle-button', 'right-button'],
         trigger = function (event, message) {
             if (!this.paused) {
@@ -124,6 +75,21 @@
              * @default {}
              */
             controlMap: {},
+
+            /**
+             * Determines whether this entity should listen for mouse events to trigger directional events. Can be set simply to "true" to accept all joystick defaults.
+             *
+             *       "joystick": {
+             *           "directions": 8, // Optional: 4, 8, or 16. Determines how many directions to broadcast. Default is 4 ("north", "east", "south", and "west").
+             *           "innerRadius": 30, // Optional. Number determining how far the mouse must be from the entity's position before joystick events should be triggered. Default is 0.
+             *           "outerRadius": 60 // Optional. Number determining how far the mouse can move away from the entity's position before the joystick stops triggering events. Default is Infinity.
+             *       }
+             *
+             * @property joystick
+             * @type Object
+             * @default null
+             */
+            joystick: null,
             
             /**
              * The stateMaps property can hold multiple control maps. Use this if certain controls should only be available for certain states. The controller finds the first valid state and falls back to the base `controlMap` as default if no matches are found.
@@ -176,6 +142,11 @@
         },
         
         events: {
+            /**
+             * On each `handle-controller` message, this component checks its list of actions and if any of their states are currently true or were true on the last call, that action message is triggered.
+             *
+             * @method 'handle-controller'
+             */
             "handle-controller": function () {
                 var actions = this.actions,
                     keys = actions.keys,
@@ -199,39 +170,126 @@
                 resolution.recycle();
             },
             
-            "mousedown": function (value) {
-                this.owner.triggerEvent('mouse:' + mouseMap[value.event.button || 0] + ':down', value.event);
+            /**
+             * This message triggers a new message on the entity that includes what button on the mouse was pressed: "mouse:left-button:down", "mouse:middle-button:down", or "mouse:right-button:down".
+             *
+             * @method 'pointerdown'
+             * @param value.event {DOM Event object} This event object is passed along with the new message.
+             */
+            "pointerdown": function (value) {
+                if (value.pixiEvent.data.pointerType === 'mouse') {
+                    /**
+                     * This component triggers the state of mouse inputs on the entity if a render component of the entity accepts mouse input.
+                     *
+                     * @event 'mouse:mouse-left:down'
+                     * @param message {DOM Event object} The original mouse event object is passed along with the control message.
+                     */
+                    /**
+                     * This component triggers the state of mouse inputs on the entity if a render component of the entity accepts mouse input (for example [[Render-Animation]]).
+                     *
+                     * @event 'mouse:mouse-middle:down'
+                     * @param message {DOM Event object} The original mouse event object is passed along with the control message.
+                     */
+                    /**
+                     * This component triggers the state of mouse inputs on the entity if a render component of the entity accepts mouse input (for example [[Render-Animation]]).
+                     *
+                     * @event 'mouse:mouse-right:down'
+                     * @param message {DOM Event object} The original mouse event object is passed along with the control message.
+                     */
+                    this.owner.triggerEvent('mouse:' + mouseMap[value.event.button || 0] + ':down', value.event);
+                }
+
                 if (this.joystick) {
+                    /**
+                     * This event is triggered when there is an active touch in the joystick area.
+                     *
+                     * @event 'joystick:down'
+                     * @param message {DOM Event object} The original pointer event object is passed along with the control message.
+                     */
                     this.owner.triggerEvent('joystick:down', value.event);
                     this.handleJoy(value);
                 }
             },
             
+            /**
+             * This message triggers a new message on the entity that includes what button on the mouse was released: "mouse:left-button:up", "mouse:middle-button:up", or "mouse:right-button:up".
+             *
+             * @method 'pressup'
+             * @param value.event {DOM Event object} This event object is passed along with the new message.
+             */
             "pressup": function (value) {
                 var owner = this.owner;
 
-                owner.triggerEvent('mouse:' + mouseMap[value.event.button || 0] + ':up', value.event);
+                if (value.pixiEvent.data.pointerType === 'mouse') {
+                    /**
+                     * This component triggers the state of mouse inputs on the entity if a render component of the entity accepts mouse input (for example [[Render-Animation]]).
+                     *
+                     * @event 'mouse:mouse-left:up'
+                     * @param message {DOM Event object} The original mouse event object is passed along with the control message.
+                     */
+                    /**
+                     * This component triggers the state of mouse inputs on the entity if a render component of the entity accepts mouse input (for example [[Render-Animation]]).
+                     *
+                     * @event 'mouse:mouse-middle:up'
+                     * @param message {DOM Event object} The original mouse event object is passed along with the control message.
+                     */
+                    /**
+                     * This component triggers the state of mouse inputs on the entity if a render component of the entity accepts mouse input (for example [[Render-Animation]]).
+                     *
+                     * @event 'mouse:mouse-right:up'
+                     * @param message {DOM Event object} The original mouse event object is passed along with the control message.
+                     */
+                    owner.triggerEvent('mouse:' + mouseMap[value.event.button || 0] + ':up', value.event);
+                }
+
                 if (this.joystick) {
+                    /**
+                     * This event is triggered when there is an active touch is released from the joystick area.
+                     *
+                     * @event 'joystick:up'
+                     * @param message {DOM Event object} The original pointer event object is passed along with the control message.
+                     */
                     owner.triggerEvent('joystick:up', value.event);
+                    /**
+                     * This event is triggered to stop movement once the joystick is released.
+                     *
+                     * @event 'stop'
+                     */
                     owner.triggerEvent('stop');
                 }
             },
             
+            /**
+             * Updates joystick input if joystick is enabled.
+             *
+             * @method 'pressmove'
+             * @param value {platypus.Data} This event object is passed along with the joystick messages.
+             */
             "pressmove": function (value) {
                 if (this.joystick) {
                     this.handleJoy(value);
                 }
             },
             
+            /**
+             * This message will stop the controller from triggering messages until "unpause-controls" is triggered on the entity.
+             *
+             * @method 'pause-controls'
+             */
             "pause-controls": function () {
                 this.paused = true;
             },
             
+            /**
+             * This message will allow the controller to trigger messages until "pause-controls" is triggered on the entity.
+             *
+             * @method 'unpause-controls'
+             */
             "unpause-controls": function () {
                 this.paused = false;
             }
         },
-        
+
         methods: {
             handleJoy: function (event) {
                 // The following translate mouse and touch events into messages that this controller can handle in a systematic way
@@ -256,8 +314,113 @@
                             owner.triggerEvent(accuracy.replace(direction, '').replace('-', ''), event);  //There's probably a better way to perform this, but the current method is functional. - DDD
                         }
                     }
+
                     owner.triggerEvent('stop');
+
+                    /**
+                     * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due north.
+                     *
+                     * @event 'north'
+                     * @param message {DOM Event object} The original pointer event object is passed along with the control message.
+                     */
+                    /**
+                     * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due north-northeast.
+                     *
+                     * @event 'north-northeast'
+                     * @param message {DOM Event object} The original pointer event object is passed along with the control message.
+                     */
+                    /**
+                     * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due northeast.
+                     *
+                     * @event 'northeast'
+                     * @param message {DOM Event object} The original pointer event object is passed along with the control message.
+                     */
+                    /**
+                     * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due east-northeast.
+                     *
+                     * @event 'east-northeast'
+                     * @param message {DOM Event object} The original pointer event object is passed along with the control message.
+                     */
+                    /**
+                     * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due east.
+                     *
+                     * @event 'east'
+                     * @param message {DOM Event object} The original pointer event object is passed along with the control message.
+                     */
+                    /**
+                     * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due east-southeast.
+                     *
+                     * @event 'east-southeast'
+                     * @param message {DOM Event object} The original pointer event object is passed along with the control message.
+                     */
+                    /**
+                     * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due southeast.
+                     *
+                     * @event 'southeast'
+                     * @param message {DOM Event object} The original pointer event object is passed along with the control message.
+                     */
+                    /**
+                     * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due south-southeast.
+                     *
+                     * @event 'south-southeast'
+                     * @param message {DOM Event object} The original pointer event object is passed along with the control message.
+                     */
+                    /**
+                     * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due south.
+                     *
+                     * @event 'south'
+                     * @param message {DOM Event object} The original pointer event object is passed along with the control message.
+                     */
+                    /**
+                     * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due south-southwest.
+                     *
+                     * @event 'south-southwest'
+                     * @param message {DOM Event object} The original pointer event object is passed along with the control message.
+                     */
+                    /**
+                     * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due southwest.
+                     *
+                     * @event 'southwest'
+                     * @param message {DOM Event object} The original pointer event object is passed along with the control message.
+                     */
+                    /**
+                     * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due west-southwest.
+                     *
+                     * @event 'west-southwest'
+                     * @param message {DOM Event object} The original pointer event object is passed along with the control message.
+                     */
+                    /**
+                     * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due west.
+                     *
+                     * @event 'west'
+                     * @param message {DOM Event object} The original pointer event object is passed along with the control message.
+                     */
+                    /**
+                     * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due west-northwest.
+                     *
+                     * @event 'west-northwest'
+                     * @param message {DOM Event object} The original pointer event object is passed along with the control message.
+                     */
+                    /**
+                     * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due northwest.
+                     *
+                     * @event 'northwest'
+                     * @param message {DOM Event object} The original pointer event object is passed along with the control message.
+                     */
+                    /**
+                     * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due north-northwest.
+                     *
+                     * @event 'north-northwest'
+                     * @param message {DOM Event object} The original pointer event object is passed along with the control message.
+                     */
                     owner.triggerEvent(direction, event);
+
+                    /**
+                     * If the soft joystick is enabled on this component, this message will trigger to provide the current orientation of the joystick.
+                     *
+                     * @event 'joystick-orientation'
+                     * @param orientation (number) - A number in radians representing the orientation of the joystick.
+                     */
                     owner.triggerEvent("joystick-orientation", orientation);
                 }
             },
@@ -277,6 +440,16 @@
                         
                     // Otherwise create a new state storage object
                     if (!actionState) {
+
+                        /**
+                         * Broadcasts active states using the JSON-defined message on each `handle-controller` message. Active states include `pressed` being true or `released` being true. If both of these states are false, the message is not broadcasted.
+                         *
+                         * @event '*'
+                         * @param message.pressed {Boolean} Whether the current input is active.
+                         * @param message.released {Boolean} Whether the current input was active last tick but is no longer active.
+                         * @param message.triggered {Boolean} Whether the current input is active but was not active last tick.
+                         * @param message.over {Boolean} Whether the mouse was over the entity when pressed, released, or triggered. This value is always false for non-mouse input messages.
+                         */
                         if (controllerState) {
                             actionState = actions.set(id, ActionState.setUp(controller, states, filteredTrigger.bind(this, controllerState)));
                         } else {

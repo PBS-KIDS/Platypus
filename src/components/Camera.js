@@ -343,11 +343,11 @@
             /**
              * If mouse dragging should cause the camera to move, this listens for the beginning of the drag motion.
              *
-             * @method 'mousedown'
-             * @param event {Object} The mouse event.
+             * @method 'pointerdown'
+             * @param event {Object} The pointer event.
              * @since 0.9.0
              **/
-            "mousedown": function (event) {
+            "pointerdown": function (event) {
                 var worldVP = this.worldCamera.viewport;
 
                 if (this.state === 'mouse-pan') {
@@ -368,7 +368,7 @@
              * If mouse dragging should cause the camera to move, this listens the drag motion.
              *
              * @method 'pressmove'
-             * @param event {Object} The mouse event.
+             * @param event {Object} The pointer event.
              * @since 0.9.0
              **/
             "pressmove": function (event) {
@@ -385,7 +385,7 @@
              * If mouse dragging should cause the camera to move, this listens for the end of the drag motion.
              *
              * @method 'pressup'
-             * @param event {Object} The mouse event.
+             * @param event {Object} The pointer event.
              * @since 0.9.0
              **/
             "pressup": function (event) {

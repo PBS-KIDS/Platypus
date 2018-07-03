@@ -193,9 +193,9 @@
             /**
              * Triggers events per the component's definition when a press is made.
              *
-             * @method 'mousedown'
+             * @method 'pointerdown'
              */
-            "mousedown": function (eventData) {
+            "pointerdown": function (eventData) {
                 if (!this.state.get('disabled')) {
                     if (this.toggle) {
                         this.readyToToggle = true;
@@ -222,7 +222,7 @@
 
                         // Doing this prevents the call from reccurring.
                         if (this.useOnce && this.removeEventListener) {
-                            this.removeEventListener('mousedown');
+                            this.removeEventListener('pointerdown');
                         }
                     }
                 }
@@ -299,9 +299,9 @@
             /**
              * If a press moves over the button, it's not cancelled.
              *
-             * @method 'mouseover'
+             * @method 'pointerover'
              */
-            "mouseover": function () {
+            "pointerover": function () {
                 if (this.onHover) {
                     this.owner.trigger(this.onHover);
                 }
@@ -313,9 +313,9 @@
             /**
              * If a press moves off of the button, it's cancelled.
              *
-             * @method 'mouseout'
+             * @method 'pointerout'
              */
-            "mouseout": function () {
+            "pointerout": function () {
                 if (this.state.get('pressed')) {
                     this.cancelled = true;
                 }
