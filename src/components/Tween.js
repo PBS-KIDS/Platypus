@@ -1,15 +1,18 @@
 /**
  * This component takes a list of tween definitions and plays them as needed. This component requires CreateJS Tween.
  *
+ * NOTE: This component handles ticking that's synchronized with the game's tick, NOT it's logic tick. As such, reading tweened values during the logic tick will show a changed value on the first logic tick, but all subsequent logic ticks comprising the game's full tick will show no change at all.
+ *
  * @namespace platypus.components
  * @class Tween
  * @uses platypus.Component
  */
-/* global createjs, platypus */
+/* global createjs, include, platypus */
 (function () {
     'use strict';
 
-    var empty = {},
+    var Tween = include('createjs.Tween', false),
+        empty = {},
         createEvent = function (dictionary, key, defaults, entity) {
             var event = getProperty(dictionary, key, defaults);
 
@@ -98,7 +101,18 @@
                 override: getProperty(overrides, 'override', defaults)
             };
         };
+    
+    if (!Tween) {
+        return platypus.createComponentClass({
+            id: 'Tween',
+            initialize: function () {
+                platypus.debug.warn('CreateJS Tween must be included in the project to use the Tween component.');
+            }
+        });
+    }
 
+    Tween._inited = true; // Prevents Tween from using its own ticker.
+    
     return platypus.createComponentClass({
         id: 'Tween',
 

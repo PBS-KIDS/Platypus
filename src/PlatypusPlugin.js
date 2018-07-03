@@ -23,9 +23,21 @@
     var Application = include('springroll.Application'),
         ApplicationPlugin = include('springroll.ApplicationPlugin'),
         PIXI = include('window.PIXI', false),
-        updateFunction = null,
+        Tween = include('createjs.Tween', false),
+        updateFunction = Tween ? function (game, time, elapsed) {
+            time.delta = elapsed;
+            Tween.tick(elapsed);
+            game.tick(time);
+        } : function (game, time, elapsed) {
+            time.delta = elapsed;
+            game.tick(time);
+        },
         plugin = new ApplicationPlugin(),
-        resizeFunction = null,
+        resizeFunction = function (game, event) {
+            if (game.currentScene) {
+                game.currentScene.triggerOnChildren('resize', event);
+            }
+        },
         sayHello = (function () {
             var getPortion = function (num, max) {
                     var min = 204;
@@ -236,17 +248,10 @@
                 }
             });
             
-            updateFunction = function (elapsed) {
-                time.delta = elapsed;
-                game.tick(time);
-            };
+            updateFunction = updateFunction.bind(null, game, time);
             this.on('update', updateFunction, priority); // Needs to occur before PIXI's ticker update so rendered objects can be positioned correctly.
     
-            resizeFunction = function (event) {
-                if (game.currentScene) {
-                    game.currentScene.triggerOnChildren('resize', event);
-                }
-            };
+            resizeFunction = resizeFunction.bind(null, game);
             this.on('resize', resizeFunction);
         }
 
