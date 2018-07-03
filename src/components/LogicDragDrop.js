@@ -1,34 +1,11 @@
 /**
-# COMPONENT **LogicDragDrop**
-A component that allows an object to be dragged and dropped. Can use collision to prevent dropping the objects in certain locations.
-NOTE: HandlerRender and the RenderSprite used by this entity need to have their 'touch' or 'click' inputs set to true.
-
-## Dependencies
-- [[HandlerLogic]] - Listens for the handle-logic and handle-post-collision-logic calls.
-- [[RenderSprite]] - Listens for 'mouseup', 'mousedown', and 'pressmove' calls.
-
-## Messages
-
-### Listens for:
-- **handle-logic** - Updates the object's location on the handle-logic tick.
-  - @param resp (object) - The tick coming from the scene.
-- **handle-post-collision-logic** - Resolves whether the object state after we check if there are any collisions. If the object was dropped and can be dropped, it is.
-  - @param resp (object) - The tick coming from the scene.
-- **mousedown** - The mousedown event passed from the render component. Fired when we're grabbing the object. Starts the drag.
-  - @param eventData (object) - The event data.
-- **mouseup** - The mouseup event passed from the render component. Fired when we're trying to drop the object.
-  - @param eventData (object) - The event data.
-- **pressmove** - The pressmove event passed from the render component. Tells us when we're dragging the object.
-  - @param eventData (object) - The event data.
-- **no-drop** - The message passed from the collision system letting us know the object is currently in a location that it cannot be dropped.
-  - @param collisionData (object) - The event data.
-  
-## JSON Definition
-    {
-        "type": "LogicDragDrop"
-    }
-*/
-/*global platypus */
+ * A component that allows an object to be dragged and dropped. Can use collision to prevent dropping the objects in certain locations.
+ *
+ * @namespace platypus.components
+ * @class LogicDragDrop
+ * @uses platypus.Component
+ */
+/* global platypus */
 (function () {
     'use strict';
 
@@ -75,13 +52,25 @@ NOTE: HandlerRender and the RenderSprite used by this entity need to have their 
             }
         },
 
-        events: {// These are messages that this component listens for
+        events: {
+            /**
+             * This component listens for added components to determine whether it should check for collision.
+             *
+             * @method 'component-added'
+             * @param component {platypus.Component} Component added to entity.
+             * @param component.type {String} Type of component to detect whether it's a collision component.
+             */
             "component-added": function (component) {
                 if (component.type === 'CollisionBasic') {
                     this.hasCollision = true;
                 }
             },
             
+            /**
+             * Updates the object's location on the handle-logic tick.
+             *
+             * @method 'handle-logic'
+             */
             "handle-logic": function () {
                 if (this.state.get('dragging')) {
                     this.owner.x = this.nextX;
@@ -92,6 +81,11 @@ NOTE: HandlerRender and the RenderSprite used by this entity need to have their 
                 this.state.set('noDrop', false);
             },
 
+            /**
+             * Resolves whether the object state after we check if there are any collisions. If the object was dropped and can be dropped, it is.
+             *
+             * @method 'handle-post-collision-logic'
+             */
             "handle-post-collision-logic": function () {
                 if (this.tryDrop) {
                     this.tryDrop = false;
@@ -110,7 +104,14 @@ NOTE: HandlerRender and the RenderSprite used by this entity need to have their 
                 }
                 this.hitSomething = false;
             },
-            "mousedown": function (eventData) {
+
+            /**
+             * The pointerdown event fires when we're grabbing the object. Starts the drag.
+             *
+             * @method 'pointerdown'
+             * @param eventData {platypus.Data} The event data.
+             */
+            "pointerdown": function (eventData) {
                 if (this.sticking) {
                     this.sticking = false;
                     this.release();
@@ -128,6 +129,13 @@ NOTE: HandlerRender and the RenderSprite used by this entity need to have their 
                 
                 eventData.pixiEvent.stopPropagation();
             },
+
+            /**
+             * The pressup event fires when we're trying to drop the object.
+             *
+             * @method 'pressup'
+             * @param eventData {platypus.Data} The event data.
+             */
             "pressup": function (eventData) {
                 if (!this.sticking) {
                     this.release();
@@ -135,7 +143,14 @@ NOTE: HandlerRender and the RenderSprite used by this entity need to have their 
                 
                 eventData.pixiEvent.stopPropagation();
             },
-            "mousemove": function (eventData) {
+
+            /**
+             * The pointermove event tells us when we're dragging a "stickyClick" object.
+             *
+             * @method 'pointermove'
+             * @param eventData {platypus.Data} The event data.
+             */
+            "pointermove": function (eventData) {
                 if (this.sticking) {
                     this.nextX = eventData.x - this.grabOffsetX;
                     this.nextY = eventData.y - this.grabOffsetY;
@@ -144,6 +159,13 @@ NOTE: HandlerRender and the RenderSprite used by this entity need to have their 
                     eventData.pixiEvent.stopPropagation();
                 }
             },
+
+            /**
+             * The pressmove event tells us when we're dragging the object.
+             *
+             * @method 'pressmove'
+             * @param eventData {platypus.Data} The event data.
+             */
             "pressmove": function (eventData) {
                 this.nextX = eventData.x - this.grabOffsetX;
                 this.nextY = eventData.y - this.grabOffsetY;
@@ -154,6 +176,12 @@ NOTE: HandlerRender and the RenderSprite used by this entity need to have their 
                 eventData.event.preventDefault();
                 eventData.pixiEvent.stopPropagation();
             },
+
+            /**
+             * This message comes from the collision system letting us know the object is currently in a location that it cannot be dropped.
+             *
+             * @method 'no-drop'
+             */
             "no-drop": function () {
                 this.hitSomething = true;
             }
