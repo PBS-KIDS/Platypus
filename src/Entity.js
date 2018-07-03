@@ -112,7 +112,9 @@ platypus.Entity = (function () {
                     }
                 }
             }
-            platypus.Async.setUp(componentInits, function () {
+            this.loadingComponents = platypus.Async.setUp(componentInits, function () {
+                this.loadingComponents = null;
+
                 // Trigger saved events that were being fired during component addition.
                 delete this.trigger;
                 delete this.triggerEvent;

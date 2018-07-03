@@ -9,33 +9,49 @@
  * @return {platypus.Async} Returns the new Async object.
  * @since 0.10.0
  */
-/*global platypus, recycle, springroll, setTimeout */
+/*global clearTimeout, platypus, recycle, springroll, setTimeout */
 platypus.Async = (function () {
     'use strict';
     
-    var callback = function () {
+    var callback = function (finalCB) {
             this.increment -= 1;
             if (!this.increment) {
-                setTimeout(this.finalCallback, 0); //ensure async to keep code flow consistent.
-                this.recycle();
+                this.resolve = finalCB;
+                this.timeout = setTimeout(finalCB, 0); //ensure async to keep code flow consistent.
             }
         },
+        final = function (callback) {
+            this.resolve = null;
+            callback();
+            this.recycle();
+        },
         Async = function (arr, finalCallback) {
-            var cb = callback.bind(this),
+            var finalCB = final.bind(this, finalCallback),
+                cb = callback.bind(this, finalCB),
                 i = arr.length;
 
             if (!i) {
-                finalCallback();
+                finalCB();
                 this.recycle();
             } else {
                 this.increment = i;
-                this.finalCallback = finalCallback;
+                this.resolve = null;
 
                 while (i--) {
                     arr[i](cb);
                 }
             }
         };
+
+    Async.prototype.attemptResolution = function () {
+        if (this.resolve) {
+            clearTimeout(this.timeout);
+            this.resolve();
+            return true;
+        } else {
+            return false;
+        }
+    };
     
     /**
      * Returns an Async from cache or creates a new one if none are available.
@@ -56,7 +72,8 @@ platypus.Async = (function () {
      */
     recycle.add(Async, !!springroll.Debug, 'Async', function () {
         this.increment = 0;
-        this.finalCallback = null;
+        this.resolve = null;
+        this.timeout = 0;
     });
 
     return Async;

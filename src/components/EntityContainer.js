@@ -83,6 +83,8 @@
                     events = this.childEvents,
                     entityInits = null;
         
+                this.newAdds = Array.setUp();
+
                 //saving list of entities for load message
                 if (definition.entities && this.owner.entities) { //combine component list and entity list into one if they both exist.
                     entities = definition.entities.concat(this.owner.entities);
@@ -137,8 +139,47 @@
                 this.removeEntity(entity);
             },
             
+            /**
+             * On receiving this message, the provided entity will be updated in the list of child entities to reflect changes in its listeners.
+             *
+             * @method 'child-entity-updated'
+             * @param entity {platypus.Entity} The entity to remove.
+             */
             "child-entity-updated": function (entity) {
                 this.updateChildEventListeners(entity);
+            },
+
+            /**
+             * On receiving this message, this component checks to see if any entities being added are ready. If so, they are added to the world. This is so ready entities don't have to wait until the end of a complete tick, but can be inserted between logic ticks.
+             *
+             * @method 'logic-tick'
+             * @since v0.12.0
+             */
+            "logic-tick": function () {
+                var adding = null,
+                    adds = this.newAdds,
+                    l = adds.length,
+                    i = 0,
+                    removals = null;
+
+                if (l) {
+                    removals = Array.setUp();
+
+                     //must go in order so entities are added in the expected order.
+                    for (i = 0; i < l; i++) {
+                        adding = adds[i];
+                        if (adding.destroyed || !adding.loadingComponents || adding.loadingComponents.attemptResolution()) {
+                            removals.push(i);
+                        }
+                    }
+
+                    i = removals.length;
+                    while (i--) {
+                        adds.greenSplice(removals[i]);
+                    }
+
+                    removals.recycle();
+                }
             }
         },
         
@@ -262,6 +303,8 @@
                 this.entities.recycle();
                 delete this.owner.entities;
                 this.childEvents.recycle();
+                this.newAdds.recycle();
+                this.newAdds = null;
             }
         },
         
@@ -355,6 +398,9 @@
                         }
                         this.owner.triggerEvent('entity-created', entity);
                     }
+
+                    this.newAdds.push(entity);
+
                     return entity;
                 };
             }()),
