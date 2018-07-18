@@ -115,6 +115,32 @@
         
         events: {
             /**
+             * Called when an entity has been updated and should be considered for adding to or removing from the handler.
+             *
+             * @method 'child-entity-updated'
+             * @param entity {platypus.Entity} The entity that is being considered.
+             * @since v0.12.0
+             */
+            "child-entity-updated": function (entity) {
+                var j = this.entities.indexOf(entity),
+                    logical = entity.getMessageIds().some(hasLogic);
+
+                if (logical && (j < 0)) {
+                    this.entities.push(entity);
+                    
+                    // Add to the active entities list so that the collision loop is aware of and can handle the addition.
+                    if (this.inLogicLoop && (!this.camera || withinBounds(entity, this.camera))) {
+                        this.activeEntities.push(entity);
+                    }
+                } else if (!logical && (j >= 0)) {
+                    this.entities.greenSplice(j);
+                    if (this.inLogicLoop) {
+                        this.removals.push(entity);
+                    }
+                }
+            },
+
+            /**
              * Called when a new entity has been added and should be considered for addition to the handler. If the entity has a 'handle-logic' message id it's added to the list of entities.
              *
              * @method 'child-entity-added'

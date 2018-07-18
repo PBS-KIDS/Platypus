@@ -95,7 +95,7 @@
             this.sprite = new Text(this.text, this.style);
             
             this.sprite.anchor.x = typeof hAlign === 'number' ? hAlign : 0.5;
-            this.sprite.anchor.y = typeof vAlign === 'number' ? hAlign : 1;
+            this.sprite.anchor.y = typeof vAlign === 'number' ? vAlign : 1;
             this.sprite.x = this.offsetX;
             this.sprite.y = this.offsetY;
             this.sprite.z = this.offsetZ;
