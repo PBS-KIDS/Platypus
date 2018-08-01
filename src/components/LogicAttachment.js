@@ -10,7 +10,13 @@
     'use strict';
 
     var Entity = include('platypus.Entity'),
-        linkId = 0;
+        trigger = function () {
+            var attachment = this.attachment;
+            
+            if (attachment) {
+                attachment.trigger.apply(attachment, arguments);
+            }
+        };
 
     return platypus.createComponentClass({
 
@@ -25,6 +31,7 @@
              * @default 'attached'
              */
             attachState: 'attached',
+
             /**
              * The type of the entity to be attached.
              *
@@ -33,6 +40,20 @@
              * @default ''
              */
             attachment: '',
+
+            /**
+             * This is an object of key/value pairs. The keys are events this component is listening for locally, the value is the new event to be broadcast on the attached entity. The value can also be an array of events to be fired.
+             *
+             *      "events": {
+             *          "sleeping": "good-night",
+             *          "awake": ["alarm", "get-up"]
+             *      }
+             *
+             * @property events
+             * @type Object
+             * @default null
+             */
+            events: null,
 
             /**
              * Whether the attachment starts out attached.
@@ -51,6 +72,7 @@
              * @default 0
              */
             offsetX: 0,
+
             /**
              * The offset of the attached entity in y from the attachee.
              *
@@ -59,6 +81,7 @@
              * @default 0
              */
             offsetY: 0,
+
             /**
              * The offset of the attached entity in z from the attachee.
              *
@@ -69,17 +92,11 @@
             offsetZ: 0.01
         },
 
-        publicProperties: {
-
-        },
-
         initialize: function () {
+            var event = '',
+                events = this.events;
+            
             this.state = this.owner.state;
-
-            if (!this.owner.linkId) {
-                this.owner.linkId = 'attachment-link-' + linkId;
-                linkId += 1;
-            }
 
             this.state.set(this.attachState, this.startAttached);
             this.attachmentPosition = {
@@ -87,8 +104,7 @@
                 y: 0,
                 z: 0,
                 dx: 0,
-                dy: 0,
-                linkId: this.owner.linkId
+                dy: 0
             };
             this.attachmentProperties = {
                 type: this.attachment,
@@ -97,6 +113,15 @@
 
             this.attachment = null;
             this.isAttached = this.startAttached;
+
+            // Messages that this component listens for and then triggers on the attached entity.
+            if (events) {
+                for (event in events) {
+                    if (events.hasOwnProperty(event)) {
+                        this.addEventListener(event, trigger.bind(this, events[event]));
+                    }
+                }
+            }
         },
 
         events: {// These are messages that this component listens for
