@@ -727,7 +727,7 @@
                 }
             },
             
-            convertImageLayer: function (imageLayer, tileHeight, tileWidth) {
+            convertImageLayer: function (imageLayer) {
                 var asset = null,
                     i = 0,
                     dataCells = 0,
@@ -740,8 +740,8 @@
                         name: imageLayer.name,
                         type: 'tilelayer',
                         width: 1,
-                        tileheight: tileHeight,
-                        tilewidth: tileWidth,
+                        tileheight: 1,
+                        tilewidth: 1,
                         x: imageLayer.x,
                         y: imageLayer.y,
                         properties: props
@@ -780,6 +780,20 @@
                         tileLayer.image = imageLayer.image;
                     }
                 }
+
+                tileLayer.tileset = {
+                    "columns": 1,
+                    "image": tileLayer.image,
+                    "imageheight": tileLayer.tileheight,
+                    "imagewidth": tileLayer.tilewidth,
+                    "margin": 0,
+                    "name": imageLayer.name,
+                    "spacing": 0,
+                    "tilecount": 1,
+                    "tileheight": tileLayer.tileheight,
+                    "tilewidth": tileLayer.tilewidth,
+                    "type": "tileset"
+                };
                 
                 return tileLayer;
             },
@@ -867,7 +881,8 @@
                     layerDefinition = layers[i];
                     switch (layerDefinition.type) {
                     case 'imagelayer':
-                        layer = this.createLayer('image-layer', this.convertImageLayer(layerDefinition, tileHeight, tileWidth), x, y, tileWidth, tileHeight, tilesets, images, layer, progress);
+                        layer = this.convertImageLayer(layerDefinition);
+                        layer = this.createLayer('image-layer', layer, x, y, layer.tilewidth, layer.tileheight, [layer.tileset], images, layer, progress);
                         break;
                     case 'objectgroup':
                         this.setUpEntities(layerDefinition, x, y, tileWidth, tileHeight, tilesets, progress);
