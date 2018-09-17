@@ -66,7 +66,7 @@
         
         properties: {
             /**
-             * Optional. A mask definition that determines where the image should clip. A string can also be used to create more complex shapes via the PIXI graphics API like: "mask": "r(10,20,40,40).dc(30,10,12)". Defaults to no mask or, if simply set to true, a rectangle using the entity's dimensions.
+             * Optional. A mask definition that determines where the image should clip. A string can also be used to create more complex shapes via the PIXI graphics API like: "mask": "r(10,20,40,40).dc(30,10,12)". Defaults to no mask or, if simply set to true, a rectangle using the entity's dimensions. Note that the mask is in world coordinates by default. To make the mask local to the entity's coordinates, set `localMask` to `true` in the RenderContainer properties.
              *
              *  "mask": {
              *      "x": 10,
@@ -157,7 +157,16 @@
              * @type Boolean
              * @default false
              */
-            ignoreOpacity: false
+            ignoreOpacity: false,
+
+            /**
+             * Whether the mask should be relative to the entity's coordinates.
+             *
+             * @property localMask
+             * @type boolean
+             * @default false
+             */
+            localMask: false
         },
 
         publicProperties: {
@@ -601,8 +610,12 @@
             setMask: function (shape) {
                 var gfx = null;
                 
-                if (this.mask && this.parentContainer) {
-                    this.parentContainer.removeChild(this.mask);
+                if (this.mask) {
+                    if (this.localMask) {
+                        this.container.removeChild(this.mask);
+                    } else if (this.parentContainer) {
+                        this.parentContainer.removeChild(this.mask);
+                    }
                 }
                 
                 if (!shape) {
@@ -630,7 +643,9 @@
                 this.mask = this.container.mask = gfx;
                 this.mask.z = 0; //TML 12-4-16 - Masks don't need a Z, but this makes it play nice with the Z-ordering in HandlerRender.
 
-                if (this.parentContainer) {
+                if (this.localMask) {
+                    this.container.addChild(this.mask);
+                } else if (this.parentContainer) {
                     this.parentContainer.addChild(this.mask);
                 }
             },
