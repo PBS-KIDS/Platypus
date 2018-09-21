@@ -98,7 +98,16 @@
              * @method 'handle-logic'
              * @param tick.delta {Number} The length of the tick.
              */
-            "handle-logic": updateLogic
+            "handle-logic": updateLogic,
+            "stop-active-timelines": function () {
+                var x = 0,
+                    instance = null;
+                for (x = this.timelineInstances.length - 1; x >= 0; x--) {
+                    instance = this.timelineInstances.greenSplice(x);
+                    instance.timeline.recycle(2);
+                    instance.recycle();
+                }
+            }
         },
         
         methods: {
