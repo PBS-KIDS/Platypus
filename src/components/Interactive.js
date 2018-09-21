@@ -351,7 +351,35 @@
                             }
                         }
                     },
-                    removeInputListeners = function (sprite, pointerdown, pointerup, pointerupoutside, pointermove, pointertap, pointerover, pointerout) {
+                    triggerPointerCancel = function (event) {
+                        var id = getId(event);
+
+                        if (pointerInstances[id] === this) {
+                            pointerInstances[id] = null;
+                            if (this.pressed) {
+                                trigger.call(this, 'pressup', event);
+                                this.pressed = false;
+                            }
+                            /**
+                             * This event is triggered on pointer cancel.
+                             *
+                             * @event 'pointercancel'
+                             * @param event {DOMEvent} The original DOM pointer event.
+                             * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
+                             * @param x {Number} The x coordinate in world units.
+                             * @param y {Number} The y coordinate in world units.
+                             * @param entity {platypus.Entity} The entity receiving this event.
+                             * @since v0.11.10
+                             */
+                            trigger.call(this, 'pointercancel', event);
+                            event.currentTarget.mouseTarget = false;
+                            
+                            if (event.currentTarget.removeDisplayObject) {
+                                event.currentTarget.removeDisplayObject();
+                            }
+                        }
+                    },
+                    removeInputListeners = function (sprite, pointerdown, pointerup, pointerupoutside, pointercancel, pointermove, pointertap, pointerover, pointerout) {
                         var key = '';
 
                         for (key in pointerInstances) {
@@ -363,6 +391,7 @@
                         sprite.removeListener('pointerdown', pointerdown);
                         sprite.removeListener('pointerup', pointerup);
                         sprite.removeListener('pointerupoutside', pointerupoutside);
+                        sprite.removeListener('pointercancel', pointercancel);
                         sprite.removeListener('pointermove', pointermove);
                         sprite.removeListener('pointertap', pointertap);
 
@@ -382,6 +411,7 @@
                         pointermove = null,
                         pointerup = null,
                         pointerupoutside = null,
+                        pointercancel = null,
                         pointertap = null;
                     
                     // The following appends necessary information to displayed objects to allow them to receive touches and clicks
@@ -391,11 +421,13 @@
                     pointermove = triggerPointerMove.bind(this);
                     pointerup = triggerPointerUp.bind(this);
                     pointerupoutside = triggerPointerUpOutside.bind(this);
+                    pointercancel = triggerPointerCancel.bind(this);
                     pointertap = triggerPointerTap.bind(this);
                     
                     sprite.addListener('pointerdown', pointerdown);
                     sprite.addListener('pointerup', pointerup);
                     sprite.addListener('pointerupoutside', pointerupoutside);
+                    sprite.addListener('pointercancel', pointercancel);
                     sprite.addListener('pointermove', pointermove);
                     sprite.addListener('pointertap', pointertap);
 
@@ -407,7 +439,7 @@
                         sprite.addListener('pointerout', pointerout);
                     }
 
-                    this.removeInputListeners = removeInputListeners.bind(this, sprite, pointerdown, pointerup, pointerupoutside, pointermove, pointertap, pointerover, pointerout);
+                    this.removeInputListeners = removeInputListeners.bind(this, sprite, pointerdown, pointerup, pointerupoutside, pointercancel, pointermove, pointertap, pointerover, pointerout);
                 };
             }()),
 
