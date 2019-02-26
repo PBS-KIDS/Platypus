@@ -9,7 +9,8 @@
 (function () {
     'use strict';
     
-    var AABB = include('platypus.AABB'),
+    var DPR = window.devicePixelRatio || 1,
+        AABB = include('platypus.AABB'),
         Data = include('platypus.Data'),
         Vector = include('platypus.Vector'),
         anchorBound = function (anchorAABB, entityOffsetX, entityOffsetY, entity) {
@@ -393,7 +394,7 @@
              **/
             "pressmove": function (event) {
                 if (this.mouse) {
-                    if (this.move(this.mouseWorldOrigin.x + (this.mouse.x - getClientX(event.event)) / this.world.transform.worldTransform.a, this.mouseWorldOrigin.y + (this.mouse.y - getClientY(event.event)) / this.world.transform.worldTransform.d)) {
+                    if (this.move(this.mouseWorldOrigin.x + ((this.mouse.x - getClientX(event.event)) * DPR) / this.world.transform.worldTransform.a, this.mouseWorldOrigin.y + ((this.mouse.y - getClientY(event.event)) * DPR) / this.world.transform.worldTransform.d)) {
                         this.viewportUpdate = true;
                         this.movedCamera = true;
                         event.pixiEvent.stopPropagation();
