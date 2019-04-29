@@ -9,7 +9,8 @@
 (function () {
     'use strict';
     
-    var AABB = include('platypus.AABB'),
+    var DPR = window.devicePixelRatio || 1,
+        AABB = include('platypus.AABB'),
         Data = include('platypus.Data'),
         Vector = include('platypus.Vector'),
         anchorBound = function (anchorAABB, entityOffsetX, entityOffsetY, entity) {
@@ -35,6 +36,26 @@
         },
         doNothing = function () {
             return false;
+        },
+
+        // These fix coords for touch events filling in for pointer events from the PIXI InteractiveManager
+        getClientX = function (event) {
+            if (!event.clientX) {
+                if (event.touches && event.touches[0] && event.touches[0].clientX) {
+                    return event.touches[0].clientX;
+                }
+                return 0;
+            }
+            return event.clientX;
+        },
+        getClientY = function (event) {
+            if (!event.clientY) {
+                if (event.touches && event.touches[0] && event.touches[0].clientY) {
+                    return event.touches[0].clientY;
+                }
+                return 0;
+            }
+            return event.clientY;
         };
     
     return platypus.createComponentClass({
@@ -356,8 +377,8 @@
                         this.mouseWorldOrigin = Vector.setUp();
                     }
                     this.mouse = this.mouseVector;
-                    this.mouse.x = event.event.clientX;
-                    this.mouse.y = event.event.clientY;
+                    this.mouse.x = getClientX(event.event);
+                    this.mouse.y = getClientY(event.event);
                     this.mouseWorldOrigin.x = worldVP.x;
                     this.mouseWorldOrigin.y = worldVP.y;
                     event.pixiEvent.stopPropagation();
@@ -373,7 +394,7 @@
              **/
             "pressmove": function (event) {
                 if (this.mouse) {
-                    if (this.move(this.mouseWorldOrigin.x + (this.mouse.x - event.event.clientX) / this.world.transform.worldTransform.a, this.mouseWorldOrigin.y + (this.mouse.y - event.event.clientY) / this.world.transform.worldTransform.d)) {
+                    if (this.move(this.mouseWorldOrigin.x + ((this.mouse.x - getClientX(event.event)) * DPR) / this.world.transform.worldTransform.a, this.mouseWorldOrigin.y + ((this.mouse.y - getClientY(event.event)) * DPR) / this.world.transform.worldTransform.d)) {
                         this.viewportUpdate = true;
                         this.movedCamera = true;
                         event.pixiEvent.stopPropagation();

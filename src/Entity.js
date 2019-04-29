@@ -277,10 +277,11 @@ platypus.Entity = (function () {
     proto.messengerDestroy = proto.destroy;
     proto.destroy = function () {
         var components = this.components,
-            i = components.length;
+            i = 0,
+            length = components.length;
         
         if (!this._destroyed) {
-            while (i--) {
+            for (i = 0; i < length; i++) {
                 components[i].destroy();
             }
             components.recycle();

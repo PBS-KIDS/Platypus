@@ -368,6 +368,7 @@
 
                     while (i--) {
                         if (groups[i].name === value) {
+                            this.parentContainer = groups[i];
                             groups[i].addChild(this.container);
                             groups[i].reorder = true;
                             if (mask) {
@@ -383,6 +384,7 @@
                     groups.push(container);
                     this.rootContainer.addChild(container);
                     this.rootContainer.reorder = true;
+                    this.parentContainer = container;
                     container.addChild(this.container);
                     if (mask) {
                         this.setMask(mask);

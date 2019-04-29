@@ -27,7 +27,11 @@
             
             while (i--) {
                 instance = instances[i];
-                if (instance.active) {
+                if (instance.remove) {
+                    instances.greenSplice(i);
+                    instance.timeline.recycle(2);
+                    instance.recycle();
+                } else if (instance.active) {
                     if (instance.timeline.length === 0) {
                         instances.greenSplice(i);
                         instance.timeline.recycle(2);
@@ -99,13 +103,19 @@
              * @param tick.delta {Number} The length of the tick.
              */
             "handle-logic": updateLogic,
+
+            /**
+             * Stops all timelines.
+             *
+             * @method 'stop-active-timelines'
+             * @since v0.12.0
+             */
             "stop-active-timelines": function () {
-                var x = 0,
-                    instance = null;
-                for (x = this.timelineInstances.length - 1; x >= 0; x--) {
-                    instance = this.timelineInstances.greenSplice(x);
-                    instance.timeline.recycle(2);
-                    instance.recycle();
+                var instances = this.timelineInstances,
+                    i = instances.length;
+
+                while (i--) {
+                    instances[i].remove = true;
                 }
             }
         },
@@ -134,7 +144,8 @@
                     "time", 0,
                     "active", 1,
                     "pause", pause,
-                    "play", play
+                    "play", play,
+                    "remove", false
                 );
             },
             progressTimeline: function (instance, delta) {

@@ -187,6 +187,7 @@
              */
             "stop-audio": function () {
                 this.player.stop();
+                this.player.voList = []; // Workaround to prevent a Springroll bug wherein stopping throws an error due to `voList` being `null`.
             }
         },
         
@@ -211,6 +212,7 @@
             destroy: function () {
                 if (this.playingAudio) {
                     this.player.stop();
+                    this.player.voList = []; // Workaround to prevent a Springroll bug wherein stopping throws an error due to `voList` being `null`.
                 }
                 this.eventList.recycle();
             }
