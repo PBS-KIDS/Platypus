@@ -732,8 +732,8 @@
                 return function (entity, time) {
                     var worldCamera = this.worldCamera,
                         worldVP = worldCamera.viewport,
-                        x = getTransitionalPoint(worldVP.x, entity.x, getRatio(this.transitionX, time)),
-                        y = getTransitionalPoint(worldVP.y, entity.y, getRatio(this.transitionY, time));
+                        x = getTransitionalPoint(worldVP.x, entity.x + this.offsetX, getRatio(this.transitionX, time)),
+                        y = getTransitionalPoint(worldVP.y, entity.y + this.offsetY, getRatio(this.transitionY, time));
 
                     if (this.rotate) { // Only run the orientation calculations if we need them.
                         return this.move(x, y, getTransitionalPoint(worldCamera.orientation, -(entity.orientation || 0), getRatio(this.transitionAngle, time)));
