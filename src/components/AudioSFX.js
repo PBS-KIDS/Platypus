@@ -446,14 +446,13 @@
                 
                 return function (audioId, playthrough) {
                     var clips = this.activeAudioClips,
-                        func = null,
+                        func = loopFunc.bind(this),
                         i = clips.length;
                     
                     if (audioId) {
-                        func = loopFunc.bind(this);
                         while (i--) {
                             if (clips[i].soundId === audioId) {
-                                if (playthrough) {
+                                if (clips[i].playthrough || playthrough) {
                                     clips[i].addEventListener('loop', func);
                                 } else {
                                     clips[i].stop();
@@ -461,14 +460,13 @@
                                 }
                             }
                         }
-                    } else if (playthrough) {
-                        func = loopFunc.bind(this);
-                        while (i--) {
-                            clips[i].addEventListener('loop', func);
-                        }
                     } else {
                         while (i--) {
-                            clips[i].stop();
+                            if (playthrough || clips[i].playthrough) {
+                                clips[i].addEventListener('loop', func);
+                            } else {
+                                clips[i].stop();
+                            }
                         }
                         clips.length = 0;
                     }
@@ -477,11 +475,12 @@
             
             stopAudioInstance: function (instance) {
                 var clips = this.activeAudioClips,
-                    i     = clips.indexOf(instance);
+                    i     = clips ? clips.indexOf(instance) : -1;
                 
                 if (i >= 0) {
-                    clips.greenSplice(i).stop();
+                    clips.greenSplice(i);
                 }
+                instance.stop();
             },
             
             removeClip: function (audioClip) {
@@ -510,6 +509,7 @@
                 
                 this.stopAudio();
                 this.activeAudioClips.recycle();
+                this.activeAudioClips = null;
                 
                 this.state = null;
 
