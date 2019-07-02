@@ -8,12 +8,12 @@ The Platypus Engine allows rapid development of 2D orthogonal tile based games f
 Platypus uses:
 
  * The [Tiled](http://www.mapeditor.org/) map editor for level creation.
- * [SpringRoll](http://springroll.io) for application management.
+ * [SpringRoll (v1)](http://springroll.io) for application management.
  * [Pixi.js](http://www.pixijs.com/) for rendering visuals.
 
 ## Key Features
 
-* Deploy on any HTML5 platform supported by SpringRoll
+* Deploy on any HTML5 platform supported by SpringRoll v1
 * Multi-platform support
 * Automatic scaling
 * Touch and keyboard input
@@ -21,7 +21,8 @@ Platypus uses:
 * [Documentation](https://github.com/PBS-KIDS/Platypus/wiki)
 
 Platypus in action:
-Wild Kratts [Monkey Mayhem](http://pbskids.org/wildkratts/games/monkey-mayhem/)
+* Ready Jet GO! [Mission Earth](https://pbskids.org/readyjetgo/games/mission/index.html)
+* Wild Kratts [Monkey Mayhem](http://pbskids.org/wildkratts/games/monkey-mayhem/)
 
 ## Building
 Platypus uses [Grunt](http://gruntjs.com/) to manage the build process. To export a release build for this library run:
