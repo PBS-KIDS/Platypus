@@ -66,6 +66,7 @@
         },
         onComplete = function (complete, soundList) {
             this.playingAudio = false;
+            this.player.unloadSound();
             if (!this.owner.destroyed) {
                 this.checkTimeEvents(true);
                 
@@ -149,6 +150,7 @@
     
             this.playingAudio = false;
             this.player = platypus.game.app.voPlayer;
+            this.player.trackSound = platypus.supports.iOS;
     
             if (this.audioMap) {
                 for (key in this.audioMap) {
