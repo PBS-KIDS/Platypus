@@ -17,7 +17,17 @@
         RenderContainer = include('platypus.components.RenderContainer'),
         SkeletonJson = include('PIXI.spine.core.SkeletonJson', false),
         Spine = include('PIXI.spine.Spine', false),
-        StateRender = include('platypus.components.StateRender');
+        StateRender = include('platypus.components.StateRender'),
+        getBaseTexture = function (path) {
+            var asset = null,
+                assetCache = platypus.game.app.assetManager.cache;
+            
+            asset = assetCache.read(path.substring(path.lastIndexOf('/') + 1, path.lastIndexOf('.')));
+            if (!asset) {
+                platypus.debug.warn('RenderSpine: "' + path + '" is not a loaded asset.');
+            }
+            return new BaseTexture(asset);
+        };
     
     // If PIXI.spine is unavailable, this component doesn't work.
     if (!Spine) {
@@ -306,7 +316,7 @@
                 },
                 imageCallback = function (loadFinished, line, callback) {
                     // Not sure if this handles memory well - keeping it in for now.
-                    var baseTexture = BaseTexture.fromImage(platypus.game.app.loader.cacheManager.prepare(line)); // Conform to SpringRoll's loading paths so that this matches and doesn't download the asset twice.
+                    var baseTexture = getBaseTexture(line);
 
                     callback(baseTexture);
 
@@ -335,7 +345,7 @@
                     this.owner.trigger(eventName, event.data);
                 };
             
-            return function (definition, callback) {
+            return function (def, callback) {
                 var animation = '',
                     definition = null,
                     settings = platypus.game.settings,
@@ -570,18 +580,29 @@
         getAssetList: (function () {
             var
                 getImages = function (atlas, atlases) {
-                    var end = 0;
+                    var images = Array.setUp(),
+                        lines = null,
+                        j = 0;
 
                     if (atlas) {
-                        end = atlas.indexOf('\n');
-                        if (end < 0) {
-                            return getImages(atlases[atlas], atlases);
-                        } else {
-                            return Array.setUp(atlas.substring(0, end).replace('\r', ''));
+                        lines = atlas.split('\n');
+                        if (lines.length === 1) { // id, not an actual atlas
+                            atlas = atlases[atlas];
+                            if (atlas) {
+                                lines = atlas.split('\n');
+                            } else {
+                                return images;
+                            }
+                        }
+                        j = lines.length;
+                        while (j--) { // Fix up relative image location paths.
+                            if (lines[j].substr(lines[j].length - 4) === '.png') {
+                                images.push(lines[j]);
+                            }
                         }
                     }
 
-                    return Array.setUp();
+                    return images;
                 };
             
             return function (component, props, defaultProps) {
