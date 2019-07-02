@@ -34,9 +34,13 @@
                 time       = 0,
                 lastFrame  = '',
                 thisFrame  = '',
-                voice = sound.voice;
+                voice = sound.voice,
+                mouthCues = sound.mouthCues;
 
-            if (typeof sound.sound === 'string') {
+            if (typeof sound === 'string') {
+                definition.sound = sound;
+                definition.events = Array.setUp();
+            } else if (typeof sound.sound === 'string') {
                 definition.sound = sound.sound;
                 definition.events = Array.setUp();
             } else {
@@ -53,6 +57,10 @@
                 }
             }
 
+            if (!voice && !mouthCues && platypus.game.app.config.mouthCues) {
+                mouthCues = platypus.game.app.config.mouthCues[definition.sound];
+            }
+
             if (voice) {
                 voice += ' ';
 
@@ -65,6 +73,15 @@
                             "event": getEventName(message, thisFrame)
                         });
                     }
+                    time += frameLength;
+                }
+            } else if (mouthCues) {
+                for (i = 0; i < mouthCues.length; i++) {
+                    thisFrame = mouthCues[i];
+                    definition.events.push({
+                        "time": thisFrame.start * 1000,
+                        "event": getEventName(message, thisFrame.value)
+                    });
                     time += frameLength;
                 }
             }
@@ -115,6 +132,15 @@
              * @default: {"default": "default"}
              */
             animationMap: {"default": "default"},
+
+            /**
+             * Specifies the type of component to add to handle VO lip-sync animation.
+             *
+             * @property renderComponent
+             * @type String
+             * @default 'renderSprite'
+             */
+            renderComponent: '',
 
             /**
              * Specifies how long a described voice-over frame should last in milliseconds.
@@ -194,7 +220,11 @@
                 }
             }
             animationDefinition.animationMap.default = this.animationMap.default;
-            componentInits.push(componentInit.bind(this, (definition.animation ? RenderAnimation : RenderSprite), animationDefinition));
+            if (this.renderComponent) {
+                componentInits.push(componentInit.bind(this, platypus.components[this.renderComponent], animationDefinition));
+            } else {
+                componentInits.push(componentInit.bind(this, (definition.animation ? RenderAnimation : RenderSprite), animationDefinition));
+            }
 
             for (i in this.voiceOverMap) {
                 if (this.voiceOverMap.hasOwnProperty(i)) {
