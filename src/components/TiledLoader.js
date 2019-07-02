@@ -133,6 +133,48 @@
             y: 1,
             id: -1
         },
+        getProperty = function (obj, key) { // Handle Tiled map versions
+            var i = 0;
+
+            if (obj) {
+                if (Array.isArray(obj)) {
+                    i = obj.length;
+                    while (i--) {
+                        if (obj[i].name === key) {
+                            return obj[i].value;
+                        }
+                    }
+                    return null;
+                } else {
+                    return obj[key];
+                }
+            } else {
+                return null;
+            }
+        },
+        setProperty = function (obj, key, value) { // Handle Tiled map versions
+            var i = 0;
+
+            if (obj) {
+                if (Array.isArray(obj)) {
+                    i = obj.length;
+                    while (i--) {
+                        if (obj[i].name === key) {
+                            obj[i].type = typeof value;
+                            obj[i].value = value;
+                            return;
+                        }
+                    }
+                    obj.push({
+                        name: key,
+                        type: typeof value,
+                        value: value
+                    });
+                } else {
+                    obj[key] = value;
+                }
+            }
+        },
         entityTransformCheck = function (v) {
             var resp = transform,
                 b = !!(maskYFlip & v),
@@ -224,12 +266,19 @@
             return data;
         },
         mergeAndFormatProperties = function (src, dest) {
-            var key = '';
+            var i = 0,
+                key = '';
             
             if (src && dest) {
-                for (key in src) {
-                    if (src.hasOwnProperty(key)) {
-                        dest[key] = formatProperty(src[key]);
+                if (Array.isArray(src)) {
+                    for (i = 0; i < src.length; i++) {
+                        setProperty(dest, src[i].name, formatProperty(src[i].value));
+                    }
+                } else {
+                    for (key in src) {
+                        if (src.hasOwnProperty(key)) {
+                            setProperty(dest, key, formatProperty(src[key]));
+                        }
                     }
                 }
             }
@@ -292,12 +341,15 @@
                             }
                         } else if (level.layers[i].type === 'imagelayer') {
                             assets.union([level.layers[i].image]);
-                        } else if (level.layers[i].properties && level.layers[i].properties.entity) {
-                            data = Data.setUp('type', level.layers[i].properties.entity);
-                            arr = Entity.getAssetList(data);
-                            assets.union(arr);
-                            arr.recycle();
-                            data.recycle();
+                        } else {
+                            entity = getProperty(level.layers[i].properties, 'entity');
+                            if (entity) {
+                                data = Data.setUp('type', entity);
+                                arr = Entity.getAssetList(data);
+                                assets.union(arr);
+                                arr.recycle();
+                                data.recycle();
+                            }
                         }
                     }
                     if (!ss) { //We need to load the tileset images since there is not a separate spriteSheet describing them
@@ -536,6 +588,8 @@
                     tWidth = layer.tilewidth || tileWidth,
                     newWidth = 0,
                     newHeight = 0,
+                    layerHeight = 0,
+                    layerWidth = 0,
                     tileTypes = 0,
                     tileDefinition = JSON.parse(JSON.stringify(platypus.game.settings.entities[entityKind] || standardEntityLayers[entityKind])), //TODO: a bit of a hack to copy an object instead of overwrite values
                     importAnimation = {},
@@ -603,12 +657,17 @@
 
                 //This builds in parallaxing support by allowing the addition of width and height properties into Tiled layers so they pan at a separate rate than other layers.
                 if (layer.properties) {
-                    if (layer.properties.width) {
-                        newWidth  = parseInt(layer.properties.width,  10);
+
+                    layerWidth = getProperty(layer.properties, 'width');
+                    if (layerWidth) {
+                        newWidth  = parseInt(layerWidth,  10);
                     }
-                    if (layer.properties.height) {
-                        newHeight = parseInt(layer.properties.height, 10);
+
+                    layerHeight = getProperty(layer.properties, 'height');
+                    if (layerHeight) {
+                        newHeight = parseInt(layerHeight, 10);
                     }
+
                     if (newWidth || newHeight) {
                         newWidth  = newWidth  || width;
                         newHeight = newHeight || height;
@@ -733,6 +792,9 @@
                     dataCells = 0,
                     imageId = '',
                     props = imageLayer.properties || {},
+                    repeat = getProperty(props, 'repeat'),
+                    repeatX = getProperty(props, 'repeat-x'),
+                    repeatY = getProperty(props, 'repeat-y'),
                     tileLayer = {
                         data: [],
                         image: '',
@@ -747,15 +809,15 @@
                         properties: props
                     };
 
-                if (props.repeat) {
-                    tileLayer.width = +props.repeat;
-                    tileLayer.height = +props.repeat;
+                if (repeat) {
+                    tileLayer.width = +repeat;
+                    tileLayer.height = +repeat;
                 }
-                if (props['repeat-x']) {
-                    tileLayer.width = +props['repeat-x'];
+                if (repeatX) {
+                    tileLayer.width = +repeatX;
                 }
-                if (props['repeat-y']) {
-                    tileLayer.height = +props['repeat-y'];
+                if (repeatY) {
+                    tileLayer.height = +repeatY;
                 }
                 dataCells = tileLayer.width * tileLayer.height;
                 for (i = 0; i < dataCells; i++) {
@@ -867,10 +929,10 @@
                 }
 
                 progress.total = i = layers.length;
-                while (i--) { // Prepatory pass through layers.
+                while (i--) { // Preparatory pass through layers.
                     if (layers[i].type === 'objectgroup') {
                         progress.total += layers[i].objects.length;
-                    } else if (actionLayerCollides && ((layers[i].name === 'collision') || (layers[i].properties && layers[i].properties.entity === 'collision-layer'))) {
+                    } else if (actionLayerCollides && ((layers[i].name === 'collision') || (getProperty(layers[i].properties, 'entity') === 'collision-layer'))) {
                         actionLayerCollides = false;
                     }
                 }
@@ -913,8 +975,8 @@
                     entity = null,
                     entityDefinition = null,
                     entityDefProps = null,
-                    entityPositionX = "",
-                    entityPositionY = "",
+                    entityPositionX = getProperty(layer.properties, 'entityPositionX') || this.entityPositionX,
+                    entityPositionY = getProperty(layer.properties, 'entityPositionY') || this.entityPositionY,
                     entityType = '',
                     gid = -1,
                     smallestX = Infinity,
@@ -929,18 +991,6 @@
 
                 mapOffsetX += layer.offsetx || 0;
                 mapOffsetY += layer.offsety || 0;
-
-                entityPositionX = this.entityPositionX;
-                entityPositionY = this.entityPositionY;
-
-                if (layer.properties) {
-                    if (layer.properties.entityPositionX) {
-                        entityPositionX = layer.properties.entityPositionX;
-                    }
-                    if (layer.properties.entityPositionY) {
-                        entityPositionY = layer.properties.entityPositionY;
-                    }
-                }
 
                 for (obj = 0; obj < layer.objects.length; obj++) {
                     entity     = layer.objects[obj];
@@ -1037,14 +1087,16 @@
                                 }
                             }
 
-                            if (!properties.width) {
-                                properties.width = fallbackWidth;
+                            if (!entity.point) {
+                                if (!properties.width) {
+                                    properties.width = fallbackWidth;
+                                }
+                                if (!properties.height) {
+                                    properties.height = fallbackHeight;
+                                }
+                                widthOffset = widthOffset || properties.width;
+                                heightOffset = heightOffset || properties.height;
                             }
-                            if (!properties.height) {
-                                properties.height = fallbackHeight;
-                            }
-                            widthOffset = widthOffset || properties.width;
-                            heightOffset = heightOffset || properties.height;
 
                             properties.x = entity.x * this.unitsPerPixel;
                             properties.y = entity.y * this.unitsPerPixel;
@@ -1140,20 +1192,21 @@
 
             setupLayer: function (layer, layerCollides, combineRenderLayer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, images, progress) {
                 var canCombine = false,
-                    entity = 'render-layer', // default
+                    specified = getProperty(layer.properties, 'entity'),
+                    entity = specified || 'render-layer', // default
                     entityDefinition = null,
                     i = 0;
                 
                 // First determine which type of entity this layer should behave as:
-                if (layer.properties && layer.properties.entity) {
-                    entity = layer.properties.entity;
-                } else if (layer.name === "collision") {
-                    entity = 'collision-layer';
-                } else if (layer.name === "action") {
-                    if (layerCollides) {
-                        entity = 'tile-layer';
-                    } else {
-                        entity = 'render-layer';
+                if (!specified) {
+                    if (layer.name === "collision") {
+                        entity = 'collision-layer';
+                    } else if (layer.name === "action") {
+                        if (layerCollides) {
+                            entity = 'tile-layer';
+                        } else {
+                            entity = 'render-layer';
+                        }
                     }
                 }
 
