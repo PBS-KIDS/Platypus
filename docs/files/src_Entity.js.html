@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.11.10 API Documentation : src\Entity.js</title>
+	<title>platypus v1.0.0 API Documentation : src\Entity.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.11.10</em>
+            <em>API Documentation for: 1.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -71,6 +71,7 @@
                                 <li><a href="../classes/platypus.components.LogicCarrier.html">platypus.components.LogicCarrier</a></li>
                                 <li><a href="../classes/platypus.components.LogicDestroyMe.html">platypus.components.LogicDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.LogicDirectionalMovement.html">platypus.components.LogicDirectionalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
@@ -80,6 +81,7 @@
                                 <li><a href="../classes/platypus.components.NodeResident.html">platypus.components.NodeResident</a></li>
                                 <li><a href="../classes/platypus.components.Orientation.html">platypus.components.Orientation</a></li>
                                 <li><a href="../classes/platypus.components.RandomEvents.html">platypus.components.RandomEvents</a></li>
+                                <li><a href="../classes/platypus.components.RelativePosition.html">platypus.components.RelativePosition</a></li>
                                 <li><a href="../classes/platypus.components.RelayFamily.html">platypus.components.RelayFamily</a></li>
                                 <li><a href="../classes/platypus.components.RelayGame.html">platypus.components.RelayGame</a></li>
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
@@ -99,6 +101,7 @@
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
+                                <li><a href="../classes/platypus.components.Tween.html">platypus.components.Tween</a></li>
                                 <li><a href="../classes/platypus.components.VoiceOver.html">platypus.components.VoiceOver</a></li>
                                 <li><a href="../classes/platypus.components.XHR.html">platypus.components.XHR</a></li>
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
@@ -190,6 +193,7 @@
                          * @param [instanceDefinition] {Object} Specific instance definition including properties that override the base definition properties.
                          * @param [instanceDefinition.properties] {Object} This is a list of key/value pairs that are added directly to the Entity as &#x60;entity.key = value&#x60;.
                          * @param [callback] {Function} A function to run once all of the components on the Entity have been loaded. The first parameter is the entity itself.
+                         * @param [parent] {Entity} Presets the parent of the entity so that the parent entity is available during component instantiation. Overrides &#x60;parent&#x60; in properties definitions.
                          * @return {Entity} Returns the new entity made up of the provided components.
                         **/
                         
@@ -203,7 +207,7 @@
                                     this.addComponent(new Component(this, componentDefinition, callback));
                                 },
                                 entityIds = {},
-                                entity = function (definition, instanceDefinition, callback) {
+                                entity = function (definition, instanceDefinition, callback, parent) {
                                     var i                    = 0,
                                         componentDefinition  = null,
                                         componentInits       = Array.setUp(),
@@ -246,6 +250,10 @@
                                     this.state = StateMap.setUp(this.state); //starts with no state information. This expands with boolean value properties entered by various logic components.
                                     this.lastState = StateMap.setUp(); //This is used to determine if the state of the entity has changed.
                                     
+                                    if (parent) {
+                                        this.parent = parent;
+                                    }
+                        
                                     this.trigger = this.triggerEvent = function (event, message) {
                                         savedEvents.push(event);
                                         savedMessages.push(message);
@@ -265,7 +273,9 @@
                                             }
                                         }
                                     }
-                                    platypus.Async.setUp(componentInits, function () {
+                                    this.loadingComponents = platypus.Async.setUp(componentInits, function () {
+                                        this.loadingComponents = null;
+                        
                                         // Trigger saved events that were being fired during component addition.
                                         delete this.trigger;
                                         delete this.triggerEvent;
@@ -428,10 +438,11 @@
                             proto.messengerDestroy = proto.destroy;
                             proto.destroy = function () {
                                 var components = this.components,
-                                    i = components.length;
+                                    i = 0,
+                                    length = components.length;
                                 
                                 if (!this._destroyed) {
-                                    while (i--) {
+                                    for (i = 0; i &lt; length; i++) {
                                         components[i].destroy();
                                     }
                                     components.recycle();

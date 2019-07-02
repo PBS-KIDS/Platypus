@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v1.0.0 API Documentation : platypus.components.RelayFamily</title>
+	<title>platypus v1.0.0 API Documentation : platypus.components.Tween</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -152,7 +152,7 @@
                 </div>            <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>platypus.components.RelayFamily Class</h1>
+                        <h1>platypus.components.Tween Class</h1>
                         <div class="box meta">
                                 <div class="uses">
                                     Uses
@@ -163,7 +163,7 @@
                         
                         
                                 <div class="foundat">
-                                    Defined in: <a href="../files/src_components_RelayFamily.js.html#l1"><code>platypus.components.RelayFamily:1</code></a>
+                                    Defined in: <a href="../files/src_components_Tween.js.html#l1"><code>platypus.components.Tween:1</code></a>
                                 </div>
                         
                                     Module: <a href="../modules/platypus.html">platypus</a>
@@ -172,7 +172,8 @@
                         
                         
                         <div class="box intro">
-                            <p>This component allows an entity to communicate directly with one or more entities via the message model, by passing local messages directly to entities in the same family as new triggered events. This component is placed on a single entity and all entities created by this entity become part of its "family".</p>
+                            <p>This component takes a list of tween definitions and plays them as needed. This component requires CreateJS Tween.</p>
+                        <p>NOTE: This component handles ticking that's synchronized with the game's tick, NOT it's logic tick. As such, reading tweened values during the logic tick will show a changed value on the first logic tick, but all subsequent logic ticks comprising the game's full tick will show no change at all.</p>
                         
                         </div>
                         
@@ -193,14 +194,6 @@
                                             <h3>Methods</h3>
                         
                                             <ul class="index-list methods">
-                                                    <li class="index-item method">
-                                                        <a href="#method_&#x27;entity-created&#x27;">&#x27;entity-created&#x27;</a>
-                        
-                                                    </li>
-                                                    <li class="index-item method">
-                                                        <a href="#method_&#x27;link-family&#x27;">&#x27;link-family&#x27;</a>
-                        
-                                                    </li>
                                                     <li class="index-item method private inherited">
                                                         <a href="#method_addEventListener">addEventListener</a>
                         
@@ -249,7 +242,55 @@
                         
                                             <ul class="index-list properties">
                                                     <li class="index-item property">
+                                                        <a href="#property_bounce">bounce</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
                                                         <a href="#property_events">events</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_ignoreGlobalPause">ignoreGlobalPause</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_loop">loop</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_onChange">onChange</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_onComplete">onComplete</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_override">override</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_paused">paused</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_pluginData">pluginData</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_position">position</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_reversed">reversed</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_timeScale">timeScale</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_useTicks">useTicks</a>
                         
                                                     </li>
                                             </ul>
@@ -261,112 +302,6 @@
                                     <div id="methods" class="api-class-tabpanel">
                                         <h2 class="off-left">Methods</h2>
                         
-                                            <div id="method_&#x27;entity-created&#x27;" class="method item">
-                                                <h3 class="name"><code>&#x27;entity-created&#x27;</code></h3>
-                                            
-                                                    <div class="args">
-                                                        <span class="paren">(</span><ul class="args-list inline commas">
-                                                            <li class="arg">
-                                                                    <code>entity</code>
-                                                            </li>
-                                                        </ul><span class="paren">)</span>
-                                                    </div>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/src_components_RelayFamily.js.html#l65"><code>&#x27;entity-created&#x27;:65</code></a>
-                                                    </p>
-                                            
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>Called when this entity spawns a new entity, this event links the newly created entity to this entity.</p>
-                                            
-                                                </div>
-                                            
-                                                    <div class="params">
-                                                        <h4>Parameters:</h4>
-                                            
-                                                        <ul class="params-list">
-                                                            <li class="param">
-                                                                    <code class="param-name">entity</code>
-                                                                    <span class="type"><a href="../classes/platypus.Entity.html" class="crosslink">platypus.Entity</a></span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <p>The entity to link.</p>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                            
-                                            
-                                            </div>
-                                            <div id="method_&#x27;link-family&#x27;" class="method item">
-                                                <h3 class="name"><code>&#x27;link-family&#x27;</code></h3>
-                                            
-                                                    <div class="args">
-                                                        <span class="paren">(</span><ul class="args-list inline commas">
-                                                            <li class="arg">
-                                                                    <code>links</code>
-                                                            </li>
-                                                        </ul><span class="paren">)</span>
-                                                    </div>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/src_components_RelayFamily.js.html#l46"><code>&#x27;link-family&#x27;:46</code></a>
-                                                    </p>
-                                            
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>Called when linking a new member to the family, this event accepts a list of family members from the new member and uses it to link all the family members together.</p>
-                                            
-                                                </div>
-                                            
-                                                    <div class="params">
-                                                        <h4>Parameters:</h4>
-                                            
-                                                        <ul class="params-list">
-                                                            <li class="param">
-                                                                    <code class="param-name">links</code>
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a> | Entities</span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <p>An array of entities.</p>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                            
-                                            
-                                            </div>
                                             <div id="method_addEventListener" class="method item private inherited">
                                                 <h3 class="name"><code>addEventListener</code></h3>
                                             
@@ -944,6 +879,32 @@
                                     <div id="properties" class="api-class-tabpanel">
                                         <h2 class="off-left">Properties</h2>
                         
+                                            <div id="property_bounce" class="property item">
+                                                <h3 class="name"><code>bounce</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_Tween.js.html#l180"><code>bounce:180</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Sets <code>bounce</code> on the tween as defined here: <a href="https://www.createjs.com/docs/tweenjs/classes/Tween.html">https://www.createjs.com/docs/tweenjs/classes/Tween.html</a></p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> false</p>
+                                            
+                                            
+                                            </div>
                                             <div id="property_events" class="property item">
                                                 <h3 class="name"><code>events</code></h3>
                                                 <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
@@ -955,22 +916,318 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RelayFamily.js.html#l16"><code>events:16</code></a>
+                                                    <a href="../files/src_components_Tween.js.html#l120"><code>events:120</code></a>
                                                     </p>
                                             
                                             
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>This is an object of key/value pairs. The keys are events this component is listening for locally, the value is the event that will be broadcast to its linked entities. The value can also be an array of events to be fired on linked entities.</p>
-                                            <pre class="code prettyprint"><code> "events": {
-                                                 "sleeping": "good-night",
-                                                 "awake": ["alarm", "get-up"]
+                                                    <p>Required. A key/value list of events and an array or object representing the tween they should trigger.</p>
+                                            <pre class="code prettyprint"><code> {
+                                                 "begin-flying": [ // When "begin-flying" is triggered on this entity, the following tween begins. Tween definitions adhere to a similar structure outlined by the TweenJS documentation. Each milestone on the tween is an item in this array.
+                                                     ["to", { // If the definition is an array, the first parameter is the type of milestone, in this case "to", with all following parameters passed directly to the equivalent Tween function.
+                                                         "scaleY": 1,
+                                                         "y": 400
+                                                     }, 500],
+                                                     ["call", "fly"], // "call" milestones can take a function or a string. If it's a string, the string will be triggered as an event on the entity. In this case, the component will trigger "fly".
+                                                 ],
+                                            
+                                                 "stop-flying": { // Alternatively, an object can be used to include properties. It must include a <code>tween</code> property with an array of tween values like above. It may include any properties that the Tween component accepts and overrides the component's properties.
+                                                     "tween": [["to", {"y": 0}, 250]],
+                                                     "loop": 2 // This overrides this component's <code>loop</code> property value.
+                                                 }
                                              }</code></pre>
                                             
                                                 </div>
                                             
                                                     <p><strong>Default:</strong> null</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_ignoreGlobalPause" class="property item">
+                                                <h3 class="name"><code>ignoreGlobalPause</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_Tween.js.html#l153"><code>ignoreGlobalPause:153</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Sets <code>ignoreGlobalPause</code> on the tween as defined here: <a href="https://www.createjs.com/docs/tweenjs/classes/Tween.html">https://www.createjs.com/docs/tweenjs/classes/Tween.html</a></p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> false</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_loop" class="property item">
+                                                <h3 class="name"><code>loop</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_Tween.js.html#l162"><code>loop:162</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Sets <code>loop</code> on the tween as defined here: <a href="https://www.createjs.com/docs/tweenjs/classes/Tween.html">https://www.createjs.com/docs/tweenjs/classes/Tween.html</a></p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> 0</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_onChange" class="property item">
+                                                <h3 class="name"><code>onChange</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function" class="crosslink external" target="_blank">Function</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_Tween.js.html#l225"><code>onChange:225</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Sets <code>onChange</code> on the tween as defined here: <a href="https://www.createjs.com/docs/tweenjs/classes/Tween.html">https://www.createjs.com/docs/tweenjs/classes/Tween.html</a>. If a string is specified, it is triggered as an event on the entity.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> &#x27;&#x27;</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_onComplete" class="property item">
+                                                <h3 class="name"><code>onComplete</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function" class="crosslink external" target="_blank">Function</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_Tween.js.html#l234"><code>onComplete:234</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Sets <code>onComplete</code> on the tween as defined here: <a href="https://www.createjs.com/docs/tweenjs/classes/Tween.html">https://www.createjs.com/docs/tweenjs/classes/Tween.html</a>. If a string is specified, it is triggered as an event on the entity.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> &#x27;&#x27;</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_override" class="property item">
+                                                <h3 class="name"><code>override</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_Tween.js.html#l243"><code>override:243</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Sets <code>override</code> on the tween as defined here: <a href="https://www.createjs.com/docs/tweenjs/classes/Tween.html">https://www.createjs.com/docs/tweenjs/classes/Tween.html</a></p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> false</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_paused" class="property item">
+                                                <h3 class="name"><code>paused</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_Tween.js.html#l207"><code>paused:207</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Sets <code>paused</code> on the tween as defined here: <a href="https://www.createjs.com/docs/tweenjs/classes/Tween.html">https://www.createjs.com/docs/tweenjs/classes/Tween.html</a></p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> false</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_pluginData" class="property item">
+                                                <h3 class="name"><code>pluginData</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_Tween.js.html#l198"><code>pluginData:198</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Sets <code>pluginData</code> on the tween as defined here: <a href="https://www.createjs.com/docs/tweenjs/classes/Tween.html">https://www.createjs.com/docs/tweenjs/classes/Tween.html</a></p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> null</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_position" class="property item">
+                                                <h3 class="name"><code>position</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_Tween.js.html#l216"><code>position:216</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Sets <code>position</code> on the tween as defined here: <a href="https://www.createjs.com/docs/tweenjs/classes/Tween.html">https://www.createjs.com/docs/tweenjs/classes/Tween.html</a></p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> false</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_reversed" class="property item">
+                                                <h3 class="name"><code>reversed</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_Tween.js.html#l171"><code>reversed:171</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Sets <code>reversed</code> on the tween as defined here: <a href="https://www.createjs.com/docs/tweenjs/classes/Tween.html">https://www.createjs.com/docs/tweenjs/classes/Tween.html</a></p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> false</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_timeScale" class="property item">
+                                                <h3 class="name"><code>timeScale</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_Tween.js.html#l189"><code>timeScale:189</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Sets <code>timeScale</code> on the tween as defined here: <a href="https://www.createjs.com/docs/tweenjs/classes/Tween.html">https://www.createjs.com/docs/tweenjs/classes/Tween.html</a></p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> 1</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_useTicks" class="property item">
+                                                <h3 class="name"><code>useTicks</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_Tween.js.html#l144"><code>useTicks:144</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Sets <code>useTicks</code> on the tween as defined here: <a href="https://www.createjs.com/docs/tweenjs/classes/Tween.html">https://www.createjs.com/docs/tweenjs/classes/Tween.html</a></p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> false</p>
                                             
                                             
                                             </div>

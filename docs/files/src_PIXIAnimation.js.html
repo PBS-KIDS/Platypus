@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.11.10 API Documentation : src\PIXIAnimation.js</title>
+	<title>platypus v1.0.0 API Documentation : src\PIXIAnimation.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.11.10</em>
+            <em>API Documentation for: 1.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -71,6 +71,7 @@
                                 <li><a href="../classes/platypus.components.LogicCarrier.html">platypus.components.LogicCarrier</a></li>
                                 <li><a href="../classes/platypus.components.LogicDestroyMe.html">platypus.components.LogicDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.LogicDirectionalMovement.html">platypus.components.LogicDirectionalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
@@ -80,6 +81,7 @@
                                 <li><a href="../classes/platypus.components.NodeResident.html">platypus.components.NodeResident</a></li>
                                 <li><a href="../classes/platypus.components.Orientation.html">platypus.components.Orientation</a></li>
                                 <li><a href="../classes/platypus.components.RandomEvents.html">platypus.components.RandomEvents</a></li>
+                                <li><a href="../classes/platypus.components.RelativePosition.html">platypus.components.RelativePosition</a></li>
                                 <li><a href="../classes/platypus.components.RelayFamily.html">platypus.components.RelayFamily</a></li>
                                 <li><a href="../classes/platypus.components.RelayGame.html">platypus.components.RelayGame</a></li>
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
@@ -99,6 +101,7 @@
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
+                                <li><a href="../classes/platypus.components.Tween.html">platypus.components.Tween</a></li>
                                 <li><a href="../classes/platypus.components.VoiceOver.html">platypus.components.VoiceOver</a></li>
                                 <li><a href="../classes/platypus.components.XHR.html">platypus.components.XHR</a></li>
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
@@ -166,7 +169,8 @@
                         (function () {
                             &#x27;use strict&#x27;;
                             
-                            var BaseTexture = include(&#x27;PIXI.BaseTexture&#x27;),
+                            var MAX_KEY_LENGTH_PER_IMAGE = 128,
+                                BaseTexture = include(&#x27;PIXI.BaseTexture&#x27;),
                                 CanvasTinter = include(&#x27;PIXI.CanvasTinter&#x27;),
                                 Data = include(&#x27;platypus.Data&#x27;),
                                 Point = include(&#x27;PIXI.Point&#x27;),
@@ -724,6 +728,20 @@
                                             ));
                                         }
                                     },
+                                    createId = function (images) {
+                                        var i = images.length,
+                                            id = &#x27;&#x27;,
+                                            segment = &#x27;&#x27;,
+                                            separator = &#x27;&#x27;;
+                        
+                                        while (i--) {
+                                            segment = images[i].src || images[i];
+                                            id += separator + segment.substring(0, MAX_KEY_LENGTH_PER_IMAGE);
+                                            separator = &#x27;,&#x27;;
+                                        }
+                        
+                                        return id;
+                                    },
                                     format = function (source, destination) {
                                         var bases = null,
                                             dAnims = destination.animations,
@@ -741,9 +759,9 @@
                                         
                                         // Set up id
                                         if (destination.id) {
-                                            destination.id += &#x27;;&#x27; + (source.id || source.images.join(&#x27;,&#x27;));
+                                            destination.id += &#x27;;&#x27; + (source.id || createId(source.images));
                                         } else {
-                                            destination.id = source.id || source.images.join(&#x27;,&#x27;);
+                                            destination.id = source.id || createId(source.images);
                                         }
                                         
                                         // Set up images array

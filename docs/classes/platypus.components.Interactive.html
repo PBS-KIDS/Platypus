@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.11.10 API Documentation : platypus.components.Interactive</title>
+	<title>platypus v1.0.0 API Documentation : platypus.components.Interactive</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.11.10</em>
+            <em>API Documentation for: 1.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -71,6 +71,7 @@
                                 <li><a href="../classes/platypus.components.LogicCarrier.html">platypus.components.LogicCarrier</a></li>
                                 <li><a href="../classes/platypus.components.LogicDestroyMe.html">platypus.components.LogicDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.LogicDirectionalMovement.html">platypus.components.LogicDirectionalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
@@ -80,6 +81,7 @@
                                 <li><a href="../classes/platypus.components.NodeResident.html">platypus.components.NodeResident</a></li>
                                 <li><a href="../classes/platypus.components.Orientation.html">platypus.components.Orientation</a></li>
                                 <li><a href="../classes/platypus.components.RandomEvents.html">platypus.components.RandomEvents</a></li>
+                                <li><a href="../classes/platypus.components.RelativePosition.html">platypus.components.RelativePosition</a></li>
                                 <li><a href="../classes/platypus.components.RelayFamily.html">platypus.components.RelayFamily</a></li>
                                 <li><a href="../classes/platypus.components.RelayGame.html">platypus.components.RelayGame</a></li>
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
@@ -99,6 +101,7 @@
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
+                                <li><a href="../classes/platypus.components.Tween.html">platypus.components.Tween</a></li>
                                 <li><a href="../classes/platypus.components.VoiceOver.html">platypus.components.VoiceOver</a></li>
                                 <li><a href="../classes/platypus.components.XHR.html">platypus.components.XHR</a></li>
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
@@ -287,30 +290,9 @@
                                             <h3>Events</h3>
                         
                                             <ul class="index-list events">
-                                                    <li class="index-item event deprecated">
-                                                        <a href="#event_&#x27;click&#x27;">&#x27;click&#x27;</a>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;pointercancel&#x27;">&#x27;pointercancel&#x27;</a>
                         
-                                                            <span class="flag deprecated">deprecated</span>
-                                                    </li>
-                                                    <li class="index-item event deprecated">
-                                                        <a href="#event_&#x27;mousedown&#x27;">&#x27;mousedown&#x27;</a>
-                        
-                                                            <span class="flag deprecated">deprecated</span>
-                                                    </li>
-                                                    <li class="index-item event deprecated">
-                                                        <a href="#event_&#x27;mousemove&#x27;">&#x27;mousemove&#x27;</a>
-                        
-                                                            <span class="flag deprecated">deprecated</span>
-                                                    </li>
-                                                    <li class="index-item event deprecated">
-                                                        <a href="#event_&#x27;mouseout&#x27;">&#x27;mouseout&#x27;</a>
-                        
-                                                            <span class="flag deprecated">deprecated</span>
-                                                    </li>
-                                                    <li class="index-item event deprecated">
-                                                        <a href="#event_&#x27;mouseover&#x27;">&#x27;mouseover&#x27;</a>
-                        
-                                                            <span class="flag deprecated">deprecated</span>
                                                     </li>
                                                     <li class="index-item event">
                                                         <a href="#event_&#x27;pointerdown&#x27;">&#x27;pointerdown&#x27;</a>
@@ -376,7 +358,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Interactive.js.html#l93"><code>&#x27;camera-update&#x27;:93</code></a>
+                                                    <a href="../files/src_components_Interactive.js.html#l102"><code>&#x27;camera-update&#x27;:102</code></a>
                                                     </p>
                                             
                                             
@@ -429,7 +411,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Interactive.js.html#l114"><code>&#x27;dispatch-event&#x27;:114</code></a>
+                                                    <a href="../files/src_components_Interactive.js.html#l123"><code>&#x27;dispatch-event&#x27;:123</code></a>
                                                     </p>
                                             
                                             
@@ -476,7 +458,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Interactive.js.html#l103"><code>&#x27;handle-render&#x27;:103</code></a>
+                                                    <a href="../files/src_components_Interactive.js.html#l112"><code>&#x27;handle-render&#x27;:112</code></a>
                                                     </p>
                                             
                                             
@@ -506,7 +488,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Interactive.js.html#l135"><code>&#x27;input-off&#x27;:135</code></a>
+                                                    <a href="../files/src_components_Interactive.js.html#l144"><code>&#x27;input-off&#x27;:144</code></a>
                                                     </p>
                                             
                                             
@@ -536,7 +518,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Interactive.js.html#l124"><code>&#x27;input-on&#x27;:124</code></a>
+                                                    <a href="../files/src_components_Interactive.js.html#l133"><code>&#x27;input-on&#x27;:133</code></a>
                                                     </p>
                                             
                                             
@@ -1139,7 +1121,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Interactive.js.html#l74"><code>buttonMode:74</code></a>
+                                                    <a href="../files/src_components_Interactive.js.html#l83"><code>buttonMode:83</code></a>
                                                     </p>
                                             
                                             
@@ -1165,7 +1147,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Interactive.js.html#l22"><code>container:22</code></a>
+                                                    <a href="../files/src_components_Interactive.js.html#l23"><code>container:23</code></a>
                                                     </p>
                                             
                                             
@@ -1182,7 +1164,7 @@
                                             </div>
                                             <div id="property_hitArea" class="property item">
                                                 <h3 class="name"><code>hitArea</code></h3>
-                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
                                             
                                             
                                             
@@ -1191,7 +1173,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Interactive.js.html#l31"><code>hitArea:31</code></a>
+                                                    <a href="../files/src_components_Interactive.js.html#l32"><code>hitArea:32</code></a>
                                                     </p>
                                             
                                             
@@ -1206,10 +1188,17 @@
                                                 "height": 40
                                             }
                                             </code></pre>
-                                            <p>A string can also be used to create more complex shapes via the PIXI graphics API like:</p>
-                                            <pre class="code prettyprint"><code>"hitArea": "r(10,20,40,40).dc(30,10,12)"
+                                            <p>Or a circle:</p>
+                                            <pre class="code prettyprint"><code>"hitArea": {
+                                                "x": 10,
+                                                "y": 10,
+                                                "radius": 40
+                                            }
                                             </code></pre>
-                                            <p>Defaults to the container if not specified or, if simply set to <code>true</code>, a rectangle using the entity's dimensions.</p>
+                                            <p>Or use an array of numbers to define a polygon: [x1, y1, x2, y2, ...]</p>
+                                            <pre class="code prettyprint"><code>"hitArea": [-10, -10, 30, -10, 30, 30, -5, 30]
+                                            </code></pre>
+                                            <p>Defaults to the container if not specified.</p>
                                             
                                                 </div>
                                             
@@ -1228,7 +1217,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Interactive.js.html#l53"><code>hover:53</code></a>
+                                                    <a href="../files/src_components_Interactive.js.html#l62"><code>hover:62</code></a>
                                                     </p>
                                             
                                             
@@ -1254,7 +1243,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Interactive.js.html#l62"><code>relativeToSelf:62</code></a>
+                                                    <a href="../files/src_components_Interactive.js.html#l71"><code>relativeToSelf:71</code></a>
                                                     </p>
                                             
                                             
@@ -1276,11 +1265,10 @@
                                     <div id="events" class="api-class-tabpanel">
                                         <h2 class="off-left">Events</h2>
                         
-                                            <div id="event_&#x27;click&#x27;" class="events item deprecated">
-                                                <h3 class="name"><code>&#x27;click&#x27;</code></h3>
+                                            <div id="event_&#x27;pointercancel&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;pointercancel&#x27;</code></h3>
                                                 <span class="type"></span>
                                             
-                                                    <span class="flag deprecated" title="since v0.10.6 - superceded by the &quot;pointertap&quot; event.">deprecated</span>
                                             
                                             
                                             
@@ -1288,367 +1276,15 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Interactive.js.html#l278"><code>&#x27;click&#x27;:278</code></a>
+                                                    <a href="../files/src_components_Interactive.js.html#l363"><code>&#x27;pointercancel&#x27;:363</code></a>
                                                     </p>
                                             
-                                                        <p>Deprecated: since v0.10.6 - superceded by the &quot;pointertap&quot; event.</p>
                                             
+                                                        <p>Available since v0.11.10</p>
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>This event is triggered on click.</p>
-                                            
-                                                </div>
-                                            
-                                                    <div class="params">
-                                                        <h4>Event Payload:</h4>
-                                            
-                                                        <ul class="params-list">
-                                                            <li class="param">
-                                                                    <code class="param-name">event</code>
-                                                                    <span class="type">DOMEvent</span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <p>The original DOM pointer event.</p>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                            <li class="param">
-                                                                    <code class="param-name">pixiEvent</code>
-                                                                    <span class="type">PIXI.interaction.InteractionEvent</span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <p>The Pixi pointer event.</p>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                            <li class="param">
-                                                                    <code class="param-name">x</code>
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <p>The x coordinate in world units.</p>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                            <li class="param">
-                                                                    <code class="param-name">y</code>
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <p>The y coordinate in world units.</p>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                            <li class="param">
-                                                                    <code class="param-name">entity</code>
-                                                                    <span class="type"><a href="../classes/platypus.Entity.html" class="crosslink">platypus.Entity</a></span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <p>The entity receiving this event.</p>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                            
-                                            
-                                            </div>
-                                            <div id="event_&#x27;mousedown&#x27;" class="events item deprecated">
-                                                <h3 class="name"><code>&#x27;mousedown&#x27;</code></h3>
-                                                <span class="type"></span>
-                                            
-                                                    <span class="flag deprecated" title="since v0.10.6 - superceded by the &quot;pointerdown&quot; event.">deprecated</span>
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/src_components_Interactive.js.html#l202"><code>&#x27;mousedown&#x27;:202</code></a>
-                                                    </p>
-                                            
-                                                        <p>Deprecated: since v0.10.6 - superceded by the &quot;pointerdown&quot; event.</p>
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>This event is triggered on mouse down.</p>
-                                            
-                                                </div>
-                                            
-                                                    <div class="params">
-                                                        <h4>Event Payload:</h4>
-                                            
-                                                        <ul class="params-list">
-                                                            <li class="param">
-                                                                    <code class="param-name">event</code>
-                                                                    <span class="type">DOMEvent</span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <p>The original DOM pointer event.</p>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                            <li class="param">
-                                                                    <code class="param-name">pixiEvent</code>
-                                                                    <span class="type">PIXI.interaction.InteractionEvent</span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <p>The Pixi pointer event.</p>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                            <li class="param">
-                                                                    <code class="param-name">x</code>
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <p>The x coordinate in world units.</p>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                            <li class="param">
-                                                                    <code class="param-name">y</code>
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <p>The y coordinate in world units.</p>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                            <li class="param">
-                                                                    <code class="param-name">entity</code>
-                                                                    <span class="type"><a href="../classes/platypus.Entity.html" class="crosslink">platypus.Entity</a></span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <p>The entity receiving this event.</p>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                            
-                                            
-                                            </div>
-                                            <div id="event_&#x27;mousemove&#x27;" class="events item deprecated">
-                                                <h3 class="name"><code>&#x27;mousemove&#x27;</code></h3>
-                                                <span class="type"></span>
-                                            
-                                                    <span class="flag deprecated" title="since v0.10.6 - superceded by the &quot;pointermove&quot; event.">deprecated</span>
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/src_components_Interactive.js.html#l249"><code>&#x27;mousemove&#x27;:249</code></a>
-                                                    </p>
-                                            
-                                                        <p>Deprecated: since v0.10.6 - superceded by the &quot;pointermove&quot; event.</p>
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>This event is triggered on mouse move.</p>
-                                            
-                                                </div>
-                                            
-                                                    <div class="params">
-                                                        <h4>Event Payload:</h4>
-                                            
-                                                        <ul class="params-list">
-                                                            <li class="param">
-                                                                    <code class="param-name">event</code>
-                                                                    <span class="type">DOMEvent</span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <p>The original DOM pointer event.</p>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                            <li class="param">
-                                                                    <code class="param-name">pixiEvent</code>
-                                                                    <span class="type">PIXI.interaction.InteractionEvent</span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <p>The Pixi pointer event.</p>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                            <li class="param">
-                                                                    <code class="param-name">x</code>
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <p>The x coordinate in world units.</p>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                            <li class="param">
-                                                                    <code class="param-name">y</code>
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <p>The y coordinate in world units.</p>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                            <li class="param">
-                                                                    <code class="param-name">entity</code>
-                                                                    <span class="type"><a href="../classes/platypus.Entity.html" class="crosslink">platypus.Entity</a></span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <p>The entity receiving this event.</p>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                            
-                                            
-                                            </div>
-                                            <div id="event_&#x27;mouseout&#x27;" class="events item deprecated">
-                                                <h3 class="name"><code>&#x27;mouseout&#x27;</code></h3>
-                                                <span class="type"></span>
-                                            
-                                                    <span class="flag deprecated" title="since v0.10.6 - superceded by the &quot;pointerout&quot; event.">deprecated</span>
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/src_components_Interactive.js.html#l306"><code>&#x27;mouseout&#x27;:306</code></a>
-                                                    </p>
-                                            
-                                                        <p>Deprecated: since v0.10.6 - superceded by the &quot;pointerout&quot; event.</p>
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>This event is triggered on mouse out.</p>
-                                            
-                                                </div>
-                                            
-                                                    <div class="params">
-                                                        <h4>Event Payload:</h4>
-                                            
-                                                        <ul class="params-list">
-                                                            <li class="param">
-                                                                    <code class="param-name">event</code>
-                                                                    <span class="type">DOMEvent</span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <p>The original DOM pointer event.</p>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                            <li class="param">
-                                                                    <code class="param-name">pixiEvent</code>
-                                                                    <span class="type">PIXI.interaction.InteractionEvent</span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <p>The Pixi pointer event.</p>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                            <li class="param">
-                                                                    <code class="param-name">x</code>
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <p>The x coordinate in world units.</p>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                            <li class="param">
-                                                                    <code class="param-name">y</code>
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <p>The y coordinate in world units.</p>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                            <li class="param">
-                                                                    <code class="param-name">entity</code>
-                                                                    <span class="type"><a href="../classes/platypus.Entity.html" class="crosslink">platypus.Entity</a></span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <p>The entity receiving this event.</p>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                            
-                                            
-                                            </div>
-                                            <div id="event_&#x27;mouseover&#x27;" class="events item deprecated">
-                                                <h3 class="name"><code>&#x27;mouseover&#x27;</code></h3>
-                                                <span class="type"></span>
-                                            
-                                                    <span class="flag deprecated" title="since v0.10.6 - superceded by the &quot;pointerover&quot; event.">deprecated</span>
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/src_components_Interactive.js.html#l333"><code>&#x27;mouseover&#x27;:333</code></a>
-                                                    </p>
-                                            
-                                                        <p>Deprecated: since v0.10.6 - superceded by the &quot;pointerover&quot; event.</p>
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>This event is triggered on mouse over.</p>
+                                                    <p>This event is triggered on pointer cancel.</p>
                                             
                                                 </div>
                                             
@@ -1727,7 +1363,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Interactive.js.html#l188"><code>&#x27;pointerdown&#x27;:188</code></a>
+                                                    <a href="../files/src_components_Interactive.js.html#l197"><code>&#x27;pointerdown&#x27;:197</code></a>
                                                     </p>
                                             
                                             
@@ -1814,7 +1450,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Interactive.js.html#l223"><code>&#x27;pointermove&#x27;:223</code></a>
+                                                    <a href="../files/src_components_Interactive.js.html#l217"><code>&#x27;pointermove&#x27;:217</code></a>
                                                     </p>
                                             
                                             
@@ -1901,7 +1537,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Interactive.js.html#l293"><code>&#x27;pointerout&#x27;:293</code></a>
+                                                    <a href="../files/src_components_Interactive.js.html#l261"><code>&#x27;pointerout&#x27;:261</code></a>
                                                     </p>
                                             
                                             
@@ -1988,7 +1624,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Interactive.js.html#l320"><code>&#x27;pointerover&#x27;:320</code></a>
+                                                    <a href="../files/src_components_Interactive.js.html#l275"><code>&#x27;pointerover&#x27;:275</code></a>
                                                     </p>
                                             
                                             
@@ -2075,7 +1711,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Interactive.js.html#l265"><code>&#x27;pointertap&#x27;:265</code></a>
+                                                    <a href="../files/src_components_Interactive.js.html#l246"><code>&#x27;pointertap&#x27;:246</code></a>
                                                     </p>
                                             
                                             
@@ -2162,7 +1798,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Interactive.js.html#l365"><code>&#x27;pointerup&#x27;:365</code></a>
+                                                    <a href="../files/src_components_Interactive.js.html#l307"><code>&#x27;pointerup&#x27;:307</code></a>
                                                     </p>
                                             
                                             
@@ -2249,7 +1885,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Interactive.js.html#l393"><code>&#x27;pointerupoutside&#x27;:393</code></a>
+                                                    <a href="../files/src_components_Interactive.js.html#l335"><code>&#x27;pointerupoutside&#x27;:335</code></a>
                                                     </p>
                                             
                                             
@@ -2336,7 +1972,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Interactive.js.html#l236"><code>&#x27;pressmove&#x27;:236</code></a>
+                                                    <a href="../files/src_components_Interactive.js.html#l230"><code>&#x27;pressmove&#x27;:230</code></a>
                                                     </p>
                                             
                                             
@@ -2422,7 +2058,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Interactive.js.html#l352"><code>&#x27;pressup&#x27;:352</code></a>
+                                                    <a href="../files/src_components_Interactive.js.html#l294"><code>&#x27;pressup&#x27;:294</code></a>
                                                     </p>
                                             
                                             

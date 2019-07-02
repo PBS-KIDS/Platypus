@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.11.10 API Documentation : src\components\Interactive.js</title>
+	<title>platypus v1.0.0 API Documentation : src\components\Interactive.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.11.10</em>
+            <em>API Documentation for: 1.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -71,6 +71,7 @@
                                 <li><a href="../classes/platypus.components.LogicCarrier.html">platypus.components.LogicCarrier</a></li>
                                 <li><a href="../classes/platypus.components.LogicDestroyMe.html">platypus.components.LogicDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.LogicDirectionalMovement.html">platypus.components.LogicDirectionalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
@@ -80,6 +81,7 @@
                                 <li><a href="../classes/platypus.components.NodeResident.html">platypus.components.NodeResident</a></li>
                                 <li><a href="../classes/platypus.components.Orientation.html">platypus.components.Orientation</a></li>
                                 <li><a href="../classes/platypus.components.RandomEvents.html">platypus.components.RandomEvents</a></li>
+                                <li><a href="../classes/platypus.components.RelativePosition.html">platypus.components.RelativePosition</a></li>
                                 <li><a href="../classes/platypus.components.RelayFamily.html">platypus.components.RelayFamily</a></li>
                                 <li><a href="../classes/platypus.components.RelayGame.html">platypus.components.RelayGame</a></li>
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
@@ -99,6 +101,7 @@
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
+                                <li><a href="../classes/platypus.components.Tween.html">platypus.components.Tween</a></li>
                                 <li><a href="../classes/platypus.components.VoiceOver.html">platypus.components.VoiceOver</a></li>
                                 <li><a href="../classes/platypus.components.XHR.html">platypus.components.XHR</a></li>
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
@@ -170,6 +173,7 @@
                             var AABB = include(&#x27;platypus.AABB&#x27;),
                                 Circle = include(&#x27;PIXI.Circle&#x27;),
                                 Data = include(&#x27;platypus.Data&#x27;),
+                                Polygon = include(&#x27;PIXI.Polygon&#x27;),
                                 Rectangle = include(&#x27;PIXI.Rectangle&#x27;),
                                 pointerInstances = {};
                             
@@ -196,14 +200,22 @@
                                      *         &quot;height&quot;: 40
                                      *     }
                                      *
-                                     * A string can also be used to create more complex shapes via the PIXI graphics API like:
+                                     * Or a circle:
                                      *
-                                     *     &quot;hitArea&quot;: &quot;r(10,20,40,40).dc(30,10,12)&quot;
+                                     *     &quot;hitArea&quot;: {
+                                     *         &quot;x&quot;: 10,
+                                     *         &quot;y&quot;: 10,
+                                     *         &quot;radius&quot;: 40
+                                     *     }
                                      *
-                                     * Defaults to the container if not specified or, if simply set to &#x60;true&#x60;, a rectangle using the entity&#x27;s dimensions.
+                                     * Or use an array of numbers to define a polygon: [x1, y1, x2, y2, ...]
+                                     *
+                                     *     &quot;hitArea&quot;: [-10, -10, 30, -10, 30, 30, -5, 30]
+                                     *
+                                     * Defaults to the container if not specified.
                                      *
                                      * @property hitArea
-                                     * @type Object|String|Boolean
+                                     * @type Object
                                      * @default null
                                      */
                                     &quot;hitArea&quot;: null,
@@ -356,21 +368,6 @@
                                                  */
                                                 trigger.call(this, &#x27;pointerdown&#x27;, event);
                         
-                                                if (!this.pressed) {
-                                                    /**
-                                                     * This event is triggered on mouse down.
-                                                     *
-                                                     * @event &#x27;mousedown&#x27;
-                                                     * @param event {DOMEvent} The original DOM pointer event.
-                                                     * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
-                                                     * @param x {Number} The x coordinate in world units.
-                                                     * @param y {Number} The y coordinate in world units.
-                                                     * @param entity {platypus.Entity} The entity receiving this event.
-                                                     * @deprecated since v0.10.6 - superceded by the &quot;pointerdown&quot; event.
-                                                     */
-                                                    trigger.call(this, &#x27;mousedown&#x27;, event);
-                                                }
-                        
                                                 event.currentTarget.mouseTarget = true;
                                                 this.pressed = true;
                                             },
@@ -403,19 +400,6 @@
                                                          */
                                                         trigger.call(this, &#x27;pressmove&#x27;, event);
                                                         event.currentTarget.mouseTarget = true;
-                                                    } else {
-                                                        /**
-                                                         * This event is triggered on mouse move.
-                                                         *
-                                                         * @event &#x27;mousemove&#x27;
-                                                         * @param event {DOMEvent} The original DOM pointer event.
-                                                         * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
-                                                         * @param x {Number} The x coordinate in world units.
-                                                         * @param y {Number} The y coordinate in world units.
-                                                         * @param entity {platypus.Entity} The entity receiving this event.
-                                                         * @deprecated since v0.10.6 - superceded by the &quot;pointermove&quot; event.
-                                                         */
-                                                        trigger.call(this, &#x27;mousemove&#x27;, event); // deprecated in v0.10.6
                                                     }
                                                 }
                                             },
@@ -432,19 +416,6 @@
                                                  * @since v0.10.6
                                                  */
                                                 trigger.call(this, &#x27;pointertap&#x27;, event);
-                        
-                                                /**
-                                                 * This event is triggered on click.
-                                                 *
-                                                 * @event &#x27;click&#x27;
-                                                 * @param event {DOMEvent} The original DOM pointer event.
-                                                 * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
-                                                 * @param x {Number} The x coordinate in world units.
-                                                 * @param y {Number} The y coordinate in world units.
-                                                 * @param entity {platypus.Entity} The entity receiving this event.
-                                                 * @deprecated since v0.10.6 - superceded by the &quot;pointertap&quot; event.
-                                                 */
-                                                trigger.call(this, &#x27;click&#x27;, event); // deprecated in v0.10.6
                                             },
                                             triggerPointerOut = function (event) {
                         
@@ -460,19 +431,6 @@
                                                  * @since v0.10.6
                                                  */
                                                 trigger.call(this, &#x27;pointerout&#x27;, event);
-                        
-                                                /**
-                                                 * This event is triggered on mouse out.
-                                                 *
-                                                 * @event &#x27;mouseout&#x27;
-                                                 * @param event {DOMEvent} The original DOM pointer event.
-                                                 * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
-                                                 * @param x {Number} The x coordinate in world units.
-                                                 * @param y {Number} The y coordinate in world units.
-                                                 * @param entity {platypus.Entity} The entity receiving this event.
-                                                 * @deprecated since v0.10.6 - superceded by the &quot;pointerout&quot; event.
-                                                 */
-                                                trigger.call(this, &#x27;mouseout&#x27;, event); // deprecated in v0.10.6
                                             },
                                             triggerPointerOver = function (event) {
                                                 /**
@@ -487,19 +445,6 @@
                                                  * @since v0.10.6
                                                  */
                                                 trigger.call(this, &#x27;pointerover&#x27;, event);
-                        
-                                                /**
-                                                 * This event is triggered on mouse over.
-                                                 *
-                                                 * @event &#x27;mouseover&#x27;
-                                                 * @param event {DOMEvent} The original DOM pointer event.
-                                                 * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
-                                                 * @param x {Number} The x coordinate in world units.
-                                                 * @param y {Number} The y coordinate in world units.
-                                                 * @param entity {platypus.Entity} The entity receiving this event.
-                                                 * @deprecated since v0.10.6 - superceded by the &quot;pointerover&quot; event.
-                                                 */
-                                                trigger.call(this, &#x27;mouseover&#x27;, event); // deprecated in v0.10.6
                                             },
                                             triggerPointerUp = function (event) {
                                                 var id = getId(event);
@@ -567,7 +512,35 @@
                                                     }
                                                 }
                                             },
-                                            removeInputListeners = function (sprite, pointerdown, pointerup, pointerupoutside, pointermove, pointertap, pointerover, pointerout) {
+                                            triggerPointerCancel = function (event) {
+                                                var id = getId(event);
+                        
+                                                if (pointerInstances[id] === this) {
+                                                    pointerInstances[id] = null;
+                                                    if (this.pressed) {
+                                                        trigger.call(this, &#x27;pressup&#x27;, event);
+                                                        this.pressed = false;
+                                                    }
+                                                    /**
+                                                     * This event is triggered on pointer cancel.
+                                                     *
+                                                     * @event &#x27;pointercancel&#x27;
+                                                     * @param event {DOMEvent} The original DOM pointer event.
+                                                     * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
+                                                     * @param x {Number} The x coordinate in world units.
+                                                     * @param y {Number} The y coordinate in world units.
+                                                     * @param entity {platypus.Entity} The entity receiving this event.
+                                                     * @since v0.11.10
+                                                     */
+                                                    trigger.call(this, &#x27;pointercancel&#x27;, event);
+                                                    event.currentTarget.mouseTarget = false;
+                                                    
+                                                    if (event.currentTarget.removeDisplayObject) {
+                                                        event.currentTarget.removeDisplayObject();
+                                                    }
+                                                }
+                                            },
+                                            removeInputListeners = function (sprite, pointerdown, pointerup, pointerupoutside, pointercancel, pointermove, pointertap, pointerover, pointerout) {
                                                 var key = &#x27;&#x27;;
                         
                                                 for (key in pointerInstances) {
@@ -579,6 +552,7 @@
                                                 sprite.removeListener(&#x27;pointerdown&#x27;, pointerdown);
                                                 sprite.removeListener(&#x27;pointerup&#x27;, pointerup);
                                                 sprite.removeListener(&#x27;pointerupoutside&#x27;, pointerupoutside);
+                                                sprite.removeListener(&#x27;pointercancel&#x27;, pointercancel);
                                                 sprite.removeListener(&#x27;pointermove&#x27;, pointermove);
                                                 sprite.removeListener(&#x27;pointertap&#x27;, pointertap);
                         
@@ -598,6 +572,7 @@
                                                 pointermove = null,
                                                 pointerup = null,
                                                 pointerupoutside = null,
+                                                pointercancel = null,
                                                 pointertap = null;
                                             
                                             // The following appends necessary information to displayed objects to allow them to receive touches and clicks
@@ -607,11 +582,13 @@
                                             pointermove = triggerPointerMove.bind(this);
                                             pointerup = triggerPointerUp.bind(this);
                                             pointerupoutside = triggerPointerUpOutside.bind(this);
+                                            pointercancel = triggerPointerCancel.bind(this);
                                             pointertap = triggerPointerTap.bind(this);
                                             
                                             sprite.addListener(&#x27;pointerdown&#x27;, pointerdown);
                                             sprite.addListener(&#x27;pointerup&#x27;, pointerup);
                                             sprite.addListener(&#x27;pointerupoutside&#x27;, pointerupoutside);
+                                            sprite.addListener(&#x27;pointercancel&#x27;, pointercancel);
                                             sprite.addListener(&#x27;pointermove&#x27;, pointermove);
                                             sprite.addListener(&#x27;pointertap&#x27;, pointertap);
                         
@@ -623,7 +600,7 @@
                                                 sprite.addListener(&#x27;pointerout&#x27;, pointerout);
                                             }
                         
-                                            this.removeInputListeners = removeInputListeners.bind(this, sprite, pointerdown, pointerup, pointerupoutside, pointermove, pointertap, pointerover, pointerout);
+                                            this.removeInputListeners = removeInputListeners.bind(this, sprite, pointerdown, pointerup, pointerupoutside, pointercancel, pointermove, pointertap, pointerover, pointerout);
                                         };
                                     }()),
                         
@@ -639,7 +616,9 @@
                                             ha = savedHitAreas[sav];
                         
                                             if (!ha) {
-                                                if (shape.radius) {
+                                                if (Array.isArray(shape)) {
+                                                    ha = new Polygon(shape);
+                                                } else if (shape.radius) {
                                                     ha = new Circle(shape.x || 0, shape.y || 0, shape.radius);
                                                 } else {
                                                     ha = new Rectangle(shape.x || 0, shape.y || 0, shape.width || this.owner.width || 0, shape.height || this.owner.height || 0);

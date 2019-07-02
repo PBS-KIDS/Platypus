@@ -3,6 +3,7 @@
  *
  * @class RelativePosition
  * @uses platypus.Component
+ * @since 1.0.0
  */
 /*global include, platypus */
 (function () {

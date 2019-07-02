@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v1.0.0 API Documentation : platypus.components.RelayFamily</title>
+	<title>platypus v1.0.0 API Documentation : platypus.components.LogicDragDrop</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -152,7 +152,7 @@
                 </div>            <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>platypus.components.RelayFamily Class</h1>
+                        <h1>platypus.components.LogicDragDrop Class</h1>
                         <div class="box meta">
                                 <div class="uses">
                                     Uses
@@ -163,7 +163,7 @@
                         
                         
                                 <div class="foundat">
-                                    Defined in: <a href="../files/src_components_RelayFamily.js.html#l1"><code>platypus.components.RelayFamily:1</code></a>
+                                    Defined in: <a href="../files/src_components_LogicDragDrop.js.html#l1"><code>platypus.components.LogicDragDrop:1</code></a>
                                 </div>
                         
                                     Module: <a href="../modules/platypus.html">platypus</a>
@@ -172,7 +172,7 @@
                         
                         
                         <div class="box intro">
-                            <p>This component allows an entity to communicate directly with one or more entities via the message model, by passing local messages directly to entities in the same family as new triggered events. This component is placed on a single entity and all entities created by this entity become part of its "family".</p>
+                            <p>A component that allows an object to be dragged and dropped. Can use collision to prevent dropping the objects in certain locations.</p>
                         
                         </div>
                         
@@ -194,11 +194,35 @@
                         
                                             <ul class="index-list methods">
                                                     <li class="index-item method">
-                                                        <a href="#method_&#x27;entity-created&#x27;">&#x27;entity-created&#x27;</a>
+                                                        <a href="#method_&#x27;component-added&#x27;">&#x27;component-added&#x27;</a>
                         
                                                     </li>
                                                     <li class="index-item method">
-                                                        <a href="#method_&#x27;link-family&#x27;">&#x27;link-family&#x27;</a>
+                                                        <a href="#method_&#x27;handle-logic&#x27;">&#x27;handle-logic&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;handle-post-collision-logic&#x27;">&#x27;handle-post-collision-logic&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;no-drop&#x27;">&#x27;no-drop&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;pointerdown&#x27;">&#x27;pointerdown&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;pointermove&#x27;">&#x27;pointermove&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;pressmove&#x27;">&#x27;pressmove&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;pressup&#x27;">&#x27;pressup&#x27;</a>
                         
                                                     </li>
                                                     <li class="index-item method private inherited">
@@ -249,7 +273,11 @@
                         
                                             <ul class="index-list properties">
                                                     <li class="index-item property">
-                                                        <a href="#property_events">events</a>
+                                                        <a href="#property_dragZ">dragZ</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_stickyClick">stickyClick</a>
                         
                                                     </li>
                                             </ul>
@@ -261,13 +289,13 @@
                                     <div id="methods" class="api-class-tabpanel">
                                         <h2 class="off-left">Methods</h2>
                         
-                                            <div id="method_&#x27;entity-created&#x27;" class="method item">
-                                                <h3 class="name"><code>&#x27;entity-created&#x27;</code></h3>
+                                            <div id="method_&#x27;component-added&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;component-added&#x27;</code></h3>
                                             
                                                     <div class="args">
                                                         <span class="paren">(</span><ul class="args-list inline commas">
                                                             <li class="arg">
-                                                                    <code>entity</code>
+                                                                    <code>component</code>
                                                             </li>
                                                         </ul><span class="paren">)</span>
                                                     </div>
@@ -282,7 +310,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RelayFamily.js.html#l65"><code>&#x27;entity-created&#x27;:65</code></a>
+                                                    <a href="../files/src_components_LogicDragDrop.js.html#l56"><code>&#x27;component-added&#x27;:56</code></a>
                                                     </p>
                                             
                                             
@@ -290,7 +318,7 @@
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>Called when this entity spawns a new entity, this event links the newly created entity to this entity.</p>
+                                                    <p>This component listens for added components to determine whether it should check for collision.</p>
                                             
                                                 </div>
                                             
@@ -299,12 +327,167 @@
                                             
                                                         <ul class="params-list">
                                                             <li class="param">
-                                                                    <code class="param-name">entity</code>
-                                                                    <span class="type"><a href="../classes/platypus.Entity.html" class="crosslink">platypus.Entity</a></span>
+                                                                    <code class="param-name">component</code>
+                                                                    <span class="type"><a href="../classes/platypus.Component.html" class="crosslink">platypus.Component</a></span>
                                             
                                             
                                                                 <div class="param-description">
-                                                                    <p>The entity to link.</p>
+                                                                    <p>Component added to entity.</p>
+                                            
+                                                                </div>
+                                            
+                                                                    <ul class="params-list">
+                                                                        <li class="param">
+                                                                                <code class="param-name">type</code>
+                                                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                                            
+                                                                            <div class="param-description">
+                                                                                <p>Type of component to detect whether it's a collision component.</p>
+                                            
+                                                                            </div>
+                                            
+                                                                        </li>
+                                                                    </ul>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;handle-logic&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;handle-logic&#x27;</code></h3>
+                                            
+                                                    <span class="paren">()</span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_LogicDragDrop.js.html#l69"><code>&#x27;handle-logic&#x27;:69</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Updates the object's location on the handle-logic tick.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;handle-post-collision-logic&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;handle-post-collision-logic&#x27;</code></h3>
+                                            
+                                                    <span class="paren">()</span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_LogicDragDrop.js.html#l84"><code>&#x27;handle-post-collision-logic&#x27;:84</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Resolves whether the object state after we check if there are any collisions. If the object was dropped and can be dropped, it is.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;no-drop&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;no-drop&#x27;</code></h3>
+                                            
+                                                    <span class="paren">()</span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_LogicDragDrop.js.html#l180"><code>&#x27;no-drop&#x27;:180</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This message comes from the collision system letting us know the object is currently in a location that it cannot be dropped.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;pointerdown&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;pointerdown&#x27;</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>eventData</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_LogicDragDrop.js.html#l108"><code>&#x27;pointerdown&#x27;:108</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The pointerdown event fires when we're grabbing the object. Starts the drag.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">eventData</code>
+                                                                    <span class="type"><a href="../classes/platypus.Data.html" class="crosslink">platypus.Data</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The event data.</p>
                                             
                                                                 </div>
                                             
@@ -314,13 +497,13 @@
                                             
                                             
                                             </div>
-                                            <div id="method_&#x27;link-family&#x27;" class="method item">
-                                                <h3 class="name"><code>&#x27;link-family&#x27;</code></h3>
+                                            <div id="method_&#x27;pointermove&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;pointermove&#x27;</code></h3>
                                             
                                                     <div class="args">
                                                         <span class="paren">(</span><ul class="args-list inline commas">
                                                             <li class="arg">
-                                                                    <code>links</code>
+                                                                    <code>eventData</code>
                                                             </li>
                                                         </ul><span class="paren">)</span>
                                                     </div>
@@ -335,7 +518,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RelayFamily.js.html#l46"><code>&#x27;link-family&#x27;:46</code></a>
+                                                    <a href="../files/src_components_LogicDragDrop.js.html#l147"><code>&#x27;pointermove&#x27;:147</code></a>
                                                     </p>
                                             
                                             
@@ -343,7 +526,7 @@
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>Called when linking a new member to the family, this event accepts a list of family members from the new member and uses it to link all the family members together.</p>
+                                                    <p>The pointermove event tells us when we're dragging a "stickyClick" object.</p>
                                             
                                                 </div>
                                             
@@ -352,12 +535,118 @@
                                             
                                                         <ul class="params-list">
                                                             <li class="param">
-                                                                    <code class="param-name">links</code>
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a> | Entities</span>
+                                                                    <code class="param-name">eventData</code>
+                                                                    <span class="type"><a href="../classes/platypus.Data.html" class="crosslink">platypus.Data</a></span>
                                             
                                             
                                                                 <div class="param-description">
-                                                                    <p>An array of entities.</p>
+                                                                    <p>The event data.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;pressmove&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;pressmove&#x27;</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>eventData</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_LogicDragDrop.js.html#l163"><code>&#x27;pressmove&#x27;:163</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The pressmove event tells us when we're dragging the object.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">eventData</code>
+                                                                    <span class="type"><a href="../classes/platypus.Data.html" class="crosslink">platypus.Data</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The event data.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;pressup&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;pressup&#x27;</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>eventData</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_LogicDragDrop.js.html#l133"><code>&#x27;pressup&#x27;:133</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The pressup event fires when we're trying to drop the object.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">eventData</code>
+                                                                    <span class="type"><a href="../classes/platypus.Data.html" class="crosslink">platypus.Data</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The event data.</p>
                                             
                                                                 </div>
                                             
@@ -944,9 +1233,9 @@
                                     <div id="properties" class="api-class-tabpanel">
                                         <h2 class="off-left">Properties</h2>
                         
-                                            <div id="property_events" class="property item">
-                                                <h3 class="name"><code>events</code></h3>
-                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            <div id="property_dragZ" class="property item">
+                                                <h3 class="name"><code>dragZ</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
                                             
                                             
                                             
@@ -955,22 +1244,46 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RelayFamily.js.html#l16"><code>events:16</code></a>
+                                                    <a href="../files/src_components_LogicDragDrop.js.html#l16"><code>dragZ:16</code></a>
                                                     </p>
                                             
                                             
+                                                        <p>Available since 0.8.3</p>
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>This is an object of key/value pairs. The keys are events this component is listening for locally, the value is the event that will be broadcast to its linked entities. The value can also be an array of events to be fired on linked entities.</p>
-                                            <pre class="code prettyprint"><code> "events": {
-                                                 "sleeping": "good-night",
-                                                 "awake": ["alarm", "get-up"]
-                                             }</code></pre>
+                                                    <p>Sets the z-order of the item while being dragged.</p>
                                             
                                                 </div>
                                             
-                                                    <p><strong>Default:</strong> null</p>
+                                                    <p><strong>Default:</strong> 10000</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_stickyClick" class="property item">
+                                                <h3 class="name"><code>stickyClick</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_LogicDragDrop.js.html#l26"><code>stickyClick:26</code></a>
+                                                    </p>
+                                            
+                                            
+                                                        <p>Available since 0.8.3</p>
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Sets whether a click-move should start the dragging behavior in addition to click-drag. This value is ignored for mobile devices.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> false</p>
                                             
                                             
                                             </div>

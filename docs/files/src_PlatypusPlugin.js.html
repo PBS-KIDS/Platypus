@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.11.10 API Documentation : src\PlatypusPlugin.js</title>
+	<title>platypus v1.0.0 API Documentation : src\PlatypusPlugin.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.11.10</em>
+            <em>API Documentation for: 1.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -71,6 +71,7 @@
                                 <li><a href="../classes/platypus.components.LogicCarrier.html">platypus.components.LogicCarrier</a></li>
                                 <li><a href="../classes/platypus.components.LogicDestroyMe.html">platypus.components.LogicDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.LogicDirectionalMovement.html">platypus.components.LogicDirectionalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
@@ -80,6 +81,7 @@
                                 <li><a href="../classes/platypus.components.NodeResident.html">platypus.components.NodeResident</a></li>
                                 <li><a href="../classes/platypus.components.Orientation.html">platypus.components.Orientation</a></li>
                                 <li><a href="../classes/platypus.components.RandomEvents.html">platypus.components.RandomEvents</a></li>
+                                <li><a href="../classes/platypus.components.RelativePosition.html">platypus.components.RelativePosition</a></li>
                                 <li><a href="../classes/platypus.components.RelayFamily.html">platypus.components.RelayFamily</a></li>
                                 <li><a href="../classes/platypus.components.RelayGame.html">platypus.components.RelayGame</a></li>
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
@@ -99,6 +101,7 @@
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
+                                <li><a href="../classes/platypus.components.Tween.html">platypus.components.Tween</a></li>
                                 <li><a href="../classes/platypus.components.VoiceOver.html">platypus.components.VoiceOver</a></li>
                                 <li><a href="../classes/platypus.components.XHR.html">platypus.components.XHR</a></li>
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
@@ -181,9 +184,21 @@
                             var Application = include(&#x27;springroll.Application&#x27;),
                                 ApplicationPlugin = include(&#x27;springroll.ApplicationPlugin&#x27;),
                                 PIXI = include(&#x27;window.PIXI&#x27;, false),
-                                updateFunction = null,
+                                Tween = include(&#x27;createjs.Tween&#x27;, false),
+                                updateFunction = Tween ? function (game, time, elapsed) {
+                                    time.delta = elapsed;
+                                    Tween.tick(elapsed);
+                                    game.tick(time);
+                                } : function (game, time, elapsed) {
+                                    time.delta = elapsed;
+                                    game.tick(time);
+                                },
                                 plugin = new ApplicationPlugin(),
-                                resizeFunction = null,
+                                resizeFunction = function (game, event) {
+                                    if (game.currentScene) {
+                                        game.currentScene.triggerOnChildren(&#x27;resize&#x27;, event);
+                                    }
+                                },
                                 sayHello = (function () {
                                     var getPortion = function (num, max) {
                                             var min = 204;
@@ -193,7 +208,7 @@
                                         getStyle = function (title, version) {
                                             var max = 0,
                                                 min = 0,
-                                                style = &#x27;color: #ffffff; padding:3px 0; border-radius: 6px;&#x27;,
+                                                style = &#x27;color: #ffffff; line-height: 1.5em; border-radius: 6px;&#x27;,
                                                 r = 0,
                                                 g = 0,
                                                 b = 0,
@@ -223,16 +238,16 @@
                                             
                                             max = Math.max(r, g, b, 1);
                         
-                                            return style + &#x27; background: rgb(&#x27; + getPortion(r, max) + &#x27;,&#x27; + getPortion(g, max) + &#x27;,&#x27; + getPortion(b, max) + &#x27;);&#x27;;
+                                            return style + &#x27; background-color: rgb(&#x27; + getPortion(r, max) + &#x27;,&#x27; + getPortion(g, max) + &#x27;,&#x27; + getPortion(b, max) + &#x27;);&#x27;;
                                         },
                                         getVersions = function (text, title, arr) {
                                             var i = 0,
                                                 str = &#x27;&#x27;,
-                                                versions = Array.setUp(text, getStyle(title, title.substr(title.lastIndexOf(&#x27; &#x27;) - title.length + 1)), &#x27;&#x27;);
+                                                versions = Array.setUp(text);
                                             
                                             for (i = 0; i &lt; arr.length; i++) {
                                                 str = arr[i];
-                                                versions.push(getStyle(str, str.substr(str.lastIndexOf(&#x27; &#x27;) - str.length + 1)), &#x27;&#x27;);
+                                                versions.push(getStyle(str, str.substr(str.lastIndexOf(&#x27; &#x27;) - str.length + 1)), &#x27;line-height: 1.5em;&#x27;);
                                             }
                                             
                                             return versions;
@@ -247,7 +262,8 @@
                                             engine  = &#x27;Platypus &#x27; + platypus.version,
                                             version = options.version || &#x27;(?)&#x27;,
                                             using   = Array.setUp(),
-                                            usingV  = Array.setUp();
+                                            usingV  = Array.setUp(),
+                                            supports = platypus.supports;
                                         
                                         if (!options.hideHello) {
                                             using   = Array.setUp(&#x27;SpringRoll &#x27; + Application.version);
@@ -277,9 +293,10 @@
                                                 title += &#x27; &#x27; + version;
                                             }
                                             
-                                            if (platypus.supports.firefox || platypus.supports.chrome) {
+                                            if (supports.firefox || supports.chrome) {
+                                                console.log(&#x27;%c &#x27; + title + &#x27; %c &#x27; + author, getStyle(title, title.substr(title.lastIndexOf(&#x27; &#x27;) - title.length + 1)), &#x27;line-height: 1.5em;&#x27;);
                                                 using.push(engine);
-                                                usingV = getVersions(&#x27;\n%c &#x27; + title + &#x27; %c &#x27; + author + &#x27; \n\nUsing %c &#x27; + using.join(&#x27; %c %c &#x27;) + &#x27; %c\n\n&#x27;, title, using);
+                                                usingV = getVersions(&#x27;Using %c &#x27; + using.join(&#x27; %c %c &#x27;) + &#x27; %c &#x27;, title, using);
                                                 console.log.apply(console, usingV);
                                                 usingV.recycle();
                                             } else {
@@ -392,17 +409,10 @@
                                         }
                                     });
                                     
-                                    updateFunction = function (elapsed) {
-                                        time.delta = elapsed;
-                                        game.tick(time);
-                                    };
+                                    updateFunction = updateFunction.bind(null, game, time);
                                     this.on(&#x27;update&#x27;, updateFunction, priority); // Needs to occur before PIXI&#x27;s ticker update so rendered objects can be positioned correctly.
                             
-                                    resizeFunction = function (event) {
-                                        if (game.currentScene) {
-                                            game.currentScene.triggerOnChildren(&#x27;resize&#x27;, event);
-                                        }
-                                    };
+                                    resizeFunction = resizeFunction.bind(null, game);
                                     this.on(&#x27;resize&#x27;, resizeFunction);
                                 }
                         

@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.11.10 API Documentation : src\components\RenderContainer.js</title>
+	<title>platypus v1.0.0 API Documentation : src\components\RenderContainer.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.11.10</em>
+            <em>API Documentation for: 1.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -71,6 +71,7 @@
                                 <li><a href="../classes/platypus.components.LogicCarrier.html">platypus.components.LogicCarrier</a></li>
                                 <li><a href="../classes/platypus.components.LogicDestroyMe.html">platypus.components.LogicDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.LogicDirectionalMovement.html">platypus.components.LogicDirectionalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
@@ -80,6 +81,7 @@
                                 <li><a href="../classes/platypus.components.NodeResident.html">platypus.components.NodeResident</a></li>
                                 <li><a href="../classes/platypus.components.Orientation.html">platypus.components.Orientation</a></li>
                                 <li><a href="../classes/platypus.components.RandomEvents.html">platypus.components.RandomEvents</a></li>
+                                <li><a href="../classes/platypus.components.RelativePosition.html">platypus.components.RelativePosition</a></li>
                                 <li><a href="../classes/platypus.components.RelayFamily.html">platypus.components.RelayFamily</a></li>
                                 <li><a href="../classes/platypus.components.RelayGame.html">platypus.components.RelayGame</a></li>
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
@@ -99,6 +101,7 @@
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
+                                <li><a href="../classes/platypus.components.Tween.html">platypus.components.Tween</a></li>
                                 <li><a href="../classes/platypus.components.VoiceOver.html">platypus.components.VoiceOver</a></li>
                                 <li><a href="../classes/platypus.components.XHR.html">platypus.components.XHR</a></li>
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
@@ -224,7 +227,7 @@
                                 
                                 properties: {
                                     /**
-                                     * Optional. A mask definition that determines where the image should clip. A string can also be used to create more complex shapes via the PIXI graphics API like: &quot;mask&quot;: &quot;r(10,20,40,40).dc(30,10,12)&quot;. Defaults to no mask or, if simply set to true, a rectangle using the entity&#x27;s dimensions.
+                                     * Optional. A mask definition that determines where the image should clip. A string can also be used to create more complex shapes via the PIXI graphics API like: &quot;mask&quot;: &quot;r(10,20,40,40).dc(30,10,12)&quot;. Defaults to no mask or, if simply set to true, a rectangle using the entity&#x27;s dimensions. Note that the mask is in world coordinates by default. To make the mask local to the entity&#x27;s coordinates, set &#x60;localMask&#x60; to &#x60;true&#x60; in the RenderContainer properties.
                                      *
                                      *  &quot;mask&quot;: {
                                      *      &quot;x&quot;: 10,
@@ -315,7 +318,16 @@
                                      * @type Boolean
                                      * @default false
                                      */
-                                    ignoreOpacity: false
+                                    ignoreOpacity: false,
+                        
+                                    /**
+                                     * Whether the mask should be relative to the entity&#x27;s coordinates.
+                                     *
+                                     * @property localMask
+                                     * @type boolean
+                                     * @default false
+                                     */
+                                    localMask: false
                                 },
                         
                                 publicProperties: {
@@ -517,6 +529,7 @@
                         
                                             while (i--) {
                                                 if (groups[i].name === value) {
+                                                    this.parentContainer = groups[i];
                                                     groups[i].addChild(this.container);
                                                     groups[i].reorder = true;
                                                     if (mask) {
@@ -532,6 +545,7 @@
                                             groups.push(container);
                                             this.rootContainer.addChild(container);
                                             this.rootContainer.reorder = true;
+                                            this.parentContainer = container;
                                             container.addChild(this.container);
                                             if (mask) {
                                                 this.setMask(mask);
@@ -569,7 +583,7 @@
                                         this.updateSprite(false);
                                         this.owner.cacheRender = this.container;
                                         this.cache = true;
-                                        if (this.owner.parent &amp;&amp; this.owner.parent.triggerEventOnChildren) {
+                                        if (this.owner.parent.triggerEventOnChildren) {
                                             /**
                                              * On receiving a &quot;cache&quot; event, this component triggers &quot;cache-sprite&quot; to cache its rendering into the background. This is an optimization for static images to reduce render calls.
                                              *
@@ -759,8 +773,12 @@
                                     setMask: function (shape) {
                                         var gfx = null;
                                         
-                                        if (this.mask &amp;&amp; this.parentContainer) {
-                                            this.parentContainer.removeChild(this.mask);
+                                        if (this.mask) {
+                                            if (this.localMask) {
+                                                this.container.removeChild(this.mask);
+                                            } else if (this.parentContainer) {
+                                                this.parentContainer.removeChild(this.mask);
+                                            }
                                         }
                                         
                                         if (!shape) {
@@ -788,7 +806,9 @@
                                         this.mask = this.container.mask = gfx;
                                         this.mask.z = 0; //TML 12-4-16 - Masks don&#x27;t need a Z, but this makes it play nice with the Z-ordering in HandlerRender.
                         
-                                        if (this.parentContainer) {
+                                        if (this.localMask) {
+                                            this.container.addChild(this.mask);
+                                        } else if (this.parentContainer) {
                                             this.parentContainer.addChild(this.mask);
                                         }
                                     },

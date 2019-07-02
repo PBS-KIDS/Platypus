@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.11.10 API Documentation : platypus.components.HandlerLogic</title>
+	<title>platypus v1.0.0 API Documentation : platypus.components.HandlerLogic</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.11.10</em>
+            <em>API Documentation for: 1.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -71,6 +71,7 @@
                                 <li><a href="../classes/platypus.components.LogicCarrier.html">platypus.components.LogicCarrier</a></li>
                                 <li><a href="../classes/platypus.components.LogicDestroyMe.html">platypus.components.LogicDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.LogicDirectionalMovement.html">platypus.components.LogicDirectionalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
@@ -80,6 +81,7 @@
                                 <li><a href="../classes/platypus.components.NodeResident.html">platypus.components.NodeResident</a></li>
                                 <li><a href="../classes/platypus.components.Orientation.html">platypus.components.Orientation</a></li>
                                 <li><a href="../classes/platypus.components.RandomEvents.html">platypus.components.RandomEvents</a></li>
+                                <li><a href="../classes/platypus.components.RelativePosition.html">platypus.components.RelativePosition</a></li>
                                 <li><a href="../classes/platypus.components.RelayFamily.html">platypus.components.RelayFamily</a></li>
                                 <li><a href="../classes/platypus.components.RelayGame.html">platypus.components.RelayGame</a></li>
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
@@ -99,6 +101,7 @@
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
+                                <li><a href="../classes/platypus.components.Tween.html">platypus.components.Tween</a></li>
                                 <li><a href="../classes/platypus.components.VoiceOver.html">platypus.components.VoiceOver</a></li>
                                 <li><a href="../classes/platypus.components.XHR.html">platypus.components.XHR</a></li>
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
@@ -201,6 +204,10 @@
                                                     </li>
                                                     <li class="index-item method">
                                                         <a href="#method_&#x27;child-entity-removed&#x27;">&#x27;child-entity-removed&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;child-entity-updated&#x27;">&#x27;child-entity-updated&#x27;</a>
                         
                                                     </li>
                                                     <li class="index-item method">
@@ -354,7 +361,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_HandlerLogic.js.html#l193"><code>&#x27;camera-update&#x27;:193</code></a>
+                                                    <a href="../files/src_components_HandlerLogic.js.html#l219"><code>&#x27;camera-update&#x27;:219</code></a>
                                                     </p>
                                             
                                             
@@ -418,7 +425,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_HandlerLogic.js.html#l117"><code>&#x27;child-entity-added&#x27;:117</code></a>
+                                                    <a href="../files/src_components_HandlerLogic.js.html#l143"><code>&#x27;child-entity-added&#x27;:143</code></a>
                                                     </p>
                                             
                                             
@@ -471,7 +478,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_HandlerLogic.js.html#l134"><code>&#x27;child-entity-removed&#x27;:134</code></a>
+                                                    <a href="../files/src_components_HandlerLogic.js.html#l160"><code>&#x27;child-entity-removed&#x27;:160</code></a>
                                                     </p>
                                             
                                             
@@ -503,6 +510,60 @@
                                             
                                             
                                             </div>
+                                            <div id="method_&#x27;child-entity-updated&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;child-entity-updated&#x27;</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>entity</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_HandlerLogic.js.html#l117"><code>&#x27;child-entity-updated&#x27;:117</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                        <p>Available since v0.12.0</p>
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Called when an entity has been updated and should be considered for adding to or removing from the handler.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">entity</code>
+                                                                    <span class="type"><a href="../classes/platypus.Entity.html" class="crosslink">platypus.Entity</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The entity that is being considered.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
                                             <div id="method_&#x27;pause-logic&#x27;" class="method item">
                                                 <h3 class="name"><code>&#x27;pause-logic&#x27;</code></h3>
                                             
@@ -524,7 +585,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_HandlerLogic.js.html#l151"><code>&#x27;pause-logic&#x27;:151</code></a>
+                                                    <a href="../files/src_components_HandlerLogic.js.html#l177"><code>&#x27;pause-logic&#x27;:177</code></a>
                                                     </p>
                                             
                                             
@@ -590,7 +651,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_HandlerLogic.js.html#l215"><code>&#x27;tick&#x27;:215</code></a>
+                                                    <a href="../files/src_components_HandlerLogic.js.html#l241"><code>&#x27;tick&#x27;:241</code></a>
                                                     </p>
                                             
                                             
@@ -649,7 +710,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_HandlerLogic.js.html#l175"><code>&#x27;unpause-logic&#x27;:175</code></a>
+                                                    <a href="../files/src_components_HandlerLogic.js.html#l201"><code>&#x27;unpause-logic&#x27;:201</code></a>
                                                     </p>
                                             
                                             
@@ -1390,7 +1451,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_HandlerLogic.js.html#l335"><code>&#x27;check-collision-group&#x27;:335</code></a>
+                                                    <a href="../files/src_components_HandlerLogic.js.html#l361"><code>&#x27;check-collision-group&#x27;:361</code></a>
                                                     </p>
                                             
                                             
@@ -1463,7 +1524,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_HandlerLogic.js.html#l297"><code>&#x27;handle-logic&#x27;:297</code></a>
+                                                    <a href="../files/src_components_HandlerLogic.js.html#l323"><code>&#x27;handle-logic&#x27;:323</code></a>
                                                     </p>
                                             
                                             
@@ -1536,7 +1597,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_HandlerLogic.js.html#l308"><code>&#x27;handle-movement&#x27;:308</code></a>
+                                                    <a href="../files/src_components_HandlerLogic.js.html#l334"><code>&#x27;handle-movement&#x27;:334</code></a>
                                                     </p>
                                             
                                             
@@ -1610,7 +1671,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_HandlerLogic.js.html#l345"><code>&#x27;handle-post-collision-logic&#x27;:345</code></a>
+                                                    <a href="../files/src_components_HandlerLogic.js.html#l371"><code>&#x27;handle-post-collision-logic&#x27;:371</code></a>
                                                     </p>
                                             
                                             
@@ -1683,7 +1744,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_HandlerLogic.js.html#l165"><code>&#x27;logic-paused&#x27;:165</code></a>
+                                                    <a href="../files/src_components_HandlerLogic.js.html#l191"><code>&#x27;logic-paused&#x27;:191</code></a>
                                                     </p>
                                             
                                             
@@ -1709,7 +1770,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_HandlerLogic.js.html#l266"><code>&#x27;logic-tick&#x27;:266</code></a>
+                                                    <a href="../files/src_components_HandlerLogic.js.html#l292"><code>&#x27;logic-tick&#x27;:292</code></a>
                                                     </p>
                                             
                                             
@@ -1774,7 +1835,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_HandlerLogic.js.html#l183"><code>&#x27;logic-unpaused&#x27;:183</code></a>
+                                                    <a href="../files/src_components_HandlerLogic.js.html#l209"><code>&#x27;logic-unpaused&#x27;:209</code></a>
                                                     </p>
                                             
                                             
@@ -1800,7 +1861,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_HandlerLogic.js.html#l285"><code>&#x27;prepare-logic&#x27;:285</code></a>
+                                                    <a href="../files/src_components_HandlerLogic.js.html#l311"><code>&#x27;prepare-logic&#x27;:311</code></a>
                                                     </p>
                                             
                                             
@@ -1874,7 +1935,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_HandlerLogic.js.html#l355"><code>&#x27;state-changed&#x27;:355</code></a>
+                                                    <a href="../files/src_components_HandlerLogic.js.html#l381"><code>&#x27;state-changed&#x27;:381</code></a>
                                                     </p>
                                             
                                             

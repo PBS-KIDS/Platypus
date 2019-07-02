@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.11.10 API Documentation : platypus.components.VoiceOver</title>
+	<title>platypus v1.0.0 API Documentation : platypus.components.VoiceOver</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.11.10</em>
+            <em>API Documentation for: 1.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -71,6 +71,7 @@
                                 <li><a href="../classes/platypus.components.LogicCarrier.html">platypus.components.LogicCarrier</a></li>
                                 <li><a href="../classes/platypus.components.LogicDestroyMe.html">platypus.components.LogicDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.LogicDirectionalMovement.html">platypus.components.LogicDirectionalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
@@ -80,6 +81,7 @@
                                 <li><a href="../classes/platypus.components.NodeResident.html">platypus.components.NodeResident</a></li>
                                 <li><a href="../classes/platypus.components.Orientation.html">platypus.components.Orientation</a></li>
                                 <li><a href="../classes/platypus.components.RandomEvents.html">platypus.components.RandomEvents</a></li>
+                                <li><a href="../classes/platypus.components.RelativePosition.html">platypus.components.RelativePosition</a></li>
                                 <li><a href="../classes/platypus.components.RelayFamily.html">platypus.components.RelayFamily</a></li>
                                 <li><a href="../classes/platypus.components.RelayGame.html">platypus.components.RelayGame</a></li>
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
@@ -99,6 +101,7 @@
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
+                                <li><a href="../classes/platypus.components.Tween.html">platypus.components.Tween</a></li>
                                 <li><a href="../classes/platypus.components.VoiceOver.html">platypus.components.VoiceOver</a></li>
                                 <li><a href="../classes/platypus.components.XHR.html">platypus.components.XHR</a></li>
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
@@ -258,6 +261,10 @@
                         
                                                     </li>
                                                     <li class="index-item property">
+                                                        <a href="#property_renderComponent">renderComponent</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
                                                         <a href="#property_voiceOverMap">voiceOverMap</a>
                         
                                                     </li>
@@ -285,7 +292,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_VoiceOver.js.html#l214"><code>&#x27;load&#x27;:214</code></a>
+                                                    <a href="../files/src_components_VoiceOver.js.html#l244"><code>&#x27;load&#x27;:244</code></a>
                                                     </p>
                                             
                                             
@@ -888,7 +895,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_VoiceOver.js.html#l100"><code>animationMap:100</code></a>
+                                                    <a href="../files/src_components_VoiceOver.js.html#l117"><code>animationMap:117</code></a>
                                                     </p>
                                             
                                             
@@ -923,7 +930,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_VoiceOver.js.html#l119"><code>frameLength:119</code></a>
+                                                    <a href="../files/src_components_VoiceOver.js.html#l145"><code>frameLength:145</code></a>
                                                     </p>
                                             
                                             
@@ -949,7 +956,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_VoiceOver.js.html#l128"><code>messagePrefix:128</code></a>
+                                                    <a href="../files/src_components_VoiceOver.js.html#l154"><code>messagePrefix:154</code></a>
                                                     </p>
                                             
                                             
@@ -964,6 +971,32 @@
                                             
                                             
                                             </div>
+                                            <div id="property_renderComponent" class="property item">
+                                                <h3 class="name"><code>renderComponent</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_VoiceOver.js.html#l136"><code>renderComponent:136</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Specifies the type of component to add to handle VO lip-sync animation.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> &#x27;renderSprite&#x27;</p>
+                                            
+                                            
+                                            </div>
                                             <div id="property_voiceOverMap" class="property item">
                                                 <h3 class="name"><code>voiceOverMap</code></h3>
                                                 <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
@@ -975,7 +1008,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_VoiceOver.js.html#l137"><code>voiceOverMap:137</code></a>
+                                                    <a href="../files/src_components_VoiceOver.js.html#l163"><code>voiceOverMap:163</code></a>
                                                     </p>
                                             
                                             

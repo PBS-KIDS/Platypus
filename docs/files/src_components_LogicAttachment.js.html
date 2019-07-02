@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.11.10 API Documentation : src\components\LogicAttachment.js</title>
+	<title>platypus v1.0.0 API Documentation : src\components\LogicAttachment.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.11.10</em>
+            <em>API Documentation for: 1.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -71,6 +71,7 @@
                                 <li><a href="../classes/platypus.components.LogicCarrier.html">platypus.components.LogicCarrier</a></li>
                                 <li><a href="../classes/platypus.components.LogicDestroyMe.html">platypus.components.LogicDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.LogicDirectionalMovement.html">platypus.components.LogicDirectionalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
@@ -80,6 +81,7 @@
                                 <li><a href="../classes/platypus.components.NodeResident.html">platypus.components.NodeResident</a></li>
                                 <li><a href="../classes/platypus.components.Orientation.html">platypus.components.Orientation</a></li>
                                 <li><a href="../classes/platypus.components.RandomEvents.html">platypus.components.RandomEvents</a></li>
+                                <li><a href="../classes/platypus.components.RelativePosition.html">platypus.components.RelativePosition</a></li>
                                 <li><a href="../classes/platypus.components.RelayFamily.html">platypus.components.RelayFamily</a></li>
                                 <li><a href="../classes/platypus.components.RelayGame.html">platypus.components.RelayGame</a></li>
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
@@ -99,6 +101,7 @@
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
+                                <li><a href="../classes/platypus.components.Tween.html">platypus.components.Tween</a></li>
                                 <li><a href="../classes/platypus.components.VoiceOver.html">platypus.components.VoiceOver</a></li>
                                 <li><a href="../classes/platypus.components.XHR.html">platypus.components.XHR</a></li>
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
@@ -168,7 +171,13 @@
                             &#x27;use strict&#x27;;
                         
                             var Entity = include(&#x27;platypus.Entity&#x27;),
-                                linkId = 0;
+                                trigger = function () {
+                                    var attachment = this.attachment;
+                                    
+                                    if (attachment) {
+                                        attachment.trigger.apply(attachment, arguments);
+                                    }
+                                };
                         
                             return platypus.createComponentClass({
                         
@@ -183,6 +192,7 @@
                                      * @default &#x27;attached&#x27;
                                      */
                                     attachState: &#x27;attached&#x27;,
+                        
                                     /**
                                      * The type of the entity to be attached.
                                      *
@@ -191,6 +201,20 @@
                                      * @default &#x27;&#x27;
                                      */
                                     attachment: &#x27;&#x27;,
+                        
+                                    /**
+                                     * This is an object of key/value pairs. The keys are events this component is listening for locally, the value is the new event to be broadcast on the attached entity. The value can also be an array of events to be fired.
+                                     *
+                                     *      &quot;events&quot;: {
+                                     *          &quot;sleeping&quot;: &quot;good-night&quot;,
+                                     *          &quot;awake&quot;: [&quot;alarm&quot;, &quot;get-up&quot;]
+                                     *      }
+                                     *
+                                     * @property events
+                                     * @type Object
+                                     * @default null
+                                     */
+                                    events: null,
                         
                                     /**
                                      * Whether the attachment starts out attached.
@@ -209,6 +233,7 @@
                                      * @default 0
                                      */
                                     offsetX: 0,
+                        
                                     /**
                                      * The offset of the attached entity in y from the attachee.
                                      *
@@ -217,6 +242,7 @@
                                      * @default 0
                                      */
                                     offsetY: 0,
+                        
                                     /**
                                      * The offset of the attached entity in z from the attachee.
                                      *
@@ -227,17 +253,11 @@
                                     offsetZ: 0.01
                                 },
                         
-                                publicProperties: {
-                        
-                                },
-                        
                                 initialize: function () {
+                                    var event = &#x27;&#x27;,
+                                        events = this.events;
+                                    
                                     this.state = this.owner.state;
-                        
-                                    if (!this.owner.linkId) {
-                                        this.owner.linkId = &#x27;attachment-link-&#x27; + linkId;
-                                        linkId += 1;
-                                    }
                         
                                     this.state.set(this.attachState, this.startAttached);
                                     this.attachmentPosition = {
@@ -245,8 +265,7 @@
                                         y: 0,
                                         z: 0,
                                         dx: 0,
-                                        dy: 0,
-                                        linkId: this.owner.linkId
+                                        dy: 0
                                     };
                                     this.attachmentProperties = {
                                         type: this.attachment,
@@ -255,6 +274,15 @@
                         
                                     this.attachment = null;
                                     this.isAttached = this.startAttached;
+                        
+                                    // Messages that this component listens for and then triggers on the attached entity.
+                                    if (events) {
+                                        for (event in events) {
+                                            if (events.hasOwnProperty(event)) {
+                                                this.addEventListener(event, trigger.bind(this, events[event]));
+                                            }
+                                        }
+                                    }
                                 },
                         
                                 events: {// These are messages that this component listens for

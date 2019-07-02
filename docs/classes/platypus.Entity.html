@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.11.10 API Documentation : platypus.Entity</title>
+	<title>platypus v1.0.0 API Documentation : platypus.Entity</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.11.10</em>
+            <em>API Documentation for: 1.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -71,6 +71,7 @@
                                 <li><a href="../classes/platypus.components.LogicCarrier.html">platypus.components.LogicCarrier</a></li>
                                 <li><a href="../classes/platypus.components.LogicDestroyMe.html">platypus.components.LogicDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.LogicDirectionalMovement.html">platypus.components.LogicDirectionalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
@@ -80,6 +81,7 @@
                                 <li><a href="../classes/platypus.components.NodeResident.html">platypus.components.NodeResident</a></li>
                                 <li><a href="../classes/platypus.components.Orientation.html">platypus.components.Orientation</a></li>
                                 <li><a href="../classes/platypus.components.RandomEvents.html">platypus.components.RandomEvents</a></li>
+                                <li><a href="../classes/platypus.components.RelativePosition.html">platypus.components.RelativePosition</a></li>
                                 <li><a href="../classes/platypus.components.RelayFamily.html">platypus.components.RelayFamily</a></li>
                                 <li><a href="../classes/platypus.components.RelayGame.html">platypus.components.RelayGame</a></li>
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
@@ -99,6 +101,7 @@
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
+                                <li><a href="../classes/platypus.components.Tween.html">platypus.components.Tween</a></li>
                                 <li><a href="../classes/platypus.components.VoiceOver.html">platypus.components.VoiceOver</a></li>
                                 <li><a href="../classes/platypus.components.XHR.html">platypus.components.XHR</a></li>
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
@@ -204,6 +207,9 @@
                                                 </li>
                                                 <li class="arg">
                                                         <code class="optional">[callback]</code>
+                                                </li>
+                                                <li class="arg">
+                                                        <code class="optional">[parent]</code>
                                                 </li>
                                             </ul><span class="paren">)</span>
                                         </div>
@@ -316,6 +322,18 @@
                                 
                                                     <div class="param-description">
                                                         <p>A function to run once all of the components on the Entity have been loaded. The first parameter is the entity itself.</p>
+                                
+                                                    </div>
+                                
+                                                </li>
+                                                <li class="param">
+                                                        <code class="param-name optional">[parent]</code>
+                                                        <span class="type">Entity</span>
+                                                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                                
+                                
+                                                    <div class="param-description">
+                                                        <p>Presets the parent of the entity so that the parent entity is available during component instantiation. Overrides <code>parent</code> in properties definitions.</p>
                                 
                                                     </div>
                                 
@@ -436,7 +454,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_Entity.js.html#l187"><code>addComponent:187</code></a>
+                                                    <a href="../files/src_Entity.js.html#l194"><code>addComponent:194</code></a>
                                                     </p>
                                             
                                             
@@ -492,7 +510,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_Entity.js.html#l265"><code>destroy:265</code></a>
+                                                    <a href="../files/src_Entity.js.html#l272"><code>destroy:272</code></a>
                                                     </p>
                                             
                                             
@@ -534,7 +552,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_Entity.js.html#l291"><code>getAssetList:291</code></a>
+                                                    <a href="../files/src_Entity.js.html#l299"><code>getAssetList:299</code></a>
                                                     </p>
                                             
                                             
@@ -613,7 +631,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_Entity.js.html#l329"><code>getLateAssetList:329</code></a>
+                                                    <a href="../files/src_Entity.js.html#l337"><code>getLateAssetList:337</code></a>
                                                     </p>
                                             
                                             
@@ -689,7 +707,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_Entity.js.html#l208"><code>removeComponent:208</code></a>
+                                                    <a href="../files/src_Entity.js.html#l215"><code>removeComponent:215</code></a>
                                                     </p>
                                             
                                             
@@ -751,7 +769,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_Entity.js.html#l249"><code>setProperty:249</code></a>
+                                                    <a href="../files/src_Entity.js.html#l256"><code>setProperty:256</code></a>
                                                     </p>
                                             
                                             
@@ -807,7 +825,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_Entity.js.html#l150"><code>toJSON:150</code></a>
+                                                    <a href="../files/src_Entity.js.html#l157"><code>toJSON:157</code></a>
                                                     </p>
                                             
                                             
@@ -867,7 +885,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_Entity.js.html#l140"><code>toString:140</code></a>
+                                                    <a href="../files/src_Entity.js.html#l147"><code>toString:147</code></a>
                                                     </p>
                                             
                                             
@@ -909,7 +927,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_Entity.js.html#l197"><code>component-added:197</code></a>
+                                                    <a href="../files/src_Entity.js.html#l204"><code>component-added:204</code></a>
                                                     </p>
                                             
                                             
@@ -963,7 +981,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_Entity.js.html#l218"><code>component-removed:218</code></a>
+                                                    <a href="../files/src_Entity.js.html#l225"><code>component-removed:225</code></a>
                                                     </p>
                                             
                                             
@@ -1017,7 +1035,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_Entity.js.html#l120"><code>load:120</code></a>
+                                                    <a href="../files/src_Entity.js.html#l127"><code>load:127</code></a>
                                                     </p>
                                             
                                             

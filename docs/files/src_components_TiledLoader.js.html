@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.11.10 API Documentation : src\components\TiledLoader.js</title>
+	<title>platypus v1.0.0 API Documentation : src\components\TiledLoader.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.11.10</em>
+            <em>API Documentation for: 1.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -71,6 +71,7 @@
                                 <li><a href="../classes/platypus.components.LogicCarrier.html">platypus.components.LogicCarrier</a></li>
                                 <li><a href="../classes/platypus.components.LogicDestroyMe.html">platypus.components.LogicDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.LogicDirectionalMovement.html">platypus.components.LogicDirectionalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
@@ -80,6 +81,7 @@
                                 <li><a href="../classes/platypus.components.NodeResident.html">platypus.components.NodeResident</a></li>
                                 <li><a href="../classes/platypus.components.Orientation.html">platypus.components.Orientation</a></li>
                                 <li><a href="../classes/platypus.components.RandomEvents.html">platypus.components.RandomEvents</a></li>
+                                <li><a href="../classes/platypus.components.RelativePosition.html">platypus.components.RelativePosition</a></li>
                                 <li><a href="../classes/platypus.components.RelayFamily.html">platypus.components.RelayFamily</a></li>
                                 <li><a href="../classes/platypus.components.RelayGame.html">platypus.components.RelayGame</a></li>
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
@@ -99,6 +101,7 @@
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
+                                <li><a href="../classes/platypus.components.Tween.html">platypus.components.Tween</a></li>
                                 <li><a href="../classes/platypus.components.VoiceOver.html">platypus.components.VoiceOver</a></li>
                                 <li><a href="../classes/platypus.components.XHR.html">platypus.components.XHR</a></li>
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
@@ -198,7 +201,8 @@
                         (function () {
                             &#x27;use strict&#x27;;
                         
-                            var AABB        = include(&#x27;platypus.AABB&#x27;),
+                            var FILENAME_TO_ID = /^(?:(\w+:)\/{2}(\w+(?:\.\w+)*\/?))?([\/.]*?(?:[^?]+)?\/)?(?:(([^\/?]+)\.(\w+))|([^\/?]+))(?:\?((?:(?:[^&amp;]*?[\/=])?(?:((?:(?:[^\/?&amp;=]+)\.(\w+)))\S*?)|\S+))?)?$/,
+                                AABB        = include(&#x27;platypus.AABB&#x27;),
                                 Data        = include(&#x27;platypus.Data&#x27;),
                                 Entity      = include(&#x27;platypus.Entity&#x27;),
                                 maskId = 0x0fffffff,
@@ -234,6 +238,11 @@
                                         return arr;
                                     };
                                 }()),
+                                getImageId = function (path) {
+                                    var result = path.match(FILENAME_TO_ID);
+                        
+                                    return result[5] || result[7];
+                                },
                                 finishedLoading = function (level, x, y, width, height, tileWidth, tileHeight, callback) {
                                     var message = Data.setUp(
                                             &quot;level&quot;, null,
@@ -284,6 +293,48 @@
                                     x: 1,
                                     y: 1,
                                     id: -1
+                                },
+                                getProperty = function (obj, key) { // Handle Tiled map versions
+                                    var i = 0;
+                        
+                                    if (obj) {
+                                        if (Array.isArray(obj)) {
+                                            i = obj.length;
+                                            while (i--) {
+                                                if (obj[i].name === key) {
+                                                    return obj[i].value;
+                                                }
+                                            }
+                                            return null;
+                                        } else {
+                                            return obj[key];
+                                        }
+                                    } else {
+                                        return null;
+                                    }
+                                },
+                                setProperty = function (obj, key, value) { // Handle Tiled map versions
+                                    var i = 0;
+                        
+                                    if (obj) {
+                                        if (Array.isArray(obj)) {
+                                            i = obj.length;
+                                            while (i--) {
+                                                if (obj[i].name === key) {
+                                                    obj[i].type = typeof value;
+                                                    obj[i].value = value;
+                                                    return;
+                                                }
+                                            }
+                                            obj.push({
+                                                name: key,
+                                                type: typeof value,
+                                                value: value
+                                            });
+                                        } else {
+                                            obj[key] = value;
+                                        }
+                                    }
                                 },
                                 entityTransformCheck = function (v) {
                                     var resp = transform,
@@ -376,12 +427,19 @@
                                     return data;
                                 },
                                 mergeAndFormatProperties = function (src, dest) {
-                                    var key = &#x27;&#x27;;
+                                    var i = 0,
+                                        key = &#x27;&#x27;;
                                     
                                     if (src &amp;&amp; dest) {
-                                        for (key in src) {
-                                            if (src.hasOwnProperty(key)) {
-                                                dest[key] = formatProperty(src[key]);
+                                        if (Array.isArray(src)) {
+                                            for (i = 0; i &lt; src.length; i++) {
+                                                setProperty(dest, src[i].name, formatProperty(src[i].value));
+                                            }
+                                        } else {
+                                            for (key in src) {
+                                                if (src.hasOwnProperty(key)) {
+                                                    setProperty(dest, key, formatProperty(src[key]));
+                                                }
                                             }
                                         }
                                     }
@@ -444,12 +502,15 @@
                                                     }
                                                 } else if (level.layers[i].type === &#x27;imagelayer&#x27;) {
                                                     assets.union([level.layers[i].image]);
-                                                } else if (level.layers[i].properties &amp;&amp; level.layers[i].properties.entity) {
-                                                    data = Data.setUp(&#x27;type&#x27;, level.layers[i].properties.entity);
-                                                    arr = Entity.getAssetList(data);
-                                                    assets.union(arr);
-                                                    arr.recycle();
-                                                    data.recycle();
+                                                } else {
+                                                    entity = getProperty(level.layers[i].properties, &#x27;entity&#x27;);
+                                                    if (entity) {
+                                                        data = Data.setUp(&#x27;type&#x27;, entity);
+                                                        arr = Entity.getAssetList(data);
+                                                        assets.union(arr);
+                                                        arr.recycle();
+                                                        data.recycle();
+                                                    }
                                                 }
                                             }
                                             if (!ss) { //We need to load the tileset images since there is not a separate spriteSheet describing them
@@ -688,6 +749,8 @@
                                             tWidth = layer.tilewidth || tileWidth,
                                             newWidth = 0,
                                             newHeight = 0,
+                                            layerHeight = 0,
+                                            layerWidth = 0,
                                             tileTypes = 0,
                                             tileDefinition = JSON.parse(JSON.stringify(platypus.game.settings.entities[entityKind] || standardEntityLayers[entityKind])), //TODO: a bit of a hack to copy an object instead of overwrite values
                                             importAnimation = {},
@@ -755,12 +818,17 @@
                         
                                         //This builds in parallaxing support by allowing the addition of width and height properties into Tiled layers so they pan at a separate rate than other layers.
                                         if (layer.properties) {
-                                            if (layer.properties.width) {
-                                                newWidth  = parseInt(layer.properties.width,  10);
+                        
+                                            layerWidth = getProperty(layer.properties, &#x27;width&#x27;);
+                                            if (layerWidth) {
+                                                newWidth  = parseInt(layerWidth,  10);
                                             }
-                                            if (layer.properties.height) {
-                                                newHeight = parseInt(layer.properties.height, 10);
+                        
+                                            layerHeight = getProperty(layer.properties, &#x27;height&#x27;);
+                                            if (layerHeight) {
+                                                newHeight = parseInt(layerHeight, 10);
                                             }
+                        
                                             if (newWidth || newHeight) {
                                                 newWidth  = newWidth  || width;
                                                 newHeight = newHeight || height;
@@ -875,14 +943,19 @@
                                             }
                                             return this.owner.addEntity(new Entity(tileDefinition, {
                                                 properties: props
-                                            }, this.updateLoadingProgress.bind(this, progress)));
+                                            }, this.updateLoadingProgress.bind(this, progress), this.owner));
                                         }
                                     },
                                     
-                                    convertImageLayer: function (imageLayer, tileHeight, tileWidth) {
-                                        var i = 0,
+                                    convertImageLayer: function (imageLayer) {
+                                        var asset = null,
+                                            i = 0,
                                             dataCells = 0,
+                                            imageId = &#x27;&#x27;,
                                             props = imageLayer.properties || {},
+                                            repeat = getProperty(props, &#x27;repeat&#x27;),
+                                            repeatX = getProperty(props, &#x27;repeat-x&#x27;),
+                                            repeatY = getProperty(props, &#x27;repeat-y&#x27;),
                                             tileLayer = {
                                                 data: [],
                                                 image: &#x27;&#x27;,
@@ -890,50 +963,76 @@
                                                 name: imageLayer.name,
                                                 type: &#x27;tilelayer&#x27;,
                                                 width: 1,
-                                                tileheight: tileHeight,
-                                                tilewidth: tileWidth,
+                                                tileheight: 1,
+                                                tilewidth: 1,
                                                 x: imageLayer.x,
                                                 y: imageLayer.y,
                                                 properties: props
                                             };
                         
-                                        if (props.repeat) {
-                                            tileLayer.width = +props.repeat;
-                                            tileLayer.height = +props.repeat;
+                                        if (repeat) {
+                                            tileLayer.width = +repeat;
+                                            tileLayer.height = +repeat;
                                         }
-                                        if (props[&#x27;repeat-x&#x27;]) {
-                                            tileLayer.width = +props[&#x27;repeat-x&#x27;];
+                                        if (repeatX) {
+                                            tileLayer.width = +repeatX;
                                         }
-                                        if (props[&#x27;repeat-y&#x27;]) {
-                                            tileLayer.height = +props[&#x27;repeat-y&#x27;];
+                                        if (repeatY) {
+                                            tileLayer.height = +repeatY;
                                         }
                                         dataCells = tileLayer.width * tileLayer.height;
                                         for (i = 0; i &lt; dataCells; i++) {
                                             tileLayer.data.push(1);
                                         }
                         
-                                        // Prefer to have name in tiled match image id in game
-                                        if (this.assetCache.read(imageLayer.name)) {
+                                        asset = this.assetCache.read(imageLayer.name);
+                                        if (asset) { // Prefer to have name in tiled match image id in game
                                             tileLayer.image = imageLayer.name;
-                                            tileLayer.tileheight = this.assetCache.read(imageLayer.name).height;
-                                            tileLayer.tilewidth = this.assetCache.read(imageLayer.name).width;
+                                            tileLayer.tileheight = asset.height;
+                                            tileLayer.tilewidth = asset.width;
                                         } else {
-                                            platypus.debug.warn(&#x27;Component TiledLoader: Cannot find the &quot;&#x27; + imageLayer.name + &#x27;&quot; sprite sheet. Add it to the list of assets in config.json and give it the id &quot;&#x27; + imageLayer.name + &#x27;&quot;.&#x27;);
-                                            tileLayer.image = imageLayer.image;
+                                            imageId = getImageId(imageLayer.image);
+                                            asset = this.assetCache.read(imageId);
+                                            if (asset) {
+                                                platypus.debug.warn(&#x27;Component TiledLoader: Did not find a spritesheet for &quot;&#x27; + imageLayer.name + &#x27;&quot;, so using &quot;&#x27; + imageLayer.image + &#x27;&quot; instead.&#x27;);
+                                                tileLayer.image = imageId;
+                                                tileLayer.tileheight = asset.height;
+                                                tileLayer.tilewidth = asset.width;
+                                            } else {
+                                                platypus.debug.warn(&#x27;Component TiledLoader: Cannot find the &quot;&#x27; + imageLayer.name + &#x27;&quot; sprite sheet. Add it to the list of assets in config.json and give it the id &quot;&#x27; + imageLayer.name + &#x27;&quot;.&#x27;);
+                                                tileLayer.image = imageLayer.image;
+                                            }
                                         }
                         
+                                        tileLayer.tileset = {
+                                            &quot;columns&quot;: 1,
+                                            &quot;image&quot;: tileLayer.image,
+                                            &quot;imageheight&quot;: tileLayer.tileheight,
+                                            &quot;imagewidth&quot;: tileLayer.tilewidth,
+                                            &quot;margin&quot;: 0,
+                                            &quot;name&quot;: imageLayer.name,
+                                            &quot;spacing&quot;: 0,
+                                            &quot;tilecount&quot;: 1,
+                                            &quot;tileheight&quot;: tileLayer.tileheight,
+                                            &quot;tilewidth&quot;: tileLayer.tilewidth,
+                                            &quot;type&quot;: &quot;tileset&quot;
+                                        };
+                                        
                                         return tileLayer;
                                     },
                                     
                                     loadLevel: function (levelData, callback) {
                                         var actionLayerCollides = true,
+                                            asset = null,
                                             layers = null,
                                             level = null,
                                             height = 0,
                                             i = 0,
+                                            imageId = &#x27;&#x27;,
                                             images = null,
                                             layer = null,
                                             layerDefinition = null,
+                                            tileset = null,
                                             tilesets = null,
                                             tileWidth = 0,
                                             tileHeight = 0,
@@ -964,11 +1063,20 @@
                                         }
                                         if (images.length === 0) {
                                             for (i = 0; i &lt; tilesets.length; i++) {
-                                                if (this.assetCache.read(tilesets[i].name)) { // Prefer to have name in tiled match image id in game
-                                                    images.push(tilesets[i].name);
+                                                tileset = tilesets[i];
+                                                asset = this.assetCache.read(tileset.name);
+                                                if (asset) { // Prefer to have name in tiled match image id in game
+                                                    images.push(tileset.name);
                                                 } else {
-                                                    platypus.debug.warn(&#x27;Component TiledLoader: Cannot find the &quot;&#x27; + tilesets[x].name + &#x27;&quot; sprite sheet. Add it to the list of assets in config.json and give it the id &quot;&#x27; + tilesets[x].name + &#x27;&quot;.&#x27;);
-                                                    images.push(tilesets[i].image);
+                                                    imageId = getImageId(tileset.image);
+                                                    asset = this.assetCache.read(imageId);
+                                                    if (asset) {
+                                                        platypus.debug.warn(&#x27;Component TiledLoader: Did not find a spritesheet for &quot;&#x27; + tileset.name + &#x27;&quot;, so using &quot;&#x27; + tileset.image + &#x27;&quot; instead.&#x27;);
+                                                        images.push(imageId);
+                                                    } else {
+                                                        platypus.debug.warn(&#x27;Component TiledLoader: Cannot find the &quot;&#x27; + tileset.name + &#x27;&quot; sprite sheet. Add it to the list of assets in config.json and give it the id &quot;&#x27; + tileset.name + &#x27;&quot;.&#x27;);
+                                                        images.push(tileset.image);
+                                                    }
                                                 }
                                             }
                                         }
@@ -982,10 +1090,10 @@
                                         }
                         
                                         progress.total = i = layers.length;
-                                        while (i--) { // Prepatory pass through layers.
+                                        while (i--) { // Preparatory pass through layers.
                                             if (layers[i].type === &#x27;objectgroup&#x27;) {
                                                 progress.total += layers[i].objects.length;
-                                            } else if (actionLayerCollides &amp;&amp; ((layers[i].name === &#x27;collision&#x27;) || (layers[i].properties &amp;&amp; layers[i].properties.entity === &#x27;collision-layer&#x27;))) {
+                                            } else if (actionLayerCollides &amp;&amp; ((layers[i].name === &#x27;collision&#x27;) || (getProperty(layers[i].properties, &#x27;entity&#x27;) === &#x27;collision-layer&#x27;))) {
                                                 actionLayerCollides = false;
                                             }
                                         }
@@ -996,7 +1104,8 @@
                                             layerDefinition = layers[i];
                                             switch (layerDefinition.type) {
                                             case &#x27;imagelayer&#x27;:
-                                                layer = this.createLayer(&#x27;image-layer&#x27;, this.convertImageLayer(layerDefinition, tileHeight, tileWidth), x, y, tileWidth, tileHeight, tilesets, images, layer, progress);
+                                                layer = this.convertImageLayer(layerDefinition);
+                                                layer = this.createLayer(&#x27;image-layer&#x27;, layer, x, y, layer.tilewidth, layer.tileheight, [layer.tileset], images, layer, progress);
                                                 break;
                                             case &#x27;objectgroup&#x27;:
                                                 this.setUpEntities(layerDefinition, x, y, tileWidth, tileHeight, tilesets, progress);
@@ -1027,8 +1136,8 @@
                                             entity = null,
                                             entityDefinition = null,
                                             entityDefProps = null,
-                                            entityPositionX = &quot;&quot;,
-                                            entityPositionY = &quot;&quot;,
+                                            entityPositionX = getProperty(layer.properties, &#x27;entityPositionX&#x27;) || this.entityPositionX,
+                                            entityPositionY = getProperty(layer.properties, &#x27;entityPositionY&#x27;) || this.entityPositionY,
                                             entityType = &#x27;&#x27;,
                                             gid = -1,
                                             smallestX = Infinity,
@@ -1043,18 +1152,6 @@
                         
                                         mapOffsetX += layer.offsetx || 0;
                                         mapOffsetY += layer.offsety || 0;
-                        
-                                        entityPositionX = this.entityPositionX;
-                                        entityPositionY = this.entityPositionY;
-                        
-                                        if (layer.properties) {
-                                            if (layer.properties.entityPositionX) {
-                                                entityPositionX = layer.properties.entityPositionX;
-                                            }
-                                            if (layer.properties.entityPositionY) {
-                                                entityPositionY = layer.properties.entityPositionY;
-                                            }
-                                        }
                         
                                         for (obj = 0; obj &lt; layer.objects.length; obj++) {
                                             entity     = layer.objects[obj];
@@ -1151,14 +1248,16 @@
                                                         }
                                                     }
                         
-                                                    if (!properties.width) {
-                                                        properties.width = fallbackWidth;
+                                                    if (!entity.point) {
+                                                        if (!properties.width) {
+                                                            properties.width = fallbackWidth;
+                                                        }
+                                                        if (!properties.height) {
+                                                            properties.height = fallbackHeight;
+                                                        }
+                                                        widthOffset = widthOffset || properties.width;
+                                                        heightOffset = heightOffset || properties.height;
                                                     }
-                                                    if (!properties.height) {
-                                                        properties.height = fallbackHeight;
-                                                    }
-                                                    widthOffset = widthOffset || properties.width;
-                                                    heightOffset = heightOffset || properties.height;
                         
                                                     properties.x = entity.x * this.unitsPerPixel;
                                                     properties.y = entity.y * this.unitsPerPixel;
@@ -1204,6 +1303,9 @@
                                                         properties.shape.type = &#x27;circle&#x27;;//&#x27;ellipse&#x27;;
                                                         properties.shape.width = properties.width * this.unitsPerPixel;
                                                         properties.shape.height = properties.height * this.unitsPerPixel;
+                        
+                                                        // Tiled has ellipses, but Platypus only accepts circles. Setting a radius based on the average of width and height in case a non-circular ellipse is imported.
+                                                        properties.shape.radius = (properties.width + properties.height) * this.unitsPerPixel / 4;
                                                     } else if (entity.width &amp;&amp; entity.height) {
                                                         properties.shape = {};
                                                         properties.shape.type = &#x27;rectangle&#x27;;
@@ -1230,10 +1332,9 @@
                                                     properties.z = this.layerZ;
                                                 }
                         
-                                                properties.parent = this.owner;
                                                 entity = this.owner.addEntity(new Entity(entityDefinition, {
                                                     properties: properties
-                                                }, this.updateLoadingProgress.bind(this, progress)));
+                                                }, this.updateLoadingProgress.bind(this, progress), this.owner));
                                                 if (entity) {
                                                     if (entity.camera) {
                                                         this.followEntity = {
@@ -1251,18 +1352,22 @@
                                     },
                         
                                     setupLayer: function (layer, layerCollides, combineRenderLayer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, images, progress) {
-                                        var entity = &#x27;render-layer&#x27;; // default
+                                        var canCombine = false,
+                                            specified = getProperty(layer.properties, &#x27;entity&#x27;),
+                                            entity = specified || &#x27;render-layer&#x27;, // default
+                                            entityDefinition = null,
+                                            i = 0;
                                         
                                         // First determine which type of entity this layer should behave as:
-                                        if (layer.properties &amp;&amp; layer.properties.entity) {
-                                            entity = layer.properties.entity;
-                                        } else if (layer.name === &quot;collision&quot;) {
-                                            entity = &#x27;collision-layer&#x27;;
-                                        } else if (layer.name === &quot;action&quot;) {
-                                            if (layerCollides) {
-                                                entity = &#x27;tile-layer&#x27;;
-                                            } else {
-                                                entity = &#x27;render-layer&#x27;;
+                                        if (!specified) {
+                                            if (layer.name === &quot;collision&quot;) {
+                                                entity = &#x27;collision-layer&#x27;;
+                                            } else if (layer.name === &quot;action&quot;) {
+                                                if (layerCollides) {
+                                                    entity = &#x27;tile-layer&#x27;;
+                                                } else {
+                                                    entity = &#x27;render-layer&#x27;;
+                                                }
                                             }
                                         }
                         
@@ -1274,7 +1379,24 @@
                                             this.createLayer(&#x27;collision-layer&#x27;, layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, images, combineRenderLayer, progress);
                                             return null;
                                         } else {
-                                            return this.createLayer(entity, layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, images, combineRenderLayer, progress);
+                                            // Need to check whether the entity can be combined for optimization. This combining of tile layers might be a nice addition to the compilation tools so it&#x27;s not happening here.
+                                            entityDefinition = platypus.game.settings.entities[entity];
+                                            if (entityDefinition) {
+                                                i = entityDefinition.components.length;
+                                                while (i--) {
+                                                    if (entityDefinition.components[i].type === &quot;RenderTiles&quot;) {
+                                                        canCombine = true;
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                        
+                                            if (canCombine) {
+                                                return this.createLayer(entity, layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, images, combineRenderLayer, progress);
+                                            } else {
+                                                this.createLayer(entity, layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, images, combineRenderLayer, progress);
+                                                return null;
+                                            }
                                         }
                                     },
                                     

@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.11.10 API Documentation : src\components\RenderSpine.js</title>
+	<title>platypus v1.0.0 API Documentation : src\components\RenderSpine.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.11.10</em>
+            <em>API Documentation for: 1.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -71,6 +71,7 @@
                                 <li><a href="../classes/platypus.components.LogicCarrier.html">platypus.components.LogicCarrier</a></li>
                                 <li><a href="../classes/platypus.components.LogicDestroyMe.html">platypus.components.LogicDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.LogicDirectionalMovement.html">platypus.components.LogicDirectionalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
@@ -80,6 +81,7 @@
                                 <li><a href="../classes/platypus.components.NodeResident.html">platypus.components.NodeResident</a></li>
                                 <li><a href="../classes/platypus.components.Orientation.html">platypus.components.Orientation</a></li>
                                 <li><a href="../classes/platypus.components.RandomEvents.html">platypus.components.RandomEvents</a></li>
+                                <li><a href="../classes/platypus.components.RelativePosition.html">platypus.components.RelativePosition</a></li>
                                 <li><a href="../classes/platypus.components.RelayFamily.html">platypus.components.RelayFamily</a></li>
                                 <li><a href="../classes/platypus.components.RelayGame.html">platypus.components.RelayGame</a></li>
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
@@ -99,6 +101,7 @@
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
+                                <li><a href="../classes/platypus.components.Tween.html">platypus.components.Tween</a></li>
                                 <li><a href="../classes/platypus.components.VoiceOver.html">platypus.components.VoiceOver</a></li>
                                 <li><a href="../classes/platypus.components.XHR.html">platypus.components.XHR</a></li>
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
@@ -175,7 +178,17 @@
                                 RenderContainer = include(&#x27;platypus.components.RenderContainer&#x27;),
                                 SkeletonJson = include(&#x27;PIXI.spine.core.SkeletonJson&#x27;, false),
                                 Spine = include(&#x27;PIXI.spine.Spine&#x27;, false),
-                                StateRender = include(&#x27;platypus.components.StateRender&#x27;);
+                                StateRender = include(&#x27;platypus.components.StateRender&#x27;),
+                                getBaseTexture = function (path) {
+                                    var asset = null,
+                                        assetCache = platypus.game.app.assetManager.cache;
+                                    
+                                    asset = assetCache.read(path.substring(path.lastIndexOf(&#x27;/&#x27;) + 1, path.lastIndexOf(&#x27;.&#x27;)));
+                                    if (!asset) {
+                                        platypus.debug.warn(&#x27;RenderSpine: &quot;&#x27; + path + &#x27;&quot; is not a loaded asset.&#x27;);
+                                    }
+                                    return new BaseTexture(asset);
+                                };
                             
                             // If PIXI.spine is unavailable, this component doesn&#x27;t work.
                             if (!Spine) {
@@ -464,7 +477,7 @@
                                         },
                                         imageCallback = function (loadFinished, line, callback) {
                                             // Not sure if this handles memory well - keeping it in for now.
-                                            var baseTexture = BaseTexture.fromImage(platypus.game.app.loader.cacheManager.prepare(line)); // Conform to SpringRoll&#x27;s loading paths so that this matches and doesn&#x27;t download the asset twice.
+                                            var baseTexture = getBaseTexture(line);
                         
                                             callback(baseTexture);
                         
@@ -493,7 +506,7 @@
                                             this.owner.trigger(eventName, event.data);
                                         };
                                     
-                                    return function (definition, callback) {
+                                    return function (def, callback) {
                                         var animation = &#x27;&#x27;,
                                             definition = null,
                                             settings = platypus.game.settings,
@@ -728,18 +741,29 @@
                                 getAssetList: (function () {
                                     var
                                         getImages = function (atlas, atlases) {
-                                            var end = 0;
+                                            var images = Array.setUp(),
+                                                lines = null,
+                                                j = 0;
                         
                                             if (atlas) {
-                                                end = atlas.indexOf(&#x27;\n&#x27;);
-                                                if (end &lt; 0) {
-                                                    return getImages(atlases[atlas], atlases);
-                                                } else {
-                                                    return Array.setUp(atlas.substring(0, end).replace(&#x27;\r&#x27;, &#x27;&#x27;));
+                                                lines = atlas.split(&#x27;\n&#x27;);
+                                                if (lines.length === 1) { // id, not an actual atlas
+                                                    atlas = atlases[atlas];
+                                                    if (atlas) {
+                                                        lines = atlas.split(&#x27;\n&#x27;);
+                                                    } else {
+                                                        return images;
+                                                    }
+                                                }
+                                                j = lines.length;
+                                                while (j--) { // Fix up relative image location paths.
+                                                    if (lines[j].substr(lines[j].length - 4) === &#x27;.png&#x27;) {
+                                                        images.push(lines[j]);
+                                                    }
                                                 }
                                             }
                         
-                                            return Array.setUp();
+                                            return images;
                                         };
                                     
                                     return function (component, props, defaultProps) {

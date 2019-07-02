@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.11.10 API Documentation : src\components\Timeline.js</title>
+	<title>platypus v1.0.0 API Documentation : src\components\Timeline.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.11.10</em>
+            <em>API Documentation for: 1.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -71,6 +71,7 @@
                                 <li><a href="../classes/platypus.components.LogicCarrier.html">platypus.components.LogicCarrier</a></li>
                                 <li><a href="../classes/platypus.components.LogicDestroyMe.html">platypus.components.LogicDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.LogicDirectionalMovement.html">platypus.components.LogicDirectionalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
@@ -80,6 +81,7 @@
                                 <li><a href="../classes/platypus.components.NodeResident.html">platypus.components.NodeResident</a></li>
                                 <li><a href="../classes/platypus.components.Orientation.html">platypus.components.Orientation</a></li>
                                 <li><a href="../classes/platypus.components.RandomEvents.html">platypus.components.RandomEvents</a></li>
+                                <li><a href="../classes/platypus.components.RelativePosition.html">platypus.components.RelativePosition</a></li>
                                 <li><a href="../classes/platypus.components.RelayFamily.html">platypus.components.RelayFamily</a></li>
                                 <li><a href="../classes/platypus.components.RelayGame.html">platypus.components.RelayGame</a></li>
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
@@ -99,6 +101,7 @@
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
+                                <li><a href="../classes/platypus.components.Tween.html">platypus.components.Tween</a></li>
                                 <li><a href="../classes/platypus.components.VoiceOver.html">platypus.components.VoiceOver</a></li>
                                 <li><a href="../classes/platypus.components.XHR.html">platypus.components.XHR</a></li>
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
@@ -185,7 +188,11 @@
                                     
                                     while (i--) {
                                         instance = instances[i];
-                                        if (instance.active) {
+                                        if (instance.remove) {
+                                            instances.greenSplice(i);
+                                            instance.timeline.recycle(2);
+                                            instance.recycle();
+                                        } else if (instance.active) {
                                             if (instance.timeline.length === 0) {
                                                 instances.greenSplice(i);
                                                 instance.timeline.recycle(2);
@@ -256,7 +263,22 @@
                                      * @method &#x27;handle-logic&#x27;
                                      * @param tick.delta {Number} The length of the tick.
                                      */
-                                    &quot;handle-logic&quot;: updateLogic
+                                    &quot;handle-logic&quot;: updateLogic,
+                        
+                                    /**
+                                     * Stops all timelines.
+                                     *
+                                     * @method &#x27;stop-active-timelines&#x27;
+                                     * @since v0.12.0
+                                     */
+                                    &quot;stop-active-timelines&quot;: function () {
+                                        var instances = this.timelineInstances,
+                                            i = instances.length;
+                        
+                                        while (i--) {
+                                            instances[i].remove = true;
+                                        }
+                                    }
                                 },
                                 
                                 methods: {
@@ -283,7 +305,8 @@
                                             &quot;time&quot;, 0,
                                             &quot;active&quot;, 1,
                                             &quot;pause&quot;, pause,
-                                            &quot;play&quot;, play
+                                            &quot;play&quot;, play,
+                                            &quot;remove&quot;, false
                                         );
                                     },
                                     progressTimeline: function (instance, delta) {
@@ -353,7 +376,6 @@
                                 }
                             });
                         }());
-                        
                             </pre>
                         </div>
                     </div>

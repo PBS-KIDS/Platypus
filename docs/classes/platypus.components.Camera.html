@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.11.10 API Documentation : platypus.components.Camera</title>
+	<title>platypus v1.0.0 API Documentation : platypus.components.Camera</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.11.10</em>
+            <em>API Documentation for: 1.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -71,6 +71,7 @@
                                 <li><a href="../classes/platypus.components.LogicCarrier.html">platypus.components.LogicCarrier</a></li>
                                 <li><a href="../classes/platypus.components.LogicDestroyMe.html">platypus.components.LogicDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.LogicDirectionalMovement.html">platypus.components.LogicDirectionalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
@@ -80,6 +81,7 @@
                                 <li><a href="../classes/platypus.components.NodeResident.html">platypus.components.NodeResident</a></li>
                                 <li><a href="../classes/platypus.components.Orientation.html">platypus.components.Orientation</a></li>
                                 <li><a href="../classes/platypus.components.RandomEvents.html">platypus.components.RandomEvents</a></li>
+                                <li><a href="../classes/platypus.components.RelativePosition.html">platypus.components.RelativePosition</a></li>
                                 <li><a href="../classes/platypus.components.RelayFamily.html">platypus.components.RelayFamily</a></li>
                                 <li><a href="../classes/platypus.components.RelayGame.html">platypus.components.RelayGame</a></li>
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
@@ -99,6 +101,7 @@
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
+                                <li><a href="../classes/platypus.components.Tween.html">platypus.components.Tween</a></li>
                                 <li><a href="../classes/platypus.components.VoiceOver.html">platypus.components.VoiceOver</a></li>
                                 <li><a href="../classes/platypus.components.XHR.html">platypus.components.XHR</a></li>
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
@@ -208,7 +211,7 @@
                         
                                                     </li>
                                                     <li class="index-item method">
-                                                        <a href="#method_&#x27;mousedown&#x27;">&#x27;mousedown&#x27;</a>
+                                                        <a href="#method_&#x27;pointerdown&#x27;">&#x27;pointerdown&#x27;</a>
                         
                                                     </li>
                                                     <li class="index-item method">
@@ -398,7 +401,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l282"><code>&#x27;child-entity-added&#x27;:282</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l303"><code>&#x27;child-entity-added&#x27;:303</code></a>
                                                     </p>
                                             
                                             
@@ -451,7 +454,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l303"><code>&#x27;child-entity-updated&#x27;:303</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l324"><code>&#x27;child-entity-updated&#x27;:324</code></a>
                                                     </p>
                                             
                                             
@@ -505,7 +508,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l541"><code>&#x27;follow&#x27;:541</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l562"><code>&#x27;follow&#x27;:562</code></a>
                                                     </p>
                                             
                                             
@@ -673,7 +676,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l261"><code>&#x27;load&#x27;:261</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l282"><code>&#x27;load&#x27;:282</code></a>
                                                     </p>
                                             
                                             
@@ -688,8 +691,8 @@
                                             
                                             
                                             </div>
-                                            <div id="method_&#x27;mousedown&#x27;" class="method item">
-                                                <h3 class="name"><code>&#x27;mousedown&#x27;</code></h3>
+                                            <div id="method_&#x27;pointerdown&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;pointerdown&#x27;</code></h3>
                                             
                                                     <div class="args">
                                                         <span class="paren">(</span><ul class="args-list inline commas">
@@ -709,7 +712,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l343"><code>&#x27;mousedown&#x27;:343</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l364"><code>&#x27;pointerdown&#x27;:364</code></a>
                                                     </p>
                                             
                                             
@@ -732,7 +735,7 @@
                                             
                                             
                                                                 <div class="param-description">
-                                                                    <p>The mouse event.</p>
+                                                                    <p>The pointer event.</p>
                                             
                                                                 </div>
                                             
@@ -763,7 +766,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l367"><code>&#x27;pressmove&#x27;:367</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l388"><code>&#x27;pressmove&#x27;:388</code></a>
                                                     </p>
                                             
                                             
@@ -786,7 +789,7 @@
                                             
                                             
                                                                 <div class="param-description">
-                                                                    <p>The mouse event.</p>
+                                                                    <p>The pointer event.</p>
                                             
                                                                 </div>
                                             
@@ -817,7 +820,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l384"><code>&#x27;pressup&#x27;:384</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l405"><code>&#x27;pressup&#x27;:405</code></a>
                                                     </p>
                                             
                                             
@@ -840,7 +843,7 @@
                                             
                                             
                                                                 <div class="param-description">
-                                                                    <p>The mouse event.</p>
+                                                                    <p>The pointer event.</p>
                                             
                                                                 </div>
                                             
@@ -871,7 +874,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l508"><code>&#x27;relocate&#x27;:508</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l529"><code>&#x27;relocate&#x27;:529</code></a>
                                                     </p>
                                             
                                             
@@ -968,7 +971,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l270"><code>&#x27;render-world&#x27;:270</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l291"><code>&#x27;render-world&#x27;:291</code></a>
                                                     </p>
                                             
                                             
@@ -1033,7 +1036,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l494"><code>&#x27;resize-camera&#x27;:494</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l515"><code>&#x27;resize-camera&#x27;:515</code></a>
                                                     </p>
                                             
                                             
@@ -1108,7 +1111,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l562"><code>&#x27;shake&#x27;:562</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l583"><code>&#x27;shake&#x27;:583</code></a>
                                                     </p>
                                             
                                             
@@ -1217,7 +1220,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l401"><code>&#x27;tick&#x27;:401</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l422"><code>&#x27;tick&#x27;:422</code></a>
                                                     </p>
                                             
                                             
@@ -1281,7 +1284,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l318"><code>&#x27;world-loaded&#x27;:318</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l339"><code>&#x27;world-loaded&#x27;:339</code></a>
                                                     </p>
                                             
                                             
@@ -1692,7 +1695,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l998"><code>isOnCanvas:998</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l1019"><code>isOnCanvas:1019</code></a>
                                                     </p>
                                             
                                             
@@ -2057,7 +2060,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l1016"><code>windowToWorld:1016</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l1037"><code>windowToWorld:1037</code></a>
                                                     </p>
                                             
                                             
@@ -2150,7 +2153,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l1039"><code>worldToWindow:1039</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l1060"><code>worldToWindow:1060</code></a>
                                                     </p>
                                             
                                             
@@ -2229,7 +2232,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l126"><code>canvas:126</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l147"><code>canvas:147</code></a>
                                                     </p>
                                             
                                             
@@ -2255,7 +2258,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l52"><code>height:52</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l73"><code>height:73</code></a>
                                                     </p>
                                             
                                             
@@ -2281,7 +2284,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l61"><code>mode:61</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l82"><code>mode:82</code></a>
                                                     </p>
                                             
                                             
@@ -2308,7 +2311,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l71"><code>overflow:71</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l92"><code>overflow:92</code></a>
                                                     </p>
                                             
                                             
@@ -2334,7 +2337,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l98"><code>rotate:98</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l119"><code>rotate:119</code></a>
                                                     </p>
                                             
                                             
@@ -2360,7 +2363,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l80"><code>stretch:80</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l101"><code>stretch:101</code></a>
                                                     </p>
                                             
                                             
@@ -2386,7 +2389,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l89"><code>threshold:89</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l110"><code>threshold:110</code></a>
                                                     </p>
                                             
                                             
@@ -2412,7 +2415,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l153"><code>transitionAngle:153</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l174"><code>transitionAngle:174</code></a>
                                                     </p>
                                             
                                             
@@ -2438,7 +2441,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l135"><code>transitionX:135</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l156"><code>transitionX:156</code></a>
                                                     </p>
                                             
                                             
@@ -2464,7 +2467,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l144"><code>transitionY:144</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l165"><code>transitionY:165</code></a>
                                                     </p>
                                             
                                             
@@ -2490,7 +2493,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l43"><code>width:43</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l64"><code>width:64</code></a>
                                                     </p>
                                             
                                             
@@ -2516,7 +2519,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l107"><code>x:107</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l128"><code>x:128</code></a>
                                                     </p>
                                             
                                             
@@ -2542,7 +2545,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l116"><code>y:116</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l137"><code>y:137</code></a>
                                                     </p>
                                             
                                             
@@ -2574,7 +2577,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l292"><code>&#x27;camera-loaded&#x27;:292</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l313"><code>&#x27;camera-loaded&#x27;:313</code></a>
                                                     </p>
                                             
                                             
@@ -2627,7 +2630,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l461"><code>&#x27;camera-update&#x27;:461</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l482"><code>&#x27;camera-update&#x27;:482</code></a>
                                                     </p>
                                             
                                             

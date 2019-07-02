@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.11.10 API Documentation : platypus.components.EntityController</title>
+	<title>platypus v1.0.0 API Documentation : platypus.components.EntityController</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.11.10</em>
+            <em>API Documentation for: 1.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -71,6 +71,7 @@
                                 <li><a href="../classes/platypus.components.LogicCarrier.html">platypus.components.LogicCarrier</a></li>
                                 <li><a href="../classes/platypus.components.LogicDestroyMe.html">platypus.components.LogicDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.LogicDirectionalMovement.html">platypus.components.LogicDirectionalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
@@ -80,6 +81,7 @@
                                 <li><a href="../classes/platypus.components.NodeResident.html">platypus.components.NodeResident</a></li>
                                 <li><a href="../classes/platypus.components.Orientation.html">platypus.components.Orientation</a></li>
                                 <li><a href="../classes/platypus.components.RandomEvents.html">platypus.components.RandomEvents</a></li>
+                                <li><a href="../classes/platypus.components.RelativePosition.html">platypus.components.RelativePosition</a></li>
                                 <li><a href="../classes/platypus.components.RelayFamily.html">platypus.components.RelayFamily</a></li>
                                 <li><a href="../classes/platypus.components.RelayGame.html">platypus.components.RelayGame</a></li>
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
@@ -99,6 +101,7 @@
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
+                                <li><a href="../classes/platypus.components.Tween.html">platypus.components.Tween</a></li>
                                 <li><a href="../classes/platypus.components.VoiceOver.html">platypus.components.VoiceOver</a></li>
                                 <li><a href="../classes/platypus.components.XHR.html">platypus.components.XHR</a></li>
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
@@ -180,6 +183,7 @@
                         
                                     <li class="api-class-tab methods"><a href="#methods">Methods</a></li>
                                     <li class="api-class-tab properties"><a href="#properties">Properties</a></li>
+                                    <li class="api-class-tab events"><a href="#events">Events</a></li>
                             </ul>
                         
                             <div>
@@ -190,6 +194,30 @@
                                             <h3>Methods</h3>
                         
                                             <ul class="index-list methods">
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;handle-controller&#x27;">&#x27;handle-controller&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;pause-controls&#x27;">&#x27;pause-controls&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;pointerdown&#x27;">&#x27;pointerdown&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;pressmove&#x27;">&#x27;pressmove&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;pressup&#x27;">&#x27;pressup&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;unpause-controls&#x27;">&#x27;unpause-controls&#x27;</a>
+                        
+                                                    </li>
                                                     <li class="index-item method private inherited">
                                                         <a href="#method_addEventListener">addEventListener</a>
                         
@@ -242,6 +270,10 @@
                         
                                                     </li>
                                                     <li class="index-item property">
+                                                        <a href="#property_joystick">joystick</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
                                                         <a href="#property_paused">paused</a>
                         
                                                     </li>
@@ -253,11 +285,374 @@
                                         </div>
                         
                         
+                                        <div class="index-section events">
+                                            <h3>Events</h3>
+                        
+                                            <ul class="index-list events">
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;*&#x27;">&#x27;*&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;east&#x27;">&#x27;east&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;east-northeast&#x27;">&#x27;east-northeast&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;east-southeast&#x27;">&#x27;east-southeast&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;joystick-orientation&#x27;">&#x27;joystick-orientation&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;joystick:down&#x27;">&#x27;joystick:down&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;joystick:up&#x27;">&#x27;joystick:up&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;mouse:mouse-left:down&#x27;">&#x27;mouse:mouse-left:down&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;mouse:mouse-left:up&#x27;">&#x27;mouse:mouse-left:up&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;mouse:mouse-middle:down&#x27;">&#x27;mouse:mouse-middle:down&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;mouse:mouse-middle:up&#x27;">&#x27;mouse:mouse-middle:up&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;mouse:mouse-right:down&#x27;">&#x27;mouse:mouse-right:down&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;mouse:mouse-right:up&#x27;">&#x27;mouse:mouse-right:up&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;north&#x27;">&#x27;north&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;north-northeast&#x27;">&#x27;north-northeast&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;north-northwest&#x27;">&#x27;north-northwest&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;northeast&#x27;">&#x27;northeast&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;northwest&#x27;">&#x27;northwest&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;south&#x27;">&#x27;south&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;south-southeast&#x27;">&#x27;south-southeast&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;south-southwest&#x27;">&#x27;south-southwest&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;southeast&#x27;">&#x27;southeast&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;southwest&#x27;">&#x27;southwest&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;stop&#x27;">&#x27;stop&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;west&#x27;">&#x27;west&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;west-northwest&#x27;">&#x27;west-northwest&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;west-southwest&#x27;">&#x27;west-southwest&#x27;</a>
+                        
+                                                    </li>
+                                            </ul>
+                                        </div>
                                 </div>
                         
                                     <div id="methods" class="api-class-tabpanel">
                                         <h2 class="off-left">Methods</h2>
                         
+                                            <div id="method_&#x27;handle-controller&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;handle-controller&#x27;</code></h3>
+                                            
+                                                    <span class="paren">()</span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_EntityController.js.html#l145"><code>&#x27;handle-controller&#x27;:145</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>On each <code>handle-controller</code> message, this component checks its list of actions and if any of their states are currently true or were true on the last call, that action message is triggered.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;pause-controls&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;pause-controls&#x27;</code></h3>
+                                            
+                                                    <span class="paren">()</span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_EntityController.js.html#l274"><code>&#x27;pause-controls&#x27;:274</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This message will stop the controller from triggering messages until "unpause-controls" is triggered on the entity.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;pointerdown&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;pointerdown&#x27;</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>value.event</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_EntityController.js.html#l173"><code>&#x27;pointerdown&#x27;:173</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This message triggers a new message on the entity that includes what button on the mouse was pressed: "mouse:left-button:down", "mouse:middle-button:down", or "mouse:right-button:down".</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">value.event</code>
+                                                                    <span class="type">DOM Event object</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>This event object is passed along with the new message.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;pressmove&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;pressmove&#x27;</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>value</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_EntityController.js.html#l262"><code>&#x27;pressmove&#x27;:262</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Updates joystick input if joystick is enabled.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">value</code>
+                                                                    <span class="type"><a href="../classes/platypus.Data.html" class="crosslink">platypus.Data</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>This event object is passed along with the joystick messages.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;pressup&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;pressup&#x27;</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>value.event</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_EntityController.js.html#l214"><code>&#x27;pressup&#x27;:214</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This message triggers a new message on the entity that includes what button on the mouse was released: "mouse:left-button:up", "mouse:middle-button:up", or "mouse:right-button:up".</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">value.event</code>
+                                                                    <span class="type">DOM Event object</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>This event object is passed along with the new message.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;unpause-controls&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;unpause-controls&#x27;</code></h3>
+                                            
+                                                    <span class="paren">()</span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_EntityController.js.html#l283"><code>&#x27;unpause-controls&#x27;:283</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This message will allow the controller to trigger messages until "pause-controls" is triggered on the entity.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
                                             <div id="method_addEventListener" class="method item private inherited">
                                                 <h3 class="name"><code>addEventListener</code></h3>
                                             
@@ -846,7 +1241,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_EntityController.js.html#l108"><code>controlMap:108</code></a>
+                                                    <a href="../files/src_components_EntityController.js.html#l59"><code>controlMap:59</code></a>
                                                     </p>
                                             
                                             
@@ -871,6 +1266,37 @@
                                             
                                             
                                             </div>
+                                            <div id="property_joystick" class="property item">
+                                                <h3 class="name"><code>joystick</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_EntityController.js.html#l79"><code>joystick:79</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Determines whether this entity should listen for mouse events to trigger directional events. Can be set simply to "true" to accept all joystick defaults.</p>
+                                            <pre class="code prettyprint"><code>  "joystick": {
+                                                  "directions": 8, // Optional: 4, 8, or 16. Determines how many directions to broadcast. Default is 4 ("north", "east", "south", and "west").
+                                                  "innerRadius": 30, // Optional. Number determining how far the mouse must be from the entity's position before joystick events should be triggered. Default is 0.
+                                                  "outerRadius": 60 // Optional. Number determining how far the mouse can move away from the entity's position before the joystick stops triggering events. Default is Infinity.
+                                              }</code></pre>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> null</p>
+                                            
+                                            
+                                            </div>
                                             <div id="property_paused" class="property item">
                                                 <h3 class="name"><code>paused</code></h3>
                                                 <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
@@ -882,7 +1308,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_EntityController.js.html#l140"><code>paused:140</code></a>
+                                                    <a href="../files/src_components_EntityController.js.html#l106"><code>paused:106</code></a>
                                                     </p>
                                             
                                             
@@ -908,7 +1334,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_EntityController.js.html#l128"><code>stateMaps:128</code></a>
+                                                    <a href="../files/src_components_EntityController.js.html#l94"><code>stateMaps:94</code></a>
                                                     </p>
                                             
                                             
@@ -927,6 +1353,1160 @@
                                     </div>
                         
                         
+                                    <div id="events" class="api-class-tabpanel">
+                                        <h2 class="off-left">Events</h2>
+                        
+                                            <div id="event_&#x27;*&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;*&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_EntityController.js.html#l444"><code>&#x27;*&#x27;:444</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Broadcasts active states using the JSON-defined message on each <code>handle-controller</code> message. Active states include <code>pressed</code> being true or <code>released</code> being true. If both of these states are false, the message is not broadcasted.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">message.pressed</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>Whether the current input is active.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">message.released</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>Whether the current input was active last tick but is no longer active.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">message.triggered</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>Whether the current input is active but was not active last tick.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">message.over</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>Whether the mouse was over the entity when pressed, released, or triggered. This value is always false for non-mouse input messages.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;east&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;east&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_EntityController.js.html#l344"><code>&#x27;east&#x27;:344</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due east.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">message</code>
+                                                                    <span class="type">DOM Event object</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The original pointer event object is passed along with the control message.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;east-northeast&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;east-northeast&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_EntityController.js.html#l338"><code>&#x27;east-northeast&#x27;:338</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due east-northeast.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">message</code>
+                                                                    <span class="type">DOM Event object</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The original pointer event object is passed along with the control message.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;east-southeast&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;east-southeast&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_EntityController.js.html#l350"><code>&#x27;east-southeast&#x27;:350</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due east-southeast.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">message</code>
+                                                                    <span class="type">DOM Event object</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The original pointer event object is passed along with the control message.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;joystick-orientation&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;joystick-orientation&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_EntityController.js.html#l418"><code>&#x27;joystick-orientation&#x27;:418</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>If the soft joystick is enabled on this component, this message will trigger to provide the current orientation of the joystick.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">orientation</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>(number) - A number in radians representing the orientation of the joystick.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;joystick:down&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;joystick:down&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_EntityController.js.html#l203"><code>&#x27;joystick:down&#x27;:203</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This event is triggered when there is an active touch in the joystick area.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">message</code>
+                                                                    <span class="type">DOM Event object</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The original pointer event object is passed along with the control message.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;joystick:up&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;joystick:up&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_EntityController.js.html#l246"><code>&#x27;joystick:up&#x27;:246</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This event is triggered when there is an active touch is released from the joystick area.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">message</code>
+                                                                    <span class="type">DOM Event object</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The original pointer event object is passed along with the control message.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;mouse:mouse-left:down&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;mouse:mouse-left:down&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_EntityController.js.html#l181"><code>&#x27;mouse:mouse-left:down&#x27;:181</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This component triggers the state of mouse inputs on the entity if a render component of the entity accepts mouse input.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">message</code>
+                                                                    <span class="type">DOM Event object</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The original mouse event object is passed along with the control message.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;mouse:mouse-left:up&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;mouse:mouse-left:up&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_EntityController.js.html#l224"><code>&#x27;mouse:mouse-left:up&#x27;:224</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This component triggers the state of mouse inputs on the entity if a render component of the entity accepts mouse input (for example [[Render-Animation]]).</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">message</code>
+                                                                    <span class="type">DOM Event object</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The original mouse event object is passed along with the control message.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;mouse:mouse-middle:down&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;mouse:mouse-middle:down&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_EntityController.js.html#l187"><code>&#x27;mouse:mouse-middle:down&#x27;:187</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This component triggers the state of mouse inputs on the entity if a render component of the entity accepts mouse input (for example [[Render-Animation]]).</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">message</code>
+                                                                    <span class="type">DOM Event object</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The original mouse event object is passed along with the control message.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;mouse:mouse-middle:up&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;mouse:mouse-middle:up&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_EntityController.js.html#l230"><code>&#x27;mouse:mouse-middle:up&#x27;:230</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This component triggers the state of mouse inputs on the entity if a render component of the entity accepts mouse input (for example [[Render-Animation]]).</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">message</code>
+                                                                    <span class="type">DOM Event object</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The original mouse event object is passed along with the control message.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;mouse:mouse-right:down&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;mouse:mouse-right:down&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_EntityController.js.html#l193"><code>&#x27;mouse:mouse-right:down&#x27;:193</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This component triggers the state of mouse inputs on the entity if a render component of the entity accepts mouse input (for example [[Render-Animation]]).</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">message</code>
+                                                                    <span class="type">DOM Event object</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The original mouse event object is passed along with the control message.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;mouse:mouse-right:up&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;mouse:mouse-right:up&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_EntityController.js.html#l236"><code>&#x27;mouse:mouse-right:up&#x27;:236</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This component triggers the state of mouse inputs on the entity if a render component of the entity accepts mouse input (for example [[Render-Animation]]).</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">message</code>
+                                                                    <span class="type">DOM Event object</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The original mouse event object is passed along with the control message.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;north&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;north&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_EntityController.js.html#l320"><code>&#x27;north&#x27;:320</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due north.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">message</code>
+                                                                    <span class="type">DOM Event object</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The original pointer event object is passed along with the control message.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;north-northeast&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;north-northeast&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_EntityController.js.html#l326"><code>&#x27;north-northeast&#x27;:326</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due north-northeast.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">message</code>
+                                                                    <span class="type">DOM Event object</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The original pointer event object is passed along with the control message.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;north-northwest&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;north-northwest&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_EntityController.js.html#l410"><code>&#x27;north-northwest&#x27;:410</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due north-northwest.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">message</code>
+                                                                    <span class="type">DOM Event object</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The original pointer event object is passed along with the control message.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;northeast&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;northeast&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_EntityController.js.html#l332"><code>&#x27;northeast&#x27;:332</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due northeast.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">message</code>
+                                                                    <span class="type">DOM Event object</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The original pointer event object is passed along with the control message.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;northwest&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;northwest&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_EntityController.js.html#l404"><code>&#x27;northwest&#x27;:404</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due northwest.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">message</code>
+                                                                    <span class="type">DOM Event object</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The original pointer event object is passed along with the control message.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;south&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;south&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_EntityController.js.html#l368"><code>&#x27;south&#x27;:368</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due south.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">message</code>
+                                                                    <span class="type">DOM Event object</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The original pointer event object is passed along with the control message.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;south-southeast&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;south-southeast&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_EntityController.js.html#l362"><code>&#x27;south-southeast&#x27;:362</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due south-southeast.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">message</code>
+                                                                    <span class="type">DOM Event object</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The original pointer event object is passed along with the control message.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;south-southwest&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;south-southwest&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_EntityController.js.html#l374"><code>&#x27;south-southwest&#x27;:374</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due south-southwest.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">message</code>
+                                                                    <span class="type">DOM Event object</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The original pointer event object is passed along with the control message.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;southeast&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;southeast&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_EntityController.js.html#l356"><code>&#x27;southeast&#x27;:356</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due southeast.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">message</code>
+                                                                    <span class="type">DOM Event object</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The original pointer event object is passed along with the control message.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;southwest&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;southwest&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_EntityController.js.html#l380"><code>&#x27;southwest&#x27;:380</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due southwest.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">message</code>
+                                                                    <span class="type">DOM Event object</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The original pointer event object is passed along with the control message.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;stop&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;stop&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_EntityController.js.html#l253"><code>&#x27;stop&#x27;:253</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This event is triggered to stop movement once the joystick is released.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;west&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;west&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_EntityController.js.html#l392"><code>&#x27;west&#x27;:392</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due west.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">message</code>
+                                                                    <span class="type">DOM Event object</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The original pointer event object is passed along with the control message.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;west-northwest&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;west-northwest&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_EntityController.js.html#l398"><code>&#x27;west-northwest&#x27;:398</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due west-northwest.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">message</code>
+                                                                    <span class="type">DOM Event object</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The original pointer event object is passed along with the control message.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;west-southwest&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;west-southwest&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_EntityController.js.html#l386"><code>&#x27;west-southwest&#x27;:386</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due west-southwest.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">message</code>
+                                                                    <span class="type">DOM Event object</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The original pointer event object is passed along with the control message.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                    </div>
                             </div>
                         </div>
                     </div>

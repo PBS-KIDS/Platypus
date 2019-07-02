@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v1.0.0 API Documentation : src\components\RelaySelf.js</title>
+	<title>platypus v1.0.0 API Documentation : src\components\RelativePosition.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -153,59 +153,206 @@
                 <div id="docs-main">
                     <div class="content">
                         <script>
-                        	var name = src\components\RelaySelf.js      
+                        	var name = src\components\RelativePosition.js      
                         </script>
-                        <h1 class="file-heading">File:src\components\RelaySelf.js</h1>
+                        <h1 class="file-heading">File:src\components\RelativePosition.js</h1>
                         
                         <div class="file">
                             <pre class="code prettyprint linenums">
                         /**
-                         * This component listens for specified local entity messages and re-broadcasts them on itself as other messages.
+                         * This component positions an entity relative to the camera viewport, according to &#x60;left&#x60;, &#x60;top&#x60;, &#x60;right&#x60;, and &#x60;left&#x60; properties.
                          *
-                         * @namespace platypus.components
-                         * @class RelaySelf
+                         * @class RelativePosition
                          * @uses platypus.Component
+                         * @since 1.0.0
                          */
-                        /*global platypus */
+                        /*global include, platypus */
                         (function () {
                             &#x27;use strict&#x27;;
                             
-                            var trigger = function () {
-                                var owner = this.owner;
-                                
-                                owner.trigger.apply(owner, arguments);
-                            };
+                            var AABB = include(&#x27;platypus.AABB&#x27;);
                         
                             return platypus.createComponentClass({
-                                id: &#x27;RelaySelf&#x27;,
                                 
+                                id: &#x27;RelativePosition&#x27;,
+                        
                                 properties: {
                                     /**
-                                     * This is an object of key/value pairs. The keys are events this component is listening for locally, the value is the new event to be broadcast on this entity. The value can also be an array of events to be fired.
+                                     * This optional array sets varying properties depending on the aspect ratio of the camera. This is useful if the camera aspect ratio varies greatly and entities must be repositioned accordingly.
                                      *
-                                     *      &quot;events&quot;: {
-                                     *          &quot;sleeping&quot;: &quot;good-night&quot;,
-                                     *          &quot;awake&quot;: [&quot;alarm&quot;, &quot;get-up&quot;]
-                                     *      }
+                                     * In this example, the entity maintains a particular horizontal location until the camera viewport becomes narrower than 2:1, at which point it maintains a particular &#x60;left&#x60; value:
                                      *
-                                     * @property events
-                                     * @type Object
+                                     *      &quot;cameraSizes&quot;: [{
+                                     *          &quot;minRatio&quot;: 2, // This block applies for wide aspect ratios until 2:1 is reached.
+                                     *          &quot;x&quot;: -1226
+                                     *      }, {
+                                     *          &quot;minRatio&quot;: 0, // This block applies for everything else.
+                                     *          &quot;left&quot;: 130
+                                     *      }]
+                                     *
+                                     * @property cameraSizes
+                                     * @type Array
                                      * @default null
                                      */
-                                    events: null
+                                    cameraSizes: null
+                                },
+                                
+                                publicProperties: {
+                                    /**
+                                     * This sets the distance in world units from the bottom of the camera&#x27;s world viewport. If set, it will override the entity&#x27;s y coordinate. This property is accessible on the entity as &#x60;entity.bottom&#x60;.
+                                     *
+                                     * @property bottom
+                                     * @type Number
+                                     * @default null
+                                     */
+                                    &quot;bottom&quot;: null,
+                        
+                                    /**
+                                     * This sets the distance in world units from the left of the camera&#x27;s world viewport. If set, it will override the entity&#x27;s x coordinate. This property is accessible on the entity as &#x60;entity.left&#x60;.
+                                     *
+                                     * @property left
+                                     * @type Number
+                                     * @default null
+                                     */
+                                    &quot;left&quot;: null,
+                        
+                                    /**
+                                     * This sets the distance in world units from the right of the camera&#x27;s world viewport. If set, it will override the entity&#x27;s x coordinate. This property is accessible on the entity as &#x60;entity.right&#x60;.
+                                     *
+                                     * @property right
+                                     * @type Number
+                                     * @default null
+                                     */
+                                    &quot;right&quot;: null,
+                        
+                                    /**
+                                     * This sets the distance in world units from the top of the camera&#x27;s world viewport. If set, it will override the entity&#x27;s y coordinate. This property is accessible on the entity as &#x60;entity.top&#x60;.
+                                     *
+                                     * @property top
+                                     * @type Number
+                                     * @default null
+                                     */
+                                    &quot;top&quot;: null,
+                        
+                                    /**
+                                     * This sets the &#x60;x&#x60; coordinate for the entity. It is overridden by &#x60;left&#x60; and &#x60;right&#x60; properties if supplied.
+                                     *
+                                     * @property x
+                                     * @type Number
+                                     * @default 0
+                                     */
+                                    &quot;x&quot;: 0,
+                        
+                                    /**
+                                     * This sets the &#x60;y&#x60; coordinate for the entity. It is overridden by &#x60;top&#x60; and &#x60;bottom&#x60; properties if supplied.
+                                     *
+                                     * @property y
+                                     * @type Number
+                                     * @default 0
+                                     */
+                                    &quot;y&quot;: 0
+                                },
+                                
+                                initialize: function (/*definition, callback*/) {
+                                    this.aabb = AABB.setUp();
+                                    this.lastBottom = null;
+                                    this.lastLeft = null;
+                                    this.lastRight = null;
+                                    this.lastTop = null;
+                                    this.cameraSizesIndex = -1;
                                 },
                         
-                                initialize: function () {
-                                    var event = &#x27;&#x27;,
-                                        events = this.events;
-                                    
-                                    // Messages that this component listens for and then triggers on itself as a renamed message - useful as a logic place-holder for simple entities.
-                                    if (events) {
-                                        for (event in events) {
-                                            if (events.hasOwnProperty(event)) {
-                                                this.addEventListener(event, trigger.bind(this, events[event]));
+                                events: {// These are messages that this component listens for
+                                    /**
+                                     * This component uses location updates to reposition the entity if its bottom, left, right, or top properties have been set.
+                                     *
+                                     * @method &#x27;handle-logic&#x27;
+                                     */
+                                    &quot;handle-logic&quot;: function () {
+                                        var bottom = this.bottom,
+                                            left = this.left,
+                                            right = this.right,
+                                            top = this.top;
+                        
+                                        if ((this.lastBottom !== bottom) || (this.lastLeft !== left) || (this.lastRight !== right) || (this.lastTop !== top)) {
+                                            this.updatePosition(this.aabb);
+                                            this.lastBottom = bottom;
+                                            this.lastLeft = left;
+                                            this.lastRight = right;
+                                            this.lastTop = top;
+                                        }
+                                    },
+                        
+                                    /**
+                                     * This component listens for camera updates to reposition the entity if its bottom, left, right, or top properties have been set.
+                                     *
+                                     * @method &#x27;camera-update&#x27;
+                                     * @param camera {platypus.Data} Camera update information
+                                     * @param camera.viewport {platypus.AABB} The bounding box describing the camera viewport location in the world.
+                                     * @since 0.9.0
+                                     */
+                                    &quot;camera-update&quot;: function (camera) {
+                                        this.aabb.set(camera.viewport);
+                                        if (this.cameraSizes) {
+                                            this.checkCamera(this.aabb);
+                                        }
+                                        this.updatePosition(this.aabb);
+                                    }
+                                },
+                                
+                                methods: {// These are internal methods that are invoked by this component.
+                                    checkCamera: function (aabb) {
+                                        var arr = this.cameraSizes,
+                                            i = 0,
+                                            ratio = aabb.width / aabb.height;
+                        
+                                        for (i = 0; i &lt; arr.length; i++) {
+                                            if (ratio &gt; arr[i].minRatio) {
+                                                if (i !== this.cameraSizesIndex) {
+                                                    this.updateProperties(arr[i]);
+                                                    this.cameraSizesIndex = i;
+                                                }
+                                                break;
                                             }
                                         }
+                                    },
+                        
+                                    updateProperties: function (props) {
+                                        this.right = (typeof props.right === &#x27;number&#x27;) ? props.right : null;
+                                        this.left = (typeof props.left === &#x27;number&#x27;) ? props.left : null;
+                                        this.top = (typeof props.top === &#x27;number&#x27;) ? props.top : null;
+                                        this.bottom = (typeof props.bottom === &#x27;number&#x27;) ? props.bottom : null;
+                                        if (typeof props.x === &#x27;number&#x27;) {
+                                            this.x = props.x;
+                                        }
+                                        if (typeof props.y === &#x27;number&#x27;) {
+                                            this.y = props.y;
+                                        }
+                                    },
+                        
+                                    updatePosition: function (vp) {
+                                        var bottom = this.bottom,
+                                            left = this.left,
+                                            owner = this.owner,
+                                            right = this.right,
+                                            top = this.top;
+                        
+                                        if (typeof left === &#x27;number&#x27;) {
+                                            owner.x = vp.left + left;
+                                        } else if (typeof right === &#x27;number&#x27;) {
+                                            owner.x = vp.right - right;
+                                        }
+                        
+                                        if (typeof top === &#x27;number&#x27;) {
+                                            owner.y = vp.top + top;
+                                        } else if (typeof bottom === &#x27;number&#x27;) {
+                                            owner.y = vp.bottom - bottom;
+                                        }
+                                    },
+                        
+                                    destroy: function () {
+                                        this.aabb.recycle();
+                                        this.aabb = null;
                                     }
                                 }
                             });

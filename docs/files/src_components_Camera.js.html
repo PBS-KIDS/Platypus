@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.11.10 API Documentation : src\components\Camera.js</title>
+	<title>platypus v1.0.0 API Documentation : src\components\Camera.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.11.10</em>
+            <em>API Documentation for: 1.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -71,6 +71,7 @@
                                 <li><a href="../classes/platypus.components.LogicCarrier.html">platypus.components.LogicCarrier</a></li>
                                 <li><a href="../classes/platypus.components.LogicDestroyMe.html">platypus.components.LogicDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.LogicDirectionalMovement.html">platypus.components.LogicDirectionalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
@@ -80,6 +81,7 @@
                                 <li><a href="../classes/platypus.components.NodeResident.html">platypus.components.NodeResident</a></li>
                                 <li><a href="../classes/platypus.components.Orientation.html">platypus.components.Orientation</a></li>
                                 <li><a href="../classes/platypus.components.RandomEvents.html">platypus.components.RandomEvents</a></li>
+                                <li><a href="../classes/platypus.components.RelativePosition.html">platypus.components.RelativePosition</a></li>
                                 <li><a href="../classes/platypus.components.RelayFamily.html">platypus.components.RelayFamily</a></li>
                                 <li><a href="../classes/platypus.components.RelayGame.html">platypus.components.RelayGame</a></li>
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
@@ -99,6 +101,7 @@
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
+                                <li><a href="../classes/platypus.components.Tween.html">platypus.components.Tween</a></li>
                                 <li><a href="../classes/platypus.components.VoiceOver.html">platypus.components.VoiceOver</a></li>
                                 <li><a href="../classes/platypus.components.XHR.html">platypus.components.XHR</a></li>
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
@@ -167,7 +170,8 @@
                         (function () {
                             &#x27;use strict&#x27;;
                             
-                            var AABB = include(&#x27;platypus.AABB&#x27;),
+                            var DPR = window.devicePixelRatio || 1,
+                                AABB = include(&#x27;platypus.AABB&#x27;),
                                 Data = include(&#x27;platypus.Data&#x27;),
                                 Vector = include(&#x27;platypus.Vector&#x27;),
                                 anchorBound = function (anchorAABB, entityOffsetX, entityOffsetY, entity) {
@@ -193,6 +197,26 @@
                                 },
                                 doNothing = function () {
                                     return false;
+                                },
+                        
+                                // These fix coords for touch events filling in for pointer events from the PIXI InteractiveManager
+                                getClientX = function (event) {
+                                    if (!event.clientX) {
+                                        if (event.touches &amp;&amp; event.touches[0] &amp;&amp; event.touches[0].clientX) {
+                                            return event.touches[0].clientX;
+                                        }
+                                        return 0;
+                                    }
+                                    return event.clientX;
+                                },
+                                getClientY = function (event) {
+                                    if (!event.clientY) {
+                                        if (event.touches &amp;&amp; event.touches[0] &amp;&amp; event.touches[0].clientY) {
+                                            return event.touches[0].clientY;
+                                        }
+                                        return 0;
+                                    }
+                                    return event.clientY;
                                 };
                             
                             return platypus.createComponentClass({
@@ -501,11 +525,11 @@
                                     /**
                                      * If mouse dragging should cause the camera to move, this listens for the beginning of the drag motion.
                                      *
-                                     * @method &#x27;mousedown&#x27;
-                                     * @param event {Object} The mouse event.
+                                     * @method &#x27;pointerdown&#x27;
+                                     * @param event {Object} The pointer event.
                                      * @since 0.9.0
                                      **/
-                                    &quot;mousedown&quot;: function (event) {
+                                    &quot;pointerdown&quot;: function (event) {
                                         var worldVP = this.worldCamera.viewport;
                         
                                         if (this.state === &#x27;mouse-pan&#x27;) {
@@ -514,8 +538,8 @@
                                                 this.mouseWorldOrigin = Vector.setUp();
                                             }
                                             this.mouse = this.mouseVector;
-                                            this.mouse.x = event.event.clientX;
-                                            this.mouse.y = event.event.clientY;
+                                            this.mouse.x = getClientX(event.event);
+                                            this.mouse.y = getClientY(event.event);
                                             this.mouseWorldOrigin.x = worldVP.x;
                                             this.mouseWorldOrigin.y = worldVP.y;
                                             event.pixiEvent.stopPropagation();
@@ -526,12 +550,12 @@
                                      * If mouse dragging should cause the camera to move, this listens the drag motion.
                                      *
                                      * @method &#x27;pressmove&#x27;
-                                     * @param event {Object} The mouse event.
+                                     * @param event {Object} The pointer event.
                                      * @since 0.9.0
                                      **/
                                     &quot;pressmove&quot;: function (event) {
                                         if (this.mouse) {
-                                            if (this.move(this.mouseWorldOrigin.x + (this.mouse.x - event.event.clientX) / this.world.transform.worldTransform.a, this.mouseWorldOrigin.y + (this.mouse.y - event.event.clientY) / this.world.transform.worldTransform.d)) {
+                                            if (this.move(this.mouseWorldOrigin.x + ((this.mouse.x - getClientX(event.event)) * DPR) / this.world.transform.worldTransform.a, this.mouseWorldOrigin.y + ((this.mouse.y - getClientY(event.event)) * DPR) / this.world.transform.worldTransform.d)) {
                                                 this.viewportUpdate = true;
                                                 this.movedCamera = true;
                                                 event.pixiEvent.stopPropagation();
@@ -543,7 +567,7 @@
                                      * If mouse dragging should cause the camera to move, this listens for the end of the drag motion.
                                      *
                                      * @method &#x27;pressup&#x27;
-                                     * @param event {Object} The mouse event.
+                                     * @param event {Object} The pointer event.
                                      * @since 0.9.0
                                      **/
                                     &quot;pressup&quot;: function (event) {
@@ -890,8 +914,8 @@
                                         return function (entity, time) {
                                             var worldCamera = this.worldCamera,
                                                 worldVP = worldCamera.viewport,
-                                                x = getTransitionalPoint(worldVP.x, entity.x, getRatio(this.transitionX, time)),
-                                                y = getTransitionalPoint(worldVP.y, entity.y, getRatio(this.transitionY, time));
+                                                x = getTransitionalPoint(worldVP.x, entity.x + this.offsetX, getRatio(this.transitionX, time)),
+                                                y = getTransitionalPoint(worldVP.y, entity.y + this.offsetY, getRatio(this.transitionY, time));
                         
                                             if (this.rotate) { // Only run the orientation calculations if we need them.
                                                 return this.move(x, y, getTransitionalPoint(worldCamera.orientation, -(entity.orientation || 0), getRatio(this.transitionAngle, time)));
