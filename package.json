@@ -3,6 +3,8 @@
     "version": "1.0.0",
     "description": "Platypus Docs",
     "license": "MIT",
+    "main": "lib/platypus.combined.js",
+    "module": "lib/platypus.combined.js",
     "url": "https://github.com/PBS-KIDS/Platypus",
     "logo": "assets/platypus-title.png",
     "repository": {
