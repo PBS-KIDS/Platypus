@@ -43,13 +43,12 @@ This component is a general purpose state-machine for an entity, taking in vario
       }
     }
 */
-/* global include, platypus */
-(function () {
-    'use strict';
+/* global platypus */
+import DataMap from '../DataMap.js';
+import StateMap from '../StateMap.js';
 
-    var DataMap = include('platypus.DataMap'),
-        StateMap = include('platypus.StateMap'),
-        changeState = function (changes, state) {
+export default (function () {
+    var changeState = function (changes, state) {
             state.update(changes);
         },
         changeSustainedState = function (change, state) {

@@ -1,7 +1,7 @@
 /* global beforeAll, describe, document, expect, it, platypus, springroll */
 
 describe("Game", function () {
-    'use strict';
+    
 
     var app = null,
         canvas = document.createElement('canvas');

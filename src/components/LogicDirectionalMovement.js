@@ -6,9 +6,9 @@
  * @uses platypus.Component
  */
 /* global platypus */
-(function () {
-    'use strict';
-    
+import Vector from '../Vector.js';
+
+export default (function () {
     var processDirection = function (direction) {
             return function (state) {
                 this[direction] = !state || (state.pressed !== false);
@@ -66,7 +66,7 @@
             if (typeof this.speed === 'number') {
                 this.speed = [this.speed, 0, 0];
             }
-            this.initialVector = platypus.Vector.setUp(this.speed);
+            this.initialVector = Vector.setUp(this.speed);
             this.reorient = rotate[this.axis];
             if (!this.reorient) {
                 this.reorient = doNothing;

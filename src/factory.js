@@ -10,13 +10,12 @@
  * See ComponentExample.js for an example componentDefinition that can be sent into this component class factory.
  *
  */
-/* global extend, include, platypus */
-(function () {
-    'use strict';
-    
-    var Component = include('platypus.Component'),
-        debug = include('springroll.Debug', false),
-        key = '',
+/* global platypus */
+import Component from './Component.js';
+import config from 'config';
+
+export default (function () {
+    var debug = config.dev,
         priority = 0,
         doNothing = function () {},
         setupProperty = function (property, component, owner) {
@@ -29,29 +28,20 @@
                 },
                 enumerable: true
             });
-        },
-        runBoth = function (f1, f2) {
-            return function () {
-                f1.apply(this, arguments);
-                f2.apply(this, arguments);
-            };
         };
         
-    platypus.components = {};
-    
-    platypus.createComponentClass = function (componentDefinition, Prototype) {
-        var component = function (owner, definition, callback) {
+    return function (componentDefinition) {
+        var func  = null,
+            proto = null;
+        
+        class NewComponent extends Component {
+            constructor (owner, definition, callback) {
                 var prop  = '',
                     func  = '',
                     name  = '',
                     alias = '';
                     
-                Component.call(this, componentDefinition.id, owner);
-
-                // if prototype provided, set up its properties here.
-                if (Prototype) {
-                    Prototype.call(this);
-                }
+                super(componentDefinition.id, owner);
 
                 // Set up properties, prioritizing component settings, entity settings, and finally defaults.
                 if (componentDefinition.properties) {
@@ -119,26 +109,13 @@
                 if (!this.initialize(definition, callback) && callback) { // whether the callback will be used; if not, we run immediately.
                     callback();
                 }
-            },
-            func  = null,
-            proto = component.prototype;
-        
-        if (Prototype) { //absorb template prototype if it exists.
-            proto = extend(component, Prototype);
-            for (key in Component.prototype) {
-                if (proto[key]) {
-                    proto[key] = runBoth(proto[key], Component.prototype[key]);
-                } else {
-                    proto[key] = Component.prototype[key];
-                }
             }
-        } else {
-            proto = extend(component, Component);
         }
         
-        // Have to copy rather than replace so definition is not corrupted
-        proto.initialize = componentDefinition.initialize || doNothing;
+        proto = NewComponent.prototype;
 
+        proto.initialize = componentDefinition.initialize || doNothing;
+        
         // This can be overridden by a "toJSON" method in the component definition. This is by design.
         proto.toJSON = (function () {
             var validating = false,
@@ -282,11 +259,13 @@
             }
         }
 
-        component.getAssetList     = componentDefinition.getAssetList     || Component.getAssetList;
-        component.getLateAssetList = componentDefinition.getLateAssetList || Component.getLateAssetList;
-        
-        platypus.components[componentDefinition.id] = component;
+        if (componentDefinition.getAssetList) {
+            NewComponent.getAssetList = componentDefinition.getAssetList;
+        }
+        if (componentDefinition.getLateAssetList) {
+            NewComponent.getLateAssetList = componentDefinition.getLateAssetList;
+        }
 
-        return component;
+        return NewComponent;
     };
 }());

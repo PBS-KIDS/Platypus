@@ -3,129 +3,235 @@
  *
  * @namespace platypus
  * @class Messenger
- * @extends springroll.EventDispatcher
  */
-/* global extend, include, platypus, springroll, window */
-platypus.Messenger = (function () {
-    'use strict';
+/* global platypus, window */
+import config from 'config';
 
-    var EventDispatcher = include('springroll.EventDispatcher'),
-        Messenger = function () {
-            EventDispatcher.call(this);
-            
-            this.loopCheck = Array.setUp();
-        },
-        debug = !!springroll.Debug,
+export default (function () {
+    var debug = config.dev,
         perfTools = debug && window.performance && window.performance.mark && window.performance.measure && window.performance, // End with this to set perfTools to window.performance
-        proto = extend(Messenger, EventDispatcher);
-    
-    /**
-     * Returns a string describing the Messenger as "[Messenger object]".
-     *
-     * @method toString
-     * @return String
-     */
-    proto.toString = function () {
-        return "[Messenger Object]";
-    };
+        runBoth = function (f1, f2) {
+            return function () {
+                f1.apply(this, arguments);
+                f2.apply(this, arguments);
+            };
+        };
 
-    /**
-     * This method is used by both internal components and external entities to trigger messages. When triggered, Messenger checks through bound handlers to run as appropriate. This handles multiple event structures: "", [], and {}
-     *
-     * @method trigger
-     * @param event {String|Array|Object} This is the message(s) to process. This can be a string, an object containing an "event" property (and optionally a "message" property, overriding the value below), or an array of the same.
-     * @param value {*} This is a message object or other value to pass along to event handler.
-     * @param debug {boolean} This flags whether to output message contents and subscriber information to the console during game development. A "value" object parameter (above) will also set this flag if value.debug is set to true.
-     * @return {number} The number of handlers for the triggered message.
-     */
-    proto._trigger = proto.trigger;
-    proto.trigger = function (events, message, debug) {
-        var args = null,
-            i = 0,
-            count = 0,
-            msg = message,
-            indexOf = 0,
-            splitEvents = null;
-        
-        if (typeof events === 'string') {
-            indexOf = events.indexOf(" ");
-            if (indexOf === -1) {
-                return this.triggerEvent.apply(this, arguments);
+    class Messenger {
+        constructor () {
+            this._listeners = {};
+            this._destroyed = false;
+            this.loopCheck = Array.setUp();
+        }
+
+        get destroyed () {
+            return this._destroyed;
+        }
+
+        /**
+         * Add an event listener. The parameters for the listener functions depend on the event.
+         *
+         * @method on
+         * @param name {String} The type of event.
+         * @param callback {Function} The callback function when event is triggered.
+         */
+        on (name, callback) {
+            var listener = this._listeners[name] = this._listeners[name] || [];
+
+            if (this._destroyed) return;
+
+            if (listener.indexOf(callback) === -1) {
+                listener.push(callback);
+            }
+        }
+
+        /**
+         * Remove the event listener
+         *
+         * @method off
+         * @param name {String} The type of event; if no name is specifed remove all listeners.
+         * @param callback {Function} The listener function.
+         */
+        off (name, callback) {
+            var listener = this._listeners[name],
+                index = 0;
+
+            if (this._destroyed) return;
+
+            // remove all
+            if (typeof name === 'undefined') {
+                this._listeners = {};
             } else {
-                splitEvents = events.split(" ");
+                // remove all listeners for that event
+                if (typeof callback === 'undefined') {
+                    listener.length = 0;
+                } else {
+                    //remove single listener
+                    index = listener.indexOf(callback);
+                    if (index !== -1) {
+                        listener.splice(index, 1);
+                    }
+                }
+            }
+        }
+
+        /**
+         * Returns a string describing the Messenger as "[Messenger object]".
+         *
+         * @method toString
+         * @return String
+         */
+        toString () {
+            return "[Messenger Object]";
+        }
+
+        /**
+         * This method is used by both internal components and external entities to trigger messages. When triggered, Messenger checks through bound handlers to run as appropriate. This handles multiple event structures: "", [], and {}
+         *
+         * @method trigger
+         * @param event {String|Array|Object} This is the message(s) to process. This can be a string, an object containing an "event" property (and optionally a "message" property, overriding the value below), or an array of the same.
+         * @param value {*} This is a message object or other value to pass along to event handler.
+         * @param debug {boolean} This flags whether to output message contents and subscriber information to the console during game development. A "value" object parameter (above) will also set this flag if value.debug is set to true.
+         * @return {number} The number of handlers for the triggered message.
+         */
+        trigger (events, message, debug) {
+            var args = null,
+                i = 0,
+                count = 0,
+                msg = message,
+                indexOf = 0,
+                splitEvents = null;
+            
+            if (typeof events === 'string') {
+                indexOf = events.indexOf(" ");
+                if (indexOf === -1) {
+                    return this.triggerEvent.apply(this, arguments);
+                } else {
+                    splitEvents = events.split(" ");
+                    args = Array.prototype.greenSlice.call(arguments);
+                    for (i = 0; i < splitEvents.length; i++) {
+                        args[0] = splitEvents[i];
+                        count += this.triggerEvent.apply(this, args);
+                    }
+                    args.recycle();
+                    return count;
+                }
+            } else if (Array.isArray(events)) {
                 args = Array.prototype.greenSlice.call(arguments);
-                for (i = 0; i < splitEvents.length; i++) {
-                    args[0] = splitEvents[i];
-                    count += this.triggerEvent.apply(this, args);
+                for (i = 0; i < events.length; i++) {
+                    args[0] = events[i];
+                    count += this.trigger.apply(this, args);
                 }
                 args.recycle();
                 return count;
-            }
-        } else if (Array.isArray(events)) {
-            args = Array.prototype.greenSlice.call(arguments);
-            for (i = 0; i < events.length; i++) {
-                args[0] = events[i];
-                count += this.trigger.apply(this, args);
-            }
-            args.recycle();
-            return count;
-        } else if (events.event) {
-            if (typeof events.message !== 'undefined') {
-                msg = events.message;
-            }
-            return this.triggerEvent(events.event, msg, events.debug || debug);
-        } else {
-            platypus.debug.warn('Event incorrectly formatted: must be string, array, or object containing an "event" property.', events);
-            return 0;
-        }
-    };
-    
-    /**
-     * This method is used by both internal components and external entities to trigger messages on this entity. When triggered, entity checks through bound handlers to run as appropriate. This method is identical to Spring Roll's [EventDispatcher.trigger](http://springroll.io/SpringRoll/docs/classes/springroll.EventDispatcher.html#method_trigger), but uses alternative Array methods to alleviate excessive GC.
-     *
-     * @method triggerEvent
-     * @param event {String} This is the message to process.
-     * @param [value] {*} This is a message object or other value to pass along to event handler.
-     * @param [value.debug] {boolean} This flags whether to output message contents and subscriber information to the console during game development.
-     * @return {number} The number of handlers for the triggered message.
-     */
-    proto.triggerEvent = function (type) {
-        var count = 0,
-            i = 0,
-            listener = null,
-            listeners = this._listeners,
-            args = null;
-        
-        if (!this._destroyed && listeners.hasOwnProperty(type) && (listeners[type])) {
-            // copy the listeners array; reusing `listeners` variable
-            listeners = listeners[type].greenSlice();
-
-            if (arguments.length > 1) {
-                args = Array.prototype.greenSlice.call(arguments);
-                args.greenSplice(0);
-            }
-
-            count = i = listeners.length;
-            while (i--) {
-                listener = listeners[i];
-                if (listener._eventDispatcherOnce) {
-                    delete listener._eventDispatcherOnce;
-                    this.off(type, listener);
+            } else if (events.event) {
+                if (typeof events.message !== 'undefined') {
+                    msg = events.message;
                 }
-                listener.apply(this, args);
+                return this.triggerEvent(events.event, msg, events.debug || debug);
+            } else {
+                platypus.debug.warn('Event incorrectly formatted: must be string, array, or object containing an "event" property.', events);
+                return 0;
+            }
+        }
+        
+        /**
+         * This method is used by both internal components and external entities to trigger messages on this entity. When triggered, entity checks through bound handlers to run as appropriate. This method is identical to Spring Roll's [EventDispatcher.trigger](http://springroll.io/SpringRoll/docs/classes/springroll.EventDispatcher.html#method_trigger), but uses alternative Array methods to alleviate excessive GC.
+         *
+         * @method triggerEvent
+         * @param event {String} This is the message to process.
+         * @param [value] {*} This is a message object or other value to pass along to event handler.
+         * @param [value.debug] {boolean} This flags whether to output message contents and subscriber information to the console during game development.
+         * @return {number} The number of handlers for the triggered message.
+         */
+        triggerEvent (type) {
+            var count = 0,
+                i = 0,
+                listener = null,
+                listeners = this._listeners,
+                args = null;
+            
+            if (!this._destroyed && listeners.hasOwnProperty(type) && (listeners[type])) {
+                // copy the listeners array; reusing `listeners` variable
+                listeners = listeners[type].greenSlice();
+
+                if (arguments.length > 1) {
+                    args = Array.prototype.greenSlice.call(arguments);
+                    args.greenSplice(0);
+                }
+
+                count = i = listeners.length;
+                while (i--) {
+                    listener = listeners[i];
+                    if (listener._eventDispatcherOnce) {
+                        delete listener._eventDispatcherOnce;
+                        this.off(type, listener);
+                    }
+                    listener.apply(this, args);
+                }
+                
+                if (args) {
+                    args.recycle();
+                }
+                listeners.recycle();
             }
             
-            if (args) {
-                args.recycle();
-            }
-            listeners.recycle();
+            return count;
         }
         
-        return count;
-    };
+        /**
+         * This method returns all the messages that this entity is concerned about.
+         *
+         * @method getMessageIds
+         * @return {Array} An array of strings listing all the messages for which this Messenger has handlers.
+         */
+        getMessageIds () {
+            return Object.keys(this._listeners);
+        }
+        
+        /**
+         * This method relinguishes Messenger properties
+         *
+         * @method destroy
+         * @since 0.7.1
+         */
+        destroy () {
+            this.loopCheck.recycle();
+            this.loopCheck = null;
+            this._destroyed = true;
+            this._listeners = null;
+        }
+
+        static mixin (ClassObject) {
+            var key = '',
+                fromProto = Messenger.prototype,
+                toProto = ClassObject.prototype,
+                methods = Object.getOwnPropertyNames(fromProto),
+                i = methods.length;
+
+            while (i--) {
+                key = methods[i];
+                if (key !== 'constructor') {
+                    if (toProto[key]) {
+                        toProto[key] = runBoth(toProto[key], fromProto[key]);
+                    } else {
+                        toProto[key] = fromProto[key];
+                    }
+                }
+            }
+        }
+
+        static initialize (object) {
+            object._listeners = {};
+            object._destroyed = false;
+            object.loopCheck = Array.setUp();
+        }
+    }
+
+    // Add logging checks for development mode.
     if (debug) {
-        proto._triggerEvent = proto.triggerEvent;
-        proto.triggerEvent = function (event, value) {
+        Messenger.prototype._triggerEvent = Messenger.prototype.triggerEvent;
+        Messenger.prototype.triggerEvent = function (event, value) {
             var i = 0,
                 debugLimit = 5,
                 debugLogging = value && value.debug,
@@ -167,30 +273,7 @@ platypus.Messenger = (function () {
                 return this._triggerEvent.apply(this, arguments);
             }
         };
-
     }
-    
-    /**
-     * This method returns all the messages that this entity is concerned about.
-     *
-     * @method getMessageIds
-     * @return {Array} An array of strings listing all the messages for which this Messenger has handlers.
-     */
-    proto.getMessageIds = function () {
-        return Object.keys(this._listeners);
-    };
-    
-    /**
-     * This method relinguishes Messenger properties
-     *
-     * @method destroy
-     * @since 0.7.1
-     */
-    proto.eventDispatcherDestroy = proto.destroy;
-    proto.destroy = function () {
-        this.loopCheck.recycle();
-        this.eventDispatcherDestroy();
-    };
     
     return Messenger;
 }());

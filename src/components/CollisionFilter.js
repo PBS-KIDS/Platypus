@@ -6,8 +6,8 @@
  * @uses platypus.Component
  */
 /*global platypus */
-(function () {
-    'use strict';
+export default (function () {
+    
 
     var collidePos = function (state, event, collInfo) {
             if (this.state.get(state)) {

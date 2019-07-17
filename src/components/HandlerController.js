@@ -6,8 +6,8 @@
  * @uses platypus.Component
  */
 /* global platypus, window */
-(function () {
-    'use strict';
+export default (function () {
+    
 
     var
         keyMap = { //Note: if this list is changed, be sure to update https://github.com/PBS-KIDS/Platypus/wiki/Handler-controller-key-list

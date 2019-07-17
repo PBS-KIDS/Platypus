@@ -5,24 +5,23 @@
  * @class RenderSpine
  * @uses platypus.Component
  */
-/* global include, platypus */
-(function () {
-    'use strict';
+/* global PIXI, platypus */
+import Data from '../Data.js';
+import EventRender from './EventRender.js';
+import RenderContainer from './RenderContainer.js';
+import StateRender from './StateRender.js';
 
-    var TextureAtlas = include('PIXI.spine.core.TextureAtlas', false),
-        AtlasAttachmentLoader = include('PIXI.spine.core.AtlasAttachmentLoader', false),
-        BaseTexture = include('PIXI.BaseTexture'),
-        Data = include('platypus.Data'),
-        EventRender = include('platypus.components.EventRender'),
-        RenderContainer = include('platypus.components.RenderContainer'),
-        SkeletonJson = include('PIXI.spine.core.SkeletonJson', false),
-        Spine = include('PIXI.spine.Spine', false),
-        StateRender = include('platypus.components.StateRender'),
+export default (function () {
+    var spine = PIXI.spine,
+        core = spine && spine.core,
+        TextureAtlas = core && core.TextureAtlas,
+        AtlasAttachmentLoader = core && core.AtlasAttachmentLoader,
+        BaseTexture = PIXI.BaseTexture,
+        SkeletonJson = core && core.SkeletonJson,
+        Spine = spine && spine.Spine,
         getBaseTexture = function (path) {
-            var asset = null,
-                assetCache = platypus.game.app.assetManager.cache;
+            var asset = platypus.assetCache.get(path.substring(path.lastIndexOf('/') + 1, path.lastIndexOf('.')));
             
-            asset = assetCache.read(path.substring(path.lastIndexOf('/') + 1, path.lastIndexOf('.')));
             if (!asset) {
                 platypus.debug.warn('RenderSpine: "' + path + '" is not a loaded asset.');
             }

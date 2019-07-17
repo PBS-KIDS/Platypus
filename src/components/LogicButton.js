@@ -5,13 +5,11 @@
  * @class LogicButton
  * @uses platypus.Component
  */
-/*global include, platypus */
-(function () {
-    'use strict';
-    
-    var AABB = include('platypus.AABB'),
-        Data = include('platypus.Data');
+/*global platypus */
+import AABB from '../AABB.js';
+import Data from '../Data.js';
 
+export default (function () {
     return platypus.createComponentClass({
 
         id: 'LogicButton',

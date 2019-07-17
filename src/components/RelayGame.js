@@ -6,8 +6,8 @@
  * @uses platypus.Component
  */
 /*global platypus */
-(function () {
-    'use strict';
+export default (function () {
+    
 
     var broadcast = function () {
         var currentScene = platypus.game.currentScene;

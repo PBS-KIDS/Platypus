@@ -5,12 +5,14 @@
  * @class NodeMap
  * @uses platypus.Component
  */
-/* global include, platypus, recycle, springroll */
-(function () {
-    'use strict';
-    
-    var Vector = include('platypus.Vector'),
-        Node = function (definition, map) { // This is a basic node object, but can be replaced by entities having a `Node` component if more functionality is needed.
+/* global platypus */
+import Entity from '../Entity.js';
+import Vector from '../Vector.js';
+import config from 'config';
+import recycle from 'recycle';
+
+export default (function () {
+    var Node = function (definition, map) { // This is a basic node object, but can be replaced by entities having a `Node` component if more functionality is needed.
             if (definition.id) {
                 if (typeof definition.id === 'string') {
                     this.id = definition.id;
@@ -89,7 +91,7 @@
         this.recycle();
     };
     
-    recycle.add(Node, !!springroll.Debug, 'Node');
+    recycle.add(Node, config.dev, 'Node');
     
     return platypus.createComponentClass({
         id: 'NodeMap',
@@ -204,7 +206,7 @@
                 
                 // Destroy simple node objects.
                 for (i = 0; i < this.map.length; i++) {
-                    if (!(this.map[i] instanceof platypus.Entity)) {
+                    if (!(this.map[i] instanceof Entity)) {
                         this.map[i].recycle();
                     }
                 }

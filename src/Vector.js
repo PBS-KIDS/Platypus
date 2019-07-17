@@ -8,10 +8,11 @@
  * @param [y] {number} The y coordinate.
  * @param [z] {number} The z coordinate.
  */
-/*global platypus, recycle, springroll */
-platypus.Vector = (function () {
-    'use strict';
-    
+/*global platypus */
+import config from 'config';
+import recycle from 'recycle';
+
+export default (function () {
     var Vector = function (x, y, z) {
             if (this.matrix) { // Recycled vectors will already have a matrix array. Resetting x, y, z to 0's to properly handle a set-up array of less than 3 dimensions.
                 this.matrix[0] = 0;
@@ -238,7 +239,7 @@ platypus.Vector = (function () {
      * @return {platypus.Vector} A normalized vector in the same direction as this vector.
      */
     proto.getUnit = function () {
-        return platypus.Vector.setUp(this).normalize();
+        return Vector.setUp(this).normalize();
     };
     
     /**
@@ -248,7 +249,7 @@ platypus.Vector = (function () {
      * @return {platypus.Vector}
      */
     proto.getInverse = function () {
-        return platypus.Vector.setUp(this).multiply(-1);
+        return Vector.setUp(this).multiply(-1);
     };
     
     /**
@@ -301,7 +302,7 @@ platypus.Vector = (function () {
      * @return {platypus.Vector} The cross product.
      */
     proto.getCrossProduct = function (v) {
-        return platypus.Vector.setUp(this).cross(v);
+        return Vector.setUp(this).cross(v);
     };
     
     /**
@@ -321,7 +322,7 @@ platypus.Vector = (function () {
             x    = 0,
             y    = 0,
             z    = 0,
-            temp = platypus.Vector.setUp();
+            temp = Vector.setUp();
         
         if (a) {
             if (a === 'x') {
@@ -559,7 +560,7 @@ platypus.Vector = (function () {
      * @return {platypus.Vector} A copy of this vector.
      */
     proto.copy = function () {
-        return platypus.Vector.setUp(this);
+        return Vector.setUp(this);
     };
     
     /**
@@ -603,7 +604,7 @@ platypus.Vector = (function () {
 
             if (obj && prop) {
                 if (!obj[prop]) {
-                    obj[prop] = platypus.Vector.setUp();
+                    obj[prop] = Vector.setUp();
                     
                     for (i = 2; i < arguments.length; i++) {
                         if (arguments[i] !== prop) {
@@ -640,7 +641,7 @@ platypus.Vector = (function () {
      * @method recycle
      * @since 0.7.1
      */
-    recycle.add(Vector, !!springroll.Debug, 'Vector', function () {
+    recycle.add(Vector, config.dev, 'Vector', function () {
         this.matrix.length = 0;
         Vector.recycle(this);
     });

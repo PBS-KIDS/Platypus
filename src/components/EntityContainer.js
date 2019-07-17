@@ -45,429 +45,435 @@
   - @param debug (boolean) - This flags whether to output message contents and subscriber information to the console during game development. A "value" object parameter (above) will also set this flag if value.debug is set to true.
   - @return integer - The number of handlers for the triggered message: this is useful for determining how many child entities care about a given message.
 */
-/* global include, platypus */
-(function () {
-    'use strict';
+/* global platypus */
+import Async from '../Async.js';
+import Data from '../Data.js';
+import Entity from '../Entity.js';
+import Messenger from '../Messenger.js';
 
-    var Data = include('platypus.Data'),
-        Entity = include('platypus.Entity'),
-        childBroadcast = function (event) {
+export default (function () {
+    var childBroadcast = function (event) {
             return function (value, debug) {
                 this.triggerOnChildren(event, value, debug);
             };
-        };
-    
-    return platypus.createComponentClass({
-        id: 'EntityContainer',
-        
-        properties: {
-            /**
-             * An Array listing messages that are triggered on the entity and should be triggered on the children as well.
-             *
-             * @property childEvents
-             * @type Array
-             * @default []
-             */
-            childEvents: []
         },
-        
-        initialize: (function () {
-            var
-                entityInit = function (entityDefinition, callback) {
-                    this.addEntity(entityDefinition, callback);
-                };
-
-            return function (definition, callback) {
-                var i = 0,
-                    entities = null,
-                    events = this.childEvents,
-                    entityInits = null;
-        
-                this.newAdds = Array.setUp();
-
-                //saving list of entities for load message
-                if (definition.entities && this.owner.entities) { //combine component list and entity list into one if they both exist.
-                    entities = definition.entities.concat(this.owner.entities);
-                } else {
-                    entities = definition.entities || this.owner.entities || null;
-                }
-
-                this.owner.entities = this.entities = Array.setUp();
-                
-                this.childEvents = Array.setUp();
-                for (i = 0; i < events.length; i++) {
-                    this.addNewPublicEvent(events[i]);
-                }
-                this.addNewPrivateEvent('peer-entity-added');
-                this.addNewPrivateEvent('peer-entity-removed');
-
-                if (entities) {
-                    entityInits = Array.setUp();
-                    for (i = 0; i < entities.length; i++) {
-                        entityInits.push(entityInit.bind(this, entities[i]));
-                    }
-                    platypus.Async.setUp(entityInits, function () {
-                        callback();
-                    });
-                    entityInits.recycle();
-                    return true; // notifies owner that this component is asynchronous.
-                } else {
-                    return false;
-                }
-            };
-        } ()),
-        
-        events: {
-            /**
-             * This message will added the given entity to this component's list of entities.
-             *
-             * @method 'add-entity'
-             * @param entity {platypus.Entity} This is the entity to be added as a child.
-             * @param [callback] {Function} A function to run once all of the components on the Entity have been loaded.
-             */
-            "add-entity": function (entity, callback) {
-                this.addEntity(entity, callback);
-            },
+        EntityContainer = platypus.createComponentClass({
+            id: 'EntityContainer',
             
-            /**
-             * On receiving this message, the provided entity will be removed from the list of child entities.
-             *
-             * @method 'remove-entity'
-             * @param entity {platypus.Entity} The entity to remove.
-             */
-            "remove-entity": function (entity) {
-                this.removeEntity(entity);
-            },
-            
-            /**
-             * On receiving this message, the provided entity will be updated in the list of child entities to reflect changes in its listeners.
-             *
-             * @method 'child-entity-updated'
-             * @param entity {platypus.Entity} The entity to remove.
-             */
-            "child-entity-updated": function (entity) {
-                this.updateChildEventListeners(entity);
-            },
-
-            /**
-             * On receiving this message, this component checks to see if any entities being added are ready. If so, they are added to the world. This is so ready entities don't have to wait until the end of a complete tick, but can be inserted between logic ticks.
-             *
-             * @method 'logic-tick'
-             * @since v0.12.0
-             */
-            "logic-tick": function () {
-                var adding = null,
-                    adds = this.newAdds,
-                    l = adds.length,
-                    i = 0,
-                    removals = null;
-
-                if (l) {
-                    removals = Array.setUp();
-
-                     //must go in order so entities are added in the expected order.
-                    for (i = 0; i < l; i++) {
-                        adding = adds[i];
-                        if (adding.destroyed || !adding.loadingComponents || adding.loadingComponents.attemptResolution()) {
-                            removals.push(i);
-                        }
-                    }
-
-                    i = removals.length;
-                    while (i--) {
-                        adds.greenSplice(removals[i]);
-                    }
-
-                    removals.recycle();
-                }
-            }
-        },
-        
-        methods: {
-            addNewPublicEvent: function (event) {
-                var i = 0;
-                
-                this.addNewPrivateEvent(event);
-                
-                for (i = 0; i < this.childEvents.length; i++) {
-                    if (this.childEvents[i] === event) {
-                        return false;
-                    }
-                }
-                this.childEvents.push(event);
+            properties: {
                 /**
-                 * Listens for specified messages and on receiving them, re-triggers them on child entities.
+                 * An Array listing messages that are triggered on the entity and should be triggered on the children as well.
                  *
-                 * @method '*'
-                 * @param message {Object} Accepts a message object that it will include in the new message to be triggered.
+                 * @property childEvents
+                 * @type Array
+                 * @default []
                  */
-                this.addEventListener(event, childBroadcast(event));
-                
-                return true;
+                childEvents: []
             },
             
-            addNewPrivateEvent: function (event) {
-                var x = 0,
-                    y = 0;
-                
-                if (this._listeners[event]) {
-                    return false; // event is already added.
-                }
-
-                this._listeners[event] = Array.setUp(); //to signify it's been added even if not used
-                
-                //Listen for message on children
-                for (x = 0; x < this.entities.length; x++) {
-                    if (this.entities[x]._listeners[event]) {
-                        for (y = 0; y < this.entities[x]._listeners[event].length; y++) {
-                            this.addChildEventListener(this.entities[x], event, this.entities[x]._listeners[event][y]);
-                        }
-                    }
-                }
-                
-                return true;
-            },
-            
-            updateChildEventListeners: function (entity) {
-                this.removeChildEventListeners(entity);
-                this.addChildEventListeners(entity);
-            },
-            
-            addChildEventListeners: function (entity) {
-                var y     = 0,
-                    event = '';
-                
-                for (event in this._listeners) {
-                    if (this._listeners.hasOwnProperty(event) && entity._listeners[event]) {
-                        for (y = 0; y < entity._listeners[event].length; y++) {
-                            this.addChildEventListener(entity, event, entity._listeners[event][y]);
-                        }
-                    }
-                }
-            },
-            
-            removeChildEventListeners: function (entity) {
-                var i        = 0,
-                    events   = null,
-                    messages = null;
-                
-                if (entity.containerListener) {
-                    events   = entity.containerListener.events;
-                    messages = entity.containerListener.messages;
-
-                    for (i = 0; i < events.length; i++) {
-                        this.removeChildEventListener(entity, events[i], messages[i]);
-                    }
-                    events.recycle();
-                    messages.recycle();
-                    entity.containerListener.recycle();
-                    entity.containerListener = null;
-                }
-            },
-            
-            addChildEventListener: function (entity, event, callback) {
-                if (!entity.containerListener) {
-                    entity.containerListener = Data.setUp(
-                        "events", Array.setUp(),
-                        "messages", Array.setUp()
-                    );
-                }
-                entity.containerListener.events.push(event);
-                entity.containerListener.messages.push(callback);
-                this.on(event, callback, callback._priority || 0);
-            },
-            
-            removeChildEventListener: function (entity, event, callback) {
-                var i        = 0,
-                    events   = entity.containerListener.events,
-                    messages = entity.containerListener.messages;
-                
-                for (i = 0; i < events.length; i++) {
-                    if ((events[i] === event) && (!callback || (messages[i] === callback))) {
-                        this.off(event, messages[i]);
-                    }
-                }
-            },
-
-            destroy: function () {
-                var entities = this.entities.greenSlice(), // Make a copy to handle entities being destroyed while processing list.
-                    i = entities.length,
-                    entity = null;
-                
-                while (i--) {
-                    entity = entities[i];
-                    this.removeChildEventListeners(entity);
-                    entity.destroy();
-                }
-                entities.recycle();
-                this.entities.recycle();
-                delete this.owner.entities;
-                this.childEvents.recycle();
-                this.newAdds.recycle();
-                this.newAdds = null;
-            }
-        },
-        
-        publicMethods: {
-            getEntityById: function (id) {
-                var i         = 0,
-                    selection = null;
-                
-                for (i = 0; i < this.entities.length; i++) {
-                    if (this.entities[i].id === id) {
-                        return this.entities[i];
-                    }
-                    if (this.entities[i].getEntityById) {
-                        selection = this.entities[i].getEntityById(id);
-                        if (selection) {
-                            return selection;
-                        }
-                    }
-                }
-                return null;
-            },
-
-            getEntitiesByType: function (type) {
-                var i         = 0,
-                    selection = null,
-                    entities  = Array.setUp();
-                
-                for (i = 0; i < this.entities.length; i++) {
-                    if (this.entities[i].type === type) {
-                        entities.push(this.entities[i]);
-                    }
-                    if (this.entities[i].getEntitiesByType) {
-                        selection = this.entities[i].getEntitiesByType(type);
-                        entities.union(selection);
-                        selection.recycle();
-                    }
-                }
-                return entities;
-            },
-
-            /**
-             * This method adds an entity to the owner's group. If an entity definition or a reference to an entity definition is provided, the entity is created and then added to the owner's group.
-             *
-             * @method addEntity
-             * @param newEntity {platypus.Entity|Object|String} Specifies the entity to add. If an object with a "type" property is provided or a String is provided, this component looks up the entity definition to create the entity.
-             * @param [newEntity.type] {String} If an object with a "type" property is provided, this component looks up the entity definition to create the entity.
-             * @param [newEntity.properties] {Object} A list of key/value pairs that sets the initial properties on the new entity.
-             * @param [callback] {Function} A function to run once all of the components on the Entity have been loaded.
-             * @return {platypus.Entity} The entity that was just added.
-             */
-            addEntity: (function () {
+            initialize: (function () {
                 var
-                    whenReady = function (callback, entity) {
-                        var owner = this.owner,
-                            entities = this.entities,
-                            i = entities.length;
-
-                        entity.triggerEvent('adopted', entity);
-                        
-                        while (i--) {
-                            if (!entity.triggerEvent('peer-entity-added', entities[i])) {
-                                break;
-                            }
-                        }
-                        this.triggerEventOnChildren('peer-entity-added', entity);
-
-                        this.addChildEventListeners(entity);
-                        entities.push(entity);
-                        owner.triggerEvent('child-entity-added', entity);
-
-                        if (callback) {
-                            callback(entity);
-                        }
+                    entityInit = function (entityDefinition, callback) {
+                        this.addEntity(entityDefinition, callback);
                     };
 
-                return function (newEntity, callback) {
-                    var entity = null,
-                        owner = this.owner;
-                    
-                    if (newEntity instanceof Entity) {
-                        entity = newEntity;
-                        entity.parent = owner;
-                        whenReady.call(this, callback, entity);
+                return function (definition, callback) {
+                    var i = 0,
+                        entities = null,
+                        events = this.childEvents,
+                        entityInits = null;
+            
+                    Messenger.initialize(this);
+
+                    this.newAdds = Array.setUp();
+
+                    //saving list of entities for load message
+                    if (definition.entities && this.owner.entities) { //combine component list and entity list into one if they both exist.
+                        entities = definition.entities.concat(this.owner.entities);
                     } else {
-                        if (typeof newEntity === 'string') {
-                            entity = new Entity(platypus.game.settings.entities[newEntity], null, whenReady.bind(this, callback), owner);
-                        } else if (newEntity.id) {
-                            entity = new Entity(newEntity, null, whenReady.bind(this, callback), owner);
-                        } else {
-                            entity = new Entity(platypus.game.settings.entities[newEntity.type], newEntity, whenReady.bind(this, callback), owner);
-                        }
-                        this.owner.triggerEvent('entity-created', entity);
+                        entities = definition.entities || this.owner.entities || null;
                     }
 
-                    this.newAdds.push(entity);
+                    this.owner.entities = this.entities = Array.setUp();
+                    
+                    this.childEvents = Array.setUp();
+                    for (i = 0; i < events.length; i++) {
+                        this.addNewPublicEvent(events[i]);
+                    }
+                    this.addNewPrivateEvent('peer-entity-added');
+                    this.addNewPrivateEvent('peer-entity-removed');
 
-                    return entity;
+                    if (entities) {
+                        entityInits = Array.setUp();
+                        for (i = 0; i < entities.length; i++) {
+                            entityInits.push(entityInit.bind(this, entities[i]));
+                        }
+                        Async.setUp(entityInits, function () {
+                            callback();
+                        });
+                        entityInits.recycle();
+                        return true; // notifies owner that this component is asynchronous.
+                    } else {
+                        return false;
+                    }
                 };
-            }()),
+            } ()),
             
-            removeEntity: function (entity) {
-                var i = this.entities.indexOf(entity);
+            events: {
+                /**
+                 * This message will added the given entity to this component's list of entities.
+                 *
+                 * @method 'add-entity'
+                 * @param entity {platypus.Entity} This is the entity to be added as a child.
+                 * @param [callback] {Function} A function to run once all of the components on the Entity have been loaded.
+                 */
+                "add-entity": function (entity, callback) {
+                    this.addEntity(entity, callback);
+                },
+                
+                /**
+                 * On receiving this message, the provided entity will be removed from the list of child entities.
+                 *
+                 * @method 'remove-entity'
+                 * @param entity {platypus.Entity} The entity to remove.
+                 */
+                "remove-entity": function (entity) {
+                    this.removeEntity(entity);
+                },
+                
+                /**
+                 * On receiving this message, the provided entity will be updated in the list of child entities to reflect changes in its listeners.
+                 *
+                 * @method 'child-entity-updated'
+                 * @param entity {platypus.Entity} The entity to remove.
+                 */
+                "child-entity-updated": function (entity) {
+                    this.updateChildEventListeners(entity);
+                },
 
-                if (i >= 0) {
+                /**
+                 * On receiving this message, this component checks to see if any entities being added are ready. If so, they are added to the world. This is so ready entities don't have to wait until the end of a complete tick, but can be inserted between logic ticks.
+                 *
+                 * @method 'logic-tick'
+                 * @since v0.12.0
+                 */
+                "logic-tick": function () {
+                    var adding = null,
+                        adds = this.newAdds,
+                        l = adds.length,
+                        i = 0,
+                        removals = null;
+
+                    if (l) {
+                        removals = Array.setUp();
+
+                        //must go in order so entities are added in the expected order.
+                        for (i = 0; i < l; i++) {
+                            adding = adds[i];
+                            if (adding.destroyed || !adding.loadingComponents || adding.loadingComponents.attemptResolution()) {
+                                removals.push(i);
+                            }
+                        }
+
+                        i = removals.length;
+                        while (i--) {
+                            adds.greenSplice(removals[i]);
+                        }
+
+                        removals.recycle();
+                    }
+                }
+            },
+            
+            methods: {
+                addNewPublicEvent: function (event) {
+                    var i = 0;
+                    
+                    this.addNewPrivateEvent(event);
+                    
+                    for (i = 0; i < this.childEvents.length; i++) {
+                        if (this.childEvents[i] === event) {
+                            return false;
+                        }
+                    }
+                    this.childEvents.push(event);
+                    /**
+                     * Listens for specified messages and on receiving them, re-triggers them on child entities.
+                     *
+                     * @method '*'
+                     * @param message {Object} Accepts a message object that it will include in the new message to be triggered.
+                     */
+                    this.addEventListener(event, childBroadcast(event));
+                    
+                    return true;
+                },
+                
+                addNewPrivateEvent: function (event) {
+                    var x = 0,
+                        y = 0;
+                    
+                    if (this._listeners[event]) {
+                        return false; // event is already added.
+                    }
+
+                    this._listeners[event] = Array.setUp(); //to signify it's been added even if not used
+                    
+                    //Listen for message on children
+                    for (x = 0; x < this.entities.length; x++) {
+                        if (this.entities[x]._listeners[event]) {
+                            for (y = 0; y < this.entities[x]._listeners[event].length; y++) {
+                                this.addChildEventListener(this.entities[x], event, this.entities[x]._listeners[event][y]);
+                            }
+                        }
+                    }
+                    
+                    return true;
+                },
+                
+                updateChildEventListeners: function (entity) {
                     this.removeChildEventListeners(entity);
-                    this.entities.greenSplice(i);
-                    this.triggerEventOnChildren('peer-entity-removed', entity);
-                    this.owner.triggerEvent('child-entity-removed', entity);
-                    entity.destroy();
-                    entity.parent = null;
-                    return entity;
+                    this.addChildEventListeners(entity);
+                },
+                
+                addChildEventListeners: function (entity) {
+                    var y     = 0,
+                        event = '';
+                    
+                    for (event in this._listeners) {
+                        if (this._listeners.hasOwnProperty(event) && entity._listeners[event]) {
+                            for (y = 0; y < entity._listeners[event].length; y++) {
+                                this.addChildEventListener(entity, event, entity._listeners[event][y]);
+                            }
+                        }
+                    }
+                },
+                
+                removeChildEventListeners: function (entity) {
+                    var i        = 0,
+                        events   = null,
+                        messages = null;
+                    
+                    if (entity.containerListener) {
+                        events   = entity.containerListener.events;
+                        messages = entity.containerListener.messages;
+
+                        for (i = 0; i < events.length; i++) {
+                            this.removeChildEventListener(entity, events[i], messages[i]);
+                        }
+                        events.recycle();
+                        messages.recycle();
+                        entity.containerListener.recycle();
+                        entity.containerListener = null;
+                    }
+                },
+                
+                addChildEventListener: function (entity, event, callback) {
+                    if (!entity.containerListener) {
+                        entity.containerListener = Data.setUp(
+                            "events", Array.setUp(),
+                            "messages", Array.setUp()
+                        );
+                    }
+                    entity.containerListener.events.push(event);
+                    entity.containerListener.messages.push(callback);
+                    this.on(event, callback, callback._priority || 0);
+                },
+                
+                removeChildEventListener: function (entity, event, callback) {
+                    var i        = 0,
+                        events   = entity.containerListener.events,
+                        messages = entity.containerListener.messages;
+                    
+                    for (i = 0; i < events.length; i++) {
+                        if ((events[i] === event) && (!callback || (messages[i] === callback))) {
+                            this.off(event, messages[i]);
+                        }
+                    }
+                },
+
+                destroy: function () {
+                    var entities = this.entities.greenSlice(), // Make a copy to handle entities being destroyed while processing list.
+                        i = entities.length,
+                        entity = null;
+                    
+                    while (i--) {
+                        entity = entities[i];
+                        this.removeChildEventListeners(entity);
+                        entity.destroy();
+                    }
+                    entities.recycle();
+                    this.entities.recycle();
+                    delete this.owner.entities;
+                    this.childEvents.recycle();
+                    this.newAdds.recycle();
+                    this.newAdds = null;
                 }
-                return false;
             },
             
-            triggerEventOnChildren: function (event, message, debug) {
-                if (this.destroyed) {
-                    return 0;
-                }
+            publicMethods: {
+                getEntityById: function (id) {
+                    var i         = 0,
+                        selection = null;
+                    
+                    for (i = 0; i < this.entities.length; i++) {
+                        if (this.entities[i].id === id) {
+                            return this.entities[i];
+                        }
+                        if (this.entities[i].getEntityById) {
+                            selection = this.entities[i].getEntityById(id);
+                            if (selection) {
+                                return selection;
+                            }
+                        }
+                    }
+                    return null;
+                },
+
+                getEntitiesByType: function (type) {
+                    var i         = 0,
+                        selection = null,
+                        entities  = Array.setUp();
+                    
+                    for (i = 0; i < this.entities.length; i++) {
+                        if (this.entities[i].type === type) {
+                            entities.push(this.entities[i]);
+                        }
+                        if (this.entities[i].getEntitiesByType) {
+                            selection = this.entities[i].getEntitiesByType(type);
+                            entities.union(selection);
+                            selection.recycle();
+                        }
+                    }
+                    return entities;
+                },
+
+                /**
+                 * This method adds an entity to the owner's group. If an entity definition or a reference to an entity definition is provided, the entity is created and then added to the owner's group.
+                 *
+                 * @method addEntity
+                 * @param newEntity {platypus.Entity|Object|String} Specifies the entity to add. If an object with a "type" property is provided or a String is provided, this component looks up the entity definition to create the entity.
+                 * @param [newEntity.type] {String} If an object with a "type" property is provided, this component looks up the entity definition to create the entity.
+                 * @param [newEntity.properties] {Object} A list of key/value pairs that sets the initial properties on the new entity.
+                 * @param [callback] {Function} A function to run once all of the components on the Entity have been loaded.
+                 * @return {platypus.Entity} The entity that was just added.
+                 */
+                addEntity: (function () {
+                    var
+                        whenReady = function (callback, entity) {
+                            var owner = this.owner,
+                                entities = this.entities,
+                                i = entities.length;
+
+                            entity.triggerEvent('adopted', entity);
+                            
+                            while (i--) {
+                                if (!entity.triggerEvent('peer-entity-added', entities[i])) {
+                                    break;
+                                }
+                            }
+                            this.triggerEventOnChildren('peer-entity-added', entity);
+
+                            this.addChildEventListeners(entity);
+                            entities.push(entity);
+                            owner.triggerEvent('child-entity-added', entity);
+
+                            if (callback) {
+                                callback(entity);
+                            }
+                        };
+
+                    return function (newEntity, callback) {
+                        var entity = null,
+                            owner = this.owner;
+                        
+                        if (newEntity instanceof Entity) {
+                            entity = newEntity;
+                            entity.parent = owner;
+                            whenReady.call(this, callback, entity);
+                        } else {
+                            if (typeof newEntity === 'string') {
+                                entity = new Entity(platypus.game.settings.entities[newEntity], null, whenReady.bind(this, callback), owner);
+                            } else if (newEntity.id) {
+                                entity = new Entity(newEntity, null, whenReady.bind(this, callback), owner);
+                            } else {
+                                entity = new Entity(platypus.game.settings.entities[newEntity.type], newEntity, whenReady.bind(this, callback), owner);
+                            }
+                            this.owner.triggerEvent('entity-created', entity);
+                        }
+
+                        this.newAdds.push(entity);
+
+                        return entity;
+                    };
+                }()),
                 
-                if (!this._listeners[event]) {
-                    this.addNewPrivateEvent(event);
+                removeEntity: function (entity) {
+                    var i = this.entities.indexOf(entity);
+
+                    if (i >= 0) {
+                        this.removeChildEventListeners(entity);
+                        this.entities.greenSplice(i);
+                        this.triggerEventOnChildren('peer-entity-removed', entity);
+                        this.owner.triggerEvent('child-entity-removed', entity);
+                        entity.destroy();
+                        entity.parent = null;
+                        return entity;
+                    }
+                    return false;
+                },
+                
+                triggerEventOnChildren: function (event, message, debug) {
+                    if (this.destroyed) {
+                        return 0;
+                    }
+                    
+                    if (!this._listeners[event]) {
+                        this.addNewPrivateEvent(event);
+                    }
+                    return this.triggerEvent(event, message, debug);
+                },
+
+                triggerOnChildren: function (event) {
+                    if (this.destroyed) {
+                        return 0;
+                    }
+                    
+                    if (!this._listeners[event]) {
+                        this.addNewPrivateEvent(event);
+                    }
+                    return this.trigger.apply(this, arguments);
                 }
-                return this.triggerEvent(event, message, debug);
             },
-
-            triggerOnChildren: function (event) {
-                if (this.destroyed) {
-                    return 0;
+            
+            getAssetList: function (def, props, defaultProps) {
+                var i = 0,
+                    assets = Array.setUp(),
+                    entities = Array.setUp(),
+                    arr = null;
+                
+                if (def.entities) {
+                    entities.union(def.entities);
                 }
                 
-                if (!this._listeners[event]) {
-                    this.addNewPrivateEvent(event);
+                if (props && props.entities) {
+                    entities.union(props.entities);
+                } else if (defaultProps && defaultProps.entities) {
+                    entities.union(defaultProps.entities);
                 }
-                return this.trigger.apply(this, arguments);
-            }
-        },
-        
-        getAssetList: function (def, props, defaultProps) {
-            var i = 0,
-                assets = Array.setUp(),
-                entities = Array.setUp(),
-                arr = null;
-            
-            if (def.entities) {
-                entities.union(def.entities);
-            }
-            
-            if (props && props.entities) {
-                entities.union(props.entities);
-            } else if (defaultProps && defaultProps.entities) {
-                entities.union(defaultProps.entities);
-            }
 
-            for (i = 0; i < entities.length; i++) {
-                arr = Entity.getAssetList(entities[i]);
-                assets.union(arr);
-                arr.recycle();
+                for (i = 0; i < entities.length; i++) {
+                    arr = Entity.getAssetList(entities[i]);
+                    assets.union(arr);
+                    arr.recycle();
+                }
+                
+                entities.recycle();
+                
+                return assets;
             }
-            
-            entities.recycle();
-            
-            return assets;
-        }
-    }, platypus.Messenger);
+        });
+    
+    Messenger.mixin(EntityContainer);
+
+    return EntityContainer;
 }());

@@ -7,11 +7,9 @@
  * @class Tween
  * @uses platypus.Component
  */
-/* global createjs, include, platypus */
-(function () {
-    'use strict';
-
-    var Tween = include('createjs.Tween', false),
+/* global createjs, platypus */
+export default (function () {
+    var Tween = createjs.Tween,
         empty = {},
         createEvent = function (dictionary, key, defaults, entity) {
             var event = getProperty(dictionary, key, defaults);

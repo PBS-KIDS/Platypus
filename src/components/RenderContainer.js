@@ -6,18 +6,16 @@
  * @uses platypus.Component
  * @since 0.11.0
  */
-/* global include, platypus */
-(function () {
-    'use strict';
-    
-    var AABB = include('platypus.AABB'),
-        CanvasRenderer = include('PIXI.CanvasRenderer'),
-        ColorMatrixFilter = include('PIXI.filters.ColorMatrixFilter'),
-        Container = include('PIXI.Container'),
-        Data = include('platypus.Data'),
-        Graphics = include('PIXI.Graphics'),
-        Interactive = include('platypus.components.Interactive'),
-        Matrix = include('PIXI.Matrix'),
+/* global PIXI, platypus */
+import AABB from '../AABB.js';
+import Data from '../Data.js';
+import Interactive from './Interactive.js';
+
+export default (function () {
+    var ColorMatrixFilter = PIXI.filters.ColorMatrixFilter,
+        Container = PIXI.Container,
+        Graphics = PIXI.Graphics,
+        Matrix = PIXI.Matrix,
         pixiMatrix = new Matrix(),
         castValue = function (color) {
             if (color === null) {
@@ -289,59 +287,36 @@
 
             this._tint = null;
 
-            // This should be simplified once PIXI supports a `tint` property on PIXI.Container: https://github.com/pixijs/pixi.js/issues/2328
-            if (platypus.game.app.display.renderer instanceof CanvasRenderer) {
-                Object.defineProperty(this.owner, 'tint', {
-                    get: function () {
-                        return this._tint;
-                    }.bind(this),
-                    set: function (value) {
-                        var children = this.container.children,
-                            i = children.length,
-                            color = castValue(value);
+            Object.defineProperty(this.owner, 'tint', {
+                get: function () {
+                    return this._tint;
+                }.bind(this),
+                set: function (value) {
+                    var filters = this.container.filters,
+                        matrix = null,
+                        color = castValue(value);
 
-                        if (color === this._tint) {
-                            return;
+                    if (color === this._tint) {
+                        return;
+                    }
+
+                    if (color === null) {
+                        if (filters) {
+                            this.container.filters = null;
                         }
-
-                        while (i--) {
-                            children[i].tint = color;
+                    } else {
+                        if (!filters) {
+                            filters = this.container.filters = Array.setUp(new ColorMatrixFilter());
                         }
-                        this._tint = color;
-                    }.bind(this)
-                });
-            } else {
-                Object.defineProperty(this.owner, 'tint', {
-                    get: function () {
-                        return this._tint;
-                    }.bind(this),
-                    set: function (value) {
-                        var filters = this.container.filters,
-                            matrix = null,
-                            color = castValue(value);
+                        matrix = filters[0].matrix;
+                        matrix[0] = (color & 0xff0000) / 0xff0000; // Red
+                        matrix[6] = (color & 0xff00) / 0xff00; // Green
+                        matrix[12] = (color & 0xff) / 0xff; // Blue
+                    }
 
-                        if (color === this._tint) {
-                            return;
-                        }
-
-                        if (color === null) {
-                            if (filters) {
-                                this.container.filters = null;
-                            }
-                        } else {
-                            if (!filters) {
-                                filters = this.container.filters = Array.setUp(new ColorMatrixFilter());
-                            }
-                            matrix = filters[0].matrix;
-                            matrix[0] = (color & 0xff0000) / 0xff0000; // Red
-                            matrix[6] = (color & 0xff00) / 0xff00; // Green
-                            matrix[12] = (color & 0xff) / 0xff; // Blue
-                        }
-
-                        this._tint = color;
-                    }.bind(this)
-                });
-            }
+                    this._tint = color;
+                }.bind(this)
+            });
 
             this.storedRenderGroup = this.renderGroup;
             this._renderGroup = null;

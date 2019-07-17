@@ -8,12 +8,12 @@
  * @extends platypus.DataMap
  * @since 0.8.0
  */
-/* global extend, include, platypus, recycle, springroll */
-platypus.StateMap = (function () {
-    'use strict';
-    
-    var DataMap = include('platypus.DataMap'),
-        StateMap = function (first) {
+import DataMap from './DataMap.js';
+import config from 'config';
+import recycle from 'recycle';
+
+export default (function () {
+    var StateMap = function (first) {
             var l = arguments.length;
             
             if (l) {
@@ -27,7 +27,14 @@ platypus.StateMap = (function () {
                 DataMap.call(this);
             }
         },
-        proto = extend(StateMap, DataMap);
+        parent = DataMap.prototype,
+        proto = StateMap.prototype = Object.create(parent);
+
+    Object.defineProperty(StateMap.prototype, 'constructor', {
+        configurable: true,
+        writable: true,
+        value: StateMap
+    });
         
     /**
      * Sets the state using the provided string value which is a comma-delimited list such that `"blue,red,!green"` sets the following state values:
@@ -158,7 +165,7 @@ platypus.StateMap = (function () {
      *
      * @method recycle
      */
-    recycle.add(StateMap, !!springroll.Debug, 'StateMap', function () {
+    recycle.add(StateMap, config.dev, 'StateMap', function () {
         this.clear();
         StateMap.recycle(this);
     });

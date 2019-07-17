@@ -6,12 +6,11 @@
  * @uses platypus.Component
  * @since 0.6.0
  */
-/*global include, platypus */
-(function () {
-    'use strict';
-    
-    var Data = include('platypus.Data'),
-        sortByTime = function (a, b) {
+/*global platypus */
+import Data from '../Data.js';
+
+export default (function () {
+    var sortByTime = function (a, b) {
             return a.time - b.time;
         },
         addEvents = function (fromList, toList) {

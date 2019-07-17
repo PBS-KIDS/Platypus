@@ -6,9 +6,7 @@
  * @uses platypus.Component
  */
 /*global platypus */
-(function () {
-    'use strict';
-
+export default (function () {
     return platypus.createComponentClass({
         id: "AIPacer",
         

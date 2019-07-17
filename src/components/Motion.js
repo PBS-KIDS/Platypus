@@ -5,12 +5,11 @@
  * @class Motion
  * @uses platypus.Component
  */
-/* global include, platypus */
-(function () {
-    'use strict';
-    
-    var Vector = include('platypus.Vector'),
-        isTrue = function () {
+/* global platypus */
+import Vector from '../Vector.js';
+
+export default (function () {
+    var isTrue = function () {
             return true;
         },
         getState = function (state, stateName) {

@@ -5,12 +5,11 @@
  * @class Mover
  * @uses platypus.Component
  */
-/* global include, platypus */
-(function () {
-    'use strict';
-    
-    var Vector = include('platypus.Vector'),
-        tempVector = Vector.setUp(),
+/* global platypus */
+import Vector from '../Vector.js';
+
+export default (function () {
+    var tempVector = Vector.setUp(),
         updateMax   = function (delta, interim, goal, time) {
             if (delta && (interim !== goal)) {
                 if (interim < goal) {
@@ -169,8 +168,8 @@
                 max = this.maxMagnitude,
                 thisState = this.owner.state;
             
-            platypus.Vector.assign(this.owner, 'position',  'x',  'y',  'z');
-            platypus.Vector.assign(this.owner, 'velocity', 'dx', 'dy', 'dz');
+            Vector.assign(this.owner, 'position',  'x',  'y',  'z');
+            Vector.assign(this.owner, 'velocity', 'dx', 'dy', 'dz');
 
             this.position = this.owner.position;
             this.velocity = this.owner.velocity;

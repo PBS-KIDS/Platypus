@@ -17,8 +17,8 @@
  * @uses platypus.Component
 */
 /*global platypus */
-(function () {
-    'use strict';
+export default (function () {
+    
 
     var createTrigger = function (eventList) {
         return function (value, debug) {

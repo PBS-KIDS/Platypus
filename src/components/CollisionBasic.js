@@ -7,16 +7,15 @@
  * @class CollisionBasic
  * @uses platypus.Component
  */
-/* global include, platypus */
-(function () {
-    'use strict';
-    
-    var AABB = include('platypus.AABB'),
-        CollisionShape = include('platypus.CollisionShape'),
-        Data = include('platypus.Data'),
-        DataMap = include('platypus.DataMap'),
-        Vector = include('platypus.Vector'),
+/* global platypus */
+import AABB from '../AABB.js';
+import CollisionShape from '../CollisionShape.js';
+import Data from '../Data.js';
+import DataMap from '../DataMap.js';
+import Vector from '../Vector.js';
 
+export default (function () {
+    var
         /**
          * On receiving a 'hit-by' message, custom messages are triggered on the entity corresponding with the component's `solidCollisions` and `softCollisions` key/value mappings.
          *

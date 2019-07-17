@@ -5,12 +5,10 @@
  * @uses platypus.Component
  * @since 1.0.0
  */
-/*global include, platypus */
-(function () {
-    'use strict';
-    
-    var AABB = include('platypus.AABB');
+/* global platypus */
+import AABB from '../AABB.js';
 
+export default (function () {
     return platypus.createComponentClass({
         
         id: 'RelativePosition',

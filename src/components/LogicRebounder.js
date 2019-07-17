@@ -31,20 +31,16 @@ This component works with `CollisionBasic` to cause entities to bounce away on s
       "elasticity": 0.4
       // Optional. Bounciness of the entity. Defaults to 0.8.
     }
-
-Requires: ["../Vector.js"]
 */
-/* global include, platypus */
-(function () {
-    'use strict';
-    
-    var Vector = include('platypus.Vector');
+/* global platypus */
+import Vector from '../Vector.js';
 
+export default (function () {
     return platypus.createComponentClass({
         id: 'LogicRebounder',
         
         initialize: function (definition) {
-            platypus.Vector.assign(this.owner, 'velocity', 'dx', 'dy', 'dz');
+            Vector.assign(this.owner, 'velocity', 'dx', 'dy', 'dz');
 
             this.owner.mass = this.owner.mass || definition.mass || 1;
             this.elasticity = definition.elasticity || 0.8;

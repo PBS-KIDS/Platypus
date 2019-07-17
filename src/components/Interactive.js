@@ -5,15 +5,14 @@
  * @uses platypus.Component
  * @since 0.9.0
  */
-/*global include, platypus */
-(function () {
-    'use strict';
+/*global PIXI, platypus */
+import AABB from '../AABB.js';
+import Data from '../Data.js';
 
-    var AABB = include('platypus.AABB'),
-        Circle = include('PIXI.Circle'),
-        Data = include('platypus.Data'),
-        Polygon = include('PIXI.Polygon'),
-        Rectangle = include('PIXI.Rectangle'),
+export default (function () {
+    var Circle = PIXI.Circle,
+        Polygon = PIXI.Polygon,
+        Rectangle = PIXI.Rectangle,
         pointerInstances = {};
     
     return platypus.createComponentClass({

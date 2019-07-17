@@ -5,12 +5,11 @@
  * @uses platypus.Component
  * @since 0.9.0
  */
-/*global include, platypus */
-(function () {
-    'use strict';
-    
-    var StateMap = include('platypus.StateMap'),
-        createTest = function (testStates, animation) {
+/*global platypus */
+import StateMap from '../StateMap.js';
+
+export default (function () {
+    var createTest = function (testStates, animation) {
             if (testStates === 'default') {
                 return defaultTest.bind(null, animation);
             } else {

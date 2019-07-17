@@ -8,11 +8,13 @@
  * @uses Map
  * @since 0.8.0
  */
-/* global include, platypus, recycle, springroll */
-platypus.DataMap = (function () {
-    'use strict';
-    
-    var Map = include('window.Map'),
+/* global window */
+import './polyfills/Map.js';
+import config from 'config';
+import recycle from 'recycle';
+
+export default (function () {
+    var Map = window.Map,
         mapSet = function (keys, key, value) {
             if (this.get(key) !== value) {
                 if (!this.has(key)) {
@@ -83,7 +85,7 @@ platypus.DataMap = (function () {
             
             if (!this.map) {
                 mm = mapMethods;
-                map = this.map = new Map;
+                map = this.map = new Map();
                 
                 /**
                  * Tracks keys on this object to make iteration faster.
@@ -194,7 +196,7 @@ platypus.DataMap = (function () {
      *
      * @method recycle
      */
-    recycle.add(DataMap, !!springroll.Debug, 'DataMap', function () {
+    recycle.add(DataMap, config.dev, 'DataMap', function () {
         this.clear();
         DataMap.recycle(this);
     });

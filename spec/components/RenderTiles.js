@@ -1,7 +1,7 @@
 /* global afterEach, beforeEach, describe, expect, it, platypus, */
 
 describe("Component: RenderTiles", function () {
-    'use strict';
+    
 
     var Entity = platypus.Entity,
         entity = null;

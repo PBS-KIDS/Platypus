@@ -5,11 +5,11 @@
  * @class XHR
  * @uses platypus.Component
  */
-/*global include, platypus */
-(function () {
-    'use strict';
+/* global platypus, window */
+export default (function () {
     
-    var XMLHttpRequest = include('window.XMLHttpRequest');
+    
+    var XMLHttpRequest = window.XMLHttpRequest;
 
     return platypus.createComponentClass({
         id: 'XHR',

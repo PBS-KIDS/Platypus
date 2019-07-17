@@ -10,10 +10,10 @@
  * @param height {number} The height of the AABB.
  * @return {platypus.AABB} Returns the new aabb object.
  */
-/*global platypus, recycle, springroll */
-platypus.AABB = (function () {
-    'use strict';
-    
+import config from 'config';
+import recycle from 'recycle';
+
+export default (function () {
     var AABB = function (x, y, width, height) {
             if (x instanceof AABB) {
                 this.set(x);
@@ -433,7 +433,7 @@ platypus.AABB = (function () {
      * @method recycle
      * @since 0.7.3
      */
-    recycle.add(AABB, !!springroll.Debug, 'AABB');
+    recycle.add(AABB, config.dev, 'AABB');
     
     return AABB;
 }());

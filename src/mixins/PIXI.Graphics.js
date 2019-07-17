@@ -1,11 +1,9 @@
 /**
  * This adds support for a tiny API to PIXI.Graphics similar to the CreateJS Graphics API. This is used for backwards support for RenderSprite masks.
  */
-/* global include */
-(function () {
-    'use strict';
-    
-    var Graphics = include('PIXI.Graphics'),
+/* global PIXI */
+export default (function () {
+    var Graphics = PIXI.Graphics,
         gfx = Graphics.prototype;
     
     gfx.a  = gfx.a  || gfx.arc;

@@ -6,8 +6,8 @@
  * @uses platypus.Component
  */
 /*global platypus */
-(function () {
-    'use strict';
+export default (function () {
+    
     
     var trigger = function () {
         var owner = this.owner;

@@ -5,12 +5,11 @@
  * @uses platypus.Component
  * @since 0.8.7
  */
-/*global include, platypus */
-(function () {
-    'use strict';
-    
-    var Data = include('platypus.Data'),
-        pause = function () {
+/* global platypus */
+import Data from '../Data.js';
+
+export default (function () {
+    var pause = function () {
             this.active--;
         },
         play = function () {

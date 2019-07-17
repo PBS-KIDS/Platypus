@@ -15,12 +15,12 @@
  * @param stuck {Number} The amount of unwarranted overlap if shapes start in a collided position before moving.
  * @return {platypus.CollisionData} Returns the new CollisionData object.
  */
-/*global include, platypus, recycle, springroll */
-platypus.CollisionData = (function () {
-    'use strict';
-    
-    var Vector = include('platypus.Vector'),
-        CollisionData = function (occurredOrData) {
+import Vector from './Vector.js';
+import config from 'config';
+import recycle from 'recycle';
+
+export default (function () {
+    var CollisionData = function (occurredOrData) {
             if (!this.vector) {
                 this.vector = Vector.setUp();
             }
@@ -97,7 +97,7 @@ platypus.CollisionData = (function () {
      * @method recycle
      * @since 0.8.7
      */
-    recycle.add(CollisionData, !!springroll.Debug, 'CollisionData');
+    recycle.add(CollisionData, config.dev, 'CollisionData');
     
     return CollisionData;
 }());

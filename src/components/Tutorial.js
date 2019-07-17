@@ -6,8 +6,8 @@
  * @since 0.8.7
  */
 /*global platypus */
-(function () {
-    'use strict';
+export default (function () {
+    
     var entityAdded = function (entity) {
             var entityType = null;
                 

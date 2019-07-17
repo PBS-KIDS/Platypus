@@ -5,14 +5,13 @@
  * @class Camera
  * @uses platypus.Component
 */
-/*global createjs, PIXI, platypus, include, window */
-(function () {
-    'use strict';
-    
+/*global createjs, PIXI, platypus, window */
+import AABB from '../AABB.js';
+import Data from '../Data.js';
+import Vector from '../Vector.js';
+
+export default (function () {
     var DPR = window.devicePixelRatio || 1,
-        AABB = include('platypus.AABB'),
-        Data = include('platypus.Data'),
-        Vector = include('platypus.Vector'),
         anchorBound = function (anchorAABB, entityOffsetX, entityOffsetY, entity) {
             var aabb = AABB.setUp(entity.x + entityOffsetX, entity.y + entityOffsetY, entity.width, entity.height),
                 x = anchorAABB.x,
@@ -266,7 +265,7 @@
             if (this.owner.container) {
                 this.parentContainer = this.owner.container;
             } else if (this.owner.stage) {
-                this.canvas = this.canvas || platypus.game.app.display.canvas; //TODO: Probably need to find a better way to handle resizing - DDD 10/4/2015
+                this.canvas = this.canvas || platypus.game.canvas; //TODO: Probably need to find a better way to handle resizing - DDD 10/4/2015
                 this.parentContainer = this.owner.stage;
                 this.owner.width  = this.canvas.width;
                 this.owner.height = this.canvas.height;

@@ -36,17 +36,20 @@
  * @return {Entity} Returns the new entity made up of the provided components.
 **/
 
-/*global include, platypus */
-platypus.Entity = (function () {
-    'use strict';
-    
-    var Data = include('platypus.Data'),
-        StateMap = include('platypus.StateMap'),
-        componentInit = function (Component, componentDefinition, callback) {
+/*global platypus */
+import Async from './Async.js';
+import Data from './Data.js';
+import Messenger from './Messenger.js';
+import StateMap from './StateMap.js';
+        
+export default (function () {
+    var componentInit = function (Component, componentDefinition, callback) {
             this.addComponent(new Component(this, componentDefinition, callback));
         },
-        entityIds = {},
-        entity = function (definition, instanceDefinition, callback, parent) {
+        entityIds = {};
+
+    class Entity extends Messenger {
+        constructor (definition, instanceDefinition, callback, parent) {
             var i                    = 0,
                 componentDefinition  = null,
                 componentInits       = Array.setUp(),
@@ -59,7 +62,7 @@ platypus.Entity = (function () {
                 savedMessages        = Array.setUp();
 
             // Set properties of messenger on this entity.
-            platypus.Messenger.call(this);
+            super();
 
             this.components  = Array.setUp();
             this.type = def.id || 'none';
@@ -112,7 +115,7 @@ platypus.Entity = (function () {
                     }
                 }
             }
-            this.loadingComponents = platypus.Async.setUp(componentInits, function () {
+            this.loadingComponents = Async.setUp(componentInits, function () {
                 this.loadingComponents = null;
 
                 // Trigger saved events that were being fired during component addition.
@@ -141,230 +144,229 @@ platypus.Entity = (function () {
             defaultProperties.recycle();
             instance.recycle();
             instanceProperties.recycle();
-        },
-        proto = entity.prototype = new platypus.Messenger();
-    
-    /**
-    * Returns a string describing the entity.
-    *
-    * @method toString
-    * @return {String} Returns the entity type as a string of the form "[Entity entity-type]".
-    **/
-    proto.toString = function () {
-        return "[Entity " + this.type + "]";
-    };
-    
-    /**
-    * Returns a JSON object describing the entity.
-    *
-    * @method toJSON
-    * @param includeComponents {Boolean} Whether the returned JSON should list components. Defaults to `false` to condense output since components are generally defined in `platypus.game.settings.entities`, but may be needed for custom-constructed entities not so defined.
-    * @return {Object} Returns a JSON definition that can be used to recreate the entity.
-    * @since 0.11.0
-    **/
-    proto.toJSON = function (includeComponents) {
-        var components = this.components,
-            definition = {
-                properties: {
-                    id: this.id,
-                    state: this.state.toJSON()
-                }
-            },
-            i = 0,
-            json = null,
-            properties = definition.properties;
-        
-        if (includeComponents) {
-            definition.id = this.type;
-            definition.components = [];
-        } else {
-            definition.type = this.type;
         }
-
-        for (i = 0; i < components.length; i++) {
-            json = components[i].toJSON(properties);
-            if (includeComponents && json) {
-                definition.components.push(json);
-            }
-        }
-
-        return definition;
-    };
-    
-    /**
-    * Attaches the provided component to the entity.
-    *
-    * @method addComponent
-    * @param {platypus.Component} component Must be an object that functions as a Component.
-    * @return {platypus.Component} Returns the same object that was submitted.
-    **/
-    proto.addComponent = function (component) {
-        this.components.push(component);
 
         /**
-         * The entity triggers `component-added` on itself once a component has been attached, notifying other components of their peer component.
-         *
-         * @event component-added
-         * @param {platypus.Component} component The added component.
-         * @param {String} component.type The type of component.
-         **/
-        this.triggerEvent('component-added', component);
-        return component;
-    };
-    
-    /**
-    * Removes the mentioned component from the entity.
-    *
-    * @method removeComponent
-    * @param {Component} component Must be a [[Component]] attached to the entity.
-    * @return {Component} Returns the same object that was submitted if removal was successful; otherwise returns false (the component was not found attached to the entity).
-    **/
-    proto.removeComponent = function (component) {
-        var i = 0;
+        * Returns a string describing the entity.
+        *
+        * @method toString
+        * @return {String} Returns the entity type as a string of the form "[Entity entity-type]".
+        **/
+        toString () {
+            return "[Entity " + this.type + "]";
+        }
         
         /**
-         * The entity triggers `component-removed` on itself once a component has been removed, notifying other components of their peer component's removal.
+        * Returns a JSON object describing the entity.
+        *
+        * @method toJSON
+        * @param includeComponents {Boolean} Whether the returned JSON should list components. Defaults to `false` to condense output since components are generally defined in `platypus.game.settings.entities`, but may be needed for custom-constructed entities not so defined.
+        * @return {Object} Returns a JSON definition that can be used to recreate the entity.
+        * @since 0.11.0
+        **/
+        toJSON (includeComponents) {
+            var components = this.components,
+                definition = {
+                    properties: {
+                        id: this.id,
+                        state: this.state.toJSON()
+                    }
+                },
+                i = 0,
+                json = null,
+                properties = definition.properties;
+            
+            if (includeComponents) {
+                definition.id = this.type;
+                definition.components = [];
+            } else {
+                definition.type = this.type;
+            }
+
+            for (i = 0; i < components.length; i++) {
+                json = components[i].toJSON(properties);
+                if (includeComponents && json) {
+                    definition.components.push(json);
+                }
+            }
+
+            return definition;
+        }
+        
+        /**
+        * Attaches the provided component to the entity.
+        *
+        * @method addComponent
+        * @param {platypus.Component} component Must be an object that functions as a Component.
+        * @return {platypus.Component} Returns the same object that was submitted.
+        **/
+        addComponent (component) {
+            this.components.push(component);
+
+            /**
+             * The entity triggers `component-added` on itself once a component has been attached, notifying other components of their peer component.
+             *
+             * @event component-added
+             * @param {platypus.Component} component The added component.
+             * @param {String} component.type The type of component.
+             **/
+            this.triggerEvent('component-added', component);
+            return component;
+        }
+        
+        /**
+        * Removes the mentioned component from the entity.
+        *
+        * @method removeComponent
+        * @param {Component} component Must be a [[Component]] attached to the entity.
+        * @return {Component} Returns the same object that was submitted if removal was successful; otherwise returns false (the component was not found attached to the entity).
+        **/
+        removeComponent (component) {
+            var i = 0;
+            
+            /**
+             * The entity triggers `component-removed` on itself once a component has been removed, notifying other components of their peer component's removal.
+             *
+             * @event component-removed
+             * @param {Component} component The removed component.
+             * @param {String} component.type The type of component.
+             **/
+            if (typeof component === 'string') {
+                for (i = 0; i < this.components.length; i++) {
+                    if (this.components[i].type === component) {
+                        component = this.components[i];
+                        this.components.greenSplice(i);
+                        this.triggerEvent('component-removed', component);
+                        component.destroy();
+                        return component;
+                    }
+                }
+            } else {
+                for (i = 0; i < this.components.length; i++) {
+                    if (this.components[i] === component) {
+                        this.components.greenSplice(i);
+                        this.triggerEvent('component-removed', component);
+                        component.destroy();
+                        return component;
+                    }
+                }
+            }
+            
+            return false;
+        }
+        
+        /**
+        * This method sets one or more properties on the entity.
+        *
+        * @param {Object} properties A list of key/value pairs to set as properties on the entity.
+        * @method setProperty
+        **/
+        setProperty (properties) {
+            var index = '';
+            
+            for (index in properties) { // This takes a list of properties and appends them directly to the object.
+                if (properties.hasOwnProperty(index)) {
+                    this[index] = properties[index];
+                }
+            }
+        }
+        
+        /**
+        * This method removes all components from the entity.
+        *
+        * @method destroy
+        **/
+        destroy () {
+            var components = this.components,
+                i = 0,
+                length = components.length;
+            
+            if (!this._destroyed) {
+                for (i = 0; i < length; i++) {
+                    components[i].destroy();
+                }
+                components.recycle();
+                
+                this.state.recycle();
+                this.state = null;
+                
+                this.lastState.recycle();
+                this.lastState = null;
+                
+                super.destroy();
+            }
+        }
+        
+        /**
+         * Returns all of the assets required for this Entity. This method calls the corresponding method on all components to determine the list of assets.
          *
-         * @event component-removed
-         * @param {Component} component The removed component.
-         * @param {String} component.type The type of component.
-         **/
-        if (typeof component === 'string') {
-            for (i = 0; i < this.components.length; i++) {
-                if (this.components[i].type === component) {
-                    component = this.components[i];
-                    this.components.greenSplice(i);
-                    this.triggerEvent('component-removed', component);
-                    component.destroy();
-                    return component;
+         * @method getAssetList
+         * @param definition {Object} The definition for the Entity.
+         * @param properties {Object} Properties for this instance of the Entity.
+         * @return {Array} A list of the necessary assets to load.
+         */
+        static getAssetList (def, props) {
+            var i = 0,
+                component = null,
+                arr = null,
+                assets = null,
+                definition = null;
+            
+            if (def.type) {
+                definition = platypus.game.settings.entities[def.type];
+                if (!definition) {
+                    platypus.debug.warn('Entity "' + def.type + '": This entity is not defined.', def);
+                    return assets;
+                }
+                return Entity.getAssetList(definition, def.properties);
+            }
+            
+            assets = Array.setUp();
+
+            for (i = 0; i < def.components.length; i++) {
+                component = def.components[i] && def.components[i].type && platypus.components[def.components[i].type];
+                if (component) {
+                    arr = component.getAssetList(def.components[i], def.properties, props);
+                    assets.union(arr);
+                    arr.recycle();
                 }
             }
-        } else {
-            for (i = 0; i < this.components.length; i++) {
-                if (this.components[i] === component) {
-                    this.components.greenSplice(i);
-                    this.triggerEvent('component-removed', component);
-                    component.destroy();
-                    return component;
+            
+            return assets;
+        }
+        
+        /**
+         * Returns all of the assets required for this Entity. This method calls the corresponding method on all components to determine the list of assets.
+         *
+         * @method getLateAssetList
+         * @param definition {Object} The definition for the Entity.
+         * @param data {Object} Scene data that affects asset list.
+         * @return {Array} A list of the necessary assets to load.
+         */
+        static getLateAssetList (def, props, data) {
+            var i = 0,
+                component = null,
+                arr = null,
+                assets = null;
+            
+            if (def.type) {
+                return Entity.getLateAssetList(platypus.game.settings.entities[def.type], props, data);
+            }
+            
+            assets = Array.setUp();
+
+            for (i = 0; i < def.components.length; i++) {
+                component = def.components[i] && def.components[i].type && platypus.components[def.components[i].type];
+                if (component) {
+                    arr = component.getLateAssetList(def.components[i], def.properties, props, data);
+                    assets.union(arr);
+                    arr.recycle();
                 }
             }
-        }
-        
-        return false;
-    };
-    
-    /**
-    * This method sets one or more properties on the entity.
-    *
-    * @param {Object} properties A list of key/value pairs to set as properties on the entity.
-    * @method setProperty
-    **/
-    proto.setProperty = function (properties) {
-        var index = '';
-        
-        for (index in properties) { // This takes a list of properties and appends them directly to the object.
-            if (properties.hasOwnProperty(index)) {
-                this[index] = properties[index];
-            }
-        }
-    };
-    
-    /**
-    * This method removes all components from the entity.
-    *
-    * @method destroy
-    **/
-    proto.messengerDestroy = proto.destroy;
-    proto.destroy = function () {
-        var components = this.components,
-            i = 0,
-            length = components.length;
-        
-        if (!this._destroyed) {
-            for (i = 0; i < length; i++) {
-                components[i].destroy();
-            }
-            components.recycle();
             
-            this.state.recycle();
-            this.state = null;
-            
-            this.lastState.recycle();
-            this.lastState = null;
-            
-            this.messengerDestroy();
-        }
-    };
+            return assets;
+        };
+    }
     
-    /**
-     * Returns all of the assets required for this Entity. This method calls the corresponding method on all components to determine the list of assets.
-     *
-     * @method getAssetList
-     * @param definition {Object} The definition for the Entity.
-     * @param properties {Object} Properties for this instance of the Entity.
-     * @return {Array} A list of the necessary assets to load.
-     */
-    entity.getAssetList = function (def, props) {
-        var i = 0,
-            component = null,
-            arr = null,
-            assets = null,
-            definition = null;
-        
-        if (def.type) {
-            definition = platypus.game.settings.entities[def.type];
-            if (!definition) {
-                platypus.debug.warn('Entity "' + def.type + '": This entity is not defined.', def);
-                return assets;
-            }
-            return entity.getAssetList(definition, def.properties);
-        }
-        
-        assets = Array.setUp();
-
-        for (i = 0; i < def.components.length; i++) {
-            component = def.components[i] && def.components[i].type && platypus.components[def.components[i].type];
-            if (component) {
-                arr = component.getAssetList(def.components[i], def.properties, props);
-                assets.union(arr);
-                arr.recycle();
-            }
-        }
-        
-        return assets;
-    };
-    
-    /**
-     * Returns all of the assets required for this Entity. This method calls the corresponding method on all components to determine the list of assets.
-     *
-     * @method getLateAssetList
-     * @param definition {Object} The definition for the Entity.
-     * @param data {Object} Scene data that affects asset list.
-     * @return {Array} A list of the necessary assets to load.
-     */
-    entity.getLateAssetList = function (def, props, data) {
-        var i = 0,
-            component = null,
-            arr = null,
-            assets = null;
-        
-        if (def.type) {
-            return entity.getLateAssetList(platypus.game.settings.entities[def.type], props, data);
-        }
-        
-        assets = Array.setUp();
-
-        for (i = 0; i < def.components.length; i++) {
-            component = def.components[i] && def.components[i].type && platypus.components[def.components[i].type];
-            if (component) {
-                arr = component.getLateAssetList(def.components[i], def.properties, props, data);
-                assets.union(arr);
-                arr.recycle();
-            }
-        }
-        
-        return assets;
-    };
-    
-    return entity;
+    return Entity;
 }());

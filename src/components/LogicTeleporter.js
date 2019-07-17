@@ -33,8 +33,8 @@ This component listens for redirected collision messages and fires a message on 
 
 */
 /*global platypus */
-(function () {
-    'use strict';
+export default (function () {
+    
 
     return platypus.createComponentClass({
         id: 'LogicTeleporter',

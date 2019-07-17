@@ -10,14 +10,14 @@
  * @uses platypus.RenderAnimation
  * @uses platypus.RenderSprite
  */
-/* global include, platypus */
-(function () {
-    'use strict';
+/* global platypus */
+import Async from '../Async.js';
+import AudioVO from './AudioVO.js';
+import RenderAnimation from './RenderAnimation.js';
+import RenderSprite from './RenderSprite.js';
 
-    var AudioVO = include('platypus.components.AudioVO'),
-        RenderAnimation = include('platypus.components.RenderAnimation'),
-        RenderSprite = include('platypus.components.RenderSprite'),
-        getEventName = function (msg, VO) {
+export default (function () {
+    var getEventName = function (msg, VO) {
             if (VO === ' ') {
                 return msg + 'default';
             } else {
@@ -233,7 +233,7 @@
             }
             componentInits.push(componentInit.bind(this, AudioVO, audioDefinition));
 
-            platypus.Async.setUp(componentInits, callback);
+            Async.setUp(componentInits, callback);
 
             componentInits.recycle();
 

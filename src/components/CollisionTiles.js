@@ -5,14 +5,13 @@
  * @class CollisionTiles
  * @uses platypus.Component
  */
-/* global include, platypus */
-(function () {
-    'use strict';
-    
-    var AABB = include('platypus.AABB'),
-        CollisionShape = include('platypus.CollisionShape'),
-        Data = include('platypus.Data'),
-        maskJumpThrough = 0x10000000,
+/* global platypus */
+import AABB from '../AABB.js';
+import CollisionShape from '../CollisionShape.js';
+import Data from '../Data.js';
+
+export default (function () {
+    var maskJumpThrough = 0x10000000,
         maskRotation = 0x20000000,
         maskXFlip = 0x80000000,
         maskYFlip = 0x40000000,

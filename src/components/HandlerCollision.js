@@ -5,12 +5,15 @@
  * @class HandlerCollision
  * @uses platypus.Component
  */
-/* global include, platypus */
-(function () {
-    'use strict';
-    
-    //set here to make them reusable objects
-    
+/* global platypus */
+import AABB from '../AABB.js';
+import CollisionData from '../CollisionData.js';
+import CollisionDataContainer from '../CollisionDataContainer.js';
+import Data from '../Data.js';
+import DataMap from '../DataMap.js';
+import Vector from '../Vector.js';
+
+export default (function () {
     /**
      * When an entity collides with an entity of a listed collision-type, this message is triggered on the entity. * is the other entity's collision-type.
      *
@@ -24,12 +27,6 @@
      * @param collision.y {number} Returns -1, 0, or 1 indicating on which side of this entity the collision occurred: top, neither, or bottom respectively.
      */
     var BIT_16 = 0xffff,
-        AABB = include('platypus.AABB'),
-        CollisionData = include('platypus.CollisionData'),
-        CollisionDataContainer = include('platypus.CollisionDataContainer'),
-        Data = include('platypus.Data'),
-        DataMap = include('platypus.DataMap'),
-        Vector = include('platypus.Vector'),
         combine = function (x, y) {
             return (x << 16) | (y & BIT_16);
         },

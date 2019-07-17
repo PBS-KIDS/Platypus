@@ -1,10 +1,10 @@
 /**
  * @namespace window
  */
-/*global recycle, springroll */
-(function (Array, Object) {
-    'use strict';
-    
+import config from 'config';
+import recycle from 'recycle';
+
+export default (function (Array, Object) {
     /**
      * Add methods to Array
      * @class Array
@@ -109,6 +109,6 @@
      * @return Array
      * @since 0.7.1
      */
-    recycle.add(Array, !!springroll.Debug, 'Array');
+    recycle.add(Array, config.dev, 'Array');
 
 }(Array, Object));

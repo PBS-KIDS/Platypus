@@ -5,12 +5,10 @@
  * @class CameraFollowMe
  * @uses platypus.Component
  */
-/*global include, platypus */
-(function () {
-    'use strict';
-    
-    var Data = include('platypus.Data');
+/*global platypus */
+import Data from '../Data.js';
 
+export default (function () {
     return platypus.createComponentClass({
         id: 'CameraFollowMe',
         

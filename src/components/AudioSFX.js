@@ -6,13 +6,12 @@
  * @uses platypus.Component
  * @since 0.6.0
  */
-/*global include, createjs, platypus */
-(function () {
-    'use strict';
-    
-    var Data = include('platypus.Data'),
-        StateMap = include('platypus.StateMap'),
-        defaultSettings = {
+/*global createjs, platypus */
+import Data from '../Data.js';
+import StateMap from '../StateMap.js';
+
+export default (function () {
+    var defaultSettings = {
             interrupt: createjs.Sound.INTERRUPT_ANY, //INTERRUPT_ANY, INTERRUPT_EARLY, INTERRUPT_LATE, or INTERRUPT_NONE
             delay: 0,
             offset: 0,

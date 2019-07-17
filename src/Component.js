@@ -13,12 +13,11 @@
  * @class Component
  * @static
  */
-/*global include, platypus */
-platypus.Component = (function () {
-    'use strict';
-    
-    var Data = include('platypus.Data'),
-        getAssetList = function () {
+/*global platypus */
+import Data from './Data.js';
+
+export default (function () {
+    var getAssetList = function () {
             return Array.setUp();
         },
         Component = function (type, owner) {

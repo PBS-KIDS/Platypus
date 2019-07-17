@@ -5,12 +5,11 @@
  * @class HandlerLogic
  * @uses platypus.Component
  **/
-/* global include, platypus */
-(function () {
-    'use strict';
+/* global platypus */
+import AABB from '../AABB.js';
 
-    var AABB = include('platypus.AABB'),
-        addAll = function (all, active) {
+export default (function () {
+    var addAll = function (all, active) {
             var j = all.length;
             
             active.length = 0;

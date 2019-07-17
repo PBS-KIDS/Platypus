@@ -5,13 +5,12 @@
  * @class HandlerRender
  * @uses platypus.Component
  */
-/*global include, platypus */
-(function () {
-    'use strict';
-    
-    var Container = include('PIXI.Container'),
-        Data = include('platypus.Data'),
-        Interactive = include('platypus.components.Interactive');
+/*global PIXI, platypus */
+import Data from '../Data.js';
+import Interactive from './Interactive.js';
+
+export default (function () {
+    var Container = PIXI.Container;
 
     return platypus.createComponentClass({
 

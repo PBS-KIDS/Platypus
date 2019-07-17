@@ -5,17 +5,14 @@
  * @class RenderSprite
  * @uses platypus.Component
  */
-/* global include, platypus */
-(function () {
-    'use strict';
-    
-    var AABB = include('platypus.AABB'),
-        Data = include('platypus.Data'),
-        EventRender = include('platypus.components.EventRender'),
-        RenderContainer = include('platypus.components.RenderContainer'),
-        PIXIAnimation = include('platypus.PIXIAnimation'),
-        StateRender = include('platypus.components.StateRender');
-    
+/* global platypus */
+import Data from '../Data.js';
+import EventRender from './EventRender.js';
+import PIXIAnimation from '../PIXIAnimation.js';
+import RenderContainer from './RenderContainer.js';
+import StateRender from './StateRender.js';
+
+export default (function () {
     return platypus.createComponentClass({
         
         id: 'RenderSprite',

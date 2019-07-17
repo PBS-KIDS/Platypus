@@ -10,13 +10,13 @@
  * @return {ActionState} Returns the new ActionState object.
  * @since 0.6.8
  */
-/*global include, platypus, recycle, springroll */
-platypus.ActionState = (function () {
-    'use strict';
-    
-    var Data = include('platypus.Data'),
-        StateMap = include('platypus.StateMap'),
-        ActionState = function (event, states, trigger) {
+import Data from './Data.js';
+import StateMap from './StateMap.js';
+import config from 'config';
+import recycle from 'recycle';
+
+export default  (function () {
+    var ActionState = function (event, states, trigger) {
             /**
              * The name of the event to trigger on the Entity.
              *
@@ -168,7 +168,7 @@ platypus.ActionState = (function () {
      * @method recycle
      * @since 0.7.1
      */
-    recycle.add(ActionState, !!springroll.Debug, 'ActionState', function () {
+    recycle.add(ActionState, config.dev, 'ActionState', function () {
         this.states.recycle();
         this.stateSummary.recycle();
         this.inputs.recycle();

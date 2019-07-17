@@ -4,18 +4,18 @@
  * @class PIXIAnimation
  * @extends PIXI.Sprite
  */
-/*global include, platypus */
-(function () {
-    'use strict';
-    
+/*global platypus */
+import * as PIXI from 'pixi.js';
+import Data from './Data.js';
+
+export default (function () {
     var MAX_KEY_LENGTH_PER_IMAGE = 128,
-        BaseTexture = include('PIXI.BaseTexture'),
-        CanvasTinter = include('PIXI.CanvasTinter'),
-        Data = include('platypus.Data'),
-        Point = include('PIXI.Point'),
-        Rectangle = include('PIXI.Rectangle'),
-        Sprite = include('PIXI.Sprite'),
-        Texture = include('PIXI.Texture'),
+        BaseTexture = PIXI.BaseTexture,
+        CanvasTinter = PIXI.CanvasTinter,
+        Point = PIXI.Point,
+        Rectangle = PIXI.Rectangle,
+        Sprite = PIXI.Sprite,
+        Texture = PIXI.Texture,
         animationCache = {},
         baseTextureCache = {},
         doNothing = function () {},
@@ -28,7 +28,7 @@
             var i = 0,
                 bts = Array.setUp(),
                 asset = null,
-                assetCache = platypus.game.app.assetManager.cache,
+                assetCache = platypus.assetCache,
                 btCache = baseTextureCache,
                 path = null;
             
@@ -36,7 +36,7 @@
                 path = images[i];
                 if (typeof path === 'string') {
                     if (!btCache[path]) {
-                        asset = assetCache.read(path);
+                        asset = assetCache.get(path);
                         if (!asset) {
                             platypus.debug.warn('"' + path + '" is not a loaded asset.');
                             break;
@@ -259,7 +259,6 @@
         prototype = PIXIAnimation.prototype = Object.create(Sprite.prototype);
     
     PIXIAnimation.prototype.constructor = PIXIAnimation;
-    platypus.PIXIAnimation = PIXIAnimation;
     
     Object.defineProperties(prototype, {
         /**
@@ -734,4 +733,6 @@
             return response;
         };
     }());
+
+    return PIXIAnimation;
 }());

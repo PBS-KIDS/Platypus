@@ -31,12 +31,10 @@ This component creates an entity and propels it away. This is useful for casting
       // Optional. Location relative to the entity where the should be located once created. Defaults to (0, 0).
     }
 */
-/*global include, platypus */
-(function () {
-    'use strict';
+/*global platypus */
+import Entity from '../Entity.js';
 
-    var Entity = include('platypus.Entity');
-
+export default (function () {
     return platypus.createComponentClass({
         
         id: 'LogicSpawner',

@@ -18,13 +18,13 @@
  * @param [definition.regY] {number} The registration y of the collision shape with the owner entity's location if offsetX is not provided.
  * @param collisionType {String} A string describing the collision type of this shape.
  */
-/*global include, platypus, recycle, springroll */
-platypus.CollisionShape = (function () {
-    'use strict';
-    
-    var AABB = include('platypus.AABB'),
-        Vector = include('platypus.Vector'),
-        circleRectCollision = function (circle, rect) {
+import AABB from './AABB.js';
+import Vector from './Vector.js';
+import config from 'config';
+import recycle from 'recycle';
+
+export default (function () {
+    var circleRectCollision = function (circle, rect) {
             var rectAabb         = rect.aABB,
                 hh = rectAabb.halfHeight,
                 hw = rectAabb.halfWidth,
@@ -296,7 +296,7 @@ platypus.CollisionShape = (function () {
      * @method recycle
      * @since 0.7.4
      */
-    recycle.add(CollisionShape, !!springroll.Debug, 'CollisionShape');
+    recycle.add(CollisionShape, config.dev, 'CollisionShape');
     
     return CollisionShape;
 }());

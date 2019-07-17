@@ -31,8 +31,8 @@ A component that enables an entity to be pushed.
 */
 
 /* global platypus */
-(function () {
-    'use strict';
+export default (function () {
+    
 
     var setMagnitude = function (direction, magnitude) {
         return (direction / Math.abs(direction)) * magnitude;

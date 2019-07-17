@@ -21,13 +21,12 @@
  * @class Orientation
  * @uses platypus.Component
  */
-/* global platypus, include */
-(function () {
-    'use strict';
-    
-    var Data = include('platypus.Data'),
-        Vector = include('platypus.Vector'),
-        normal = Vector.setUp(0, 0, 1),
+/* global platypus */
+import Data from '../Data.js';
+import Vector from '../Vector.js';
+
+export default (function () {
+    var normal = Vector.setUp(0, 0, 1),
         origin = Vector.setUp(1, 0, 0),
         matrices = {
             'identity': [[  1,  0,  0],

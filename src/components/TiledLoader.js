@@ -36,14 +36,14 @@
  * @class TiledLoader
  * @uses platypus.Component
  */
-/*global atob, include, pako, platypus */
-(function () {
-    'use strict';
+/*global atob, pako, platypus */
+import AABB from '../AABB.js';
+import Data from '../Data.js';
+import Entity from '../Entity.js';
+import Vector from '../Vector.js';
 
+export default (function () {
     var FILENAME_TO_ID = /^(?:(\w+:)\/{2}(\w+(?:\.\w+)*\/?))?([\/.]*?(?:[^?]+)?\/)?(?:(([^\/?]+)\.(\w+))|([^\/?]+))(?:\?((?:(?:[^&]*?[\/=])?(?:((?:(?:[^\/?&=]+)\.(\w+)))\S*?)|\S+))?)?$/,
-        AABB        = include('platypus.AABB'),
-        Data        = include('platypus.Data'),
-        Entity      = include('platypus.Entity'),
         maskId = 0x0fffffff,
         maskJumpThrough = 0x10000000, // This is not passed in via Tiled - rather it's additional information sent to CollisionTiles.
         maskXFlip = 0x80000000,
@@ -537,7 +537,7 @@
         },
 
         initialize: function () {
-            this.assetCache = platypus.game.app.assetManager.cache;
+            this.assetCache = platypus.assetCache;
             this.layerZ = 0;
             this.followEntity = false;
         },
@@ -824,14 +824,14 @@
                     tileLayer.data.push(1);
                 }
 
-                asset = this.assetCache.read(imageLayer.name);
+                asset = this.assetCache.get(imageLayer.name);
                 if (asset) { // Prefer to have name in tiled match image id in game
                     tileLayer.image = imageLayer.name;
                     tileLayer.tileheight = asset.height;
                     tileLayer.tilewidth = asset.width;
                 } else {
                     imageId = getImageId(imageLayer.image);
-                    asset = this.assetCache.read(imageId);
+                    asset = this.assetCache.get(imageId);
                     if (asset) {
                         platypus.debug.warn('Component TiledLoader: Did not find a spritesheet for "' + imageLayer.name + '", so using "' + imageLayer.image + '" instead.');
                         tileLayer.image = imageId;
@@ -903,12 +903,12 @@
                 if (images.length === 0) {
                     for (i = 0; i < tilesets.length; i++) {
                         tileset = tilesets[i];
-                        asset = this.assetCache.read(tileset.name);
+                        asset = this.assetCache.get(tileset.name);
                         if (asset) { // Prefer to have name in tiled match image id in game
                             images.push(tileset.name);
                         } else {
                             imageId = getImageId(tileset.image);
-                            asset = this.assetCache.read(imageId);
+                            asset = this.assetCache.get(imageId);
                             if (asset) {
                                 platypus.debug.warn('Component TiledLoader: Did not find a spritesheet for "' + tileset.name + '", so using "' + tileset.image + '" instead.');
                                 images.push(imageId);
@@ -1105,7 +1105,7 @@
                                 w = (entity.width || fallbackWidth) / 2;
                                 h = (entity.height || fallbackHeight) / 2;
                                 a = ((entity.rotation / 180) % 2) * Math.PI;
-                                v = platypus.Vector.setUp(w, -h).rotate(a);
+                                v = Vector.setUp(w, -h).rotate(a);
                                 properties.rotation = entity.rotation;
                                 properties.x = Math.round((properties.x + v.x - w) * clamp) / clamp;
                                 properties.y = Math.round((properties.y + v.y + h) * clamp) / clamp;

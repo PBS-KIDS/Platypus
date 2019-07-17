@@ -6,8 +6,8 @@
  * @uses platypus.Component
  */
 /*global PIXI, platypus */
-(function () {
-    'use strict';
+export default (function () {
+    
     
     return platypus.createComponentClass({
         

@@ -62,8 +62,8 @@ This component connects an entity to its parent's [[NodeMap]]. It manages naviga
  * @uses platypus.Component
  */
 /* global platypus */
-(function () {
-    'use strict';
+export default (function () {
+    
     
     var createGateway = function (nodeDefinition, map, gateway) {
             return function () {

@@ -5,11 +5,11 @@
  * @class LogicAttachment
  * @uses platypus.Component
  */
-/* global include, platypus */
-(function () {
-    'use strict';
+/* global platypus */
+import Entity from '../Entity.js';
 
-    var Entity = include('platypus.Entity'),
+export default (function () {
+    var
         trigger = function () {
             var attachment = this.attachment;
             

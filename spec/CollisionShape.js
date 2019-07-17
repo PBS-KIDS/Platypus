@@ -1,7 +1,7 @@
 /* global afterEach, beforeEach, describe, expect, it, platypus, */
 
 describe("CollisionShape", function () {
-    'use strict';
+    
     var collisionShape = null,
         owner = {
             x: 1,

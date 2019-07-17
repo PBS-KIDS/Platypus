@@ -8,9 +8,7 @@
  * @since 0.8.0
  */
 /* global window */
-(function (Object) {
-    'use strict';
-    
+export default (function (Object) {
     var mapDefinition = null,
         Map = null,
         proto = null;

@@ -30,12 +30,10 @@ A component which changes the scene when activated. When the portal receives an 
       //Required - The destination scene to which the portal will take us. In most cases this will come into the portal from Tiled where you'll set a property on the portal you place.
     }
 */
-/* global include, platypus */
-(function () {
-    'use strict';
-    
-    var DataMap = include('platypus.DataMap');
+/* global platypus */
+import DataMap from '../DataMap.js';
 
+export default (function () {
     return platypus.createComponentClass({
         id: 'LogicPortal',
         initialize: function (definition) {

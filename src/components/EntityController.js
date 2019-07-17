@@ -5,15 +5,14 @@
  * @class EntityController
  * @uses platypus.Component
  */
-/* global include, platypus */
-(function () {
-    'use strict';
+/* global platypus */
+import ActionState from '../ActionState.js';
+import Data from '../Data.js';
+import DataMap from '../DataMap.js';
+import StateMap from '../StateMap.js';
 
-    var ActionState = include('platypus.ActionState'),
-        Data = include('platypus.Data'),
-        DataMap = include('platypus.DataMap'),
-        StateMap = include('platypus.StateMap'),
-        distance = function (origin, destination) {
+export default (function () {
+    var distance = function (origin, destination) {
             var x = destination.x - origin.x,
                 y = destination.y - origin.y;
 

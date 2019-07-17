@@ -6,8 +6,8 @@
  * @since 0.9.0
  */
 /*global platypus */
-(function () {
-    'use strict';
+export default (function () {
+    
     
     return platypus.createComponentClass({
         id: 'EventRender',

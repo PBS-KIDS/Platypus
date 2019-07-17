@@ -1,8 +1,8 @@
 /**
  * @namespace window
  */
-(function (String, Object) {
-    'use strict';
+export default (function (String, Object) {
+    
     /**
      * Add methods to String
      * @class String

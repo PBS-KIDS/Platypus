@@ -8,8 +8,8 @@
  * @uses platypus.Component
  */
 /*global platypus */
-(function () {
-    'use strict';
+export default (function () {
+    
 
     var
         mergeData = function (levelData, levelMergeAxisLength, segmentData, segmentMergeAxisLength, nonMergeAxisLength, mergeAxis) {

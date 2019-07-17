@@ -5,12 +5,11 @@
  * @class RenderDebug
  * @uses platypus.Component
  */
-/*global include, platypus */
-(function () {
-    'use strict';
-    
-    var Graphics = include('PIXI.Graphics'),
-        RenderContainer = include('platypus.components.RenderContainer'),
+/*global PIXI, platypus */
+import RenderContainer from './RenderContainer.js';
+
+export default (function () {
+    var Graphics = PIXI.Graphics,
         createShape = function (shape, color, left, top, width, height, z, outline) {
             var newShape = new Graphics().beginFill(color, 0.1);
 

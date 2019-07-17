@@ -20,7 +20,7 @@
  * @namespace platypus
  * @class Scene
  * @constructor
- * @extends springroll.State
+ * @extends platypus.Messenger
  * @param Stage {PIXI.Container} Object where the scene displays layers.
  * @param {Object} [definition] Base definition for the scene, including one or more layers with both properties and components as shown above under "JSON Definition Example".
  * @param {String} [definition.id] This declares the id of the scene.
@@ -28,15 +28,35 @@
  * @param {Array} [definition.assets] This lists the assets that this scene requires.
  * @return {Scene} Returns the new scene made up of the provided layers.
  */
-/* global extend, include, platypus */
-platypus.Scene = (function () {
-    'use strict';
-    
-    var Data = include('platypus.Data'),
-        Entity = include('platypus.Entity'),
-        PIXIAnimation = include('platypus.PIXIAnimation'),
-        State  = include('springroll.State'),
-        fn = /^(?:\w+:\/{2}\w+(?:\.\w+)*\/?)?(?:[\/.]*?(?:[^?]+)?\/)?(?:([^\/?]+)\.(\w+))(?:\?\S*)?$/,
+/* global createjs, platypus */
+import Async from './Async.js';
+import Data from './Data.js';
+import Entity from './Entity.js';
+import Messenger from './Messenger.js';
+import PIXIAnimation from './PIXIAnimation.js';
+        
+export default (function () {
+    var fn = /^(?:\w+:\/{2}\w+(?:\.\w+)*\/?)?(?:[\/.]*?(?:[^?]+)?\/)?(?:([^\/?]+)\.(\w+))(?:\?\S*)?$/,
+        addAsset = function (event) {
+            platypus.assetCache.set(event.item.id, event.result);
+        },
+        unloadAssets = function (lateAssets) {
+            var i = lateAssets.length,
+                id = '',
+                img = null,
+                lateAsset = null;
+
+            while (i--) {
+                lateAsset = lateAssets[i];
+                id = lateAsset.id;
+                img = platypus.assetCache.get(id);
+                img.src = '';
+                platypus.assetCache.delete(id);
+                lateAsset.recycle();
+            }
+            
+            lateAssets.recycle();
+        },
         filterAssets = (function () {
             var isDuplicate = function (id, preload) {
                 var j = preload.length;
@@ -52,13 +72,13 @@ platypus.Scene = (function () {
 
             return function (assets, preload) {
                 var asset = null,
-                    cache = platypus.game.app.assetManager.cache._cache,
+                    cache = platypus.assetCache,
                     filteredAssets = Array.setUp(),
                     i = assets.length;
 
                 while (i--) {
                     asset = formatAsset(assets[i]);
-                    if (cache[asset.id] || isDuplicate(asset.id, preload)) {
+                    if (cache.get(asset.id) || isDuplicate(asset.id, preload)) {
                         asset.recycle();
                     } else {
                         filteredAssets.push(asset);
@@ -72,7 +92,7 @@ platypus.Scene = (function () {
             var match = asset.match(fn),
                 a = Data.setUp(
                     'id', asset,
-                    'src', asset
+                    'src', (platypus.game.options.images || '') + asset
                 );
             
             //TODO: Make this behavior less opaque.
@@ -84,26 +104,22 @@ platypus.Scene = (function () {
             
             return a;
         },
-        releaseHold = function () {
+        releaseHold = function (callback) {
             var holds = this.holds;
 
             holds.count -= 1;
             if (!holds.count) { // All holds have been released
-                this.sceneLive();
                 holds.recycle();
                 this.holds = null;
+                callback();
             }
-        },
-        unloadAssets = function (lateAssets) {
-            this.app.unload(lateAssets);
-            lateAssets.recycle();
         },
         layerInit = function (layerDefinition, properties, callback) {
             this.layers.push(new Entity(layerDefinition, {
                 properties: properties
             }, callback));
         },
-        loadScene = function () {
+        loadScene = function (callback) {
             var i = 0,
                 key = '',
                 layerInits = Array.setUp(),
@@ -113,10 +129,11 @@ platypus.Scene = (function () {
                 properties = null,
                 messages = null;
                 
-            this.holds = Data.setUp('count', 1, 'release', releaseHold.bind(this));
+            this.holds = Data.setUp('count', 1, 'release', releaseHold.bind(this, callback));
             this.storeMessages = true;
             this.storedMessages = Array.setUp();
             this.layers = Array.setUp();
+
             for (i = 0; i < layers.length; i++) {
                 layerDefinition = layers[i];
                 properties = {stage: this.stage, parent: this};
@@ -155,7 +172,7 @@ platypus.Scene = (function () {
                 }
             }
 
-            platypus.Async.setUp(layerInits, function () {
+            Async.setUp(layerInits, function () {
                 var holds = this.holds;
 
                 platypus.debug.olive('Scene loaded: ' + this.id);
@@ -172,7 +189,7 @@ platypus.Scene = (function () {
                 this.triggerOnChildren('scene-loaded', this.data, holds);
                 
                 // Go ahead and load base textures to the GPU to prevent intermittent lag later. - DDD 3/18/2016
-                PIXIAnimation.preloadBaseTextures(this.app.display.renderer);
+                PIXIAnimation.preloadBaseTextures(platypus.game.renderer);
 
                 holds.release(); // Release initial hold. This triggers "scene-live" immediately if no holds have been placed by the "scene-loaded" event.
             }.bind(this));
@@ -188,21 +205,36 @@ platypus.Scene = (function () {
 
             layerInits.recycle();
         },
-        loading = function (definition, assets) {
-            var lateAssets = this.getLateAssetList(definition);
-            
+        loading = function (definition, callback) {
+            var lateAssets = this.getLateAssetList(definition),
+                assets = this.preload.greenSlice(),
+                queue = null;
+
             if (lateAssets.length) {
                 assets.union(lateAssets);
-                this.once('exit', unloadAssets.bind(this, lateAssets));
+                this.unloadAssets = unloadAssets.bind(this, lateAssets);
             } else {
                 lateAssets.recycle();
             }
-        },
-        Scene  = function (panel, definition) {
+
+            if (assets.length) {
+                queue = new createjs.LoadQueue();
+                queue.on('fileload', addAsset);
+                queue.on('complete', loadScene.bind(this, callback));
+                queue.loadManifest(assets);
+            } else {
+                loadScene.call(this, callback);
+            }
+        };
+
+    class Scene extends Messenger {
+        constructor (panel, definition) {
             var assets = null;
+
+            super();
             
-            State.call(this, panel, definition.options);
-            
+            this.preload = (definition && definition.options && definition.options.preload) || [];
+
             assets = this.getAssetList(definition);
 
             this.id = definition.id;
@@ -216,188 +248,225 @@ platypus.Scene = (function () {
             this.holds = null;
             
             // If the scene has dynamically added assets such as level data
-            this.on('loading', loading.bind(this, definition));
+            this.on('load-scene', loading.bind(this, definition));
+            this.on('show-scene', this.sceneLive.bind(this));
+            this.on('exit-scene', this.exitStart.bind(this));
 
-            // Load scene
-            this.on('loaded', loadScene);
-            
             assets.recycle();
-        },
-        proto = extend(Scene, State);
-        
-    proto.sceneLive = function () {
-        platypus.game.currentScene = this;
-        platypus.debug.olive('Scene live: ' + this.id);
-        
-        /**
-         * This event is triggered on the layers once the Scene is finished loading.
-         *
-         * @event 'scene-live'
-         * @param data {Object} A list of key-value pairs of data sent into this Scene from the previous Scene.
-         */
-        this.triggerOnChildren('scene-live', this.data);
-    };
-    
-    /**
-     * Triggers 'scene-ended' on the layer.
-     *
-     * @method exitStart
-     */
-    proto.exitStart = function () {
-        platypus.debug.olive('Scene ending: ' + this.id);
-        
-        /**
-         * This event is triggered on the layers once the Scene is over.
-         *
-         * @event 'scene-ended'
-         * @param data {Object} A list of key-value pairs of data sent into this Scene from the previous Scene.
-         * @since 0.7.1
-         */
-        this.triggerOnChildren('scene-ended', this.data);
-    };
-    
-/**
- * This method is used by external objects to trigger messages on the layers as well as internal entities broadcasting messages across the scope of the scene.
- *
- * @method triggerOnChildren
- * @param {String} eventId This is the message to process.
- * @param {*} event This is a message object or other value to pass along to component functions.
- **/
-    proto.triggerOnChildren = function (eventId, event) {
-        var i = 0;
-        
-        if (this.storeMessages) {
-            this.storedMessages.push({
-                message: eventId,
-                value: event
-            });
-        } else {
-            for (i = 0; i < this.layers.length; i++) {
-                this.layers[i].trigger.apply(this.layers[i], arguments);
-            }
         }
-    };
-    
-/**
- * This method will return the first entity it finds with a matching id.
- *
- * @method getEntityById
- * @param {string} id The entity id to find.
- * @return {Entity} Returns the entity that matches the specified entity id.
- **/
-    proto.getEntityById = function (id) {
-        var i = 0,
-            selection = null;
         
-        for (i = 0; i < this.layers.length; i++) {
-            if (this.layers[i].id === id) {
-                return this.layers[i];
-            }
-            if (this.layers[i].getEntityById) {
-                selection = this.layers[i].getEntityById(id);
-                if (selection) {
-                    return selection;
+        sceneLive () {
+            platypus.game.currentScene = this;
+            platypus.game.stage.addChild(this.stage);
+            platypus.debug.olive('Scene live: ' + this.id);
+            
+            /**
+             * This event is triggered on the layers once the Scene is finished loading.
+             *
+             * @event 'scene-live'
+             * @param data {Object} A list of key-value pairs of data sent into this Scene from the previous Scene.
+             */
+            this.triggerOnChildren('scene-live', this.data);
+        }
+        
+        /**
+         * Triggers 'scene-ended' on the layer.
+         *
+         * @method exitStart
+         */
+        exitStart (callback) {
+            platypus.debug.olive('Scene ending: ' + this.id);
+            
+            /**
+             * This event is triggered on the layers once the Scene is over.
+             *
+             * @event 'scene-ended'
+             * @param data {Object} A list of key-value pairs of data sent into this Scene from the previous Scene.
+             * @since 0.7.1
+             */
+            this.triggerOnChildren('scene-ended', this.data);
+            platypus.game.stage.removeChild(this.stage);
+
+            this.exit();
+
+            callback();
+        }
+        
+        /**
+         * This method is used by external objects to trigger messages on the layers as well as internal entities broadcasting messages across the scope of the scene.
+         *
+         * @method triggerOnChildren
+         * @param {String} eventId This is the message to process.
+         * @param {*} event This is a message object or other value to pass along to component functions.
+         **/
+        triggerOnChildren (eventId, event) {
+            var i = 0;
+            
+            if (this.storeMessages) {
+                this.storedMessages.push({
+                    message: eventId,
+                    value: event
+                });
+            } else {
+                for (i = 0; i < this.layers.length; i++) {
+                    this.layers[i].trigger.apply(this.layers[i], arguments);
                 }
             }
         }
-        return null;
-    };
-
-/**
- * This method will return all game entities that match the provided type.
- *
- * @method getEntitiesByType
- * @param {String} type The entity type to find.
- * @return entities {Array} Returns the entities that match the specified entity type.
- **/
-    proto.getEntitiesByType = function (type) {
-        var i = 0,
-            selection = null,
-            entities  = Array.setUp();
         
-        for (i = 0; i < this.layers.length; i++) {
-            if (this.layers[i].type === type) {
-                entities.push(this.layers[i]);
+        /**
+         * This method will return the first entity it finds with a matching id.
+         *
+         * @method getEntityById
+         * @param {string} id The entity id to find.
+         * @return {Entity} Returns the entity that matches the specified entity id.
+         **/
+        getEntityById (id) {
+            var i = 0,
+                selection = null;
+            
+            for (i = 0; i < this.layers.length; i++) {
+                if (this.layers[i].id === id) {
+                    return this.layers[i];
+                }
+                if (this.layers[i].getEntityById) {
+                    selection = this.layers[i].getEntityById(id);
+                    if (selection) {
+                        return selection;
+                    }
+                }
             }
-            if (this.layers[i].getEntitiesByType) {
-                selection = this.layers[i].getEntitiesByType(type);
-                entities.union(selection);
-                selection.recycle();
+            return null;
+        }
+
+        /**
+         * This method will return all game entities that match the provided type.
+         *
+         * @method getEntitiesByType
+         * @param {String} type The entity type to find.
+         * @return entities {Array} Returns the entities that match the specified entity type.
+         **/
+        getEntitiesByType (type) {
+            var i = 0,
+                selection = null,
+                entities  = Array.setUp();
+            
+            for (i = 0; i < this.layers.length; i++) {
+                if (this.layers[i].type === type) {
+                    entities.push(this.layers[i]);
+                }
+                if (this.layers[i].getEntitiesByType) {
+                    selection = this.layers[i].getEntitiesByType(type);
+                    entities.union(selection);
+                    selection.recycle();
+                }
             }
+            return entities;
         }
-        return entities;
-    };
 
-/**
- * This method destroys all the layers in the scene.
- *
- * @method exit
- **/
-    proto.exit = function () {
-        var i = 0;
-        
-        for (i = 0; i < this.layers.length; i++) {
-            this.layers[i].destroy();
-        }
-        this.layers.recycle();
-        this.layers = null;
-        
-        // Unload all base textures to prep for next scene
-        PIXIAnimation.unloadBaseTextures();
+        /**
+         * This method destroys all the layers in the scene.
+         *
+         * @method exit
+         **/
+        exit () {
+            var i = 0;
+            
+            for (i = 0; i < this.layers.length; i++) {
+                this.layers[i].destroy();
+            }
+            this.layers.recycle();
+            this.layers = null;
+            
+            // Unload all base textures to prep for next scene
+            PIXIAnimation.unloadBaseTextures();
 
-        platypus.game.currentScene = null;
-    };
-    
-    /**
-     * Returns all of the assets required for the Scene. This method calls the corresponding method on all entities to determine the list of assets. It ignores assets that have already been preloaded.
-     *
-     * @method getAssetList
-     * @param definition {Object} The definition for the Scene.
-     * @return {Array} A list of the necessary assets to load.
-     */
-    proto.getAssetList = function (def) {
-        var i = 0,
-            arr = null,
-            assets = Array.setUp();
+            if (this.unloadAssets) {
+                this.unloadAssets();
+                this.unloadAssets = null;
+            }
+
+            platypus.game.currentScene = null;
+        }
+
+        /**
+         * Don't use the state object after this
+         * @method destroy
+         */
+        destroy () {
+            // Only destroy once!
+            if (this._destroyed) return;
+
+            this.trigger('destroy');
+
+            this.app = null;
+            this.scaling = null;
+            this.sound = null;
+            this.voPlayer = null;
+            this.config = null;
+            this.scalingItems = null;
+            this.assets = null;
+            this.preload = null;
+            this.panel = null;
+            this.manager = null;
+            this._destroyed = true;
+            this._onEnterProceed = null;
+            this._onLoadingComplete = null;
+
+            super.destroy();
+        };
         
-        if (def.assets) {
-            assets.union(def.assets);
+        /**
+         * Returns all of the assets required for the Scene. This method calls the corresponding method on all entities to determine the list of assets. It ignores assets that have already been preloaded.
+         *
+         * @method getAssetList
+         * @param definition {Object} The definition for the Scene.
+         * @return {Array} A list of the necessary assets to load.
+         */
+        getAssetList (def) {
+            var i = 0,
+                arr = null,
+                assets = Array.setUp();
+            
+            if (def.assets) {
+                assets.union(def.assets);
+            }
+            
+            for (i = 0; i < def.layers.length; i++) {
+                arr = Entity.getAssetList(def.layers[i]);
+                assets.union(arr);
+                arr.recycle();
+            }
+            
+            arr = filterAssets(assets, this.preload);
+            assets.recycle();
+            
+            return arr;
         }
         
-        for (i = 0; i < def.layers.length; i++) {
-            arr = Entity.getAssetList(def.layers[i]);
-            assets.union(arr);
-            arr.recycle();
+        /**
+         * Returns all of the dynamic assets required for the Scene.
+         *
+         * @method getLateAssetList
+         * @return {Array} A list of the necessary assets to load.
+         */
+        getLateAssetList (def) {
+            var i = 0,
+                arr = null,
+                assets = Array.setUp();
+            
+            for (i = 0; i < def.layers.length; i++) {
+                arr = Entity.getLateAssetList(def.layers[i], null, this.data);
+                assets.union(arr);
+                arr.recycle();
+            }
+            
+            arr = filterAssets(assets, this.preload);
+            assets.recycle();
+            
+            return arr;
         }
-        
-        arr = filterAssets(assets, this.preload);
-        assets.recycle();
-        
-        return arr;
-    };
-    
-    /**
-     * Returns all of the dynamic assets required for the Scene.
-     *
-     * @method getLateAssetList
-     * @return {Array} A list of the necessary assets to load.
-     */
-    proto.getLateAssetList = function (def) {
-        var i = 0,
-            arr = null,
-            assets = Array.setUp();
-        
-        for (i = 0; i < def.layers.length; i++) {
-            arr = Entity.getLateAssetList(def.layers[i], null, this.data);
-            assets.union(arr);
-            arr.recycle();
-        }
-        
-        arr = filterAssets(assets, this.preload);
-        assets.recycle();
-        
-        return arr;
-    };
+    }
 
     return Scene;
 }());

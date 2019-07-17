@@ -5,12 +5,10 @@
  * @class AIChaser
  * @uses platypus.Component
  */
-/* global include, platypus */
-(function () {
-    'use strict';
-    
-    var Vector = include('platypus.Vector');
+/* global platypus */
+import Vector from '../Vector.js';
 
+export default (function () {
     return platypus.createComponentClass({
         
         id: 'AIChaser',

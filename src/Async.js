@@ -9,10 +9,11 @@
  * @return {platypus.Async} Returns the new Async object.
  * @since 0.10.0
  */
-/*global clearTimeout, platypus, recycle, springroll, setTimeout */
-platypus.Async = (function () {
-    'use strict';
-    
+/*global clearTimeout, setTimeout */
+import config from 'config';
+import recycle from 'recycle';
+
+export default (function () {
     var callback = function (finalCB) {
             this.increment -= 1;
             if (!this.increment) {
@@ -70,7 +71,7 @@ platypus.Async = (function () {
      *
      * @method recycle
      */
-    recycle.add(Async, !!springroll.Debug, 'Async', function () {
+    recycle.add(Async, config.dev, 'Async', function () {
         this.increment = 0;
         this.resolve = null;
         this.timeout = 0;

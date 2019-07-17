@@ -3,8 +3,8 @@
     "version": "1.0.0",
     "description": "Platypus Docs",
     "license": "MIT",
-    "main": "lib/platypus.combined.js",
-    "module": "lib/platypus.combined.js",
+    "main": "lib/platypus.js",
+    "module": "src/index.js",
     "url": "https://github.com/PBS-KIDS/Platypus",
     "logo": "assets/platypus-title.png",
     "repository": {
@@ -12,7 +12,15 @@
         "url": "https://github.com/PBS-KIDS/Platypus"
     },
     "scripts": {
-        "test": "grunt jasmine:src"
+        "test": "grunt jasmine:src",
+        "start": "webpack-dev-server --env.dev",
+        "build:release": "webpack --env.prod",
+        "build:debug": "webpack --env.dev"
+    },
+    "dependencies": {
+        "createjs": "^1.0.1",
+        "pixi.js": "^4.5.1",
+        "springroll": "2.0.0"
     },
     "devDependencies": {
         "grunt": "^0.4.5",
@@ -24,9 +32,9 @@
         "grunt-contrib-yuidoc": "^0.8.0",
         "lodash": "^3.10.0",
         "pako": "^0.2.8",
-        "pixi.js": "^4.5.1",
-        "recycle": "https://github.com/gopherwood/recycle.git#v1.0.1",
-        "springroll": "^1.0.2"
+        "recycle": "https://github.com/gopherwood/recycle.git#master",
+        "webpack": "^4.35.2",
+        "webpack-cli": "^3.3.5"
     },
     "engine": "node >= 0.10.22"
 }

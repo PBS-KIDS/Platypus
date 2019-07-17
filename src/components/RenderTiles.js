@@ -9,23 +9,22 @@
  * @class RenderTiles
  * @uses platypus.Component
  */
-/* global include, platypus, recycle, springroll */
-(function () {
-    'use strict';
+/* global platypus, PIXI */
+import AABB from '../AABB.js';
+import PIXIAnimation from '../PIXIAnimation.js';
+import RenderContainer from './RenderContainer.js';
+import config from 'config';
+import recycle from 'recycle';
 
+export default (function () {
     var EDGE_BLEED = 1,
         EDGES_BLEED = EDGE_BLEED * 2,
-        AABB              = include('platypus.AABB'),
-        PIXIAnimation     = include('platypus.PIXIAnimation'),
-        Application       = include('springroll.Application'),
-        CanvasRenderer    = include('PIXI.CanvasRenderer'),
-        Container         = include('PIXI.Container'),
-        Graphics          = include('PIXI.Graphics'),
-        ParticleContainer = Container, //Excluding ParticleContainer atm due to https://github.com/pixijs/pixi.js/issues/4008 -- include('PIXI.particles.ParticleContainer'),
-        Rectangle = include('PIXI.Rectangle'),
-        RenderContainer = include('platypus.components.RenderContainer'),
-        RenderTexture = include('PIXI.RenderTexture'),
-        Sprite            = include('PIXI.Sprite'),
+        Container         = PIXI.Container,
+        Graphics          = PIXI.Graphics,
+        ParticleContainer = Container, //Excluding ParticleContainer atm due to https://github.com/pixijs/pixi.js/issues/4008 -- PIXI.particles.ParticleContainer,
+        Rectangle = PIXI.Rectangle,
+        RenderTexture = PIXI.RenderTexture,
+        Sprite = PIXI.Sprite,
         clearRenderTexture = function (renderer, renderTexture, clearColor) { // This is pulled from https://github.com/pixijs/pixi.js/pull/3647 and should be in a future build of PIXI
             var baseTexture = renderTexture.baseTexture,
                 renderTarget = baseTexture._glRenderTargets[renderer.CONTEXT_UID];
@@ -115,7 +114,7 @@
         this.recycle();
     };
 
-    recycle.add(Template, !!springroll.Debug, 'Template');
+    recycle.add(Template, config.dev, 'Template');
 
     return platypus.createComponentClass({
 
@@ -254,7 +253,7 @@
 
             this.tiles            = {};
 
-            this.renderer         = Application.instance.display.renderer;
+            this.renderer         = platypus.game.renderer;
             this.tilesSprite      = null;
             this.cacheTexture     = null;
             this.mapContainer      = null;
@@ -269,7 +268,7 @@
 
             // Set up containers
             this.spriteSheet = PIXIAnimation.formatSpriteSheet(this.spriteSheet);
-            this.tileContainer = ((this.spriteSheet.images.length > 1) || (this.renderer instanceof CanvasRenderer)) ? new Container() : new ParticleContainer(15000, {position: true, rotation: true, scale: true});
+            this.tileContainer = (this.spriteSheet.images.length > 1) ? new Container() : new ParticleContainer(15000, {position: true, rotation: true, scale: true});
             this.mapContainer = new Container();
             this.mapContainer.addChild(this.tileContainer);
             

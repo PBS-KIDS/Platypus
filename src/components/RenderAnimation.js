@@ -8,17 +8,16 @@
  * @uses platypus.Component
  * @since 0.10.0
  */
-/* global include, PIXI, platypus */
-(function () {
-    "use strict";
+/* global PIXI, platypus */
+import AABB from '../AABB.js';
+import Data from '../Data.js';
+import EventRender from './EventRender.js';
+import Interactive from './Interactive.js';
+import StateRender from './StateRender.js';
 
-    var AABB = include('platypus.AABB'),
-        Animator = include('PIXI.animate.Animator', false),
-        Data = include('platypus.Data'),
-        EventRender = include('platypus.components.EventRender'),
-        Graphics = include('PIXI.Graphics'),
-        Interactive = include('platypus.components.Interactive'),
-        StateRender = include('platypus.components.StateRender'),
+export default (function () {
+    var Animator = PIXI.animate && PIXI.animate.Animator,
+        Graphics = PIXI.Graphics,
         animationEnded = function (animation) {
             this.playAnimation(animation);
 
@@ -337,7 +336,7 @@
                 this.instance = null;
                 this.ready = false;
                 if (this.animation) {
-                    PIXI.animate.load(include(this.animation), onceLoaded.bind(this, callback));
+                    PIXI.animate.load(this.animation, onceLoaded.bind(this, callback));
                 }
 
                 this.parentContainer = null;

@@ -23,9 +23,9 @@ This component causes an entity to be a position on a [[NodeMap]]. This componen
     }
 */
 /* global platypus */
-(function () {
-    'use strict';
-    
+import Vector from '../Vector.js';
+
+export default (function () {
     return platypus.createComponentClass({
         
         id: 'Node',
@@ -50,7 +50,7 @@ This component causes an entity to be a position on a [[NodeMap]]. This componen
             this.contains = this.owner.contains = Array.setUp();
             this.edgesContain = this.owner.edgesContain = Array.setUp();
             
-            platypus.Vector.assign(this.owner, 'position', 'x', 'y', 'z');
+            Vector.assign(this.owner, 'position', 'x', 'y', 'z');
             
             this.neighbors = this.owner.neighbors = definition.neighbors || this.owner.neighbors || {};
         },

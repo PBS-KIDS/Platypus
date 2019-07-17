@@ -5,14 +5,12 @@
  * @class CollisionGroup
  * @uses platypus.Component
  */
-/* global include, platypus */
-(function () {
-    'use strict';
+/* global platypus */
+import AABB from '../AABB.js';
+import DataMap from '../DataMap.js';
+import Vector from '../Vector.js';
 
-    var AABB = include('platypus.AABB'),
-        DataMap = include('platypus.DataMap'),
-        Vector = include('platypus.Vector');
-    
+export default (function () {
     return platypus.createComponentClass({
         id: 'CollisionGroup',
         
