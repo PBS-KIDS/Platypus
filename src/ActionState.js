@@ -168,12 +168,11 @@ export default  (function () {
      * @method recycle
      * @since 0.7.1
      */
-    recycle.add(ActionState, config.dev, 'ActionState', function () {
+    recycle.add(ActionState, 'ActionState', ActionState, function () {
         this.states.recycle();
         this.stateSummary.recycle();
         this.inputs.recycle();
-        ActionState.recycle(this);
-    });
+    }, true, config.dev);
 
     return ActionState;
 }());

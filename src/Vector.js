@@ -641,10 +641,9 @@ export default (function () {
      * @method recycle
      * @since 0.7.1
      */
-    recycle.add(Vector, config.dev, 'Vector', function () {
+    recycle.add(Vector, 'Vector', Vector, function () {
         this.matrix.length = 0;
-        Vector.recycle(this);
-    });
+    }, true, config.dev);
     
     return Vector;
 }());

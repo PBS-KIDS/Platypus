@@ -165,10 +165,9 @@ export default (function () {
      *
      * @method recycle
      */
-    recycle.add(StateMap, config.dev, 'StateMap', function () {
+    recycle.add(StateMap, 'StateMap', StateMap, function () {
         this.clear();
-        StateMap.recycle(this);
-    });
+    }, true, config.dev);
     
     return StateMap;
 }());

@@ -433,7 +433,7 @@ export default (function () {
      * @method recycle
      * @since 0.7.3
      */
-    recycle.add(AABB, config.dev, 'AABB');
+    recycle.add(AABB, 'AABB', AABB, null, true, config.dev);
     
     return AABB;
 }());

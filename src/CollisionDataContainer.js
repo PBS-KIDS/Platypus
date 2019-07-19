@@ -126,7 +126,7 @@ export default (function () {
      * @method recycle
      * @since 0.8.7
      */
-    recycle.add(CollisionDataContainer, config.dev, 'CollisionDataContainer');
+    recycle.add(CollisionDataContainer, 'CollisionDataContainer', CollisionDataContainer, null, true, config.dev);
 
     return CollisionDataContainer;
 }());

@@ -56,7 +56,7 @@ export default (function () {
      * @method recycle
      * @since 0.7.1
      */
-    recycle.add(Data, config.dev, 'Data', function () {
+    recycle.add(Data, 'Data', Data, function () {
         var key = '';
         
         for (key in this) {
@@ -64,8 +64,7 @@ export default (function () {
                 delete this[key];
             }
         }
-        Data.recycle(this);
-    });
+    }, true, config.dev);
     
     return Data;
 }());

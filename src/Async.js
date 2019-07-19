@@ -71,11 +71,11 @@ export default (function () {
      *
      * @method recycle
      */
-    recycle.add(Async, config.dev, 'Async', function () {
+    recycle.add(Async, 'Async', Async, function () {
         this.increment = 0;
         this.resolve = null;
         this.timeout = 0;
-    });
+    }, true, config.dev);
 
     return Async;
 }());

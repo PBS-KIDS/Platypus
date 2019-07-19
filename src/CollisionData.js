@@ -97,7 +97,7 @@ export default (function () {
      * @method recycle
      * @since 0.8.7
      */
-    recycle.add(CollisionData, config.dev, 'CollisionData');
+    recycle.add(CollisionData, 'CollisionData', CollisionData, null, true, config.dev);
     
     return CollisionData;
 }());

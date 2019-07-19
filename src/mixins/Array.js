@@ -109,6 +109,6 @@ export default (function (Array, Object) {
      * @return Array
      * @since 0.7.1
      */
-    recycle.add(Array, config.dev, 'Array');
+    recycle.add(Array, 'Array', null, null, true, config.dev);
 
 }(Array, Object));

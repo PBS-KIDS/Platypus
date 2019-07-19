@@ -114,7 +114,7 @@ export default (function () {
         this.recycle();
     };
 
-    recycle.add(Template, config.dev, 'Template');
+    recycle.add(Template, 'Template', Template, null, true, config.dev);
 
     return platypus.createComponentClass({
 

@@ -296,7 +296,7 @@ export default (function () {
      * @method recycle
      * @since 0.7.4
      */
-    recycle.add(CollisionShape, config.dev, 'CollisionShape');
+    recycle.add(CollisionShape, 'CollisionShape', CollisionShape, null, true, config.dev);
     
     return CollisionShape;
 }());

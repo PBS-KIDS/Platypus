@@ -196,10 +196,9 @@ export default (function () {
      *
      * @method recycle
      */
-    recycle.add(DataMap, config.dev, 'DataMap', function () {
+    recycle.add(DataMap, 'DataMap', DataMap, function () {
         this.clear();
-        DataMap.recycle(this);
-    });
+    }, true, config.dev);
     
     return DataMap;
 }());

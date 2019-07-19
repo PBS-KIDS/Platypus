@@ -91,7 +91,7 @@ export default (function () {
         this.recycle();
     };
     
-    recycle.add(Node, config.dev, 'Node');
+    recycle.add(Node, 'Node', Node, null, true, config.dev);
     
     return platypus.createComponentClass({
         id: 'NodeMap',
