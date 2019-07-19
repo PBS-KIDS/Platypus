@@ -6,6 +6,7 @@
  * @uses platypus.Component
  */
 /* global platypus */
+import {arrayCache, greenSlice, union} from '../utils/array.js';
 import Data from '../Data.js';
 import EventRender from './EventRender.js';
 import PIXIAnimation from '../PIXIAnimation.js';
@@ -481,11 +482,11 @@ export default (function () {
                         if (typeof ss === 'string') {
                             return getImages(spriteSheets[ss], spriteSheets);
                         } else if (ss.images) {
-                            return ss.images.greenSlice();
+                            return greenSlice(ss.images);
                         }
                     }
 
-                    return Array.setUp();
+                    return arrayCache.setUp();
                 };
             
             return function (component, props, defaultProps) {
@@ -497,11 +498,11 @@ export default (function () {
                 
                 if (Array.isArray(ss)) {
                     i = ss.length;
-                    images = Array.setUp();
+                    images = arrayCache.setUp();
                     while (i--) {
                         arr = getImages(ss[i], spriteSheets);
-                        images.union(arr);
-                        arr.recycle();
+                        union(images, arr);
+                        arrayCache.recycle(arr);
                     }
                     return images;
                 } else {

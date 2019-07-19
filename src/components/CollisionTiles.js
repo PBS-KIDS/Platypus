@@ -9,6 +9,7 @@
 import AABB from '../AABB.js';
 import CollisionShape from '../CollisionShape.js';
 import Data from '../Data.js';
+import {arrayCache} from '../utils/array.js';
 
 export default (function () {
     var maskJumpThrough = 0x10000000,
@@ -78,10 +79,10 @@ export default (function () {
         copySection = function (array, originX, originY, width, height) {
             var x   = 0,
                 y   = 0,
-                arr = Array.setUp();
+                arr = arrayCache.setUp();
 
             for (y = 0; y < height; y++) {
-                arr[y] = Array.setUp();
+                arr[y] = arrayCache.setUp();
                 for (x = 0; x < width; x++) {
                     arr[y][x] = array[originX + x][originY + y];
                 }
@@ -91,10 +92,10 @@ export default (function () {
         cutSection = function (array, originX, originY, width, height) {
             var x   = 0,
                 y   = 0,
-                arr = Array.setUp();
+                arr = arrayCache.setUp();
 
             for (y = 0; y < height; y++) {
-                arr[y] = Array.setUp();
+                arr[y] = arrayCache.setUp();
                 for (x = 0; x < width; x++) {
                     arr[y][x] = array[originX + x][originY + y];
                     array[originX + x][originY + y] = -1;
@@ -125,7 +126,7 @@ export default (function () {
                         array[originX + x][originY + y] = fD(arr[x][y]);
                     }
                 }
-                arr.recycle(2);
+                arrayCache.recycle(arr, 2);
                 return array;
             },
             "diagonal-inverse": function (array, originX, originY, width, height) {
@@ -139,7 +140,7 @@ export default (function () {
                         array[originX + width - x - 1][originY + height - y - 1] = fDI(arr[x][y]);
                     }
                 }
-                arr.recycle(2);
+                arrayCache.recycle(arr, 2);
                 return array;
             },
             "horizontal": function (array, originX, originY, width, height) {
@@ -153,7 +154,7 @@ export default (function () {
                         array[originX + width - x - 1][originY + y] = fX(arr[y][x]);
                     }
                 }
-                arr.recycle(2);
+                arrayCache.recycle(arr, 2);
                 return array;
             },
             "vertical": function (array, originX, originY, width, height) {
@@ -167,7 +168,7 @@ export default (function () {
                         array[originX + x][originY + height - y - 1] = fY(arr[y][x]);
                     }
                 }
-                arr.recycle(2);
+                arrayCache.recycle(arr, 2);
                 return array;
             },
             "rotate-90": function (array, originX, originY, width, height) {
@@ -181,7 +182,7 @@ export default (function () {
                         array[originX + height - y - 1][originY + x] = r90(arr[y][x]);
                     }
                 }
-                arr.recycle(2);
+                arrayCache.recycle(arr, 2);
                 return array;
             },
             "rotate-180": function (array, originX, originY, width, height) {
@@ -195,7 +196,7 @@ export default (function () {
                         array[originX + width - x - 1][originY + height - y - 1] = r180(arr[y][x]);
                     }
                 }
-                arr.recycle(2);
+                arrayCache.recycle(arr, 2);
                 return array;
             },
             "rotate-270": function (array, originX, originY, width, height) {
@@ -209,7 +210,7 @@ export default (function () {
                         array[originX + y][originY + width - x - 1] = r270(arr[y][x]);
                     }
                 }
-                arr.recycle(2);
+                arrayCache.recycle(arr, 2);
                 return array;
             },
             "translate": function (array, originX, originY, width, height, dx, dy) {
@@ -222,7 +223,7 @@ export default (function () {
                         array[originX + x + dx][originY + y + dy] = arr[y][x];
                     }
                 }
-                arr.recycle(2);
+                arrayCache.recycle(arr, 2);
                 return array;
             }
         };
@@ -315,8 +316,8 @@ export default (function () {
                 "height", this.tileHeight
             );
             
-            this.storedTiles = Array.setUp();
-            this.serveTiles = Array.setUp();
+            this.storedTiles = arrayCache.setUp();
+            this.serveTiles = arrayCache.setUp();
             this.storedTileIndex = 0;
             
             this.aabb = AABB.setUp();
@@ -425,19 +426,19 @@ export default (function () {
                     i = store.length;
                 
                 this.shapeDefinition.recycle();
-                delete this.shapeDefinition;
+                this.shapeDefinition = null;
                 
                 while (i--) {
                     store[i].recycle();
                 }
-                store.recycle();
-                delete this.storedTiles;
+                arrayCache.recycle(store);
+                this.storedTiles = null;
 
-                this.serveTiles.recycle();
-                delete this.serveTiles;
+                arrayCache.recycle(this.serveTiles);
+                this.serveTiles = null;
                 
                 this.aabb.recycle();
-                delete this.aabb;
+                this.aabb = null;
             }
         },
         

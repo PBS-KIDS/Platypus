@@ -6,9 +6,9 @@
  * @uses platypus.Component
  */
 /*global platypus */
-export default (function () {
-    
+import {arrayCache, greenSlice, greenSplice, union} from '../utils/array.js';
 
+export default (function () {
     return platypus.createComponentClass({
         id: 'RelayFamily',
         
@@ -39,7 +39,7 @@ export default (function () {
                 }
             }
     
-            this.owner.familyLinks = Array.setUp(this.owner);
+            this.owner.familyLinks = arrayCache.setUp(this.owner);
         },
         
         events: {
@@ -52,14 +52,14 @@ export default (function () {
             "link-family": function (links) {
                 var i = 0,
                     oldList = this.owner.familyLinks,
-                    newList = Array.setUp().union(links).union(oldList);
+                    newList = union(union(arrayCache.setUp(), links), oldList);
 
                 for (i = 0; i < newList.length; i++) {
                     newList[i].familyLinks = newList;
                 }
                 this.broadcast(links,   'family-members-added', oldList);
                 this.broadcast(oldList, 'family-members-added', links);
-                oldList.recycle();
+                arrayCache.recycle(oldList);
             },
             
             /**
@@ -80,15 +80,15 @@ export default (function () {
             broadcast: function (links) {
                 var entities = links || this.owner.familyLinks,
                     i = 0,
-                    args = Array.prototype.greenSlice.call(arguments);
+                    args = greenSlice(arguments);
 
-                args.greenSplice(0);
+                args.shift();
 
                 for (i = 0; i < entities.length; i++) {
                     entities[i].trigger.apply(entities[i], args);
                 }
                 
-                args.recycle();
+                arrayCache.recycle(args);
             },
             
             destroy: function () {
@@ -96,7 +96,7 @@ export default (function () {
                     i = familyLinks.indexOf(this.owner);
                 
                 if (i >= 0) {
-                    familyLinks.greenSplice(i);
+                    greenSplice(familyLinks, i);
                 }
                 this.broadcast(familyLinks, 'family-member-removed', this.owner);
                 this.events = null;

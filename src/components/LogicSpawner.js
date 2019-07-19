@@ -33,6 +33,7 @@ This component creates an entity and propels it away. This is useful for casting
 */
 /*global platypus */
 import Entity from '../Entity.js';
+import {arrayCache} from '../utils/array.js';
 
 export default (function () {
     return platypus.createComponentClass({
@@ -152,7 +153,7 @@ export default (function () {
                 });
             }
             
-            return Array.setUp();
+            return arrayCache.setUp();
         }
     });
 }());

@@ -6,6 +6,7 @@
  * @uses platypus.Component
  **/
 /* global platypus */
+import {arrayCache, greenSplice} from '../utils/array.js';
 import AABB from '../AABB.js';
 
 export default (function () {
@@ -88,9 +89,9 @@ export default (function () {
             timeMultiplier: 1
         },
         initialize: function () {
-            this.entities = Array.setUp();
-            this.activeEntities = Array.setUp();
-            this.removals = Array.setUp();
+            this.entities = arrayCache.setUp();
+            this.activeEntities = arrayCache.setUp();
+            this.removals = arrayCache.setUp();
             
             this.inLogicLoop = false;
 
@@ -132,7 +133,7 @@ export default (function () {
                         this.activeEntities.push(entity);
                     }
                 } else if (!logical && (j >= 0)) {
-                    this.entities.greenSplice(j);
+                    greenSplice(this.entities, j);
                     if (this.inLogicLoop) {
                         this.removals.push(entity);
                     }
@@ -166,7 +167,7 @@ export default (function () {
                 var j = this.entities.indexOf(entity);
                 
                 if (j >= 0) {
-                    this.entities.greenSplice(j);
+                    greenSplice(this.entities, j);
                     if (this.inLogicLoop) {
                         this.removals.push(entity);
                     }
@@ -350,7 +351,7 @@ export default (function () {
                             while (i--) {
                                 j = actives.indexOf(removals[i]);
                                 if (j >= 0) {
-                                    actives.greenSplice(j);
+                                    greenSplice(actives, j);
                                 }
                             }
                             removals.length = 0;
@@ -405,9 +406,12 @@ export default (function () {
         
         methods: {
             destroy: function () {
-                this.entities.recycle();
-                this.activeEntities.recycle();
-                this.removals.recycle();
+                arrayCache.recycle(this.entities);
+                this.entities = null;
+                arrayCache.recycle(this.activeEntities);
+                this.activeEntities = null;
+                arrayCache.recycle(this.removals);
+                this.removals = null;
             }
         }
     });

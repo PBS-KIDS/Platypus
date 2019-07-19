@@ -7,9 +7,9 @@
  */
 
 /*global platypus */
-export default (function () {
-    
+import {arrayCache} from '../utils/array.js';
 
+export default (function () {
     return platypus.createComponentClass({
         
         id: 'LogicAngularMovement',
@@ -58,7 +58,7 @@ export default (function () {
 
         initialize: function () {
             this.angle     = this.startAngle;
-            this.v         = Array.setUp(0, 0);
+            this.v         = arrayCache.setUp(0, 0);
             this.moving    = false;
             this.piOverTwo = Math.PI / 2;
             this.owner.rotation = this.owner.rotation || this.visualOffset;

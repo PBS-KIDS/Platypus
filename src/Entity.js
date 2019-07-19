@@ -37,6 +37,7 @@
 **/
 
 /*global platypus */
+import {arrayCache, greenSplice, union} from './utils/array.js';
 import Async from './Async.js';
 import Data from './Data.js';
 import Messenger from './Messenger.js';
@@ -52,19 +53,19 @@ export default (function () {
         constructor (definition, instanceDefinition, callback, parent) {
             var i                    = 0,
                 componentDefinition  = null,
-                componentInits       = Array.setUp(),
+                componentInits       = arrayCache.setUp(),
                 def                  = Data.setUp(definition),
                 componentDefinitions = def.components,
                 defaultProperties    = Data.setUp(def.properties),
                 instance             = Data.setUp(instanceDefinition),
                 instanceProperties   = Data.setUp(instance.properties),
-                savedEvents          = Array.setUp(),
-                savedMessages        = Array.setUp();
+                savedEvents          = arrayCache.setUp(),
+                savedMessages        = arrayCache.setUp();
 
             // Set properties of messenger on this entity.
             super();
 
-            this.components  = Array.setUp();
+            this.components  = arrayCache.setUp();
             this.type = def.id || 'none';
 
             this.id = instance.id || instanceProperties.id;
@@ -124,8 +125,8 @@ export default (function () {
                 for (i = 0; i < savedEvents.length; i++) {
                     this.trigger(savedEvents[i], savedMessages[i]);
                 }
-                savedEvents.recycle();
-                savedMessages.recycle();
+                arrayCache.recycle(savedEvents);
+                arrayCache.recycle(savedMessages);
 
                 /**
                  * The entity triggers `load` on itself once all the properties and components have been attached, notifying the components that all their peer components are ready for messages.
@@ -139,7 +140,7 @@ export default (function () {
                 }
             }.bind(this));
             
-            componentInits.recycle();
+            arrayCache.recycle(componentInits);
             def.recycle();
             defaultProperties.recycle();
             instance.recycle();
@@ -235,7 +236,7 @@ export default (function () {
                 for (i = 0; i < this.components.length; i++) {
                     if (this.components[i].type === component) {
                         component = this.components[i];
-                        this.components.greenSplice(i);
+                        greenSplice(this.components, i);
                         this.triggerEvent('component-removed', component);
                         component.destroy();
                         return component;
@@ -244,7 +245,7 @@ export default (function () {
             } else {
                 for (i = 0; i < this.components.length; i++) {
                     if (this.components[i] === component) {
-                        this.components.greenSplice(i);
+                        greenSplice(this.components, i);
                         this.triggerEvent('component-removed', component);
                         component.destroy();
                         return component;
@@ -285,7 +286,8 @@ export default (function () {
                 for (i = 0; i < length; i++) {
                     components[i].destroy();
                 }
-                components.recycle();
+                arrayCache.recycle(components);
+                this.components = null;
                 
                 this.state.recycle();
                 this.state = null;
@@ -321,14 +323,14 @@ export default (function () {
                 return Entity.getAssetList(definition, def.properties);
             }
             
-            assets = Array.setUp();
+            assets = arrayCache.setUp();
 
             for (i = 0; i < def.components.length; i++) {
                 component = def.components[i] && def.components[i].type && platypus.components[def.components[i].type];
                 if (component) {
                     arr = component.getAssetList(def.components[i], def.properties, props);
-                    assets.union(arr);
-                    arr.recycle();
+                    union(assets, arr);
+                    arrayCache.recycle(arr);
                 }
             }
             
@@ -353,14 +355,14 @@ export default (function () {
                 return Entity.getLateAssetList(platypus.game.settings.entities[def.type], props, data);
             }
             
-            assets = Array.setUp();
+            assets = arrayCache.setUp();
 
             for (i = 0; i < def.components.length; i++) {
                 component = def.components[i] && def.components[i].type && platypus.components[def.components[i].type];
                 if (component) {
                     arr = component.getLateAssetList(def.components[i], def.properties, props, data);
-                    assets.union(arr);
-                    arr.recycle();
+                    union(assets, arr);
+                    arrayCache.recycle(arr);
                 }
             }
             

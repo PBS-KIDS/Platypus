@@ -6,9 +6,9 @@
  * @uses platypus.Component
  */
 /* global platypus */
-export default (function () {
-    
+import {arrayCache, union} from '../utils/array.js';
 
+export default (function () {
     var
         addSwitch = function (event) {
             this.switches.push(event);
@@ -54,7 +54,7 @@ export default (function () {
         initialize: function () {
             var event = '';
             
-            this.switches = Array.setUp(); // The list of switches to make.
+            this.switches = arrayCache.setUp(); // The list of switches to make.
             
             if (this.componentMap) {
                 for (event in this.componentMap) {
@@ -142,7 +142,7 @@ export default (function () {
             },
             
             destroy: function () {
-                this.switches.recycle();
+                arrayCache.recycle(this.switches);
             }
         },
         
@@ -151,7 +151,7 @@ export default (function () {
                 event = '',
                 i = 0,
                 component = null,
-                assets = Array.setUp(),
+                assets = arrayCache.setUp(),
                 arr = null;
             
             for (event in map) {
@@ -160,8 +160,8 @@ export default (function () {
                         component = platypus.components[map[event].add[i].type];
                         if (component) {
                             arr = component.getAssetList(map[event].add[i], props, defaultProps);
-                            assets.union(arr);
-                            arr.recycle();
+                            union(assets, arr);
+                            arrayCache.recycle(arr);
                         }
                     }
                 }

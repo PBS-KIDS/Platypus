@@ -34,6 +34,7 @@ This component works with `CollisionBasic` to cause entities to bounce away on s
 */
 /* global platypus */
 import Vector from '../Vector.js';
+import {arrayCache} from '../utils/array.js';
 
 export default (function () {
     return platypus.createComponentClass({
@@ -51,9 +52,9 @@ export default (function () {
             this.staticCollisionOccurred = false;
             this.nonStaticCollisionOccurred = false;
             
-            this.hitThisTick = Array.setUp();
+            this.hitThisTick = arrayCache.setUp();
             this.otherV = Vector.setUp(0, 0, 0);
-            this.otherVelocityData = Array.setUp();
+            this.otherVelocityData = arrayCache.setUp();
         },
 
         events: {// These are messages that this component listens for
@@ -145,8 +146,8 @@ export default (function () {
                 this.v.recycle();
                 this.incidentVector.recycle();
                 this.otherV.recycle();
-                this.hitThisTick.recycle();
-                this.otherVelocityData.recycle();
+                arrayCache.recycle(this.hitThisTick);
+                arrayCache.recycle(this.otherVelocityData);
             }
         },
         

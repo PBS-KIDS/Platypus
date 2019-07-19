@@ -11,6 +11,7 @@
  *
  */
 /* global platypus */
+import {arrayCache, greenSlice} from './utils/array.js';
 import Component from './Component.js';
 import config from 'config';
 
@@ -136,7 +137,7 @@ export default (function () {
                         invalid = true;
                     } else if ((type === 'object') && (value !== null)) {
                         if (value.toJSON) { // We know it's valid but we run this for the depth check to make sure that there is no recursion.
-                            depth = depthArray ? depthArray.greenSlice() : Array.setUp();
+                            depth = depthArray ? greenSlice(depthArray) : arrayCache.setUp();
                             depth.push(value);
                             if (!valid(value.toJSON(), depth)) {
                                 invalid = true;
@@ -148,7 +149,7 @@ export default (function () {
                                     invalid = true;
                                     break;
                                 }
-                                depth = depthArray ? depthArray.greenSlice() : Array.setUp();
+                                depth = depthArray ? greenSlice(depthArray) : arrayCache.setUp();
                                 depth.push(value[i]);
                                 if (!valid(value[i], depth)) {
                                     invalid = true;
@@ -162,7 +163,7 @@ export default (function () {
                                         invalid = true;
                                         break;
                                     }
-                                    depth = depthArray ? depthArray.greenSlice() : Array.setUp();
+                                    depth = depthArray ? greenSlice(depthArray) : arrayCache.setUp();
                                     depth.push(value[key]);
                                     if (!valid(value[key], depth)) {
                                         invalid = true;
@@ -174,7 +175,7 @@ export default (function () {
                     }
 
                     if (depthArray) {
-                        depthArray.recycle();
+                        arrayCache.recycle(depthArray);
                     }
 
                     if (root) {

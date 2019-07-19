@@ -46,6 +46,7 @@
   - @return integer - The number of handlers for the triggered message: this is useful for determining how many child entities care about a given message.
 */
 /* global platypus */
+import {arrayCache, greenSlice, greenSplice, union} from '../utils/array.js';
 import Async from '../Async.js';
 import Data from '../Data.js';
 import Entity from '../Entity.js';
@@ -85,7 +86,7 @@ export default (function () {
             
                     Messenger.initialize(this);
 
-                    this.newAdds = Array.setUp();
+                    this.newAdds = arrayCache.setUp();
 
                     //saving list of entities for load message
                     if (definition.entities && this.owner.entities) { //combine component list and entity list into one if they both exist.
@@ -94,9 +95,9 @@ export default (function () {
                         entities = definition.entities || this.owner.entities || null;
                     }
 
-                    this.owner.entities = this.entities = Array.setUp();
+                    this.owner.entities = this.entities = arrayCache.setUp();
                     
-                    this.childEvents = Array.setUp();
+                    this.childEvents = arrayCache.setUp();
                     for (i = 0; i < events.length; i++) {
                         this.addNewPublicEvent(events[i]);
                     }
@@ -104,14 +105,14 @@ export default (function () {
                     this.addNewPrivateEvent('peer-entity-removed');
 
                     if (entities) {
-                        entityInits = Array.setUp();
+                        entityInits = arrayCache.setUp();
                         for (i = 0; i < entities.length; i++) {
                             entityInits.push(entityInit.bind(this, entities[i]));
                         }
                         Async.setUp(entityInits, function () {
                             callback();
                         });
-                        entityInits.recycle();
+                        arrayCache.recycle(entityInits);
                         return true; // notifies owner that this component is asynchronous.
                     } else {
                         return false;
@@ -165,7 +166,7 @@ export default (function () {
                         removals = null;
 
                     if (l) {
-                        removals = Array.setUp();
+                        removals = arrayCache.setUp();
 
                         //must go in order so entities are added in the expected order.
                         for (i = 0; i < l; i++) {
@@ -177,10 +178,10 @@ export default (function () {
 
                         i = removals.length;
                         while (i--) {
-                            adds.greenSplice(removals[i]);
+                            greenSplice(adds, removals[i]);
                         }
 
-                        removals.recycle();
+                        arrayCache.recycle(removals);
                     }
                 }
             },
@@ -216,7 +217,7 @@ export default (function () {
                         return false; // event is already added.
                     }
 
-                    this._listeners[event] = Array.setUp(); //to signify it's been added even if not used
+                    this._listeners[event] = arrayCache.setUp(); //to signify it's been added even if not used
                     
                     //Listen for message on children
                     for (x = 0; x < this.entities.length; x++) {
@@ -260,8 +261,8 @@ export default (function () {
                         for (i = 0; i < events.length; i++) {
                             this.removeChildEventListener(entity, events[i], messages[i]);
                         }
-                        events.recycle();
-                        messages.recycle();
+                        arrayCache.recycle(events);
+                        arrayCache.recycle(messages);
                         entity.containerListener.recycle();
                         entity.containerListener = null;
                     }
@@ -270,8 +271,8 @@ export default (function () {
                 addChildEventListener: function (entity, event, callback) {
                     if (!entity.containerListener) {
                         entity.containerListener = Data.setUp(
-                            "events", Array.setUp(),
-                            "messages", Array.setUp()
+                            "events", arrayCache.setUp(),
+                            "messages", arrayCache.setUp()
                         );
                     }
                     entity.containerListener.events.push(event);
@@ -292,7 +293,7 @@ export default (function () {
                 },
 
                 destroy: function () {
-                    var entities = this.entities.greenSlice(), // Make a copy to handle entities being destroyed while processing list.
+                    var entities = greenSlice(this.entities), // Make a copy to handle entities being destroyed while processing list.
                         i = entities.length,
                         entity = null;
                     
@@ -301,11 +302,13 @@ export default (function () {
                         this.removeChildEventListeners(entity);
                         entity.destroy();
                     }
-                    entities.recycle();
-                    this.entities.recycle();
-                    delete this.owner.entities;
-                    this.childEvents.recycle();
-                    this.newAdds.recycle();
+                    
+                    arrayCache.recycle(entities);
+                    arrayCache.recycle(this.entities);
+                    this.owner.entities = null;
+                    arrayCache.recycle(this.childEvents);
+                    this.childEvents = null;
+                    arrayCache.recycle(this.newAdds);
                     this.newAdds = null;
                 }
             },
@@ -332,7 +335,7 @@ export default (function () {
                 getEntitiesByType: function (type) {
                     var i         = 0,
                         selection = null,
-                        entities  = Array.setUp();
+                        entities  = arrayCache.setUp();
                     
                     for (i = 0; i < this.entities.length; i++) {
                         if (this.entities[i].type === type) {
@@ -340,8 +343,8 @@ export default (function () {
                         }
                         if (this.entities[i].getEntitiesByType) {
                             selection = this.entities[i].getEntitiesByType(type);
-                            entities.union(selection);
-                            selection.recycle();
+                            union(entities, selection);
+                            arrayCache.recycle(selection);
                         }
                     }
                     return entities;
@@ -412,7 +415,7 @@ export default (function () {
 
                     if (i >= 0) {
                         this.removeChildEventListeners(entity);
-                        this.entities.greenSplice(i);
+                        greenSplice(this.entities, i);
                         this.triggerEventOnChildren('peer-entity-removed', entity);
                         this.owner.triggerEvent('child-entity-removed', entity);
                         entity.destroy();
@@ -447,27 +450,27 @@ export default (function () {
             
             getAssetList: function (def, props, defaultProps) {
                 var i = 0,
-                    assets = Array.setUp(),
-                    entities = Array.setUp(),
+                    assets = arrayCache.setUp(),
+                    entities = arrayCache.setUp(),
                     arr = null;
                 
                 if (def.entities) {
-                    entities.union(def.entities);
+                    union(entities, def.entities);
                 }
                 
                 if (props && props.entities) {
-                    entities.union(props.entities);
+                    union(entities, props.entities);
                 } else if (defaultProps && defaultProps.entities) {
-                    entities.union(defaultProps.entities);
+                    union(entities, defaultProps.entities);
                 }
 
                 for (i = 0; i < entities.length; i++) {
                     arr = Entity.getAssetList(entities[i]);
-                    assets.union(arr);
-                    arr.recycle();
+                    union(assets, arr);
+                    arrayCache.recycle(arr);
                 }
                 
-                entities.recycle();
+                arrayCache.recycle(entities);
                 
                 return assets;
             }

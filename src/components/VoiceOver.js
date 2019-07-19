@@ -11,6 +11,7 @@
  * @uses platypus.RenderSprite
  */
 /* global platypus */
+import {arrayCache, greenSlice} from '../utils/array.js';
 import Async from '../Async.js';
 import AudioVO from './AudioVO.js';
 import RenderAnimation from './RenderAnimation.js';
@@ -39,10 +40,10 @@ export default (function () {
 
             if (typeof sound === 'string') {
                 definition.sound = sound;
-                definition.events = Array.setUp();
+                definition.events = arrayCache.setUp();
             } else if (typeof sound.sound === 'string') {
                 definition.sound = sound.sound;
-                definition.events = Array.setUp();
+                definition.events = arrayCache.setUp();
             } else {
                 for (key in sound.sound) {
                     if (sound.sound.hasOwnProperty(key)) {
@@ -51,9 +52,9 @@ export default (function () {
                 }
 
                 if (definition.events) {
-                    definition.events = definition.events.greenSlice();
+                    definition.events = greenSlice(definition.events);
                 } else {
-                    definition.events = Array.setUp();
+                    definition.events = arrayCache.setUp();
                 }
             }
 
@@ -90,7 +91,7 @@ export default (function () {
         },
         createVO = function (sound, events, message, frameLength) {
             var i = 0,
-                definitions = Array.setUp();
+                definitions = arrayCache.setUp();
 
             if (!events[' ']) {
                 events[' '] = events.default;
@@ -181,7 +182,7 @@ export default (function () {
 
         initialize: function (definition, callback) {
             var i = '',
-                componentInits = Array.setUp(),
+                componentInits = arrayCache.setUp(),
                 audioDefinition     = {
                     audioMap: {},
                     aliases: definition.aliases
@@ -235,7 +236,7 @@ export default (function () {
 
             Async.setUp(componentInits, callback);
 
-            componentInits.recycle();
+            arrayCache.recycle(componentInits);
 
             return true;
         },
@@ -255,11 +256,11 @@ export default (function () {
             var ss = component.spriteSheet || props.spriteSheet || (defaultProps && defaultProps.spriteSheet);
             
             if (typeof ss === 'string') {
-                return platypus.game.settings.spriteSheets[ss].images.greenSlice();
+                return greenSlice(platypus.game.settings.spriteSheets[ss].images);
             } else if (ss) {
-                return ss.images.greenSlice();
+                return greenSlice(ss.images);
             } else {
-                return Array.setUp();
+                return arrayCache.setUp();
             }
         }
     });

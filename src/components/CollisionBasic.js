@@ -8,6 +8,7 @@
  * @uses platypus.Component
  */
 /* global platypus */
+import {arrayCache, greenSplice} from '../utils/array.js';
 import AABB from '../AABB.js';
 import CollisionShape from '../CollisionShape.js';
 import Data from '../Data.js';
@@ -473,11 +474,11 @@ export default (function () {
                 }];
             }
             
-            this.owner.collisionTypes = this.owner.collisionTypes || Array.setUp();
+            this.owner.collisionTypes = this.owner.collisionTypes || arrayCache.setUp();
             this.owner.collisionTypes.push(this.collisionType);
             
-            this.shapes = Array.setUp();
-            this.prevShapes = Array.setUp();
+            this.shapes = arrayCache.setUp();
+            this.prevShapes = arrayCache.setUp();
             this.entities = null;
             for (x = 0; x < shapes.length; x++) {
                 this.shapes.push(CollisionShape.setUp(this.owner, shapes[x], this.collisionType));
@@ -489,7 +490,7 @@ export default (function () {
             setupCollisionFunctions(this, this.owner);
             
             this.owner.solidCollisionMap = this.owner.solidCollisionMap || DataMap.setUp();
-            arr = this.owner.solidCollisionMap.set(this.collisionType, Array.setUp());
+            arr = this.owner.solidCollisionMap.set(this.collisionType, arrayCache.setUp());
             if (this.solidCollisions) {
                 for (key in this.solidCollisions) {
                     if (this.solidCollisions.hasOwnProperty(key)) {
@@ -502,7 +503,7 @@ export default (function () {
             }
     
             this.owner.softCollisionMap = this.owner.softCollisionMap || DataMap.setUp();
-            arr = this.owner.softCollisionMap.set(this.collisionType, Array.setUp());
+            arr = this.owner.softCollisionMap.set(this.collisionType, arrayCache.setUp());
             if (this.softCollisions) {
                 for (key in this.softCollisions) {
                     if (this.softCollisions.hasOwnProperty(key)) {
@@ -568,7 +569,7 @@ export default (function () {
                     parent.triggerEvent('remove-collision-entity', owner);
                     index = colTypes.indexOf(colType);
                     if (index >= 0) {
-                        colTypes.greenSplice(index);
+                        greenSplice(colTypes, index);
                     }
                     this.active = false;
 
@@ -733,14 +734,14 @@ export default (function () {
                 delete this.prevAABB;
                 
                 if (i >= 0) {
-                    owner.collisionTypes.greenSplice(i);
+                    greenSplice(owner.collisionTypes, i);
                 }
                 
                 if (owner.solidCollisionMap.has(collisionType)) {
-                    owner.solidCollisionMap.delete(collisionType).recycle();
+                    arrayCache.recycle(owner.solidCollisionMap.delete(collisionType));
                 }
                 if (owner.softCollisionMap.has(collisionType)) {
-                    owner.softCollisionMap.delete(collisionType).recycle();
+                    arrayCache.recycle(owner.softCollisionMap.delete(collisionType));
                 }
 
                 colFuncs.delete(collisionType).recycle();
@@ -750,12 +751,12 @@ export default (function () {
                     this.shapes[i].recycle();
                     this.prevShapes[i].recycle();
                 }
-                this.shapes.recycle();
-                this.prevShapes.recycle();
-                delete this.shapes;
-                delete this.prevShapes;
+                arrayCache.recycle(this.shapes);
+                arrayCache.recycle(this.prevShapes);
+                this.shapes = null;
+                this.prevShapes = null;
 
-                delete this.entities;
+                this.entities = null;
 
                 if (owner.collisionTypes.length) {
                     owner.parent.triggerEvent('add-collision-entity', owner);
@@ -768,6 +769,8 @@ export default (function () {
                     owner.softCollisionMap = null;
                     owner.aabb.recycle();
                     owner.aabb = null;
+                    arrayCache.recycle(owner.collisionTypes);
+                    owner.collisionTypes = null;
                 }
             }
         }

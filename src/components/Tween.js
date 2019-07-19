@@ -8,6 +8,8 @@
  * @uses platypus.Component
  */
 /* global createjs, platypus */
+import {arrayCache, greenSlice} from '../utils/array.js';
+
 export default (function () {
     var Tween = createjs.Tween,
         empty = {},
@@ -54,20 +56,20 @@ export default (function () {
                     if (tweenDef[0] === 'call' && typeof tweenDef[1] === 'string') {
                         tween.call(createTrigger(owner, tweenDef[1]));
                     } else {
-                        arr = tweenDef.greenSlice();
-                        if (arr.greenSplice(0) === 'to' && arr[2] && createjs.Ease[arr[2]]) {
+                        arr = greenSlice(tweenDef);
+                        if (arr.shift() === 'to' && arr[2] && createjs.Ease[arr[2]]) {
                             if (arr.length > 3) {
-                                arr2 = arr.greenSlice();
-                                arr2.greenSplice(0);
-                                arr2.greenSplice(0);
-                                arr[2] = createjs.Ease[arr2.greenSplice(0)].apply(null, arr2);
-                                arr2.recycle();
+                                arr2 = greenSlice(arr);
+                                arr2.shift();
+                                arr2.shift();
+                                arr[2] = createjs.Ease[arr2.shift()].apply(null, arr2);
+                                arrayCache.recycle(arr2);
                             } else {
                                 arr[2] = createjs.Ease[arr[2]];
                             }
                         }
                         tween[tweenDef[0]].apply(tween, arr);
-                        arr.recycle();
+                        arrayCache.recycle(arr);
                     }
                 } else if (tweenDef.method === 'call' && typeof tweenDef.params === 'string') {
                     tween.call(createTrigger(owner, tweenDef.params));

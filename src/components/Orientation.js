@@ -22,8 +22,10 @@
  * @uses platypus.Component
  */
 /* global platypus */
+import {arrayCache, greenSplice} from '../utils/array.js';
 import Data from '../Data.js';
 import Vector from '../Vector.js';
+import {greenSplit} from '../utils/string.js';
 
 export default (function () {
     var normal = Vector.setUp(0, 0, 1),
@@ -69,7 +71,7 @@ export default (function () {
             return function (a, b, dest) {
                 var i   = 0,
                     j   = 0,
-                    arr = Array.setUp();
+                    arr = arrayCache.setUp();
 
                 for (i = 0; i < a.length; i++) {
                     for (j = 0; j < a[0].length; j++) {
@@ -79,11 +81,11 @@ export default (function () {
 
                 for (i = 0; i < a.length; i++) {
                     for (j = 0; j < a[0].length; j++) {
-                        dest[i][j] = arr.greenSplice(0);
+                        dest[i][j] = arr.shift();
                     }
                 }
                 
-                arr.recycle();
+                arrayCache.recycle(arr);
             };
         }()),
         identitize = function (m) {
@@ -155,10 +157,10 @@ export default (function () {
             var setupOrientation = function (self, orientation) {
                 var vector = Vector.setUp(1, 0, 0),
                     owner  = self.owner,
-                    matrix = Array.setUp(
-                        Array.setUp(1, 0, 0),
-                        Array.setUp(0, 1, 0),
-                        Array.setUp(0, 0, 1)
+                    matrix = arrayCache.setUp(
+                        arrayCache.setUp(1, 0, 0),
+                        arrayCache.setUp(0, 1, 0),
+                        arrayCache.setUp(0, 0, 1)
                     );
                 
                 Object.defineProperty(owner, 'orientationMatrix', {
@@ -195,26 +197,26 @@ export default (function () {
                 this.loadedOrientationMatrix = this.orientationMatrix;
                 
                 // This is the stationary transform
-                this.matrix = Array.setUp(
-                    Array.setUp(1, 0, 0),
-                    Array.setUp(0, 1, 0),
-                    Array.setUp(0, 0, 1)
+                this.matrix = arrayCache.setUp(
+                    arrayCache.setUp(1, 0, 0),
+                    arrayCache.setUp(0, 1, 0),
+                    arrayCache.setUp(0, 0, 1)
                 );
                 
                 // This is the tweening transform
-                this.matrixTween = Array.setUp(
-                    Array.setUp(1, 0, 0),
-                    Array.setUp(0, 1, 0),
-                    Array.setUp(0, 0, 1)
+                this.matrixTween = arrayCache.setUp(
+                    arrayCache.setUp(1, 0, 0),
+                    arrayCache.setUp(0, 1, 0),
+                    arrayCache.setUp(0, 0, 1)
                 );
                 
                 this.relocationMessage = Data.setUp(
                     "position", null
                 );
                 
-                this.vectors  = Array.setUp();
-                this.inverses = Array.setUp();
-                this.tweens   = Array.setUp();
+                this.vectors  = arrayCache.setUp();
+                this.inverses = arrayCache.setUp();
+                this.tweens   = arrayCache.setUp();
                 
                 this.orientationVector = setupOrientation(this, this.orientation);
                 this.owner.triggerEvent('orient-vector', this.orientationVector);
@@ -272,13 +274,13 @@ export default (function () {
                     msg = this.relocationMessage;
                 
                 if (i) {
-                    finishedTweening = Array.setUp();
+                    finishedTweening = arrayCache.setUp();
                     state.set('reorienting', true);
                     identitize(this.matrixTween);
                     
                     while (i--) {
                         if (this.updateTween(this.tweens[i], delta)) { // finished tweening
-                            finishedTweening.push(this.tweens.greenSplice(i));
+                            finishedTweening.push(greenSplice(this.tweens, i));
                         }
                     }
                     
@@ -303,7 +305,7 @@ export default (function () {
                         tween.recycle();
                     }
                     
-                    finishedTweening.recycle();
+                    arrayCache.recycle(finishedTweening);
                 } else if (state.get('reorienting')) {
                     identitize(this.matrixTween);
                     state.set('reorienting', false);
@@ -378,8 +380,8 @@ export default (function () {
                 var i = this.vectors.indexOf(vector);
                 
                 if (i >= 0) {
-                    this.vectors.greenSplice(i);
-                    this.inverses.greenSplice(i).recycle();
+                    greenSplice(this.vectors, i);
+                    greenSplice(this.inverses, i).recycle();
                 }
             },
             
@@ -442,9 +444,9 @@ export default (function () {
                             angle = -Math.PI / 2;
                             break;
                         default:
-                            arr = props.transform.greenSplit('-');
+                            arr = greenSplit(props.transform, '-');
                             angle = (arr[1] / 180) * Math.PI;
-                            arr.recycle();
+                            arrayCache.recycle(arr);
                             break;
                         }
                     }
@@ -560,7 +562,7 @@ export default (function () {
                         return sum;
                     },
                     invert = function (a) {
-                        var arr = Array.setUp(Array.setUp(), Array.setUp(), Array.setUp()),
+                        var arr = arrayCache.setUp(arrayCache.setUp(), arrayCache.setUp(), arrayCache.setUp()),
                             inv = 1 / det3(a);
 
                         arr[0].push(det2(a[1][1], a[1][2], a[2][1], a[2][2]) * inv);
@@ -584,7 +586,7 @@ export default (function () {
                     this.multiply(m);
                     
                     // clean-up
-                    inversion.recycle(2);
+                    arrayCache.recycle(inversion, 2);
                 };
             }()),
             
@@ -629,10 +631,10 @@ export default (function () {
                         z = getMid(z, m[2][2], t);
                     }
                     
-                    matrix = Array.setUp(
-                        Array.setUp(a, c, 0),
-                        Array.setUp(b, d, 0),
-                        Array.setUp(0, 0, z)
+                    matrix = arrayCache.setUp(
+                        arrayCache.setUp(a, c, 0),
+                        arrayCache.setUp(b, d, 0),
+                        arrayCache.setUp(0, 0, z)
                     );
 
                     multiply(this.matrixTween, matrix, this.matrixTween);
@@ -651,7 +653,7 @@ export default (function () {
 
                     tween.afterTick(t, matrix);
                     
-                    matrix.recycle(2);
+                    arrayCache.recycle(matrix, 2);
                     
                     return false;
                 };
@@ -664,14 +666,14 @@ export default (function () {
             },
             
             destroy: function () {
-                this.vectors.recycle();
-                this.inverses.recycle();
-                this.tweens.recycle();
-                this.orientationVector.recycle();
-                this.orientationMatrix.recycle(2);
-                this.matrix.recycle(2);
-                this.matrixTween.recycle(2);
-                this.relocationMessage.recycle();
+                arrayCache.recycle(this.vectors); this.vectors = null;
+                arrayCache.recycle(this.inverses); this.inverses = null;
+                arrayCache.recycle(this.tweens); this.tweens = null;
+                this.orientationVector.recycle(); this.orientationVector = null;
+                arrayCache.recycle(this.orientationMatrix, 2);/* this.orientationMatrix = null; - Only has a setter */
+                arrayCache.recycle(this.matrix, 2); this.matrix = null;
+                arrayCache.recycle(this.matrixTween, 2); this.matrixTween = null;
+                this.relocationMessage.recycle(); this.relocationMessage = null;
             }
         }
     });

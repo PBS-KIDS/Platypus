@@ -23,6 +23,7 @@ This component causes an entity to be a position on a [[NodeMap]]. This componen
     }
 */
 /* global platypus */
+import {arrayCache, greenSplice} from '../utils/array.js';
 import Vector from '../Vector.js';
 
 export default (function () {
@@ -47,8 +48,8 @@ export default (function () {
             
             this.owner.isNode = true;
             this.map = this.owner.map = this.owner.map || null;
-            this.contains = this.owner.contains = Array.setUp();
-            this.edgesContain = this.owner.edgesContain = Array.setUp();
+            this.contains = this.owner.contains = arrayCache.setUp();
+            this.edgesContain = this.owner.edgesContain = arrayCache.setUp();
             
             Vector.assign(this.owner, 'position', 'x', 'y', 'z');
             
@@ -96,8 +97,10 @@ export default (function () {
         
         methods: {
             destroy: function () {
-                this.contains.recycle();
-                this.edgesContain.recycle();
+                arrayCache.recycle(this.contains);
+                this.contains = this.owner.contains = null;
+                arrayCache.recycle(this.edgesContain);
+                this.edgesContain = this.owner.edgesContain = null;
             }
         },
         
@@ -148,7 +151,7 @@ export default (function () {
                 
                 for (i = 0; i < this.contains.length; i++) {
                     if (this.contains[i] === entity) {
-                        return this.contains.greenSplice(i);
+                        return greenSplice(this.contains, i);
                     }
                 }
                 return false;
@@ -169,7 +172,7 @@ export default (function () {
                 
                 for (i = 0; i < this.edgesContain.length; i++) {
                     if (this.edgesContain[i] === entity) {
-                        return this.edgesContain.greenSplice(i);
+                        return greenSplice(this.edgesContain, i);
                     }
                 }
                 return false;

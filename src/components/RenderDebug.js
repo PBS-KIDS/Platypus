@@ -7,6 +7,7 @@
  */
 /*global PIXI, platypus */
 import RenderContainer from './RenderContainer.js';
+import {arrayCache} from '../utils/array.js';
 
 export default (function () {
     var Graphics = PIXI.Graphics,
@@ -114,7 +115,7 @@ export default (function () {
         },
         
         initialize: function () {
-            this.shapes = Array.setUp();
+            this.shapes = arrayCache.setUp();
             this.isOutdated = true;
 
             this.aabbColor = standardizeColor(this.aabbColor);
@@ -248,7 +249,7 @@ export default (function () {
                 for (i = 0; i < this.shapes.length; i++) {
                     this.owner.container.removeChild(this.shapes[i]);
                 }
-                this.shapes.recycle();
+                arrayCache.recycle(this.shapes);
             }
         }
     });

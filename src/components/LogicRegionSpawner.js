@@ -33,6 +33,7 @@ This component spawns new entities within a given area at set intervals.
 */
 /* global platypus */
 import Entity from '../Entity.js';
+import {arrayCache} from '../utils/array.js';
 
 export default (function () {
     return platypus.createComponentClass({
@@ -63,8 +64,8 @@ export default (function () {
             this.regionWidth = 0;
             this.regionHeight = 0;
             if (definition.regions) {
-                this.regions = Array.setUp();
-                this.usedRegions = Array.setUp();
+                this.regions = arrayCache.setUp();
+                this.usedRegions = arrayCache.setUp();
                 this.regionWidth  = width  = definition.regions.width  || this.owner.width;
                 this.regionHeight = height = definition.regions.height || this.owner.height;
                 columns = Math.round(this.owner.width  / width);
@@ -121,8 +122,8 @@ export default (function () {
         methods: {
             destroy: function () {
                 if (this.regions) {
-                    this.regions.recycle();
-                    this.usedRegions.recycle();
+                    arrayCache.recycle(this.regions);
+                    arrayCache.recycle(this.usedRegions);
                 }
             }
         },
@@ -136,7 +137,7 @@ export default (function () {
                 });
             }
             
-            return Array.setUp();
+            return arrayCache.setUp();
         }
     });
 }());

@@ -1,4 +1,7 @@
 /* global console, document, PIXI, platypus, window */
+import {arrayCache} from './utils/array.js';
+import {greenSplit} from './utils/string.js';
+
 export default (function () {
     var getPortion = function (num, max) {
             var min = 204;
@@ -15,7 +18,7 @@ export default (function () {
                 v = null;
                 
             if (version) {
-                v = version.greenSplit('.');
+                v = greenSplit(version, '.');
             }
             
             if (version && (v.length === 3)) {
@@ -33,7 +36,7 @@ export default (function () {
             }
             
             if (v) {
-                v.recycle();
+                arrayCache.recycle(v);
             }
             
             max = Math.max(r, g, b, 1);
@@ -43,7 +46,7 @@ export default (function () {
         getVersions = function (text, title, arr) {
             var i = 0,
                 str = '',
-                versions = Array.setUp(text);
+                versions = arrayCache.setUp(text);
             
             for (i = 0; i < arr.length; i++) {
                 str = arr[i];
@@ -67,8 +70,8 @@ export default (function () {
             title   = options.name || app.name || document.title || '',
             engine  = 'Platypus ' + platypus.version,
             version = options.version || '(?)',
-            using   = Array.setUp(),
-            usingV  = Array.setUp(),
+            using   = arrayCache.setUp(),
+            usingV  = arrayCache.setUp(),
             sr      = platypus.springroll, //TODO: Figure out how to detect SR.
             supports = platypus.supports;
         
@@ -106,11 +109,11 @@ export default (function () {
             using.push(engine);
             usingV = getVersions('Using %c ' + using.join(' %c %c ') + ' %c ', title, using);
             console.log.apply(console, usingV);
-            usingV.recycle();
+            arrayCache.recycle(usingV);
         } else {
             console.log('--- "' + title + '" ' + author + ' - Using ' + using.join(', ') + ', and ' + engine + ' ---');
         }
 
-        using.recycle();
+        arrayCache.recycle(using);
     };
 }());

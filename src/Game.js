@@ -13,6 +13,7 @@
 import Messenger from './Messenger.js';
 import {ScaleManager} from 'springroll';
 import Scene from './Scene.js';
+import {arrayCache} from './utils/array.js';
 import config from 'config';
 import sayHello from './sayHello.js';
 
@@ -238,7 +239,7 @@ export default (function () {
                     window.getVisibleSprites = function (c, a) {
                         var i = 0;
                         
-                        a = a || Array.setUp();
+                        a = a || arrayCache.setUp();
                         c = c || this.stage;
                         
                         if (!c.texture && c.visible) {
@@ -346,7 +347,7 @@ export default (function () {
             if (this.currentScene) {
                 return this.currentScene.getEntitiesByType(type);
             } else {
-                return Array.setUp();
+                return arrayCache.setUp();
             }
         }
         

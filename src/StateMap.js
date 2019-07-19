@@ -9,7 +9,9 @@
  * @since 0.8.0
  */
 import DataMap from './DataMap.js';
+import {arrayCache} from './utils/array.js';
 import config from 'config';
+import {greenSplit} from './utils/string.js';
 import recycle from 'recycle';
 
 export default (function () {
@@ -51,7 +53,7 @@ export default (function () {
      */
     Object.defineProperty(proto, 'updateFromString', {
         value: function (states) {
-            var arr = states.greenSplit(','),
+            var arr = greenSplit(states, ','),
                 i = arr.length,
                 str = '';
             
@@ -66,7 +68,7 @@ export default (function () {
                 }
             }
             
-            arr.recycle();
+            arrayCache.recycle(arr);
             
             return this;
         }

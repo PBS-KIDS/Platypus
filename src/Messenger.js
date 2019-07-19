@@ -5,6 +5,7 @@
  * @class Messenger
  */
 /* global platypus, window */
+import {arrayCache, greenSlice} from './utils/array.js';
 import config from 'config';
 
 export default (function () {
@@ -21,7 +22,7 @@ export default (function () {
         constructor () {
             this._listeners = {};
             this._destroyed = false;
-            this.loopCheck = Array.setUp();
+            this.loopCheck = arrayCache.setUp();
         }
 
         get destroyed () {
@@ -108,21 +109,21 @@ export default (function () {
                     return this.triggerEvent.apply(this, arguments);
                 } else {
                     splitEvents = events.split(" ");
-                    args = Array.prototype.greenSlice.call(arguments);
+                    args = greenSlice(arguments);
                     for (i = 0; i < splitEvents.length; i++) {
                         args[0] = splitEvents[i];
                         count += this.triggerEvent.apply(this, args);
                     }
-                    args.recycle();
+                    arrayCache.recycle(args);
                     return count;
                 }
             } else if (Array.isArray(events)) {
-                args = Array.prototype.greenSlice.call(arguments);
+                args = greenSlice(arguments);
                 for (i = 0; i < events.length; i++) {
                     args[0] = events[i];
                     count += this.trigger.apply(this, args);
                 }
-                args.recycle();
+                arrayCache.recycle(args);
                 return count;
             } else if (events.event) {
                 if (typeof events.message !== 'undefined') {
@@ -153,11 +154,11 @@ export default (function () {
             
             if (!this._destroyed && listeners.hasOwnProperty(type) && (listeners[type])) {
                 // copy the listeners array; reusing `listeners` variable
-                listeners = listeners[type].greenSlice();
+                listeners = greenSlice(listeners[type]);
 
                 if (arguments.length > 1) {
-                    args = Array.prototype.greenSlice.call(arguments);
-                    args.greenSplice(0);
+                    args = greenSlice(arguments);
+                    args.shift();
                 }
 
                 count = i = listeners.length;
@@ -171,9 +172,9 @@ export default (function () {
                 }
                 
                 if (args) {
-                    args.recycle();
+                    arrayCache.recycle(args);
                 }
-                listeners.recycle();
+                arrayCache.recycle(listeners);
             }
             
             return count;
@@ -196,7 +197,7 @@ export default (function () {
          * @since 0.7.1
          */
         destroy () {
-            this.loopCheck.recycle();
+            arrayCache.recycle(this.loopCheck);
             this.loopCheck = null;
             this._destroyed = true;
             this._listeners = null;
@@ -224,7 +225,7 @@ export default (function () {
         static initialize (object) {
             object._listeners = {};
             object._destroyed = false;
-            object.loopCheck = Array.setUp();
+            object.loopCheck = arrayCache.setUp();
         }
     }
 

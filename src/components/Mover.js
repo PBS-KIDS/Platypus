@@ -6,6 +6,7 @@
  * @uses platypus.Component
  */
 /* global platypus */
+import {arrayCache, greenSplice} from '../utils/array.js';
 import Vector from '../Vector.js';
 
 export default (function () {
@@ -180,10 +181,10 @@ export default (function () {
             
             // Copy movers so we're not re-using mover definitions
             this.moversCopy = this.movers;
-            this.movers = Array.setUp();
+            this.movers = arrayCache.setUp();
 
-            this.velocityChanges = Array.setUp();
-            this.velocityDirections = Array.setUp();
+            this.velocityChanges = arrayCache.setUp();
+            this.velocityDirections = arrayCache.setUp();
 
             this.ground = Vector.setUp(this.ground);
             
@@ -278,7 +279,7 @@ export default (function () {
                 if (component.type === 'Motion') {
                     i = this.movers.indexOf(component);
                     if (i >= 0) {
-                        this.movers.greenSplice(i);
+                        greenSplice(this.movers, i);
                     }
                 }
             },
@@ -468,7 +469,7 @@ export default (function () {
                     v = tempVector;
                 
                 if (i) {
-                    soc = Array.setUp();
+                    soc = arrayCache.setUp();
                     
                     while (j--) {
                         m = ms[j];
@@ -492,6 +493,7 @@ export default (function () {
                     
                     vc.length = 0;
                     vd.length = 0;
+                    arrayCache.recycle(soc);
                 }
             },
             
@@ -556,11 +558,12 @@ export default (function () {
                 for (i = this.movers.length - 1; i >= 0; i--) {
                     this.removeMover(this.movers[i]);
                 }
-                this.movers.recycle();
+                arrayCache.recycle(this.movers);
+                
                 this.ground.recycle();
                 this.lastVelocity.recycle();
-                this.velocityChanges.recycle();
-                this.velocityDirections.recycle();
+                arrayCache.recycle(this.velocityChanges);
+                arrayCache.recycle(this.velocityDirections);
                 
                 delete this.owner.maxMagnitude; // remove property handlers
                 this.owner.maxMagnitude = max;

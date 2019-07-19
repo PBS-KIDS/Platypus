@@ -14,6 +14,8 @@ import Data from '../Data.js';
 import EventRender from './EventRender.js';
 import Interactive from './Interactive.js';
 import StateRender from './StateRender.js';
+import {arrayCache} from '../utils/array.js';
+import {greenSplit} from '../utils/string.js';
 
 export default (function () {
     var Animator = PIXI.animate && PIXI.animate.Animator,
@@ -37,13 +39,13 @@ export default (function () {
                     values = value.substring(paren + 1, value.indexOf(')'));
 
                 if (values.length) {
-                    values = values.greenSplit(',');
+                    values = greenSplit(values, ',');
                     i = values.length;
                     while (i--) {
                         values[i] = +values[i];
                     }
                     gfx[func].apply(gfx, values);
-                    values.recycle();
+                    arrayCache.recycle(values);
                 } else {
                     gfx[func]();
                 }
@@ -51,13 +53,13 @@ export default (function () {
 
             return function (gfx, value) {
                 var i = 0,
-                    arr = value.greenSplit('.');
+                    arr = greenSplit(value, '.');
 
                 for (i = 0; i < arr.length; i++) {
                     process(gfx, arr[i]);
                 }
                 
-                arr.recycle();
+                arrayCache.recycle(arr);
             };
         }());
     

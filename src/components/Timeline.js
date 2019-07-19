@@ -6,6 +6,7 @@
  * @since 0.8.7
  */
 /* global platypus */
+import {arrayCache, greenSplice} from '../utils/array.js';
 import Data from '../Data.js';
 
 export default (function () {
@@ -27,13 +28,13 @@ export default (function () {
             while (i--) {
                 instance = instances[i];
                 if (instance.remove) {
-                    instances.greenSplice(i);
-                    instance.timeline.recycle(2);
+                    greenSplice(instances, i);
+                    arrayCache.recycle(instance.timeline, 2);
                     instance.recycle();
                 } else if (instance.active) {
                     if (instance.timeline.length === 0) {
-                        instances.greenSplice(i);
-                        instance.timeline.recycle(2);
+                        greenSplice(instances, i);
+                        arrayCache.recycle(instance.timeline, 2);
                         instance.recycle();
                     } else {
                         this.progressTimeline(instance, delta);
@@ -77,7 +78,7 @@ export default (function () {
         initialize: function () {
             var x = 0;
             
-            this.timelineInstances = Array.setUp();
+            this.timelineInstances = arrayCache.setUp();
             for (x in this.timelines) {
                 if (this.timelines.hasOwnProperty(x)) {
                     this.addEventListener(x, timelineTrigger.bind(this, x));
@@ -121,7 +122,7 @@ export default (function () {
         
         methods: {
             createTimeStampedTimeline: function (timeline) {
-                var timeStampedTimeline = Array.setUp(),
+                var timeStampedTimeline = arrayCache.setUp(),
                     x = 0,
                     timeOffset = 0,
                     entry = null;
@@ -205,10 +206,10 @@ export default (function () {
                 
                 while (i--) {
                     instance = instances[i];
-                    instance.timeline.recycle(2);
+                    arrayCache.recycle(instance.timeline, 2);
                     instance.recycle();
                 }
-                instances.recycle();
+                arrayCache.recycle(instances);
                 this.timelineInstances = null;
             }
         }

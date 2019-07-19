@@ -44,6 +44,7 @@ This component is a general purpose state-machine for an entity, taking in vario
     }
 */
 /* global platypus */
+import {arrayCache, greenSplice} from '../utils/array.js';
 import DataMap from '../DataMap.js';
 import StateMap from '../StateMap.js';
 
@@ -216,7 +217,7 @@ export default (function () {
             this.state = thisState;
             
             if (inputDefinition) {
-                stateObjects = Array.setUp();
+                stateObjects = arrayCache.setUp();
                 for (key in inputDefinition) {
                     if (inputDefinition.hasOwnProperty(key)) {
                         state = StateMap.setUp(inputDefinition[key]);
@@ -245,8 +246,8 @@ export default (function () {
 
             this.snapshot = StateMap.setUp();
             this.last = StateMap.setUp();
-            this.queueTimes = Array.setUp();
-            this.queue = Array.setUp();
+            this.queueTimes = arrayCache.setUp();
+            this.queue = arrayCache.setUp();
             this.outputs = setUpOutputs(this.outputs);
         },
 
@@ -270,8 +271,8 @@ export default (function () {
                     
                     if (this.queueTimes[i] <= 0) {
                         this.owner.trigger(this.queue[i].event, this.queue[i].message);
-                        this.queueTimes.greenSplice(i);
-                        this.queue.greenSplice(i);
+                        greenSplice(this.queueTimes, i);
+                        greenSplice(this.queue, i);
                     }
                 }
             },
@@ -288,14 +289,14 @@ export default (function () {
                 if (this.outputs) {
                     ss.update(state);
                     
-                    queue = Array.setUp();
+                    queue = arrayCache.setUp();
                     handleOutput('outputs', ss, this.last, this.outputs, false, this.owner, queue);
                     i = queue.length;
                     while (i--) {
                         this.queue.push(queue[i]);
                         this.queueTimes.push(queue[i].delay);
                     }
-                    queue.recycle();
+                    arrayCache.recycle(queue);
                     
                     this.last.update(ss);
                 }
@@ -307,15 +308,15 @@ export default (function () {
                 var i = 0,
                     so = this.stateObjects;
                 
-                this.queueTimes.recycle();
-                this.queue.recycle();
+                arrayCache.recycle(this.queueTimes);
+                arrayCache.recycle(this.queue);
                 
                 if (so) {
                     i = so.length;
                     while (i--) {
                         so[i].recycle();
                     }
-                    so.recycle();
+                    arrayCache.recycle(so);
                     this.stateObjects = null;
                 }
 

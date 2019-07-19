@@ -12,6 +12,7 @@
  */
 import Data from './Data.js';
 import StateMap from './StateMap.js';
+import {arrayCache} from './utils/array.js';
 import config from 'config';
 import recycle from 'recycle';
 
@@ -79,7 +80,7 @@ export default  (function () {
              * @property inputs
              * @type Array
              */
-            this.inputs = Array.setUp();
+            this.inputs = arrayCache.setUp();
 
             /**
              * The message that is passed to the Entity if the ActionState is active.
@@ -171,7 +172,7 @@ export default  (function () {
     recycle.add(ActionState, 'ActionState', ActionState, function () {
         this.states.recycle();
         this.stateSummary.recycle();
-        this.inputs.recycle();
+        arrayCache.recycle(this.inputs);
     }, true, config.dev);
 
     return ActionState;

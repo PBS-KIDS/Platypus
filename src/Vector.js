@@ -9,6 +9,7 @@
  * @param [z] {number} The z coordinate.
  */
 /*global platypus */
+import {arrayCache, greenSlice} from './utils/array.js';
 import config from 'config';
 import recycle from 'recycle';
 
@@ -19,7 +20,7 @@ export default (function () {
                 this.matrix[1] = 0;
                 this.matrix[2] = 0;
             } else {
-                this.matrix = Array.setUp(0, 0, 0);
+                this.matrix = arrayCache.setUp(0, 0, 0);
             }
             this.set(x, y, z);
         },
@@ -340,16 +341,16 @@ export default (function () {
         y     = a.y;
         z     = a.z;
         
-        arr = Array.setUp(
-            Array.setUp(    cos + x * x * icos, x * y * icos - z * sin, x * z * icos + y * sin),
-            Array.setUp(y * x * icos + z * sin,     cos + y * y * icos, y * z * icos - x * sin),
-            Array.setUp(z * x * icos - y * sin, z * y * icos + x * sin,     cos + z * z * icos)
+        arr = arrayCache.setUp(
+            arrayCache.setUp(    cos + x * x * icos, x * y * icos - z * sin, x * z * icos + y * sin),
+            arrayCache.setUp(y * x * icos + z * sin,     cos + y * y * icos, y * z * icos - x * sin),
+            arrayCache.setUp(z * x * icos - y * sin, z * y * icos + x * sin,     cos + z * z * icos)
         );
         
         this.multiply(arr);
         
         temp.recycle();
-        arr.recycle(2);
+        arrayCache.recycle(arr, 2);
         
         return this;
     };
@@ -369,7 +370,7 @@ export default (function () {
             l = 0;
         
         if (Array.isArray(multiplier)) {
-            arr = this.matrix.greenSlice();
+            arr = greenSlice(this.matrix);
             l = limit || multiplier.length;
             for (i = 0; i < l; i++) {
                 this.matrix[i] = 0;
@@ -377,7 +378,7 @@ export default (function () {
                     this.matrix[i] += arr[j] * multiplier[i][j];
                 }
             }
-            arr.recycle();
+            arrayCache.recycle(arr);
         } else {
             l = limit || this.matrix.length;
             for (i = 0; i < l; i++) {

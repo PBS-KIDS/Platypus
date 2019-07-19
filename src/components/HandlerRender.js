@@ -8,6 +8,7 @@
 /*global PIXI, platypus */
 import Data from '../Data.js';
 import Interactive from './Interactive.js';
+import {arrayCache} from '../utils/array.js';
 
 export default (function () {
     var Container = PIXI.Container;
@@ -61,7 +62,7 @@ export default (function () {
 
         initialize: function () {
             var definition = null,
-                renderGroups = this.owner.renderGroups = this.renderGroups = Array.setUp();
+                renderGroups = this.owner.renderGroups = this.renderGroups = arrayCache.setUp();
 
             this.worldContainer = this.worldContainer || new Container();
             this.worldContainer.name = '';
@@ -226,9 +227,10 @@ export default (function () {
         methods: {
             destroy: function () {
                 this.worldContainer = null;
-                this.renderGroups.recycle();
+                arrayCache.recycle(this.renderGroups);
                 this.renderGroups = null;
                 this.renderMessage.recycle();
+                this.renderMessage = null;
             }
         }
     });

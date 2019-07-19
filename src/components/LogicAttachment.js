@@ -7,6 +7,7 @@
  */
 /* global platypus */
 import Entity from '../Entity.js';
+import {arrayCache} from '../utils/array.js';
 
 export default (function () {
     var
@@ -238,7 +239,7 @@ export default (function () {
                 });
             }
             
-            return Array.setUp();
+            return arrayCache.setUp();
         }
     });
 }());

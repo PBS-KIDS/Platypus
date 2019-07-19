@@ -7,6 +7,7 @@
  * @since 0.6.0
  */
 /*global createjs, platypus */
+import {arrayCache, greenSplice} from '../utils/array.js';
 import Data from '../Data.js';
 import StateMap from '../StateMap.js';
 
@@ -176,7 +177,7 @@ export default (function () {
                 playClip = null,
                 sound    = null;
             
-            this.activeAudioClips = Array.setUp();
+            this.activeAudioClips = arrayCache.setUp();
     
             this.state = this.owner.state;
             this.stateChange = false;
@@ -185,7 +186,7 @@ export default (function () {
     
             if (definition.audioMap) {
                 if (this.stateBased) {
-                    this.checkStates = Array.setUp();
+                    this.checkStates = arrayCache.setUp();
                 }
                 for (key in definition.audioMap) {
                     if (definition.audioMap.hasOwnProperty(key)) {
@@ -455,7 +456,7 @@ export default (function () {
                                     clips[i].addEventListener('loop', func);
                                 } else {
                                     clips[i].stop();
-                                    clips.greenSplice(i);
+                                    greenSplice(clips, i);
                                 }
                             }
                         }
@@ -477,7 +478,7 @@ export default (function () {
                     i     = clips ? clips.indexOf(instance) : -1;
                 
                 if (i >= 0) {
-                    clips.greenSplice(i);
+                    greenSplice(clips, i);
                 }
                 instance.stop();
             },
@@ -486,7 +487,7 @@ export default (function () {
                 var i = this.activeAudioClips.indexOf(audioClip);
 
                 if (i >= 0) {
-                    this.activeAudioClips.greenSplice(i);
+                    greenSplice(this.activeAudioClips, i);
                 }
             },
             
@@ -507,7 +508,7 @@ export default (function () {
                     i = 0;
                 
                 this.stopAudio();
-                this.activeAudioClips.recycle();
+                arrayCache.recycle(this.activeAudioClips);
                 this.activeAudioClips = null;
                 
                 this.state = null;
@@ -519,7 +520,7 @@ export default (function () {
                         ci.states.recycle();
                         ci.recycle();
                     }
-                    c.recycle();
+                    arrayCache.recycle(c);
                     this.checkStates = null;
                 }
             }

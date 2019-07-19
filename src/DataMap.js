@@ -10,6 +10,7 @@
  */
 /* global window */
 import './polyfills/Map.js';
+import {arrayCache, greenSplice} from './utils/array.js';
 import config from 'config';
 import recycle from 'recycle';
 
@@ -29,7 +30,7 @@ export default (function () {
                 value = this.get(key);
             
             if (i >= 0) {
-                keys.greenSplice(i);
+                greenSplice(keys, i);
                 this.delete(key);
             }
             
@@ -94,7 +95,7 @@ export default (function () {
                  * @type Array
                  * @default []
                  */
-                keys = mm.keys.value = Array.setUp();
+                keys = mm.keys.value = arrayCache.setUp();
                 
                 /**
                  * Returns the value of the provided key.

@@ -37,6 +37,7 @@
  * @uses platypus.Component
  */
 /*global atob, pako, platypus */
+import {arrayCache, greenSlice, union} from '../utils/array.js';
 import AABB from '../AABB.js';
 import Data from '../Data.js';
 import Entity from '../Entity.js';
@@ -310,9 +311,9 @@ export default (function () {
         checkLevel = function (level, ss) {
             var i = 0,
                 j = 0,
-                tilesets = Array.setUp(),
+                tilesets = arrayCache.setUp(),
                 arr = null,
-                assets = Array.setUp(),
+                assets = arrayCache.setUp(),
                 data = null,
                 entity = null,
                 entityAssets = null;
@@ -327,7 +328,7 @@ export default (function () {
                 }
 
                 if (level.assets) { // Property added by a previous parse (so that this algorithm isn't run on the same level multiple times)
-                    assets.union(level.assets);
+                    union(assets, level.assets);
                 } else if (level.layers) {
                     for (i = 0; i < level.layers.length; i++) {
                         if (level.layers[i].type === 'objectgroup') {
@@ -335,19 +336,19 @@ export default (function () {
                                 entity = getEntityData(level.layers[i].objects[j], level.tilesets);
                                 if (entity) {
                                     entityAssets = Entity.getAssetList(entity);
-                                    assets.union(entityAssets);
-                                    entityAssets.recycle();
+                                    union(assets, entityAssets);
+                                    arrayCache.recycle(entityAssets);
                                 }
                             }
                         } else if (level.layers[i].type === 'imagelayer') {
-                            assets.union([level.layers[i].image]);
+                            union(assets, [level.layers[i].image]);
                         } else {
                             entity = getProperty(level.layers[i].properties, 'entity');
                             if (entity) {
                                 data = Data.setUp('type', entity);
                                 arr = Entity.getAssetList(data);
-                                assets.union(arr);
-                                arr.recycle();
+                                union(assets, arr);
+                                arrayCache.recycle(arr);
                                 data.recycle();
                             }
                         }
@@ -356,10 +357,10 @@ export default (function () {
                         for (i = 0; i < level.tilesets.length; i++) {
                             tilesets.push(level.tilesets[i].image);
                         }
-                        assets.union(tilesets);
-                        tilesets.recycle();
+                        union(assets, tilesets);
+                        arrayCache.recycle(tilesets);
                     }
-                    level.assets = assets.greenSlice(); // Save for later in case this level is checked again.
+                    level.assets = greenSlice(assets); // Save for later in case this level is checked again.
                 }
             }
             
@@ -896,9 +897,9 @@ export default (function () {
                 }
                 
                 if (this.images) {
-                    images = this.images.greenSlice();
+                    images = greenSlice(this.images);
                 } else {
-                    images = Array.setUp();
+                    images = arrayCache.setUp();
                 }
                 if (images.length === 0) {
                     for (i = 0; i < tilesets.length; i++) {
@@ -1293,14 +1294,14 @@ export default (function () {
             
             if (ss) {
                 if (typeof ss === 'string') {
-                    assets.union(platypus.game.settings.spriteSheets[ss].images);
+                    union(assets, platypus.game.settings.spriteSheets[ss].images);
                 } else {
-                    assets.union(ss.images);
+                    union(assets, ss.images);
                 }
             }
             
             if (images) {
-                assets.union(images);
+                union(assets, images);
             }
             
             return assets;
@@ -1314,7 +1315,7 @@ export default (function () {
             if (data && data.level) {
                 return checkLevel(data.level, ss);
             } else {
-                return Array.setUp();
+                return arrayCache.setUp();
             }
         }
     });

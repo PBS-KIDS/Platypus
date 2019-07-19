@@ -6,9 +6,9 @@
  * @uses platypus.Component
  */
 /*global platypus */
-export default (function () {
-    
+import {arrayCache, greenSplice} from '../utils/array.js';
 
+export default (function () {
     var broadcast = function () {
         var i = 0,
             link = null;
@@ -68,7 +68,7 @@ export default (function () {
                 this.owner.trigger(resp.message, resp.value, resp.debug);
             }.bind(this));
             
-            this.links = Array.setUp();
+            this.links = arrayCache.setUp();
             
             if (this.owner.linkEntities) {
                 for (i = 0; i < this.owner.linkEntities.length; i++) {
@@ -133,7 +133,7 @@ export default (function () {
                 var i = this.links.indexOf(toUnlink.entity);
                 
                 if (i >= 0) {
-                    this.links.greenSplice(i);
+                    greenSplice(this.links, i);
                 }
             }
         },
@@ -145,7 +145,7 @@ export default (function () {
                 for (i = 0; i < this.links.length; i++) {
                     this.links[i].triggerEvent('unlink-entity', this.linkMessage);
                 }
-                this.links.recycle();
+                arrayCache.recycle(this.links);
                 this.links = null;
                 this.events = null;
             }

@@ -14,19 +14,20 @@
  * @static
  */
 /*global platypus */
+import {arrayCache, greenSplice} from './utils/array.js';
 import Data from './Data.js';
 
 export default (function () {
     var getAssetList = function () {
-            return Array.setUp();
+            return arrayCache.setUp();
         },
         Component = function (type, owner) {
             this.type = type;
             this.owner = owner;
             this.publicMethods = Data.setUp();
             this.listener = Data.setUp(
-                "events", Array.setUp(),
-                "messages", Array.setUp()
+                "events", arrayCache.setUp(),
+                "messages", arrayCache.setUp()
             );
         },
         proto = Component.prototype;
@@ -74,8 +75,8 @@ export default (function () {
             this.publicMethods.recycle();
             
             this.removeEventListeners();
-            this.listener.events.recycle();
-            this.listener.messages.recycle();
+            arrayCache.recycle(this.listener.events);
+            arrayCache.recycle(this.listener.messages);
             this.listener.recycle();
             this.listener = null;
         }
@@ -162,8 +163,8 @@ export default (function () {
         for (i = events.length - 1; i >= 0; i--) {
             if ((events[i] === event) && (!callback || (messages[i] === callback))) {
                 this.owner.off(event, messages[i]);
-                this.listener.events.greenSplice(i);
-                this.listener.messages.greenSplice(i);
+                greenSplice(this.listener.events, i);
+                greenSplice(this.listener.messages, i);
             }
         }
     };

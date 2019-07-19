@@ -6,6 +6,7 @@
  */
 /*global platypus */
 import * as PIXI from 'pixi.js';
+import {arrayCache, greenSlice} from './utils/array.js';
 import Data from './Data.js';
 
 export default (function () {
@@ -26,7 +27,7 @@ export default (function () {
         regex = /[\[\]{},-]/g,
         getBaseTextures = function (images) {
             var i = 0,
-                bts = Array.setUp(),
+                bts = arrayCache.setUp(),
                 asset = null,
                 assetCache = platypus.assetCache,
                 btCache = baseTextureCache,
@@ -69,7 +70,7 @@ export default (function () {
             return spriteSheet.id;
         },
         getDefaultAnimation = function (length, textures) {
-            var frames = Array.setUp(),
+            var frames = arrayCache.setUp(),
                 i = 0;
             
             for (i = 0; i < length; i++) {
@@ -92,7 +93,7 @@ export default (function () {
             for (key in def) {
                 if (def.hasOwnProperty(key)) {
                     animation = def[key];
-                    frames = animation.frames.greenSlice();
+                    frames = greenSlice(animation.frames);
                     i = frames.length;
                     while (i--) {
                         frames[i] = textures[frames[i]] || emptyFrame;
@@ -120,7 +121,7 @@ export default (function () {
                 frames   = spriteSheet.frames,
                 images   = spriteSheet.images,
                 texture  = null,
-                textures = Array.setUp(),
+                textures = arrayCache.setUp(),
                 bases    = getBaseTextures(images);
 
             // Set up texture for each frame
@@ -141,7 +142,7 @@ export default (function () {
                 anims.default = getDefaultAnimation(textures.length, textures);
             }
             
-            bases.recycle();
+            arrayCache.recycle(bases);
             
             return Data.setUp(
                 "textures", textures,
@@ -155,7 +156,7 @@ export default (function () {
                 frames   = spriteSheet.frames,
                 images   = spriteSheet.images,
                 texture  = null,
-                textures = Array.setUp(),
+                textures = arrayCache.setUp(),
                 bases    = getBaseTextures(images);
 
             // Set up texture for each frame
@@ -171,7 +172,7 @@ export default (function () {
             // Set up animations
             anims = standardizeAnimations(spriteSheet.animations, textures);
 
-            bases.recycle();
+            arrayCache.recycle(bases);
             
             return Data.setUp(
                 "textures", textures,
@@ -444,10 +445,10 @@ export default (function () {
         if (this.cacheId) {
             animationCache[this.cacheId].viable -= 1;
             if (animationCache[this.cacheId].viable <= 0) {
-                animationCache[this.cacheId].textures.recycle();
+                arrayCache.recycle(animationCache[this.cacheId].textures);
                 for (key in animationCache[this.cacheId].animations) {
                     if (animationCache[this.cacheId].animations.hasOwnProperty(key)) {
-                        animationCache[this.cacheId].animations[key].frames.recycle();
+                        arrayCache.recycle(animationCache[this.cacheId].animations[key].frames);
                     }
                 }
                 delete animationCache[this.cacheId];
@@ -517,7 +518,7 @@ export default (function () {
                 for (key in source) {
                     if (source.hasOwnProperty(key)) {
                         if (destination[key]) {
-                            destination[key].frames.recycle();
+                            arrayCache.recycle(destination[key].frames);
                             destination[key].recycle();
                             platypus.debug.olive('PIXIAnimation "' + id + '": Overwriting duplicate animation for "' + key + '".');
                         }
@@ -555,7 +556,7 @@ export default (function () {
                 
                 for (i = 0; i < source.length; i++) {
                     frame = source[i];
-                    destination.push(Array.setUp(
+                    destination.push(arrayCache.setUp(
                         frame[0],
                         frame[1],
                         frame[2],
@@ -587,7 +588,7 @@ export default (function () {
                     dFR = destination.framerate || 60,
                     dFrames = destination.frames,
                     i = 0,
-                    images = Array.setUp(),
+                    images = arrayCache.setUp(),
                     firstImageIndex = dImages.length,
                     firstFrameIndex = dFrames.length,
                     sAnims = source.animations,
@@ -614,20 +615,20 @@ export default (function () {
                 } else {
                     bases = getBaseTextures(images);
                     addFrameObject(sFrames, dFrames, firstImageIndex, bases);
-                    bases.recycle();
+                    arrayCache.recycle(bases);
                 }
                 
                 // Set up animations object
                 addAnimations(sAnims, dAnims, sFR / dFR, firstFrameIndex, destination.id);
                 
-                images.recycle();
+                arrayCache.recycle(images);
                 
                 return destination;
             },
             formatAnimation = function (key, animation, speedRatio, firstFrameIndex) {
                 var i = 0,
                     first = 0,
-                    frames = Array.setUp(),
+                    frames = arrayCache.setUp(),
                     last = 0;
                 
                 if (typeof animation === 'number') {
@@ -679,13 +680,15 @@ export default (function () {
                 
                 for (key in animations) {
                     if (animations.hasOwnProperty(key)) {
-                        animations[key].frames.recycle();
+                        arrayCache.recycle(animations[key].frames);
                     }
                     animations[key].recycle();
                 }
                 
-                this.frames.recycle(2);
-                this.images.recycle();
+                arrayCache.recycle(this.frames, 2);
+                this.frames = null;
+                arrayCache.recycle(this.images);
+                this.images = null;
                 this.recycle();
             },
             merge = function (spriteSheets, destination) {
@@ -717,9 +720,9 @@ export default (function () {
                 response = Data.setUp(
                     "animations", Data.setUp(),
                     "framerate", 60,
-                    "frames", Array.setUp(),
+                    "frames", arrayCache.setUp(),
                     "id", '',
-                    "images", Array.setUp(),
+                    "images", arrayCache.setUp(),
                     "recycleSpriteSheet", recycle
                 );
                     

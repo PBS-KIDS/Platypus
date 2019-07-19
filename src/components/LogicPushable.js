@@ -31,9 +31,9 @@ A component that enables an entity to be pushed.
 */
 
 /* global platypus */
-export default (function () {
-    
+import {arrayCache} from '../utils/array.js';
 
+export default (function () {
     var setMagnitude = function (direction, magnitude) {
         return (direction / Math.abs(direction)) * magnitude;
     };
@@ -53,7 +53,7 @@ export default (function () {
             this.currentPushY = 0;
             this.lastX = this.owner.x;
             this.lastY = this.owner.y;
-            this.pushers = Array.setUp();
+            this.pushers = arrayCache.setUp();
         },
         events: {
             "handle-logic": function (resp) {
@@ -102,7 +102,7 @@ export default (function () {
         
         methods: {
             destroy: function () {
-                this.pushers.recycle();
+                arrayCache.recycle(this.pushers);
             }
         }
     });

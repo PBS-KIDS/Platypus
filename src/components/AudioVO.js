@@ -8,6 +8,7 @@
  */
 /*global platypus */
 import Data from '../Data.js';
+import {arrayCache} from '../utils/array.js';
 
 export default (function () {
     var sortByTime = function (a, b) {
@@ -48,7 +49,7 @@ export default (function () {
         },
         setupEventList = function (sounds, eventList, player) { // This function merges events from individual sounds into a full list queued to sync with the SpringRoll voPlayer.
             var i = 0,
-                soundList = Array.setUp();
+                soundList = arrayCache.setUp();
             
             // Create alias-only sound list.
             for (i = 0; i < sounds.length; i++) {
@@ -76,15 +77,15 @@ export default (function () {
                  */
                 this.owner.triggerEvent('sequence-complete');
             }
-            soundList.recycle();
+            arrayCache.recycle(soundList);
         },
         playSound = function (soundDefinition, value) {
             var soundList = null,
-                eventList = Array.setUp(),
+                eventList = arrayCache.setUp(),
                 player = this.player;
 
             if (typeof soundDefinition === 'string') {
-                soundList = Array.setUp(soundDefinition);
+                soundList = arrayCache.setUp(soundDefinition);
             } else if (Array.isArray(soundDefinition)) {
                 soundList = setupEventList(soundDefinition, eventList, player);
             } else {
@@ -94,7 +95,7 @@ export default (function () {
                 if (Array.isArray(soundDefinition.sound)) {
                     soundList = setupEventList(soundDefinition.sound, eventList, player);
                 } else {
-                    soundList = Array.setUp(soundDefinition.sound);
+                    soundList = arrayCache.setUp(soundDefinition.sound);
                 }
             }
             
@@ -105,7 +106,7 @@ export default (function () {
             player.play(soundList, onComplete.bind(this, true, soundList), onComplete.bind(this, false, soundList));
 
             // Removing `this.eventList` after play call since playing a VO clip could be stopping a currently playing clip with events in progress.
-            this.eventList.recycle();
+            arrayCache.recycle(this.eventList);
             this.eventList = eventList;
             this.playingAudio = true;
         };
@@ -145,7 +146,7 @@ export default (function () {
         initialize: function () {
             var key = '';
             
-            this.eventList = Array.setUp();
+            this.eventList = arrayCache.setUp();
     
             this.playingAudio = false;
             this.player = platypus.game.app.voPlayer;
@@ -203,7 +204,7 @@ export default (function () {
                     currentTime = this.player.getElapsed();
 
                     while (events.length && (finished || (events[0].time <= currentTime))) {
-                        event = events.greenSplice(0);
+                        event = events.shift();
                         owner.trigger(event.event, event.message);
                         event.recycle();
                     }
@@ -215,7 +216,8 @@ export default (function () {
                     this.player.stop();
                     this.player.voList = []; // Workaround to prevent a Springroll bug wherein stopping throws an error due to `voList` being `null`.
                 }
-                this.eventList.recycle();
+                arrayCache.recycle(this.eventList);
+                this.eventList = null;
             }
         }
     });

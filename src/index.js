@@ -4,10 +4,6 @@
  */
 /* global global, navigator, require, window */
 
- //TODO: Need to remove these at some point - be a good neighbor and not add stuff to built-ins.
-import './mixins/Array.js';
-import './mixins/String.js';
-
 import DataMap from './DataMap.js';
 import {Debugger} from 'springroll';
 import Game from './Game.js';
@@ -18,6 +14,8 @@ import factory from './factory.js';
 window.createjs = {};
 require('createjs');
 
+export * from './utils/array.js';
+export * from './utils/string.js';
 export {default as AABB} from './AABB.js';
 export {default as ActionState} from './ActionState.js';
 export {default as Async} from './Async.js';

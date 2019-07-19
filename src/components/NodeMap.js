@@ -6,6 +6,7 @@
  * @uses platypus.Component
  */
 /* global platypus */
+import {arrayCache, greenSplice} from '../utils/array.js';
 import Entity from '../Entity.js';
 import Vector from '../Vector.js';
 import config from 'config';
@@ -27,7 +28,7 @@ export default (function () {
 
             this.isNode = true;
             this.map = map;
-            this.contains = Array.setUp();
+            this.contains = arrayCache.setUp();
             this.type = definition.type || '';
             this.x = definition.x || 0;
             this.y = definition.y || 0;
@@ -80,18 +81,15 @@ export default (function () {
         
         for (i = 0; i < this.contains.length; i++) {
             if (this.contains[i] === entity) {
-                return this.contains.greenSplice(i);
+                return greenSplice(this.contains, i);
             }
         }
         return false;
     };
     
-    proto.recycle = function () {
-        this.contains.recycle();
-        this.recycle();
-    };
-    
-    recycle.add(Node, 'Node', Node, null, true, config.dev);
+    recycle.add(Node, 'Node', Node, function () {
+        arrayCache.recycle(this.contains);
+    }, true, config.dev);
     
     return platypus.createComponentClass({
         id: 'NodeMap',
@@ -129,9 +127,9 @@ export default (function () {
             var i   = 0,
                 map = this.map;
             
-            this.map   = Array.setUp(); // Original map is node definitions, so we replace it with actual nodes.
+            this.map   = arrayCache.setUp(); // Original map is node definitions, so we replace it with actual nodes.
             this.nodes = {};
-            this.residentsAwaitingNode = Array.setUp();
+            this.residentsAwaitingNode = arrayCache.setUp();
             
             for (i = 0; i < map.length; i++) {
                 this.addNode(Node.setUp(map[i], this));
@@ -168,7 +166,7 @@ export default (function () {
                 for (i = this.residentsAwaitingNode.length - 1; i >= 0; i--) {
                     entity = this.residentsAwaitingNode[i];
                     if (node.id === entity.nodeId) {
-                        this.residentsAwaitingNode.greenSplice(i);
+                        greenSplice(this.residentsAwaitingNode, i);
                         entity.node = this.getNode(entity.nodeId);
                         entity.triggerEvent('on-node', entity.node);
                     }
@@ -211,8 +209,8 @@ export default (function () {
                     }
                 }
                 
-                this.map.recycle();
-                this.residentsAwaitingNode.recycle();
+                arrayCache.recycle(this.map);
+                arrayCache.recycle(this.residentsAwaitingNode);
             }
         },
         

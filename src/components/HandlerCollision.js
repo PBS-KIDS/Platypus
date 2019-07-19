@@ -6,6 +6,7 @@
  * @uses platypus.Component
  */
 /* global platypus */
+import {arrayCache, greenSplice, union} from '../utils/array.js';
 import AABB from '../AABB.js';
 import CollisionData from '../CollisionData.js';
 import CollisionDataContainer from '../CollisionDataContainer.js';
@@ -59,11 +60,11 @@ export default (function () {
         initialize: function () {
             this.againstGrid = Data.setUp();
             
-            this.solidEntitiesLive = Array.setUp();
-            this.softEntitiesLive = Array.setUp();
-            this.allEntitiesLive = Array.setUp();
-            this.groupsLive = Array.setUp();
-            this.nonColliders = Array.setUp();
+            this.solidEntitiesLive = arrayCache.setUp();
+            this.softEntitiesLive = arrayCache.setUp();
+            this.allEntitiesLive = arrayCache.setUp();
+            this.groupsLive = arrayCache.setUp();
+            this.nonColliders = arrayCache.setUp();
             
             this.terrain = null;
             this.owner.previousX = this.owner.previousX || this.owner.x;
@@ -180,9 +181,9 @@ export default (function () {
                                 if (arr && arr.length) {
                                     tList = data[type];
                                     if (!tList) {
-                                        data[type] = Array.setUp.apply(null, arr);
+                                        data[type] = arrayCache.setUp.apply(null, arr);
                                     } else {
-                                        tList.union(arr);
+                                        union(tList, arr);
                                     }
                                 }
                             }
@@ -213,9 +214,9 @@ export default (function () {
                         if (arr && arr.length) {
                             tList = data[type];
                             if (!tList) {
-                                data[type] = Array.setUp.apply(null, arr);
+                                data[type] = arrayCache.setUp.apply(null, arr);
                             } else {
-                                tList.union(arr);
+                                union(tList, arr);
                             }
                         }
                     }
@@ -242,7 +243,7 @@ export default (function () {
                         if (arr) {
                             id = arr.indexOf(entity);
                             if (id >= 0) {
-                                arr.greenSplice(id);
+                                greenSplice(arr, id);
                             }
                         }
                     }
@@ -279,7 +280,7 @@ export default (function () {
                                 type = types[i];
                                 arr = list.get(type);
                                 if (!arr) {
-                                    arr = list.set(type, Array.setUp());
+                                    arr = list.set(type, arrayCache.setUp());
                                 }
                                 arr.push(entity);
                             }
@@ -295,7 +296,7 @@ export default (function () {
                 if (entity.getTileShapes) { // Has a CollisionTiles component
                     this.terrain = entity;
                 } else if (entity.collisionTypes && !entity.againstGrid) {
-                    entity.againstGrid = Array.setUp();
+                    entity.againstGrid = arrayCache.setUp();
                     entity.againstAABB = AABB.setUp();
                     this.updateAgainst(entity);
                 }
@@ -304,7 +305,7 @@ export default (function () {
             removeCollisionEntity: function (entity) {
                 if (entity.againstGrid) {
                     this.removeAgainst(entity);
-                    entity.againstGrid.recycle();
+                    arrayCache.recycle(entity.againstGrid);
                     entity.againstGrid = null;
                     entity.againstAABB.recycle();
                     entity.againstAABB = null;
@@ -617,7 +618,7 @@ export default (function () {
                         l = 0,
                         isIncluded = includeEntity,
                         potentialCollision       = false,
-                        potentialCollidingShapes = Array.setUp(),
+                        potentialCollidingShapes = arrayCache.setUp(),
                         pcsGroup                 = null,
                         previousAABB             = null,
                         currentAABB              = null,
@@ -637,7 +638,7 @@ export default (function () {
     
                     while (i--) {
                         //Sweep the full movement of each collision type
-                        potentialCollidingShapes[i] = pcsGroup = Array.setUp();
+                        potentialCollidingShapes[i] = pcsGroup = arrayCache.setUp();
                         collisionType = collisionTypes[i];
                         previousAABB = entityOrGroup.getPreviousAABB(collisionType);
                         currentAABB = entityOrGroup.getAABB(collisionType);
@@ -670,7 +671,7 @@ export default (function () {
                                         potentialCollision = true;
                                     }
                                 }
-                                otherEntities.recycle();
+                                arrayCache.recycle(otherEntities);
                             } else if (terrain) {
                                 //Do our sweep check against the tiles and add potentially colliding shapes to our list.
                                 otherShapes = terrain.getTileShapes(sweepAABB, previousAABB, otherCollisionType);
@@ -690,7 +691,7 @@ export default (function () {
                     }
                     
                     // Array recycling
-                    potentialCollidingShapes.recycle(2);
+                    arrayCache.recycle(potentialCollidingShapes, 2);
                     
                     return finalMovementInfo;
                 };
@@ -1050,7 +1051,7 @@ export default (function () {
                                     }
                                 }
                             }
-                            otherEntities.recycle();
+                            arrayCache.recycle(otherEntities);
                         }
                     }
                     againstGrid.recycle();
@@ -1102,7 +1103,7 @@ export default (function () {
                                 }
                             }
                         }
-                        otherEntities.recycle();
+                        arrayCache.recycle(otherEntities);
                     }
                 }
                 againstGrid.recycle();
@@ -1167,11 +1168,11 @@ export default (function () {
                     keys = null,
                     i = 0;
                 
-                this.groupsLive.recycle();
-                this.nonColliders.recycle();
-                this.allEntitiesLive.recycle();
-                this.softEntitiesLive.recycle();
-                this.solidEntitiesLive.recycle();
+                arrayCache.recycle(this.groupsLive);
+                arrayCache.recycle(this.nonColliders);
+                arrayCache.recycle(this.allEntitiesLive);
+                arrayCache.recycle(this.softEntitiesLive);
+                arrayCache.recycle(this.solidEntitiesLive);
                 this.relocationMessage.position.recycle();
                 this.relocationMessage.recycle();
                 
@@ -1181,7 +1182,7 @@ export default (function () {
                         keys = data.keys;
                         i = keys.length;
                         while (i--) {
-                            data.get(keys[i]).recycle();
+                            arrayCache.recycle(data.get(keys[i]));
                         }
                         data.recycle();
                     }
@@ -1220,7 +1221,7 @@ export default (function () {
              * @return collisions {Array} This is a list of collision objects describing the soft collisions.
              */
             getEntityCollisions: function (entity) {
-                var collisions = Array.setUp();
+                var collisions = arrayCache.setUp();
                 
                 this.checkEntityForSoftCollisions(entity, function (collision) {
                     collisions.push(Data.setUp(collision));
@@ -1239,7 +1240,7 @@ export default (function () {
              * @since 0.11.2
              */
             getShapeCollisions: function (shape, collisionTypes) {
-                var collisions = Array.setUp();
+                var collisions = arrayCache.setUp();
                 
                 this.checkShapeForCollisions(shape, collisionTypes, function (collision) {
                     collisions.push(Data.setUp(collision));
@@ -1259,7 +1260,7 @@ export default (function () {
              * @since 0.11.0
              */
             getPointCollisions: function (x, y, collisionTypes) {
-                var collisions = Array.setUp();
+                var collisions = arrayCache.setUp();
                 
                 this.checkPointForCollisions(x, y, collisionTypes, function (collision) {
                     collisions.push(Data.setUp(collision));

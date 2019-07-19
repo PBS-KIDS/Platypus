@@ -7,6 +7,7 @@
  */
 /*global platypus */
 import StateMap from '../StateMap.js';
+import {arrayCache} from '../utils/array.js';
 
 export default (function () {
     var createTest = function (testStates, animation) {
@@ -98,7 +99,7 @@ export default (function () {
                 map = this.animationMap;
 
             this.followThroughs = {};
-            this.checkStates = Array.setUp();
+            this.checkStates = arrayCache.setUp();
             this.state = this.owner.state;
             this.stateChange = true; //Check state against entity's prior state to update animation if necessary on instantiation.
             this.lastState = -1;
@@ -214,13 +215,11 @@ export default (function () {
             },
 
             destroy: function () {
-                this.checkStates.recycle();
+                arrayCache.recycle(this.checkStates);
+                this.checkStates = null;
                 this.followThroughs = null;
                 this.state = null;
             }
-        },
-        
-        publicMethods: {
         }
     });
 }());

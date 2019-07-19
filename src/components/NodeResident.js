@@ -62,9 +62,9 @@ This component connects an entity to its parent's [[NodeMap]]. It manages naviga
  * @uses platypus.Component
  */
 /* global platypus */
+import {arrayCache, greenSlice} from '../utils/array.js';
+
 export default (function () {
-    
-    
     var createGateway = function (nodeDefinition, map, gateway) {
             return function () {
                 // ensure it's a node if one is available at this gateway
@@ -178,7 +178,7 @@ export default (function () {
                 y: offset.y || 0,
                 z: offset.z || 0
             };
-            this.destinationNodes = Array.setUp();
+            this.destinationNodes = arrayCache.setUp();
             this.algorithm = definition.algorithm || distance;
             
             this.state = this.owner.state;
@@ -199,9 +199,9 @@ export default (function () {
                     arr = null;
                 
                 if (!this.owner.node) {
-                    arr = Array.setUp(this.owner.x, this.owner.y);
+                    arr = arrayCache.setUp(this.owner.x, this.owner.y);
                     this.owner.triggerEvent('on-node', this.owner.parent.getClosestNode(arr));
-                    arr.recycle();
+                    arrayCache.recycle(arr);
                     
                     /**
                      * This event is triggered if the entity is placed on the map but not assigned a node. It is moved to the nearest node and "in-location" is triggered.
@@ -241,7 +241,7 @@ export default (function () {
                         this.onEdge(this.destinationNodes[0]);
                     } else if (!this.lastNode) {
                         this.owner.triggerEvent('on-node', this.destinationNodes[0]);
-                        this.destinationNodes.greenSplice(0);
+                        this.destinationNodes.shift();
                         if (!this.destinationNodes.length) {
                             this.state.set('moving', false);
                             return;
@@ -259,7 +259,7 @@ export default (function () {
                                 node = this.destinationNodes[0];
                                 momentum -= (this.distance - this.progress);
                                 this.progress = 0;
-                                this.destinationNodes.greenSplice(0);
+                                this.destinationNodes.shift();
                                 this.owner.triggerEvent('on-node', node);
                                 if (this.destinationNodes.length && momentum) {
                                     this.onEdge(this.destinationNodes[0]);
@@ -377,7 +377,7 @@ export default (function () {
                     }
                     
                     if (origin && nodesOrNodeType && !test(origin, nodesOrNodeType)) {
-                        nodes = Array.setUp();
+                        nodes = arrayCache.setUp();
                         travResp = this.traverseNode({
                             depth: depth,
                             origin: origin,
@@ -412,7 +412,7 @@ export default (function () {
                             this.blocked = true;
                         }
                         
-                        nodes.recycle();
+                        arrayCache.recycle(nodes);
                     }
                 };
             }()),
@@ -472,7 +472,7 @@ export default (function () {
                     }
                     
                     if (origin && node && (this.node !== node)) {
-                        nodes = Array.setUp();
+                        nodes = arrayCache.setUp();
                         
                         travResp = this.traverseNode({
                             depth: depth,
@@ -511,7 +511,7 @@ export default (function () {
                             this.blocked = true;
                         }
                         
-                        nodes.recycle();
+                        arrayCache.recycle(nodes);
                     }
                     
                     return moving;
@@ -563,7 +563,7 @@ export default (function () {
                             node = map.getNode(neighbors[j]);
                             hasNeighbor = true;
                             if (this.isPassable(node)) {
-                                nodeList = record.nodes.greenSlice();
+                                nodeList = greenSlice(record.nodes);
                                 nodeList.push(node);
                                 resp = this.traverseNode({
                                     depth: record.depth - 1,
@@ -579,7 +579,7 @@ export default (function () {
                                     found: false,
                                     blocked: false
                                 });
-                                nodeList.recycle();
+                                arrayCache.recycle(nodeList);
                                 if (resp.found && (savedResp.shortestPath > resp.shortestPath)) {
                                     savedResp = resp;
                                 }
@@ -593,10 +593,10 @@ export default (function () {
             },
             setPath: function (resp, steps) {
                 if (resp.nodes[0] === this.node) {
-                    resp.nodes.greenSplice(0);
+                    resp.nodes.shift();
                 }
-                this.destinationNodes.recycle();
-                this.destinationNodes = resp.nodes.greenSlice();
+                arrayCache.recycle(this.destinationNodes);
+                this.destinationNodes = greenSlice(resp.nodes);
                 if (steps) {
                     this.destinationNodes.length = Math.min(steps, this.destinationNodes.length);
                 }
@@ -623,7 +623,8 @@ export default (function () {
                 this.owner.triggerEvent('leave-node');
             },
             destroy: function () {
-                this.destinationNodes.recycle();
+                arrayCache.recycle(this.destinationNodes);
+                this.destinationNodes = null;
                 this.state = null;
             }
         }

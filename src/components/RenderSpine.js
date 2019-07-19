@@ -6,6 +6,7 @@
  * @uses platypus.Component
  */
 /* global PIXI, platypus */
+import {arrayCache, union} from '../utils/array.js';
 import Data from '../Data.js';
 import EventRender from './EventRender.js';
 import RenderContainer from './RenderContainer.js';
@@ -579,7 +580,7 @@ export default (function () {
         getAssetList: (function () {
             var
                 getImages = function (atlas, atlases) {
-                    var images = Array.setUp(),
+                    var images = arrayCache.setUp(),
                         lines = null,
                         j = 0;
 
@@ -613,11 +614,11 @@ export default (function () {
                 
                 if (Array.isArray(atlas)) {
                     i = atlas.length;
-                    images = Array.setUp();
+                    images = arrayCache.setUp();
                     while (i--) {
                         arr = getImages(atlas[i], atlases);
-                        images.union(arr);
-                        arr.recycle();
+                        union(images, arr);
+                        arrayCache.recycle(arr);
                     }
                     return images;
                 } else {

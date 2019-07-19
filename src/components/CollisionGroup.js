@@ -6,6 +6,7 @@
  * @uses platypus.Component
  */
 /* global platypus */
+import {arrayCache, greenSplice, union} from '../utils/array.js';
 import AABB from '../AABB.js';
 import DataMap from '../DataMap.js';
 import Vector from '../Vector.js';
@@ -15,12 +16,12 @@ export default (function () {
         id: 'CollisionGroup',
         
         initialize: function () {
-            this.solidEntities = Array.setUp();
+            this.solidEntities = arrayCache.setUp();
             
             // These are used as return values for methods, but are instantiated here for recycling later.
-            this.collisionTypes = Array.setUp();
-            this.shapes = Array.setUp();
-            this.prevShapes = Array.setUp();
+            this.collisionTypes = arrayCache.setUp();
+            this.shapes = arrayCache.setUp();
+            this.prevShapes = arrayCache.setUp();
             
             this.terrain  = null;
             this.aabb     = AABB.setUp(this.owner.x, this.owner.y);
@@ -165,7 +166,7 @@ export default (function () {
                         if (entity.solidCollisionMap.get(types[i]).length) {
                             x = this.solidEntities.indexOf(entity);
                             if (x >= 0) {
-                                this.solidEntities.greenSplice(x);
+                                greenSplice(this.solidEntities, x);
                             }
                         }
                     }
@@ -186,7 +187,7 @@ export default (function () {
                     if ((childEntity !== this.owner) && childEntity.collisionGroup) {
                         childEntity = childEntity.collisionGroup;
                     }
-                    compiledList.union(childEntity.getCollisionTypes());
+                    union(compiledList, childEntity.getCollisionTypes());
                 }
                 
                 return compiledList;
@@ -219,9 +220,9 @@ export default (function () {
                         toList = compiledList.get(key);
                         fromList = entityList.get(key);
                         if (!toList) {
-                            toList = compiledList.set(key, Array.setUp());
+                            toList = compiledList.set(key, arrayCache.setUp());
                         }
-                        toList.union(fromList);
+                        union(toList, fromList);
                         if (recycle) {
                             fromList.recycle();
                         }
@@ -316,7 +317,7 @@ export default (function () {
                     }
                     newShapes = childEntity.getShapes(collisionType);
                     if (newShapes) {
-                        shapes.union(newShapes);
+                        union(shapes, newShapes);
                     }
                 }
                 return shapes;
@@ -337,7 +338,7 @@ export default (function () {
                     }
                     newShapes = childEntity.getPrevShapes(collisionType);
                     if (newShapes) {
-                        shapes.union(newShapes);
+                        union(shapes, newShapes);
                     }
                 }
                 return shapes;
@@ -425,10 +426,10 @@ export default (function () {
             },
 
             destroy: function () {
-                this.solidEntities.recycle();
-                this.collisionTypes.recycle();
-                this.shapes.recycle();
-                this.prevShapes.recycle();
+                arrayCache.recycle(this.solidEntities);
+                arrayCache.recycle(this.collisionTypes);
+                arrayCache.recycle(this.shapes);
+                arrayCache.recycle(this.prevShapes);
                 this.aabb.recycle();
                 this.prevAABB.recycle();
                 this.filteredAABB.recycle();

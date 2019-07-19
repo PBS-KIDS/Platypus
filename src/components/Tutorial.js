@@ -6,8 +6,9 @@
  * @since 0.8.7
  */
 /*global platypus */
+import {greenSlice} from '../utils/array.js';
+
 export default (function () {
-    
     var entityAdded = function (entity) {
             var entityType = null;
                 
@@ -147,8 +148,8 @@ export default (function () {
                     platypus.debug.warn("Tutorial definition lacks events.");
                     continue;
                 }
-                tutorial.events = tutDef.events.greenSlice();
-                tutorial.originalEvents = tutDef.events.greenSlice();
+                tutorial.events = greenSlice(tutDef.events);
+                tutorial.originalEvents = greenSlice(tutDef.events);
                 tutorial.priority = tutDef.priority || 0;
                 tutorial.queue = tutDef.queue || false;
                 tutorial.timesToReplay = (typeof tutDef.timesToReplay === 'number') ? tutDef.timesToReplay : Infinity;
@@ -158,7 +159,7 @@ export default (function () {
                 tutorial.requirements = {};
                 for (entityType in tutDef.requirements) {
                     if (tutDef.requirements.hasOwnProperty(entityType)) {
-                        tutorial.requirements[entityType] = tutDef.requirements[entityType].greenSlice();
+                        tutorial.requirements[entityType] = greenSlice(tutDef.requirements[entityType]);
                         if (!this.watchedEntities[entityType]) {
                             this.watchedEntities[entityType] = [];
                         }
@@ -239,7 +240,7 @@ export default (function () {
 
                 this.playing = tutorial;
                 if (this.playing.events.length === 0) {
-                    this.playing.events = this.playing.originalEvents.greenSlice();
+                    this.playing.events = greenSlice(this.playing.originalEvents);
                 }
 
                 toCall = this.playing.events.splice(Math.floor(Math.random() * this.playing.events.length), 1)[0];

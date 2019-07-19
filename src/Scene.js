@@ -29,6 +29,7 @@
  * @return {Scene} Returns the new scene made up of the provided layers.
  */
 /* global createjs, platypus */
+import {arrayCache, greenSlice, union} from './utils/array.js';
 import Async from './Async.js';
 import Data from './Data.js';
 import Entity from './Entity.js';
@@ -55,7 +56,7 @@ export default (function () {
                 lateAsset.recycle();
             }
             
-            lateAssets.recycle();
+            arrayCache.recycle(lateAssets);
         },
         filterAssets = (function () {
             var isDuplicate = function (id, preload) {
@@ -73,7 +74,7 @@ export default (function () {
             return function (assets, preload) {
                 var asset = null,
                     cache = platypus.assetCache,
-                    filteredAssets = Array.setUp(),
+                    filteredAssets = arrayCache.setUp(),
                     i = assets.length;
 
                 while (i--) {
@@ -122,7 +123,7 @@ export default (function () {
         loadScene = function (callback) {
             var i = 0,
                 key = '',
-                layerInits = Array.setUp(),
+                layerInits = arrayCache.setUp(),
                 layers = this.layerDefinitions,
                 supportedLayer = true,
                 layerDefinition = false,
@@ -131,8 +132,8 @@ export default (function () {
                 
             this.holds = Data.setUp('count', 1, 'release', releaseHold.bind(this, callback));
             this.storeMessages = true;
-            this.storedMessages = Array.setUp();
-            this.layers = Array.setUp();
+            this.storedMessages = arrayCache.setUp();
+            this.layers = arrayCache.setUp();
 
             for (i = 0; i < layers.length; i++) {
                 layerDefinition = layers[i];
@@ -200,21 +201,21 @@ export default (function () {
             for (i = 0; i < messages.length; i++) {
                 this.triggerOnChildren(messages[i].message, messages[i].value);
             }
-            messages.recycle();
+            arrayCache.recycle(messages);
             this.storedMessages = null;
 
-            layerInits.recycle();
+            arrayCache.recycle(layerInits);
         },
         loading = function (definition, callback) {
             var lateAssets = this.getLateAssetList(definition),
-                assets = this.preload.greenSlice(),
+                assets = greenSlice(this.preload),
                 queue = null;
 
             if (lateAssets.length) {
-                assets.union(lateAssets);
+                union(assets, lateAssets);
                 this.unloadAssets = unloadAssets.bind(this, lateAssets);
             } else {
-                lateAssets.recycle();
+                arrayCache.recycle(lateAssets);
             }
 
             if (assets.length) {
@@ -238,7 +239,7 @@ export default (function () {
             assets = this.getAssetList(definition);
 
             this.id = definition.id;
-            this.preload.union(assets);
+            union(this.preload, assets);
             this.layerDefinitions = definition.layers;
             this.storeMessages = false;
             this.storedMessages = null;
@@ -252,7 +253,7 @@ export default (function () {
             this.on('show-scene', this.sceneLive.bind(this));
             this.on('exit-scene', this.exitStart.bind(this));
 
-            assets.recycle();
+            arrayCache.recycle(assets);
         }
         
         sceneLive () {
@@ -349,7 +350,7 @@ export default (function () {
         getEntitiesByType (type) {
             var i = 0,
                 selection = null,
-                entities  = Array.setUp();
+                entities  = arrayCache.setUp();
             
             for (i = 0; i < this.layers.length; i++) {
                 if (this.layers[i].type === type) {
@@ -357,8 +358,8 @@ export default (function () {
                 }
                 if (this.layers[i].getEntitiesByType) {
                     selection = this.layers[i].getEntitiesByType(type);
-                    entities.union(selection);
-                    selection.recycle();
+                    union(entities, selection);
+                    arrayCache.recycle(selection);
                 }
             }
             return entities;
@@ -375,7 +376,7 @@ export default (function () {
             for (i = 0; i < this.layers.length; i++) {
                 this.layers[i].destroy();
             }
-            this.layers.recycle();
+            arrayCache.recycle(this.layers);
             this.layers = null;
             
             // Unload all base textures to prep for next scene
@@ -426,20 +427,20 @@ export default (function () {
         getAssetList (def) {
             var i = 0,
                 arr = null,
-                assets = Array.setUp();
+                assets = arrayCache.setUp();
             
             if (def.assets) {
-                assets.union(def.assets);
+                union(assets, def.assets);
             }
             
             for (i = 0; i < def.layers.length; i++) {
                 arr = Entity.getAssetList(def.layers[i]);
-                assets.union(arr);
-                arr.recycle();
+                union(assets, arr);
+                arrayCache.recycle(arr);
             }
             
             arr = filterAssets(assets, this.preload);
-            assets.recycle();
+            arrayCache.recycle(assets);
             
             return arr;
         }
@@ -453,16 +454,16 @@ export default (function () {
         getLateAssetList (def) {
             var i = 0,
                 arr = null,
-                assets = Array.setUp();
+                assets = arrayCache.setUp();
             
             for (i = 0; i < def.layers.length; i++) {
                 arr = Entity.getLateAssetList(def.layers[i], null, this.data);
-                assets.union(arr);
-                arr.recycle();
+                union(assets, arr);
+                arrayCache.recycle(arr);
             }
             
             arr = filterAssets(assets, this.preload);
-            assets.recycle();
+            arrayCache.recycle(assets);
             
             return arr;
         }

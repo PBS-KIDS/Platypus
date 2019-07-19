@@ -10,6 +10,7 @@ import ActionState from '../ActionState.js';
 import Data from '../Data.js';
 import DataMap from '../DataMap.js';
 import StateMap from '../StateMap.js';
+import {arrayCache} from '../utils/array.js';
 
 export default (function () {
     var distance = function (origin, destination) {
@@ -151,7 +152,7 @@ export default (function () {
                     keys = actions.keys,
                     i = keys.length,
                     action = '',
-                    resolution = Array.setUp(),
+                    resolution = arrayCache.setUp(),
                     state = this.owner.state;
                 
                 while (i--) {
@@ -166,7 +167,7 @@ export default (function () {
                     resolution[i].resolve();
                 }
                 
-                resolution.recycle();
+                arrayCache.recycle(resolution);
             },
             
             /**

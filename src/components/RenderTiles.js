@@ -10,6 +10,7 @@
  * @uses platypus.Component
  */
 /* global platypus, PIXI */
+import {arrayCache, greenSlice, union} from '../utils/array.js';
 import AABB from '../AABB.js';
 import PIXIAnimation from '../PIXIAnimation.js';
 import RenderContainer from './RenderContainer.js';
@@ -70,7 +71,7 @@ export default (function () {
         },
         Template = function (tile, id) {
             this.id = id;
-            this.instances = Array.setUp(tile);
+            this.instances = arrayCache.setUp(tile);
             this.index = 0;
             tile.template = this; // backwards reference for clearing index later.
         },
@@ -110,7 +111,7 @@ export default (function () {
             this.instances[i].destroy();
         }
         
-        this.instances.recycle();
+        arrayCache.recycle(this.instances);
         this.recycle();
     };
 
@@ -276,7 +277,7 @@ export default (function () {
             this.updateCache = false;
 
             // Prepare map tiles
-            this.imageMap = Array.setUp(this.createMap(imgMap));
+            this.imageMap = arrayCache.setUp(this.createMap(imgMap));
 
             this.tilesWidth  = this.imageMap[0].length;
             this.tilesHeight = this.imageMap[0][0].length;
@@ -489,8 +490,8 @@ export default (function () {
                 // Determine whether to merge this image with the background.
                 if (this.entityCache && object) { //TODO: currently only handles a single display object on the cached entity.
                     if (!this.doMap) {
-                        this.doMap = Array.setUp();
-                        this.cachedDisplayObjects = Array.setUp();
+                        this.doMap = arrayCache.setUp();
+                        this.cachedDisplayObjects = arrayCache.setUp();
                         this.populate = this.populateTilesAndEntities;
                     }
                     this.cachedDisplayObjects.push(object);
@@ -507,11 +508,11 @@ export default (function () {
                     // Find tiles that should include this display object
                     for (x = left; x < right; x++) {
                         if (!this.doMap[x]) {
-                            this.doMap[x] = Array.setUp();
+                            this.doMap[x] = arrayCache.setUp();
                         }
                         for (y = top; y < bottom; y++) {
                             if (!this.doMap[x][y]) {
-                                this.doMap[x][y] = Array.setUp();
+                                this.doMap[x][y] = arrayCache.setUp();
                             }
                             this.doMap[x][y].push(object);
                         }
@@ -576,9 +577,9 @@ export default (function () {
                     return mapDefinition;
                 }
 
-                map = Array.setUp();
+                map = arrayCache.setUp();
                 for (x = 0; x < mapDefinition.length; x++) {
-                    map[x] = Array.setUp();
+                    map[x] = arrayCache.setUp();
                     for (y = 0; y < mapDefinition[x].length; y++) {
                         index = mapDefinition[x][y];
                         this.updateTile(index, map, x, y);
@@ -699,10 +700,10 @@ export default (function () {
                     z = this.owner.z,
                     col = null,
                     ct = null,
-                    cg = Array.setUp();
+                    cg = arrayCache.setUp();
 
                 for (x = 0; x < tsw; x += ctw) {
-                    col = Array.setUp();
+                    col = arrayCache.setUp();
                     cg.push(col);
                     for (y = 0; y < tsh; y += cth) {
                         // This prevents us from using too large of a cache for the right and bottom edges of the map.
@@ -777,7 +778,7 @@ export default (function () {
                     z = 0,
                     layer = 0,
                     tile  = null,
-                    tiles = Array.setUp();
+                    tiles = arrayCache.setUp();
 
                 this.tileContainer.removeChildren();
                 for (x = bounds.left; x <= bounds.right; x++) {
@@ -802,7 +803,7 @@ export default (function () {
                 for (z = 0; z < tiles.length; z++) {
                     tiles[z].clear();
                 }
-                tiles.recycle();
+                arrayCache.recycle(tiles);
             },
             
             populateTilesAndEntities: function (bounds, oldBounds) {
@@ -812,8 +813,8 @@ export default (function () {
                     layer   = 0,
                     tile    = null,
                     ent     = null,
-                    ents    = Array.setUp(),
-                    tiles   = Array.setUp(),
+                    ents    = arrayCache.setUp(),
+                    tiles   = arrayCache.setUp(),
                     oList   = null;
 
                 this.tileContainer.removeChildren();
@@ -868,8 +869,8 @@ export default (function () {
                     tiles[z].clear();
                 }
                 
-                tiles.recycle();
-                ents.recycle();
+                arrayCache.recycle(tiles);
+                arrayCache.recycle(ents);
             },
             
             renderCache: function (bounds, dest, src, wrapper, oldCache, oldBounds) {
@@ -985,7 +986,7 @@ export default (function () {
                             this.container.removeChild(grid[x][y]);
                         }
                     }
-                    grid.recycle(2);
+                    arrayCache.recycle(grid, 2);
                     delete this.cacheGrid;
                 } else if (this.tilesSprite) {
                     if (this.tilesSprite.texture.alternate) {
@@ -997,7 +998,7 @@ export default (function () {
                     this.container.removeChild(this.mapContainer);
                 }
                 
-                img.recycle(2);
+                arrayCache.recycle(img, 2);
                 
                 for (key in this.tiles) {
                     if (this.tiles.hasOwnProperty(key)) {
@@ -1013,7 +1014,7 @@ export default (function () {
                     for (x = 0; x < this.cachedDisplayObjects.length; x++) {
                         this.cachedDisplayObjects[x].destroy();
                     }
-                    this.cachedDisplayObjects.recycle();
+                    arrayCache.recycle(this.cachedDisplayObjects);
 
                     for (x = 0; x < map.length; x++) {
                         if (map[x]) {
@@ -1022,10 +1023,10 @@ export default (function () {
                                     map[x][y].recycle();
                                 }
                             }
-                            map[x].recycle();
+                            arrayCache.recycle(map[x]);
                         }
                     }
-                    map.recycle();
+                    arrayCache.recycle(map);
                 }
                 
                 this.laxCam.recycle();
@@ -1041,11 +1042,11 @@ export default (function () {
                         if (typeof ss === 'string') {
                             return getImages(spriteSheets[ss], spriteSheets);
                         } else if (ss.images) {
-                            return ss.images.greenSlice();
+                            return greenSlice(ss.images);
                         }
                     }
 
-                    return Array.setUp();
+                    return arrayCache.setUp();
                 };
             
             return function (component, props, defaultProps) {
@@ -1060,19 +1061,19 @@ export default (function () {
                         return getImages(ss, spriteSheets);
                     } else if (Array.isArray(ss)) {
                         i = ss.length;
-                        images = Array.setUp();
+                        images = arrayCache.setUp();
                         while (i--) {
                             arr = getImages(ss[i], spriteSheets);
-                            images.union(arr);
-                            arr.recycle();
+                            union(images, arr);
+                            arrayCache.recycle(arr);
                         }
                         return images;
                     } else if (ss.images) {
-                        return ss.images.greenSlice();
+                        return greenSlice(ss.images);
                     }
                 }
                 
-                return Array.setUp();
+                return arrayCache.setUp();
             };
         }())
     });

@@ -6,9 +6,9 @@
  * @uses platypus.Component
  */
 /* global platypus */
-export default (function () {
-    
+import {arrayCache, greenSlice} from '../utils/array.js';
 
+export default (function () {
     return platypus.createComponentClass({
         id: 'RenderDestroyMe',
         
@@ -34,9 +34,9 @@ export default (function () {
 
         initialize: function (definition) {
             if (this.animationId) {
-                this.animationIds = Array.setUp(definition.animationId);
+                this.animationIds = arrayCache.setUp(definition.animationId);
             } else if (this.animationIds) {
-                this.animationIds = this.animationIds.greenSlice();
+                this.animationIds = greenSlice(this.animationIds);
             }
         },
 
@@ -57,8 +57,8 @@ export default (function () {
         methods: {
             destroy: function () {
                 if (this.animationIds) {
-                    this.animationIds.recycle();
-                    delete this.animationIds;
+                    arrayCache.recycle(this.animationIds);
+                    this.animationIds = null;
                 }
             }
         }
