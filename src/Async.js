@@ -29,16 +29,17 @@ export default (function () {
         Async = function (arr, finalCallback) {
             var finalCB = final.bind(this, finalCallback),
                 cb = callback.bind(this, finalCB),
-                i = arr.length;
+                i = 0,
+                length = arr.length;
 
-            if (!i) {
+            if (!length) {
                 finalCB();
                 this.recycle();
             } else {
-                this.increment = i;
+                this.increment = length;
                 this.resolve = null;
 
-                while (i--) {
+                for (i = 0; i < length; i++) {
                     arr[i](cb);
                 }
             }
