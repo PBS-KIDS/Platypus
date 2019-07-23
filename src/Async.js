@@ -1,5 +1,5 @@
 /**
- * This class defines an asynchronous set up wherein multiple calls can be made and a final function will be run once the calls are completed.
+ * This class defines an asynchronous set up wherein multiple calls can be made and a final function will be run once the calls are completed. Something like `Promise.all` but better for avoiding garbage collection.
  *
  * @namespace platypus
  * @class Async

@@ -109,9 +109,7 @@ export default (function () {
                         for (i = 0; i < entities.length; i++) {
                             entityInits.push(entityInit.bind(this, entities[i]));
                         }
-                        Async.setUp(entityInits, function () {
-                            callback();
-                        });
+                        Async.setUp(entityInits, callback);
                         arrayCache.recycle(entityInits);
                         return true; // notifies owner that this component is asynchronous.
                     } else {
