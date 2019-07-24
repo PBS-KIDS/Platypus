@@ -214,8 +214,9 @@ export default (function () {
                             scenes[id] = new Scene(new Container(), settings.scenes[scene]);
                         }
                     }
-                    
                     this.scenes = scenes;
+                    
+                    //createjs.Sound.registerSounds([{src:'assets/audio/loop.ogg', id:'loop'}]);
                     
                     if (onFinishedLoading) {
                         onFinishedLoading(this);

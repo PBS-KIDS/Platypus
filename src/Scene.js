@@ -29,15 +29,24 @@
  * @return {Scene} Returns the new scene made up of the provided layers.
  */
 /* global createjs, platypus */
-import {arrayCache, greenSlice, union} from './utils/array.js';
+import {arrayCache, greenSlice, greenSplice, union} from './utils/array.js';
 import Async from './Async.js';
 import Data from './Data.js';
 import Entity from './Entity.js';
 import Messenger from './Messenger.js';
 import PIXIAnimation from './PIXIAnimation.js';
-        
+
 export default (function () {
     var fn = /^(?:\w+:\/{2}\w+(?:\.\w+)*\/?)?(?:[\/.]*?(?:[^?]+)?\/)?(?:([^\/?]+)\.(\w+))(?:\?\S*)?$/,
+        folders = {
+            png: 'images',
+            jpg: 'images',
+            jpeg: 'images',
+            ogg: 'audio',
+            mp3: 'audio',
+            m4a: 'audio',
+            wav: 'audio'
+        },
         addAsset = function (event) {
             platypus.assetCache.set(event.item.id, event.result);
         },
@@ -93,7 +102,7 @@ export default (function () {
             var match = asset.match(fn),
                 a = Data.setUp(
                     'id', asset,
-                    'src', (platypus.game.options.images || '') + asset
+                    'src', (platypus.game.options[folders[match[2].toLowerCase()]] || '') + asset
                 );
             
             //TODO: Make this behavior less opaque.
@@ -209,7 +218,10 @@ export default (function () {
         loading = function (definition, callback) {
             var lateAssets = this.getLateAssetList(definition),
                 assets = greenSlice(this.preload),
-                queue = null;
+                queue = null,
+                i = 0,
+                sounds = arrayCache.setUp(),
+                src = '';
 
             if (lateAssets.length) {
                 union(assets, lateAssets);
@@ -217,6 +229,20 @@ export default (function () {
             } else {
                 arrayCache.recycle(lateAssets);
             }
+
+            i = assets.length;
+            while (i--) {
+                src = assets[i].src || assets[i];
+                src = src.substring(src.lastIndexOf('.')).toLowerCase();
+                if (src === '.ogg' || src === '.mp3' || src === '.wav') {
+                    sounds.push(greenSplice(assets, i));
+                }
+            }
+
+            if (sounds.length) {
+                createjs.Sound.registerSounds(sounds);
+            }
+            arrayCache.recycle(sounds);
 
             if (assets.length) {
                 queue = new createjs.LoadQueue();

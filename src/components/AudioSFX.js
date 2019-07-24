@@ -60,7 +60,8 @@ export default (function () {
             }
 
             return function (value) {
-                var data = null;
+                var data = null,
+                    wait = null;
 
                 value = value || attributes;
                 
@@ -80,6 +81,17 @@ export default (function () {
                 if (data.audio) {
                     data.audio.soundId = sound;
                     this.activeAudioClips.push(data.audio);
+
+                    if (data.audio.playState === 'playFailed') {
+                        // Let's try again - maybe it was a loading issue.
+                        wait = function (event) {
+                            if (event.id === sound) {
+                                data.audio.play();
+                                createjs.Sound.off('fileload', wait);
+                            }
+                        };
+                        createjs.Sound.on('fileload', wait);
+                    }
                 }
             };
         },
@@ -141,6 +153,8 @@ export default (function () {
              * @default null
              */
             audioMap: null,
+
+            channel: 'sfx',
             
             /**
              * Determines whether a sound that's started should play through completely regardless of entity state changes.
@@ -182,7 +196,7 @@ export default (function () {
             this.state = this.owner.state;
             this.stateChange = false;
             
-            this.player = platypus.game.app.sound;
+            this.player = createjs.Sound;
     
             if (definition.audioMap) {
                 if (this.stateBased) {
@@ -524,6 +538,23 @@ export default (function () {
                     this.checkStates = null;
                 }
             }
+        },
+        
+        getAssetList: function (component, props, defaultProps) {
+            var key = '',
+                preload = arrayCache.setUp(),
+                audioMap = component.audioMap || props.audioMap || defaultProps.audioMap;
+            
+            for (key in audioMap) {
+                if (audioMap.hasOwnProperty(key)) {
+                    const item = (audioMap[key].sound || audioMap[key]) + '.ogg';
+                    if (preload.indexOf(item) === -1) {
+                        preload.push(item);
+                    }
+                }
+            }
+
+            return preload;
         }
     });
 }());
