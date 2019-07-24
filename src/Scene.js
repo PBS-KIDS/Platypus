@@ -220,7 +220,7 @@ export default (function () {
                 assets = greenSlice(this.preload),
                 queue = null,
                 i = 0,
-                sounds = arrayCache.setUp(),
+                sounds = this.unloadSounds = arrayCache.setUp(),
                 src = '';
 
             if (lateAssets.length) {
@@ -407,6 +407,12 @@ export default (function () {
             
             // Unload all base textures to prep for next scene
             PIXIAnimation.unloadBaseTextures();
+
+            if (this.unloadSounds.length) {
+                createjs.Sound.removeSounds(this.unloadSounds);
+                arrayCache.recycle(this.unloadSounds);
+                this.unloadSounds = null;
+            }
 
             if (this.unloadAssets) {
                 this.unloadAssets();
