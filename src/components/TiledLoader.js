@@ -944,23 +944,24 @@ export default (function () {
             },
             
             setUpEntities: (function () {
-                const offsetPoints = function (points, offsetX, offsetY, mapOffsetX, mapOffsetY) {
+                const offsetPoints = function (points, mapOffsetX, mapOffsetY) {
                         const coords = [];
                         let p = 0;
 
                         for (p = 0; p < points.length; p++) {
                             coords.push({
-                                "x": ((points[p].x - offsetX) + mapOffsetX),
-                                "y": ((points[p].y - offsetY) + mapOffsetY)
+                                "x": points[p].x + mapOffsetX,
+                                "y": points[p].y + mapOffsetY
                             });
                         }
 
                         return coords;
                     },
-                    getPolyShape = function (type, points, decomposed, offsetX, offsetY, mapOffsetX, mapOffsetY) {
-                        const shape = {
+                    getPolyShape = function (type, points, decomposed, mapOffsetX, mapOffsetY) {
+                        const
+                            shape = {
                                 type: type,
-                                points: offsetPoints(points, offsetX, offsetY, mapOffsetX, mapOffsetY)
+                                points: offsetPoints(points, mapOffsetX, mapOffsetY)
                             };
 
                         if (decomposed) {
@@ -968,7 +969,7 @@ export default (function () {
                             let p = 0;
 
                             for (p = 0; p < decomposed.length; p++) {
-                                decomposedPoints.push(offsetPoints(decomposed[p], offsetX, offsetY, mapOffsetX, mapOffsetY));
+                                decomposedPoints.push(offsetPoints(decomposed[p], mapOffsetX, mapOffsetY));
                             }
     
                             shape.decomposedPolygon = decomposedPoints;
@@ -1052,8 +1053,8 @@ export default (function () {
                                 }
                                 properties.width = largestX - smallestX;
                                 properties.height = largestY - smallestY;
-                                properties.x = entity.x + smallestX;
-                                properties.y = entity.y + smallestY;
+                                properties.x = entity.x;// + smallestX;
+                                properties.y = entity.y;// + smallestY;
     
                                 widthOffset = 0;
                                 heightOffset = 0;
@@ -1062,9 +1063,9 @@ export default (function () {
                                 properties.y = properties.y + mapOffsetY;
     
                                 if (entity.polygon) {
-                                    properties.shape = getPolyShape('polygon', polyPoints, properties.decomposedPolygon, smallestX, smallestY, mapOffsetX, mapOffsetY);
+                                    properties.shape = getPolyShape('polygon', polyPoints, properties.decomposedPolygon, mapOffsetX, mapOffsetY);
                                 } else if (entity.polyline) {
-                                    properties.shape = getPolyShape('polyline', polyPoints, null, smallestX, smallestY, mapOffsetX, mapOffsetY);
+                                    properties.shape = getPolyShape('polyline', polyPoints, null, mapOffsetX, mapOffsetY);
                                 }
 
                                 if (entity.rotation) {
