@@ -491,25 +491,6 @@ export default (function () {
             level: null,
 
             /**
-             * Sets how many world units in width and height correspond to a single pixel in the Tiled map. Default is 1: One pixel is one world unit. Available on the entity as `entity.unitsPerPixel`.
-             *
-             * @property unitsPerPixel
-             * @type number
-             * @default 1
-             */
-            unitsPerPixel: 1,
-
-            /**
-             * If images are provided, this property sets the scale of the art relative to world coordinates. Available on the entity as `entity.imagesScale`.
-             *
-             * @property imagesScale
-             * @type number
-             * @default 1
-             * @deprecated since v0.11.9
-             */
-            imagesScale: 1,
-
-            /**
              * Can be "left", "right", or "center". Defines where entities registered X position should be when spawned. Available on the entity as `entity.entityPositionX`.
              *
              * @property entityPositionX
@@ -705,14 +686,14 @@ export default (function () {
                     }
                 }
                 
-                tileDefinition.properties.width = tWidth * width * this.unitsPerPixel;
-                tileDefinition.properties.height = tHeight * height * this.unitsPerPixel;
+                tileDefinition.properties.width = tWidth * width;
+                tileDefinition.properties.height = tHeight * height;
                 tileDefinition.properties.columns = width;
                 tileDefinition.properties.rows = height;
-                tileDefinition.properties.tileWidth = tWidth * this.unitsPerPixel;
-                tileDefinition.properties.tileHeight = tHeight * this.unitsPerPixel;
-                tileDefinition.properties.scaleX = this.imagesScale;
-                tileDefinition.properties.scaleY = this.imagesScale;
+                tileDefinition.properties.tileWidth = tWidth;
+                tileDefinition.properties.tileHeight = tHeight;
+                tileDefinition.properties.scaleX = 1;
+                tileDefinition.properties.scaleY = 1;
                 tileDefinition.properties.layerZ = this.layerZ;
                 tileDefinition.properties.left = tileDefinition.properties.x || mapOffsetX;
                 tileDefinition.properties.top = tileDefinition.properties.y || mapOffsetY;
@@ -720,7 +701,7 @@ export default (function () {
 
                 if (tilesets.length) {
                     for (x = 0; x < tilesets.length; x++) {
-                        createFrames(importFrames, x, tilesets[x], this.unitsPerPixel / this.imagesScale); // deprecate image resizing for v0.11.9
+                        createFrames(importFrames, x, tilesets[x], 1);
                     }
 
                     lastSet = tilesets[tilesets.length - 1];
@@ -921,8 +902,8 @@ export default (function () {
                     }
                 }
                 
-                width = level.width * tileWidth * this.unitsPerPixel;
-                height = level.height * tileHeight * this.unitsPerPixel;
+                width = level.width * tileWidth;
+                height = level.height * tileHeight;
 
                 if (this.offsetMap) {
                     x = getPowerOfTen(width);
@@ -962,234 +943,252 @@ export default (function () {
                 }
             },
             
-            setUpEntities: function (layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, progress) {
-                var clamp = 1000,
-                    widthOffset = 0,
-                    heightOffset = 0,
-                    x = 0,
-                    p = 0,
-                    w = 0,
-                    h = 0,
-                    a = 0,
-                    v = null,
-                    obj = 0,
-                    entity = null,
-                    entityDefinition = null,
-                    entityDefProps = null,
-                    entityPositionX = getProperty(layer.properties, 'entityPositionX') || this.entityPositionX,
-                    entityPositionY = getProperty(layer.properties, 'entityPositionY') || this.entityPositionY,
-                    entityType = '',
-                    gid = -1,
-                    smallestX = Infinity,
-                    largestX = -Infinity,
-                    smallestY = Infinity,
-                    largestY = -Infinity,
-                    entityData = null,
-                    properties = null,
-                    polyPoints = null,
-                    fallbackWidth = 0,
-                    fallbackHeight = 0;
+            setUpEntities: (function () {
+                const offsetPoints = function (points, offsetX, offsetY, mapOffsetX, mapOffsetY) {
+                        const coords = [];
+                        let p = 0;
 
-                mapOffsetX += layer.offsetx || 0;
-                mapOffsetY += layer.offsety || 0;
-
-                for (obj = 0; obj < layer.objects.length; obj++) {
-                    entity     = layer.objects[obj];
-                    entityData = getEntityData(entity, tilesets);
-                    if (entityData) {
-                        gid = entityData.gid;
-                        entityType = entityData.type;
-                        entityDefinition = platypus.game.settings.entities[entityType];
-                        if (entityDefinition) {
-                            entityDefProps = entityDefinition.properties || null;
-                        } else {
-                            entityDefProps = null;
+                        for (p = 0; p < points.length; p++) {
+                            coords.push({
+                                "x": ((points[p].x - offsetX) + mapOffsetX),
+                                "y": ((points[p].y - offsetY) + mapOffsetY)
+                            });
                         }
-                        properties = entityData.properties;
 
-                        if (entity.polygon || entity.polyline) {
-                            //Figuring out the width of the polygon and shifting the origin so it's in the top-left.
-                            smallestX = Infinity;
-                            largestX = -Infinity;
-                            smallestY = Infinity;
-                            largestY = -Infinity;
+                        return coords;
+                    },
+                    getPolyShape = function (type, points, decomposed, offsetX, offsetY, mapOffsetX, mapOffsetY) {
+                        const shape = {
+                                type: type,
+                                points: offsetPoints(points, offsetX, offsetY, mapOffsetX, mapOffsetY)
+                            };
 
-                            polyPoints = null;
-                            if (entity.polygon) {
-                                polyPoints = entity.polygon;
-                            } else if (entity.polyline) {
-                                polyPoints = entity.polyline;
+                        if (decomposed) {
+                            const decomposedPoints = [];
+                            let p = 0;
+
+                            for (p = 0; p < decomposed.length; p++) {
+                                decomposedPoints.push(offsetPoints(decomposed[p], offsetX, offsetY, mapOffsetX, mapOffsetY));
                             }
+    
+                            shape.decomposedPolygon = decomposedPoints;
+                        }
 
-                            for (x = 0; x < polyPoints.length; x++) {
-                                if (polyPoints[x].x > largestX) {
-                                    largestX = polyPoints[x].x;
+                        return shape;
+                    };
+
+                return function (layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, progress) {
+                    var clamp = 1000,
+                        widthOffset = 0,
+                        heightOffset = 0,
+                        x = 0,
+                        p = 0,
+                        w = 0,
+                        h = 0,
+                        a = 0,
+                        v = null,
+                        obj = 0,
+                        entity = null,
+                        entityDefinition = null,
+                        entityDefProps = null,
+                        entityPositionX = getProperty(layer.properties, 'entityPositionX') || this.entityPositionX,
+                        entityPositionY = getProperty(layer.properties, 'entityPositionY') || this.entityPositionY,
+                        entityType = '',
+                        gid = -1,
+                        smallestX = Infinity,
+                        largestX = -Infinity,
+                        smallestY = Infinity,
+                        largestY = -Infinity,
+                        entityData = null,
+                        properties = null,
+                        polyPoints = null,
+                        fallbackWidth = 0,
+                        fallbackHeight = 0;
+    
+                    mapOffsetX += layer.offsetx || 0;
+                    mapOffsetY += layer.offsety || 0;
+    
+                    for (obj = 0; obj < layer.objects.length; obj++) {
+                        entity     = layer.objects[obj];
+                        entityData = getEntityData(entity, tilesets);
+                        if (entityData) {
+                            gid = entityData.gid;
+                            entityType = entityData.type;
+                            entityDefinition = platypus.game.settings.entities[entityType];
+                            if (entityDefinition) {
+                                entityDefProps = entityDefinition.properties || null;
+                            } else {
+                                entityDefProps = null;
+                            }
+                            properties = entityData.properties;
+    
+                            if (entity.polygon || entity.polyline) {
+                                //Figuring out the width of the polygon and shifting the origin so it's in the top-left.
+                                smallestX = Infinity;
+                                largestX = -Infinity;
+                                smallestY = Infinity;
+                                largestY = -Infinity;
+    
+                                polyPoints = null;
+                                if (entity.polygon) {
+                                    polyPoints = entity.polygon;
+                                } else if (entity.polyline) {
+                                    polyPoints = entity.polyline;
                                 }
-                                if (polyPoints[x].x < smallestX) {
-                                    smallestX = polyPoints[x].x;
+    
+                                for (x = 0; x < polyPoints.length; x++) {
+                                    if (polyPoints[x].x > largestX) {
+                                        largestX = polyPoints[x].x;
+                                    }
+                                    if (polyPoints[x].x < smallestX) {
+                                        smallestX = polyPoints[x].x;
+                                    }
+                                    if (polyPoints[x].y > largestY) {
+                                        largestY = polyPoints[x].y;
+                                    }
+                                    if (polyPoints[x].y < smallestY) {
+                                        smallestY = polyPoints[x].y;
+                                    }
                                 }
-                                if (polyPoints[x].y > largestY) {
-                                    largestY = polyPoints[x].y;
+                                properties.width = largestX - smallestX;
+                                properties.height = largestY - smallestY;
+                                properties.x = entity.x + smallestX;
+                                properties.y = entity.y + smallestY;
+    
+                                widthOffset = 0;
+                                heightOffset = 0;
+    
+                                properties.x = properties.x + mapOffsetX;
+                                properties.y = properties.y + mapOffsetY;
+    
+                                if (entity.polygon) {
+                                    properties.shape = getPolyShape('polygon', polyPoints, properties.decomposedPolygon, smallestX, smallestY, mapOffsetX, mapOffsetY);
+                                } else if (entity.polyline) {
+                                    properties.shape = getPolyShape('polyline', polyPoints, null, smallestX, smallestY, mapOffsetX, mapOffsetY);
                                 }
-                                if (polyPoints[x].y < smallestY) {
-                                    smallestY = polyPoints[x].y;
+
+                                if (entity.rotation) {
+                                    properties.rotation = entity.rotation;
+                                }
+                            } else {
+                                fallbackWidth = tileWidth;
+                                fallbackHeight = tileHeight;
+                                widthOffset = 0;
+                                heightOffset = 0;
+                                properties.width = entity.width || 0;
+                                properties.height = entity.height || 0;
+    
+                                if (entityDefProps) {
+                                    if (typeof entityDefProps.width === 'number') {
+                                        properties.width = entityDefProps.width;
+                                        widthOffset = fallbackWidth;
+                                    }
+                                    if (typeof entityDefProps.height === 'number') {
+                                        properties.height = entityDefProps.height;
+                                        heightOffset = fallbackHeight;
+                                    }
+                                }
+    
+                                if (!entity.point) {
+                                    if (!properties.width) {
+                                        properties.width = fallbackWidth;
+                                    }
+                                    if (!properties.height) {
+                                        properties.height = fallbackHeight;
+                                    }
+                                    widthOffset = widthOffset || properties.width;
+                                    heightOffset = heightOffset || properties.height;
+                                }
+    
+                                properties.x = entity.x;
+                                properties.y = entity.y;
+    
+                                if (entity.rotation) {
+                                    w = (entity.width || fallbackWidth) / 2;
+                                    h = (entity.height || fallbackHeight) / 2;
+                                    a = ((entity.rotation / 180) % 2) * Math.PI;
+                                    v = Vector.setUp(w, -h).rotate(a);
+                                    properties.rotation = entity.rotation;
+                                    properties.x = Math.round((properties.x + v.x - w) * clamp) / clamp;
+                                    properties.y = Math.round((properties.y + v.y + h) * clamp) / clamp;
+                                    v.recycle();
+                                }
+    
+                                if (entityPositionX === 'left') {
+                                    properties.regX = 0;
+                                } else if (entityPositionX === 'center') {
+                                    properties.regX = properties.width / 2;
+                                    properties.x += widthOffset / 2;
+                                } else if (entityPositionX === 'right') {
+                                    properties.regX = properties.width;
+                                    properties.x += widthOffset;
+                                }
+                                properties.x += mapOffsetX;
+    
+                                if (gid === -1) {
+                                    properties.y += properties.height;
+                                }
+                                if (entityPositionY === 'bottom') {
+                                    properties.regY = properties.height;
+                                } else if (entityPositionY === 'center') {
+                                    properties.regY = properties.height / 2;
+                                    properties.y -= heightOffset / 2;
+                                } else if (entityPositionY === 'top') {
+                                    properties.regY = 0;
+                                    properties.y -= heightOffset;
+                                }
+                                properties.y += mapOffsetY;
+    
+                                if (entity.ellipse) {
+                                    properties.shape = {};
+                                    properties.shape.type = 'circle';//'ellipse';
+                                    properties.shape.width = properties.width;
+                                    properties.shape.height = properties.height;
+    
+                                    // Tiled has ellipses, but Platypus only accepts circles. Setting a radius based on the average of width and height in case a non-circular ellipse is imported.
+                                    properties.shape.radius = (properties.width + properties.height) / 4;
+                                } else if (entity.width && entity.height) {
+                                    properties.shape = {};
+                                    properties.shape.type = 'rectangle';
+                                    properties.shape.width = properties.width;
+                                    properties.shape.height = properties.height;
                                 }
                             }
-                            properties.width = largestX - smallestX;
-                            properties.height = largestY - smallestY;
-                            properties.x = entity.x + smallestX;
-                            properties.y = entity.y + smallestY;
-
-                            widthOffset = 0;
-                            heightOffset = 0;
-                            properties.width = properties.width * this.unitsPerPixel;
-                            properties.height = properties.height * this.unitsPerPixel;
-
-                            properties.x = properties.x * this.unitsPerPixel + mapOffsetX;
-                            properties.y = properties.y * this.unitsPerPixel + mapOffsetY;
-
-                            if (entity.polygon) {
-                                properties.shape = {};
-                                properties.shape.type = 'polygon';
-                                properties.shape.points = [];
-                                for (p = 0; p < polyPoints.length; p++) {
-                                    properties.shape.points.push({
-                                        "x": ((polyPoints[p].x - smallestX) * this.unitsPerPixel + mapOffsetX),
-                                        "y": ((polyPoints[p].y - smallestY) * this.unitsPerPixel + mapOffsetY)
-                                    });
-                                }
-                            } else if (entity.polyline) {
-                                properties.shape = {};
-                                properties.shape.type = 'polyline';
-                                properties.shape.points = [];
-                                for (p = 0; p < polyPoints.length; p++) {
-                                    properties.shape.points.push({
-                                        "x": ((polyPoints[p].x - smallestX) * this.unitsPerPixel + mapOffsetX),
-                                        "y": ((polyPoints[p].y - smallestY) * this.unitsPerPixel + mapOffsetY)
-                                    });
-                                }
-                            }
-                        } else {
-                            fallbackWidth = tileWidth * this.unitsPerPixel;
-                            fallbackHeight = tileHeight * this.unitsPerPixel;
-                            widthOffset = 0;
-                            heightOffset = 0;
-                            properties.width = (entity.width || 0) * this.unitsPerPixel;
-                            properties.height = (entity.height || 0) * this.unitsPerPixel;
-
+    
                             if (entityDefProps) {
-                                if (typeof entityDefProps.width === 'number') {
-                                    properties.width = entityDefProps.width;
-                                    widthOffset = fallbackWidth;
+                                properties.scaleX *= (entityDefProps.scaleX || 1);
+                                properties.scaleY *= (entityDefProps.scaleY || 1);
+                            }
+                            properties.layerZ = this.layerZ;
+    
+                            //Setting the z value. All values are getting added to the layerZ value.
+                            if (properties.z) {
+                                properties.z += this.layerZ;
+                            } else if (entityDefProps && (typeof entityDefProps.z === 'number')) {
+                                properties.z = this.layerZ + entityDefProps.z;
+                            } else {
+                                properties.z = this.layerZ;
+                            }
+    
+                            entity = this.owner.addEntity(new Entity(entityDefinition, {
+                                properties: properties
+                            }, this.updateLoadingProgress.bind(this, progress), this.owner));
+                            if (entity) {
+                                if (entity.camera) {
+                                    this.followEntity = {
+                                        entity: entity,
+                                        mode: entity.camera
+                                    }; //used by camera
                                 }
-                                if (typeof entityDefProps.height === 'number') {
-                                    properties.height = entityDefProps.height;
-                                    heightOffset = fallbackHeight;
-                                }
+                                this.owner.triggerEvent('entity-created', entity);
                             }
-
-                            if (!entity.point) {
-                                if (!properties.width) {
-                                    properties.width = fallbackWidth;
-                                }
-                                if (!properties.height) {
-                                    properties.height = fallbackHeight;
-                                }
-                                widthOffset = widthOffset || properties.width;
-                                heightOffset = heightOffset || properties.height;
-                            }
-
-                            properties.x = entity.x * this.unitsPerPixel;
-                            properties.y = entity.y * this.unitsPerPixel;
-
-                            if (entity.rotation) {
-                                w = (entity.width || fallbackWidth) / 2;
-                                h = (entity.height || fallbackHeight) / 2;
-                                a = ((entity.rotation / 180) % 2) * Math.PI;
-                                v = Vector.setUp(w, -h).rotate(a);
-                                properties.rotation = entity.rotation;
-                                properties.x = Math.round((properties.x + v.x - w) * clamp) / clamp;
-                                properties.y = Math.round((properties.y + v.y + h) * clamp) / clamp;
-                                v.recycle();
-                            }
-
-                            if (entityPositionX === 'left') {
-                                properties.regX = 0;
-                            } else if (entityPositionX === 'center') {
-                                properties.regX = properties.width / 2;
-                                properties.x += widthOffset / 2;
-                            } else if (entityPositionX === 'right') {
-                                properties.regX = properties.width;
-                                properties.x += widthOffset;
-                            }
-                            properties.x += mapOffsetX;
-
-                            if (gid === -1) {
-                                properties.y += properties.height;
-                            }
-                            if (entityPositionY === 'bottom') {
-                                properties.regY = properties.height;
-                            } else if (entityPositionY === 'center') {
-                                properties.regY = properties.height / 2;
-                                properties.y -= heightOffset / 2;
-                            } else if (entityPositionY === 'top') {
-                                properties.regY = 0;
-                                properties.y -= heightOffset;
-                            }
-                            properties.y += mapOffsetY;
-
-                            if (entity.ellipse) {
-                                properties.shape = {};
-                                properties.shape.type = 'circle';//'ellipse';
-                                properties.shape.width = properties.width * this.unitsPerPixel;
-                                properties.shape.height = properties.height * this.unitsPerPixel;
-
-                                // Tiled has ellipses, but Platypus only accepts circles. Setting a radius based on the average of width and height in case a non-circular ellipse is imported.
-                                properties.shape.radius = (properties.width + properties.height) * this.unitsPerPixel / 4;
-                            } else if (entity.width && entity.height) {
-                                properties.shape = {};
-                                properties.shape.type = 'rectangle';
-                                properties.shape.width = properties.width * this.unitsPerPixel;
-                                properties.shape.height = properties.height * this.unitsPerPixel;
-                            }
-                        }
-
-                        if (entityDefProps) {
-                            properties.scaleX *= this.imagesScale * (entityDefProps.scaleX || 1); //this.unitsPerPixel;
-                            properties.scaleY *= this.imagesScale * (entityDefProps.scaleY || 1); //this.unitsPerPixel;
                         } else {
-                            properties.scaleX *= this.imagesScale;
-                            properties.scaleY *= this.imagesScale;
+                            this.updateLoadingProgress(progress);
                         }
-                        properties.layerZ = this.layerZ;
-
-                        //Setting the z value. All values are getting added to the layerZ value.
-                        if (properties.z) {
-                            properties.z += this.layerZ;
-                        } else if (entityDefProps && (typeof entityDefProps.z === 'number')) {
-                            properties.z = this.layerZ + entityDefProps.z;
-                        } else {
-                            properties.z = this.layerZ;
-                        }
-
-                        entity = this.owner.addEntity(new Entity(entityDefinition, {
-                            properties: properties
-                        }, this.updateLoadingProgress.bind(this, progress), this.owner));
-                        if (entity) {
-                            if (entity.camera) {
-                                this.followEntity = {
-                                    entity: entity,
-                                    mode: entity.camera
-                                }; //used by camera
-                            }
-                            this.owner.triggerEvent('entity-created', entity);
-                        }
-                    } else {
-                        this.updateLoadingProgress(progress);
                     }
-                }
-                this.layerZ += this.layerIncrement;
-            },
+                    this.layerZ += this.layerIncrement;
+                };
+            }()),
 
             setupLayer: function (layer, layerCollides, combineRenderLayer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, images, progress) {
                 var canCombine = false,
