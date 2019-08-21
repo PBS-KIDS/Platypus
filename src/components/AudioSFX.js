@@ -6,14 +6,15 @@
  * @uses platypus.Component
  * @since 0.6.0
  */
-/*global createjs, platypus */
+/*global createjs, platypus, setTimeout */
 import {arrayCache, greenSplice} from '../utils/array.js';
 import Data from '../Data.js';
+import {Sound} from '@createjs/soundjs';
 import StateMap from '../StateMap.js';
 
 export default (function () {
     var defaultSettings = {
-            interrupt: createjs.Sound.INTERRUPT_ANY, //INTERRUPT_ANY, INTERRUPT_EARLY, INTERRUPT_LATE, or INTERRUPT_NONE
+            interrupt: 0,
             delay: 0,
             offset: 0,
             loop: 0,
@@ -72,6 +73,7 @@ export default (function () {
                     "interrupt", value.interrupt || attributes.interrupt || defaultSettings.interrupt,
                     "delay",     value.delay     || attributes.delay  || defaultSettings.delay,
                     "loop",      value.loop      || attributes.loop   || defaultSettings.loop,
+                    "loops",     value.loop      || attributes.loop   || defaultSettings.loop, // SoundJS 2.0 listens for this
                     "offset",    value.offset    || attributes.offset || defaultSettings.offset,
                     "volume",    (typeof value.volume !== 'undefined') ? value.volume : ((typeof attributes.volume !== 'undefined') ? attributes.volume : defaultSettings.volume),
                     "pan",       value.pan       || attributes.pan    || defaultSettings.pan,
@@ -91,10 +93,10 @@ export default (function () {
                         wait = function (event) {
                             if (event.id === sound) {
                                 data.audio.play(data);
-                                createjs.Sound.off('fileload', wait);
+                                Sound.off('fileload', wait);
                             }
                         };
-                        createjs.Sound.on('fileload', wait);
+                        Sound.on('fileload', wait);
                     }
                 }
             };
@@ -237,7 +239,7 @@ export default (function () {
             this.state = this.owner.state;
             this.stateChange = false;
             
-            this.player = createjs.Sound;
+            this.player = Sound;
     
             if (definition.audioMap) {
                 if (this.stateBased) {
