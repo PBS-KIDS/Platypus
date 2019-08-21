@@ -241,13 +241,13 @@ export default (function () {
             
             this.player = Sound;
     
-            if (definition.audioMap) {
+            if (this.audioMap) {
                 if (this.stateBased) {
                     this.checkStates = arrayCache.setUp();
                 }
-                for (key in definition.audioMap) {
-                    if (definition.audioMap.hasOwnProperty(key)) {
-                        sound = definition.audioMap[key];
+                for (key in this.audioMap) {
+                    if (this.audioMap.hasOwnProperty(key)) {
+                        sound = this.audioMap[key];
                         playClip = playSound(sound, this.channel);
                         if (sound.sound) {
                             sound = sound.sound;
