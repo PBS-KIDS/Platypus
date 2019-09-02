@@ -20,6 +20,8 @@
     "dependencies": {
         "createjs": "https://github.com/CreateJS/Combined.git#197c0c904872c8a07ae8a1e1c2a5ce3e318b6e34",
         "pixi.js": "^4.5.1",
+        "@createjs/soundjs": "https://github.com/CreateJS/SoundJS.git#2.0",
+        "recycle": "https://github.com/gopherwood/recycle.git#master",
         "springroll": "2.0.0"
     },
     "devDependencies": {
@@ -32,7 +34,6 @@
         "grunt-contrib-yuidoc": "^0.8.0",
         "lodash": "^3.10.0",
         "pako": "^0.2.8",
-        "recycle": "https://github.com/gopherwood/recycle.git#master",
         "webpack": "^4.35.2",
         "webpack-cli": "^3.3.5"
     },
