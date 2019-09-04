@@ -254,6 +254,24 @@ export default (function () {
              * @default 1
              */
             scaleY: 1,
+            
+            /**
+            * The scaling factor for this sprite relative to the scale of the container.
+            *
+            * @property localScaleX
+            * @type Number|Array|Object
+            * @default 1
+            */
+            localScaleX: 1,
+
+           /**
+            * The scaling factor for this sprite relative to the scale of the container.
+            *
+            * @property localScaleY
+            * @type Number|Array|Object
+            * @default 1
+            */
+            localScaleY: 1,
 
             /**
              * The skew factor for this component.
@@ -368,6 +386,8 @@ export default (function () {
                 this.sprite.x = this.offsetX;
                 this.sprite.y = this.offsetY;
                 this.sprite.z = this.offsetZ;
+                this.sprite.scale.x = this.localScaleX;
+                this.sprite.scale.y = this.localScaleY;
 
                 if (!this.owner.container) {
                     definition = Data.setUp(
