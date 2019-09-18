@@ -36,7 +36,27 @@ export default (function () {
              * @default false
              * @since 0.9.1
              */
-            interactive: false
+            interactive: false,
+
+            /**
+             * Defines the names and z-indexes of the render groups.
+             *
+             *  "groups": [
+             *      {
+             *          "name": interface,
+             *          "z": 1
+             *      },{
+             *          "name": alert,
+             *          "z": 2
+             *      }
+             *  ]
+             *
+             * @property groups
+             * @type Array
+             * @default null
+             * @since 2.0.0
+             */
+            groups: null
         },
 
         publicProperties: {
@@ -61,12 +81,19 @@ export default (function () {
         },
 
         initialize: function () {
-            var definition = null,
-                renderGroups = this.owner.renderGroups = this.renderGroups = arrayCache.setUp();
+            let x = 0,
+                definition = null;
+            const renderGroups = this.owner.renderGroups = this.renderGroups = arrayCache.setUp();
 
             this.worldContainer = this.worldContainer || new Container();
             this.worldContainer.name = '';
             renderGroups.push(this.worldContainer);
+
+            if (this.groups) {
+                for (x = 0; x < this.groups.length; x++) {
+                    this.createRenderGroup(this.groups[x].name, this.groups[x].z);
+                }
+            }
 
             if (this.interactive) {
                 definition = Data.setUp(
@@ -121,6 +148,10 @@ export default (function () {
              * @param entity {platypus.Entity} The entity added to the parent.
              */
             "child-entity-added": function (entity) {
+                if (entity.container) {
+                    this.addEntityToRenderGroup(entity);
+                }
+                
                 /**
                  * Triggered on an entity added to the parent.
                  *
@@ -222,9 +253,46 @@ export default (function () {
                         }
                     }
                 };
-            }())
+            }()),
+            "create-render-group": function (name, z) {
+                this.createRenderGroup(name, z);
+            },
+            "change-entity-render-group": function (entity, group) {
+                this.setEntityRenderGroup(entity, group);
+            }
+
         },
         methods: {
+            createRenderGroup: function (name, z) {
+                const group = new Container();
+
+                group.name = name;
+                group.z = z;
+                this.renderGroups.push(group);
+                this.worldContainer.addChild(group);
+                this.worldContainer.reorder = true;
+            },
+            setEntityRenderGroup: function (entity, group) {
+                let x = 0;
+
+                if (typeof group === "undefined") {
+                    group = entity.renderGroup || '';
+                }
+
+                entity.leaveCurrentRenderGroup();
+
+                for (x = 0; x < this.renderGroups.length; x++) {
+                    if (group === this.renderGroups[x].name) {
+                        entity.addToRenderGroup(this.renderGroups[x]);
+                        return;
+                    }
+                }
+
+                //Didn't find group.
+                console.warn("Trying to add to non-existent RenderGroup, added to World instead.");
+                entity.addToRenderGroup(this.worldContainer);
+                
+            },
             destroy: function () {
                 this.worldContainer = null;
                 arrayCache.recycle(this.renderGroups);
