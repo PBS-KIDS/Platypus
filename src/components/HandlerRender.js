@@ -149,7 +149,7 @@ export default (function () {
              */
             "child-entity-added": function (entity) {
                 if (entity.container) {
-                    this.addEntityToRenderGroup(entity);
+                    this.setEntityRenderGroup(entity);
                 }
                 
                 /**
