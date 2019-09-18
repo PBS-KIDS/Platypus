@@ -16,6 +16,7 @@ require('createjs');
 
 export * from './utils/array.js';
 export * from './utils/string.js';
+export {default as recycle} from 'recycle';
 export {default as AABB} from './AABB.js';
 export {default as ActionState} from './ActionState.js';
 export {default as Async} from './Async.js';
