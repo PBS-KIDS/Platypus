@@ -203,6 +203,17 @@ export default (function () {
      * @return {number} The magnitude of the vector.
      */
     proto.magnitude = function (dimensions) {
+        return Math.sqrt(this.magnitudeSquared(dimensions));
+    };
+    
+    /**
+     * Returns the magnitude squared of the vector. This is slightly faster than finding the magnitude.
+     *
+     * @method magnitudeSquared
+     * @param [dimensions] {number} The dimensions to include. Defaults to all dimensions.
+     * @return {number} The magnitude squared of the vector.
+     */
+    proto.magnitudeSquared = function (dimensions) {
         var squares = 0,
             x = 0;
 
@@ -212,7 +223,7 @@ export default (function () {
             squares += Math.pow(this.matrix[x], 2);
         }
 
-        return Math.sqrt(squares);
+        return squares;
     };
     
     /**
@@ -354,6 +365,26 @@ export default (function () {
         
         return this;
     };
+
+    /**
+     * Rotates the vector position around a given point on the cartesian plane.
+     *
+     * @method rotateAbout
+     * @param point {Vector} A vector describing the point around which the rotation should occur.
+     * @param angle {number} The amount to rotate the vector in radians.
+     * @chainable
+     */
+    proto.rotateAbout = function (point, angle) {
+        const cos = Math.cos(angle),
+            sin = Math.sin(angle),
+            dx = this.x - point.x,
+            dy = this.y - point.y;
+
+        this.x = point.x + (dx * cos - dy * sin);
+        this.y = point.y + (dx * sin + dy * cos);
+
+        return this;
+    };
     
     /**
      * Scales the vector by the given factor or performs a transform if a matrix is provided.
@@ -441,7 +472,35 @@ export default (function () {
      * @chainable
      */
     proto.subtractVector = function (otherVector, dimensions) {
-        return this.add(otherVector.getInverse(), dimensions);
+        var inv = otherVector.getInverse();
+
+        this.add(inv, dimensions);
+        inv.recycle();
+
+        return this;
+    };
+
+    /**
+     * Returns the perpendicular vector.
+     *
+     * @method perpendicular
+     * @param opposite {Boolean} Whether to negate the perpendicular vector.
+     * @chainable
+     */
+    proto.perpendicular = function (negate) {
+        const matrix = this.matrix,
+            mult = (negate === true) ? -1 : 1,
+            x = -this.matrix[1];
+
+        matrix[1] = matrix[0];
+        matrix[0] = x;
+
+        if (negate) {
+            matrix[1] *= mult;
+            matrix[0] *= mult;
+        }
+
+        return this;
     };
     
     /**

@@ -27,15 +27,16 @@ export default (function () {
             this.recycle();
         },
         Async = function (arr, finalCallback) {
-            var finalCB = final.bind(this, finalCallback),
-                cb = callback.bind(this, finalCB),
-                i = 0,
+            const finalCB = final.bind(this, finalCallback),
                 length = arr.length;
 
             if (!length) {
-                finalCB();
-                this.recycle();
+                this.resolve = finalCB;
+                this.timeout = setTimeout(finalCB, 0); //ensure async to keep code flow consistent.
             } else {
+                const cb = callback.bind(this, finalCB);
+                let i = 0;
+
                 this.increment = length;
                 this.resolve = null;
 
