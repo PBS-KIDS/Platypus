@@ -35,6 +35,7 @@ import Data from './Data.js';
 import Entity from './Entity.js';
 import Messenger from './Messenger.js';
 import PIXIAnimation from './PIXIAnimation.js';
+import {Sound} from '@createjs/soundjs';
 
 export default (function () {
     var fn = /^(?:\w+:\/{2}\w+(?:\.\w+)*\/?)?(?:[\/.]*?(?:[^?]+)?\/)?(?:([^\/?]+)\.(\w+))(?:\?\S*)?$/,
@@ -240,9 +241,8 @@ export default (function () {
             }
 
             if (sounds.length) {
-                createjs.Sound.registerSounds(sounds);
+                Sound.registerSounds(sounds);
             }
-            arrayCache.recycle(sounds);
 
             if (assets.length) {
                 queue = new createjs.LoadQueue();
@@ -409,7 +409,7 @@ export default (function () {
             PIXIAnimation.unloadBaseTextures();
 
             if (this.unloadSounds.length) {
-                createjs.Sound.removeSounds(this.unloadSounds);
+                Sound.removeSounds(this.unloadSounds);
                 arrayCache.recycle(this.unloadSounds);
                 this.unloadSounds = null;
             }
