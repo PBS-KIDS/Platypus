@@ -269,15 +269,17 @@ export default (function () {
         methods: {
             createRenderGroup: function (groupDef) {
                 if (groupDef.name) {
-                    const group = new Container();
+                    const x = groupDef.x || 0,
+                        y = groupDef.y || 0,
+                        scaleX = groupDef.scale ? groupDef.scale[0] : 1,
+                        scaleY = groupDef.scale ? groupDef.scale[1] : 1,
+                        rotation = groupDef.angle ? (groupDef.angle / 180) * Math.PI : 0,
+                        group = new Container();
+
                     group.name = groupDef.name;
-                    group.x = groupDef.x || 0;
-                    group.y = groupDef.y || 0;
                     group.z = groupDef.z || 0;
-                    if (groupDef.scale) {
-                        group.scale = new PIXI.Point(groupDef.scale[0], groupDef.scale[1]);
-                    }
-                    group.angle = groupDef.angle || 0;
+                    group.setTransform(x, y, scaleX, scaleY, rotation, 0, 0, 0, 0);
+
                     this.renderGroups.push(group);
                     this.worldContainer.addChild(group);
                     this.worldContainer.reorder = true;
