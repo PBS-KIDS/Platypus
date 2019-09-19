@@ -39,12 +39,16 @@ export default (function () {
             interactive: false,
 
             /**
-             * Defines the names and z-indexes of the render groups.
+             * Defines the names and z-indexes of the render groups. Can specify the x, y position of the container, the z-index, the scale, and angle of rotation (in degrees). Name is a required value.
              *
              *  "groups": [
              *      {
              *          "name": interface,
-             *          "z": 1
+             *          "x": 0,
+             *          "y": 0,
+             *          "z": 1,
+             *          "scale": 1.5,
+             *          "angle": 90
              *      },{
              *          "name": alert,
              *          "z": 2
@@ -91,7 +95,7 @@ export default (function () {
 
             if (this.groups) {
                 for (x = 0; x < this.groups.length; x++) {
-                    this.createRenderGroup(this.groups[x].name, this.groups[x].z);
+                    this.createRenderGroup(this.groups[x]);
                 }
             }
 
@@ -254,8 +258,8 @@ export default (function () {
                     }
                 };
             }()),
-            "create-render-group": function (name, z) {
-                this.createRenderGroup(name, z);
+            "create-render-group": function (groupDef) {
+                this.createRenderGroup(groupDef);
             },
             "change-entity-render-group": function (entity, group) {
                 this.setEntityRenderGroup(entity, group);
@@ -263,14 +267,21 @@ export default (function () {
 
         },
         methods: {
-            createRenderGroup: function (name, z) {
-                const group = new Container();
-
-                group.name = name;
-                group.z = z;
-                this.renderGroups.push(group);
-                this.worldContainer.addChild(group);
-                this.worldContainer.reorder = true;
+            createRenderGroup: function (groupDef) {
+                if (groupDef.name) {
+                    const group = new Container();
+                    group.name = groupDef.name;
+                    group.x = groupDef.x || 0;
+                    group.y = groupDef.y || 0;
+                    group.z = groupDef.z || 0;
+                    group.scale = groupDef.scale || 1;
+                    group.angle = groupDef.angle || 0;
+                    this.renderGroups.push(group);
+                    this.worldContainer.addChild(group);
+                    this.worldContainer.reorder = true;
+                } else {
+                    console.warn("Trying to create a renderGroup without a name. RenderGroup was not created.");
+                }
             },
             setEntityRenderGroup: function (entity, group) {
                 let x = 0;
