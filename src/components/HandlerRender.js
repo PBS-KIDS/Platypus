@@ -47,7 +47,7 @@ export default (function () {
              *          "x": 0,
              *          "y": 0,
              *          "z": 1,
-             *          "scale": 1.5,
+             *          "scale": [1, 1],
              *          "angle": 90
              *      },{
              *          "name": alert,
@@ -274,7 +274,9 @@ export default (function () {
                     group.x = groupDef.x || 0;
                     group.y = groupDef.y || 0;
                     group.z = groupDef.z || 0;
-                    group.scale = groupDef.scale || 1;
+                    if (groupDef.scale) {
+                        group.scale = new PIXI.Point(groupDef.scale[0], groupDef.scale[1]);
+                    }
                     group.angle = groupDef.angle || 0;
                     this.renderGroups.push(group);
                     this.worldContainer.addChild(group);
