@@ -36,31 +36,7 @@ export default (function () {
              * @default false
              * @since 0.9.1
              */
-            interactive: false,
-
-            /**
-             * Defines the names and z-indexes of the render groups. Can specify the x, y position of the container, the z-index, the scale, and angle of rotation (in degrees). Name is a required value.
-             *
-             *  "groups": [
-             *      {
-             *          "name": interface,
-             *          "x": 0,
-             *          "y": 0,
-             *          "z": 1,
-             *          "scale": [1, 1],
-             *          "angle": 90
-             *      },{
-             *          "name": alert,
-             *          "z": 2
-             *      }
-             *  ]
-             *
-             * @property groups
-             * @type Array
-             * @default null
-             * @since 2.0.0
-             */
-            groups: null
+            interactive: false
         },
 
         publicProperties: {
