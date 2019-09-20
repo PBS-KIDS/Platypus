@@ -181,14 +181,14 @@ export default (function () {
             dragMode: false,
 
             /**
-             * Determines the container this entity should use for rendering. Defaults to the top-most layer.
+             * The entity or id of the entity that will act as the parent container. If not set, the entity will be rendered in the layer's container.
              *
-             * @property renderGroup
-             * @type String
-             * @default ""
-             * @since 0.11.10
+             * @property renderParent
+             * @type String|Object
+             * @default null
+             * @since 2.0.0
              */
-            renderGroup: '',
+            renderParent: null,
 
             /**
              * Optional. The rotation of the sprite in degrees. All sprites on the same entity are rotated the same amount unless they ignore the rotation value by setting 'rotate' to false.
@@ -277,7 +277,6 @@ export default (function () {
                 definition = null,
                 initialTint = this.tint;
 
-            this.rootContainer = null;
             this.parentContainer = null;
             this.wasVisible = this.visible;
             this.lastX = this.owner.x;
@@ -571,20 +570,17 @@ export default (function () {
         },
     
         publicMethods: {// These are methods that are available on the entity.
-            leaveCurrentRenderGroup: function () {
+            removeFromParentContainer: function () {
                 if (this.parentContainer) {
                     if (this.mask) {
                         this.setMask();
                     }
 
                     this.parentContainer.removeChild(this.container);
-                    this.renderGroup = null;
                 }
             },
             
-            addToRenderGroup: function (container) {
-
-                this.renderGroup = container.name;
+            addToParentContainer: function (container) {
                 this.parentContainer = container;
                 this.parentContainer.addChild(this.container);
                 this.parentContainer.reorder = true;

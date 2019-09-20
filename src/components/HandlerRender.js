@@ -73,25 +73,14 @@ export default (function () {
              * @since 0.11.0
              */
             worldContainer: null,
-
-            /**
-             * This is a read-only list of the world container and subcontainers for entities that should be rendered together.
-             *
-             * @property renderGroups
-             * @type Array
-             * @default null
-             * @since 0.11.10
-             */
         },
 
         initialize: function () {
             let x = 0,
                 definition = null;
-            const renderGroups = this.owner.renderGroups = this.renderGroups = arrayCache.setUp();
-
+            
             this.worldContainer = this.worldContainer || new Container();
             this.worldContainer.name = '';
-            renderGroups.push(this.worldContainer);
 
             if (this.groups) {
                 for (x = 0; x < this.groups.length; x++) {
@@ -112,8 +101,7 @@ export default (function () {
 
             this.renderMessage = Data.setUp(
                 'delta', 0,
-                'container', this.worldContainer,
-                'renderGroups', renderGroups
+                'container', this.worldContainer
             );
         },
 
@@ -130,11 +118,9 @@ export default (function () {
                  * @event 'render-world'
                  * @param data {Object}
                  * @param data.world {PIXI.Container} Contains entities to be rendered.
-                 * @param data.renderGroups {Array of PIXI.Container} Containers to categorize display of groups of entities.
                  */
                 this.owner.triggerEvent('render-world', {
-                    world: this.worldContainer,
-                    renderGroups: this.renderGroups
+                    world: this.worldContainer
                 });
 
                 /**
@@ -153,7 +139,7 @@ export default (function () {
              */
             "child-entity-added": function (entity) {
                 if (entity.container) {
-                    this.setEntityRenderGroup(entity);
+                    this.setParentRenderContainer(entity, entity.renderParent);
                 }
                 
                 /**
@@ -163,7 +149,6 @@ export default (function () {
                  * @param data {Object}
                  * @param data.delta {Number} The delta time for this tick.
                  * @param data.container {PIXI.Container} The display Container the entities display objects should be added to.
-                 * @param data.renderGroups {Array of PIXI.Container} Containers to categorize display of groups of entities.
                  */
                 entity.triggerEvent('handle-render-load', this.renderMessage);
             },
@@ -216,97 +201,69 @@ export default (function () {
              * @method 'tick'
              * @param tick {Object} An object containing tick data.
              */
-            "tick": (function () {
-                var sort = function (a, b) {
-                    return a.z - b.z;
-                };
+            "tick": function (tick) {
+                var message = this.renderMessage;
 
-                return function (tick) {
-                    var message = this.renderMessage,
-                        renderGroup = null,
-                        renderGroups = this.renderGroups,
-                        i = renderGroups.length;
+                message.delta = tick.delta;
 
-                    message.delta = tick.delta;
-
-                    if (this.paused > 0) {
-                        this.paused -= tick.delta;
-                        if (this.paused <= 0) {
-                            this.paused = 0;
-                        }
+                if (this.paused > 0) {
+                    this.paused -= tick.delta;
+                    if (this.paused <= 0) {
+                        this.paused = 0;
                     }
+                }
 
-                    if (!this.paused && this.owner.triggerEventOnChildren) {
-                        /**
-                         * Triggered every tick on the children entities.
-                         *
-                         * @event 'handle-render'
-                         * @param data {Object}
-                         * @param data.delta {Number} The delta time for this tick.
-                         * @param data.container {PIXI.Container} The display Container the entities display objects should be added to.
-                         * @param data.renderGroups {Array of PIXI.Container} Containers to categorize display of groups of entities.
-                         */
-                        this.owner.triggerEventOnChildren('handle-render', message);
-                    }
-
-                    while (i--) {
-                        renderGroup = renderGroups[i];
-                        if (renderGroup.reorder) {
-                            renderGroup.reorder = false;
-                            renderGroup.children.sort(sort);
-                        }
-                    }
-                };
-            }()),
-            "create-render-group": function (groupDef) {
-                this.createRenderGroup(groupDef);
+                if (!this.paused && this.owner.triggerEventOnChildren) {
+                    /**
+                     * Triggered every tick on the children entities.
+                     *
+                     * @event 'handle-render'
+                     * @param data {Object}
+                     * @param data.delta {Number} The delta time for this tick.
+                     * @param data.container {PIXI.Container} The display Container the entities display objects should be added to.
+                     */
+                    this.owner.triggerEventOnChildren('handle-render', message);
+                }
+                
             },
-            "change-entity-render-group": function (entity, group) {
-                this.setEntityRenderGroup(entity, group);
+            /**
+             * Sets the parent render container of an entity to that of the given entity or entity with the given id.
+             *
+             * @method 'set-parent-render-container'
+             * @param entity {Object} The entity to relocate.
+             * @param entityOrId {Object|String} The entity or id of the entity that will act as the parent container.
+             */
+            "set-parent-render-container": function (entity, entityOrId) {
+                this.setParentRenderContainer(entity, entityOrId);
             }
 
         },
         methods: {
-            createRenderGroup: function (groupDef) {
-                if (groupDef.name) {
-                    const x = groupDef.x || 0,
-                        y = groupDef.y || 0,
-                        scaleX = groupDef.scale ? groupDef.scale[0] : 1,
-                        scaleY = groupDef.scale ? groupDef.scale[1] : 1,
-                        rotation = groupDef.angle ? (groupDef.angle / 180) * Math.PI : 0,
-                        group = new Container();
+            setParentRenderContainer: function (entity, entityOrId) {
+                let container = null;
 
-                    group.name = groupDef.name;
-                    group.z = groupDef.z || 0;
-                    group.setTransform(x, y, scaleX, scaleY, rotation, 0, 0, 0, 0);
+                entity.removeFromParentContainer();
 
-                    this.renderGroups.push(group);
-                    this.worldContainer.addChild(group);
-                    this.worldContainer.reorder = true;
-                } else {
-                    console.warn("Trying to create a renderGroup without a name. RenderGroup was not created.");
-                }
-            },
-            setEntityRenderGroup: function (entity, group) {
-                let x = 0;
+                if (!entityOrId) {
+                    container = this.worldContainer;
 
-                if (typeof group === "undefined") {
-                    group = entity.renderGroup || '';
-                }
+                } else if (typeof entityOrId === "string") {
 
-                entity.leaveCurrentRenderGroup();
-
-                for (x = 0; x < this.renderGroups.length; x++) {
-                    if (group === this.renderGroups[x].name) {
-                        entity.addToRenderGroup(this.renderGroups[x]);
-                        return;
+                    const otherEntity = this.owner.getEntityById(entityOrId)();
+                    if (otherEntity) {
+                        container = otherEntity.container;
+                    } else {
+                        //Didn't find group.
+                        console.warn("Trying to add to non-existent entity, added to World container instead.");
+                        container = this.worldContainer;
                     }
+
+                } else {
+                    container = entityOrId.container;
                 }
 
-                //Didn't find group.
-                console.warn("Trying to add to non-existent RenderGroup, added to World instead.");
-                entity.addToRenderGroup(this.worldContainer);
-                
+                entity.addToParentContainer(container);
+
             },
             destroy: function () {
                 this.worldContainer = null;
