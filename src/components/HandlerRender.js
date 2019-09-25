@@ -9,7 +9,6 @@
 import {Container} from 'pixi.js';
 import Data from '../Data.js';
 import Interactive from './Interactive.js';
-import {arrayCache} from '../utils/array.js';
 
 export default (function () {
     return platypus.createComponentClass({
@@ -56,12 +55,6 @@ export default (function () {
             
             this.worldContainer = this.worldContainer || new Container();
             this.worldContainer.name = '';
-
-            if (this.groups) {
-                for (x = 0; x < this.groups.length; x++) {
-                    this.createRenderGroup(this.groups[x]);
-                }
-            }
 
             if (this.interactive) {
                 definition = Data.setUp(
@@ -177,7 +170,8 @@ export default (function () {
              * @param tick {Object} An object containing tick data.
              */
             "tick": function (tick) {
-                var message = this.renderMessage;
+                const message = this.renderMessage,
+                    worldContainer = this.worldContainer;
 
                 message.delta = tick.delta;
 
@@ -199,7 +193,11 @@ export default (function () {
                      */
                     this.owner.triggerEventOnChildren('handle-render', message);
                 }
-                
+
+                if (worldContainer.reorder) {
+                    worldContainer.reorder = false;
+                    worldContainer.children.sort((a, b) => a.z - b.z);
+                }
             },
             /**
              * Sets the parent render container of an entity to that of the given entity or entity with the given id.
@@ -242,8 +240,6 @@ export default (function () {
             },
             destroy: function () {
                 this.worldContainer = null;
-                arrayCache.recycle(this.renderGroups);
-                this.renderGroups = null;
                 this.renderMessage.recycle();
                 this.renderMessage = null;
             }
