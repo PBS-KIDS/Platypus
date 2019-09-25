@@ -111,7 +111,6 @@ export default (function () {
                 frame    = null,
                 frames   = spriteSheet.frames,
                 images   = spriteSheet.images,
-                texture  = null,
                 textures = arrayCache.setUp(),
                 bases    = getBaseTextures(images);
 
@@ -142,7 +141,6 @@ export default (function () {
                 frame    = null,
                 frames   = spriteSheet.frames,
                 images   = spriteSheet.images,
-                texture  = null,
                 textures = arrayCache.setUp(),
                 bases    = getBaseTextures(images);
 

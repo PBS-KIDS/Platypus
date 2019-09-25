@@ -250,11 +250,7 @@ export default (function () {
                 });
                 queue.onComplete.add(loadScene.bind(this, callback));
                 while (i--) {
-                    try { // Currently not checking whether it's already loaded...
-                        queue.add(assets[i].id || assets[i].src || assets[i], assets[i].src || assets[i], assets[i]);
-                    } catch (e) {
-                        console.warn(e);
-                    }
+                    queue.add(assets[i].id || assets[i].src || assets[i], assets[i].src || assets[i], assets[i]);
                 }
                 queue.load();
                 this.loader = queue;
