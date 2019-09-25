@@ -5,25 +5,16 @@
  * @extends PIXI.Sprite
  */
 /*global platypus */
-import * as PIXI from 'pixi.js';
+import {AnimatedSprite, BaseTexture, Container, Point, Rectangle, Sprite, Texture} from 'pixi.js';
 import {arrayCache, greenSlice} from './utils/array.js';
 import Data from './Data.js';
 
 export default (function () {
     var MAX_KEY_LENGTH_PER_IMAGE = 128,
-        BaseTexture = PIXI.BaseTexture,
-        CanvasTinter = PIXI.CanvasTinter,
-        Point = PIXI.Point,
-        Rectangle = PIXI.Rectangle,
-        Sprite = PIXI.Sprite,
-        Texture = PIXI.Texture,
         animationCache = {},
         baseTextureCache = {},
         doNothing = function () {},
-        emptyFrame = {
-            texture: Texture.EMPTY,
-            anchor: new Point(0, 0)
-        },
+        emptyFrame = Texture.EMPTY,
         regex = /[\[\]{},-]/g,
         getBaseTextures = function (images) {
             var i = 0,
@@ -127,11 +118,7 @@ export default (function () {
             // Set up texture for each frame
             for (i = 0; i < frames.length; i++) {
                 frame = frames[i];
-                texture = new Texture(bases[frame[4]], new Rectangle(frame[0], frame[1], frame[2], frame[3]));
-                textures.push({
-                    texture: texture,
-                    anchor: new Point((frame[5] || 0) / texture.width, (frame[6] || 0) / texture.height)
-                });
+                textures.push(new Texture(bases[frame[4]], new Rectangle(frame[0], frame[1], frame[2], frame[3]), null, null, 0, new Point((frame[5] || 0) / frame[2], (frame[6] || 0) / frame[3])));
             }
 
             // Set up animations
@@ -162,11 +149,7 @@ export default (function () {
             // Set up texture for each frame
             for (i = 0; i < frames.length; i++) {
                 frame = frames[i];
-                texture = new Texture(bases[frame[4]], new Rectangle(frame[0], frame[1], frame[2], frame[3]));
-                textures.push({
-                    texture: texture,
-                    anchor: new Point((frame[5] || 0) / texture.width, (frame[6] || 0) / texture.height)
-                });
+                textures.push(new Texture(bases[frame[4]], new Rectangle(frame[0], frame[1], frame[2], frame[3]), null, null, 0, new Point((frame[5] || 0) / frame[2], (frame[6] || 0) / frame[3])));
             }
 
             // Set up animations
@@ -186,6 +169,8 @@ export default (function () {
                 cacheId = getTexturesCacheId(spriteSheet),
                 cache = (cacheId ? animationCache[cacheId] : null),
                 speed = (spriteSheet.framerate || FR) / FR;
+
+            let animationCount = 0;
             
             if (!cacheId) {
                 cache = getAnimations(spriteSheet);
@@ -196,13 +181,21 @@ export default (function () {
                 cache.viable += 1;
                 this.cacheId = cacheId;
             }
-            
-            Sprite.call(this, cache.textures[0].texture);
+
+            Container.call(this); //, cache.textures[0].texture
         
             /**
             * @private
             */
-            this._animations = cache.animations;
+            this._animations = {};
+            for (let key in cache.animations) {
+                if (cache.animations[key].frames.length === 1) {
+                    this._animations[key] = new Sprite(cache.animations[key].frames[0]);
+                } else {
+                    this._animations[key] = new AnimatedSprite(cache.animations[key].frames);
+                }
+                animationCount += 1;
+            }
             
             this._animation = null;
         
@@ -225,14 +218,6 @@ export default (function () {
             this.currentAnimation = null;
         
             /**
-            * Elapsed time since animation has been started, used internally to display current texture
-            *
-            * @member {number}
-            * @private
-            */
-            this._currentTime = 0;
-        
-            /**
             * Indicates if the PIXIAnimation is currently playing
             *
             * @member {boolean}
@@ -251,13 +236,9 @@ export default (function () {
             this.update = doNothing;
 
             // Set up initial playthrough.
-            if (cache.textures.length < 2) {
-                this.gotoAndStop(animation);
-            } else {
-                this.gotoAndPlay(animation);
-            }
+            this.gotoAndPlay(animation);
         },
-        prototype = PIXIAnimation.prototype = Object.create(Sprite.prototype);
+        prototype = PIXIAnimation.prototype = Object.create(Container.prototype);
     
     PIXIAnimation.prototype.constructor = PIXIAnimation;
     
@@ -274,21 +255,6 @@ export default (function () {
             },
             set: function (value) {
                 this._visible = value;
-                this._syncUpdate();
-            }
-        },
-        
-       /**
-        * The PIXIAnimations current frame index
-        *
-        * @member {number}
-        * @memberof platypus.PIXIAnimation#
-        * @readonly
-        */
-        currentFrame: {
-            get: function () {
-                var frames = this._animation.frames;
-                return frames[Math.floor(this._currentTime) % frames.length];
             }
         },
         
@@ -304,7 +270,6 @@ export default (function () {
             set: function (value) {
                 if ((value && this.playing) || (!value && !this.playing)) {
                     this.playing = !value;
-                    this._syncUpdate();
                 }
             }
         }
@@ -327,44 +292,6 @@ export default (function () {
         this.paused = false;
     };
     
-    prototype._syncUpdate = (function () {
-        var
-            update = function (deltaTime) {
-                var name = "",
-                    floor = 0;
-                
-                this._currentTime += this.animationSpeed * this._animation.speed * deltaTime * (60 / 1000);
-                
-                floor = Math.floor(this._currentTime);
-            
-                if (floor < 0) {
-                    floor = 0;
-                }
-                
-                if (floor < this._animation.frames.length) {
-                    this.setFrame(floor % this._animation.frames.length);
-                } else if (floor >= this._animation.frames.length) {
-                    name = this._animation.id;
-                    this.gotoAndPlay(this._animation.next);
-                    this.emit('complete', name);
-                }
-            };
-        
-        return function () {
-            var updating = this.playing && this._visible;
-            
-            if (updating !== this._updating) {
-                this._updating = updating;
-                
-                if (updating) {
-                    this.update = update;
-                } else {
-                    this.update = doNothing;
-                }
-            }
-        };
-    }());
-    
     /**
     * Stops the PIXIAnimation and goes to a specific frame
     *
@@ -373,12 +300,12 @@ export default (function () {
     prototype.gotoAndStop = function (animation) {
         this.stop();
     
-        this._currentTime = 0;
         this._animation = this._animations[animation];
         if (!this._animation) {
             this._animation = this._animations.default;
         }
-        this.setFrame(0);
+        this.removeChildren();
+        this.addChild(this._animation);
     };
     
     /**
@@ -390,35 +317,17 @@ export default (function () {
     */
     prototype.gotoAndPlay = function (animation, restart) {
         if ((this.currentAnimation !== animation) || (restart !== false)) {
-            this._currentTime = 0;
             this._animation = this._animations[animation];
             this.currentAnimation = animation;
             if (!this._animation) {
                 this._animation = this._animations.default;
                 this.currentAnimation = 'default';
             }
-            this.setFrame(0);
+            this.removeChildren();
+            this.addChild(this._animation);
         }
             
         this.play();
-    };
-    
-    /**
-    * Sets the texture and anchor for a particular frame.
-    *
-    * @method setFrame
-    * @param frameIndex {Number} Animation frame index to set.
-    * @since 0.11.1
-    */
-    prototype.setFrame = function (frameIndex) {
-        var frameData = this._animation.frames[frameIndex];
-
-        this._texture = frameData.texture;
-        this.anchor = frameData.anchor;
-
-        if (this.tintedTexture) { // Sprite is using a cached tinted canvas, so we need to update this cache too.
-            this.tintedTexture = CanvasTinter.getTintedTexture(this, this.tint);
-        }
     };
     
     /**
@@ -441,7 +350,7 @@ export default (function () {
         var key = '';
         
         this.stop();
-        Sprite.prototype.destroy.call(this);
+        Container.prototype.destroy.call(this);
         if (this.cacheId) {
             animationCache[this.cacheId].viable -= 1;
             if (animationCache[this.cacheId].viable <= 0) {

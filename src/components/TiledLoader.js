@@ -983,7 +983,6 @@ export default (function () {
                         widthOffset = 0,
                         heightOffset = 0,
                         x = 0,
-                        p = 0,
                         w = 0,
                         h = 0,
                         a = 0,

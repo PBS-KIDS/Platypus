@@ -9,7 +9,8 @@
  * @param [onFinishedLoading] {Function} An optional function to run once the game has begun.
  * @return {platypus.Game} Returns the instantiated game.
  */
-/* global createjs, document, PIXI, platypus, window */
+/* global document, platypus, window */
+import {Container, Renderer, Ticker} from 'pixi.js';
 import Messenger from './Messenger.js';
 import {ScaleManager} from 'springroll';
 import Scene from './Scene.js';
@@ -18,9 +19,7 @@ import config from 'config';
 import sayHello from './sayHello.js';
 
 export default (function () {
-    var Container      = PIXI.Container,
-        WebGLRenderer = PIXI.WebGLRenderer,
-        XMLHttpRequest = window.XMLHttpRequest,
+    var XMLHttpRequest = window.XMLHttpRequest,
         getJSON = function (path, callback) {
             var xhr = new XMLHttpRequest();
             
@@ -153,24 +152,21 @@ export default (function () {
         },
         setUpFPS = function (ticker, canvas) {
             var framerate = document.createElement("div"),
-                frameCount = 0,
                 framerateTimer = 0;
 
             framerate.id = "framerate";
             framerate.innerHTML = "FPS: 00.000";
             canvas.parentNode.insertBefore(framerate, canvas);
 
-            ticker.on('tick', function (tick) {
-                frameCount += 1;
-                framerateTimer += tick.delta;
+            ticker.add(function () {
+                framerateTimer += this.deltaMS;
 
                 // Only update the framerate every second
                 if (framerateTimer >= 1000) {
-                    framerate.innerHTML = "FPS: " + (1000 / framerateTimer * frameCount).toFixed(3);
+                    framerate.innerHTML = "FPS: " + this.FPS.toFixed(3);
                     framerateTimer = 0;
-                    frameCount = 0;
                 }
-            });
+            }.bind(ticker));
         };
 
     class Game extends Messenger {
@@ -180,14 +176,16 @@ export default (function () {
                     var id = '',
                         scene  = '',
                         scenes = {},
-                        Ticker = createjs.Ticker;
+                        ticker = Ticker.shared;
                         
                     platypus.game = this; //Make this instance the only Game instance.
                     
                     this.currentScene = null;
                     this.settings = settings;
                     this.stage = new Container();
-                    this.renderer = new WebGLRenderer(this.canvas.width, this.canvas.height, {
+                    this.renderer = new Renderer({
+                        width: this.canvas.width,
+                        height: this.canvas.height,
                         view: this.canvas,
                         transparent: !!displayOptions.transparent,
                         antialias: !!displayOptions.antiAlias,
@@ -215,8 +213,6 @@ export default (function () {
                         }
                     }
                     this.scenes = scenes;
-                    
-                    //createjs.Sound.registerSounds([{src:'assets/audio/loop.ogg', id:'loop'}]);
                     
                     if (onFinishedLoading) {
                         onFinishedLoading(this);
@@ -256,11 +252,14 @@ export default (function () {
                     }.bind(this);
 
                     // START GAME!
-                    Ticker.timingMode = Ticker.RAF;
-                    Ticker.on('tick', this.tick.bind(this));
+                    ticker.add(this.tick.bind(this, ticker, {
+                        delta: 0, // standard, backwards-compatible parameter for `deltaMS`
+                        deltaMS: 0, // MS from last frame (matches above)
+                        deltaTime: 0 // PIXI ticker frame value
+                    }));
 
                     if (config.dev) {
-                        setUpFPS(Ticker, this.canvas);
+                        setUpFPS(ticker, this.canvas);
                     }
                 };
             
@@ -298,12 +297,16 @@ export default (function () {
         * This method causes the game to tick once. It's called by the SpringRoll Application.
         *
         * @method tick
-        * @param tickEvent {Object} Key/value pairs passed on to the current scene.
-        * @param tickEvent.delta {number} The time elapsed since the last tick.
+        * @param tickMessage {Object} Event tracking tick data.
+        * @param ticker {PIXI.Ticker} The ticker being used to set the game tick.
+        * @param deltaTime {number} The time elapsed since the last tick.
         **/
-        tick (tickEvent) {
+        tick (ticker, tickMessage, deltaTime) {
+            tickMessage.delta = tickMessage.deltaMS = ticker.deltaMS;
+            tickMessage.deltaTime = deltaTime;
+
             if (this.currentScene) {
-                this.currentScene.triggerOnChildren('tick', tickEvent);
+                this.currentScene.triggerOnChildren('tick', tickMessage);
             }
             this.renderer.render(this.stage);
         }

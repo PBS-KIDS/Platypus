@@ -10,10 +10,6 @@ import Game from './Game.js';
 import config from 'config';
 import factory from './factory.js';
 
-// Fix for CreateJS 1.x window reference
-window.createjs = {};
-require('createjs');
-
 export * from './utils/array.js';
 export * from './utils/string.js';
 export {default as recycle} from 'recycle';

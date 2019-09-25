@@ -5,14 +5,13 @@
  * @class HandlerRender
  * @uses platypus.Component
  */
-/*global PIXI, platypus */
+/*global platypus */
+import {Container} from 'pixi.js';
 import Data from '../Data.js';
 import Interactive from './Interactive.js';
 import {arrayCache} from '../utils/array.js';
 
 export default (function () {
-    var Container = PIXI.Container;
-
     return platypus.createComponentClass({
 
         id: "HandlerRender",

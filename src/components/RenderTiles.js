@@ -9,7 +9,8 @@
  * @class RenderTiles
  * @uses platypus.Component
  */
-/* global platypus, PIXI */
+/* global platypus */
+import {Container, Graphics, Rectangle, RenderTexture, Sprite} from 'pixi.js';
 import {arrayCache, greenSlice, union} from '../utils/array.js';
 import AABB from '../AABB.js';
 import PIXIAnimation from '../PIXIAnimation.js';
@@ -20,12 +21,6 @@ import recycle from 'recycle';
 export default (function () {
     var EDGE_BLEED = 1,
         EDGES_BLEED = EDGE_BLEED * 2,
-        Container         = PIXI.Container,
-        Graphics          = PIXI.Graphics,
-        ParticleContainer = Container, //Excluding ParticleContainer atm due to https://github.com/pixijs/pixi.js/issues/4008 -- PIXI.particles.ParticleContainer,
-        Rectangle = PIXI.Rectangle,
-        RenderTexture = PIXI.RenderTexture,
-        Sprite = PIXI.Sprite,
         clearRenderTexture = function (renderer, renderTexture, clearColor) { // This is pulled from https://github.com/pixijs/pixi.js/pull/3647 and should be in a future build of PIXI
             var baseTexture = renderTexture.baseTexture,
                 renderTarget = baseTexture._glRenderTargets[renderer.CONTEXT_UID];
@@ -269,7 +264,7 @@ export default (function () {
 
             // Set up containers
             this.spriteSheet = PIXIAnimation.formatSpriteSheet(this.spriteSheet);
-            this.tileContainer = (this.spriteSheet.images.length > 1) ? new Container() : new ParticleContainer(15000, {position: true, rotation: true, scale: true});
+            this.tileContainer = new Container();
             this.mapContainer = new Container();
             this.mapContainer.addChild(this.tileContainer);
             

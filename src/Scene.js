@@ -28,14 +28,15 @@
  * @param {Array} [definition.assets] This lists the assets that this scene requires.
  * @return {Scene} Returns the new scene made up of the provided layers.
  */
-/* global createjs, platypus */
+/* global platypus */
+import * as Sound from 'pixi-sound';
 import {arrayCache, greenSlice, greenSplice, union} from './utils/array.js';
 import Async from './Async.js';
 import Data from './Data.js';
 import Entity from './Entity.js';
+import {Loader} from 'pixi.js';
 import Messenger from './Messenger.js';
 import PIXIAnimation from './PIXIAnimation.js';
-import {Sound} from '@createjs/soundjs';
 
 export default (function () {
     var fn = /^(?:\w+:\/{2}\w+(?:\.\w+)*\/?)?(?:[\/.]*?(?:[^?]+)?\/)?(?:([^\/?]+)\.(\w+))(?:\?\S*)?$/,
@@ -47,9 +48,6 @@ export default (function () {
             mp3: 'audio',
             m4a: 'audio',
             wav: 'audio'
-        },
-        addAsset = function (event) {
-            platypus.assetCache.set(event.item.id, event.result);
         },
         unloadAssets = function (lateAssets) {
             var i = lateAssets.length,
@@ -244,11 +242,21 @@ export default (function () {
                 Sound.registerSounds(sounds);
             }
 
-            if (assets.length) {
-                queue = new createjs.LoadQueue();
-                queue.on('fileload', addAsset);
-                queue.on('complete', loadScene.bind(this, callback));
-                queue.loadManifest(assets);
+            i = assets.length;
+            if (i) {
+                queue = new Loader();
+                queue.onLoad.add((loader, response) => {
+                    platypus.assetCache.set(response.name, response.data);
+                });
+                queue.onComplete.add(loadScene.bind(this, callback));
+                while (i--) {
+                    try { // Currently not checking whether it's already loaded...
+                        queue.add(assets[i].id || assets[i].src || assets[i], assets[i].src || assets[i], assets[i]);
+                    } catch (e) {
+                        console.warn(e);
+                    }
+                }
+                queue.load();
             } else {
                 loadScene.call(this, callback);
             }

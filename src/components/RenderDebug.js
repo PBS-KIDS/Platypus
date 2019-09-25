@@ -5,13 +5,13 @@
  * @class RenderDebug
  * @uses platypus.Component
  */
-/*global PIXI, platypus */
+/*global platypus */
+import {Graphics} from 'pixi.js';
 import RenderContainer from './RenderContainer.js';
 import {arrayCache} from '../utils/array.js';
 
 export default (function () {
-    var Graphics = PIXI.Graphics,
-        createShape = function (shape, color, left, top, width, height, z, outline) {
+    var createShape = function (shape, color, left, top, width, height, z, outline) {
             var newShape = new Graphics().beginFill(color, 0.1);
 
             if (outline) {

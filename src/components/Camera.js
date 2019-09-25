@@ -5,9 +5,11 @@
  * @class Camera
  * @uses platypus.Component
 */
-/*global createjs, PIXI, platypus, window */
+/*global platypus, window */
 import AABB from '../AABB.js';
+import {Container} from 'pixi.js';
 import Data from '../Data.js';
+import {Tween} from '@tweenjs/tween.js';
 import Vector from '../Vector.js';
 
 export default (function () {
@@ -272,7 +274,7 @@ export default (function () {
             } else {
                 platypus.debug.warn('Camera: There appears to be no Container on this entity for the camera to display.');
             }
-            this.container = new PIXI.Container();
+            this.container = new Container();
             this.container.visible = false;
             this.parentContainer.addChild(this.container);
             this.movedCamera = false;
@@ -549,9 +551,9 @@ export default (function () {
                     var v = null,
                         worldVP = this.worldCamera.viewport;
 
-                    if (location.time && window.createjs && createjs.Tween) {
+                    if (location.time) {
                         v = Vector.setUp(worldVP.x, worldVP.y);
-                        createjs.Tween.get(v).to({x: location.x, y: location.y}, location.time, location.ease).on('change', move.bind(this, v)).call(stop.bind(v));
+                        new Tween(v).to({x: location.x, y: location.y}, location.time).easing(location.ease).onUpdate(move.bind(this, v)).onStop(stop.bind(v)).start();
                     } else if (this.move(location.x, location.y)) {
                         this.viewportUpdate = true;
                     }

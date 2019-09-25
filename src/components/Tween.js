@@ -7,12 +7,12 @@
  * @class Tween
  * @uses platypus.Component
  */
-/* global createjs, platypus */
+/* global platypus */
 import {arrayCache, greenSlice} from '../utils/array.js';
+import Tween from '@tweenjs/tween.js';
 
 export default (function () {
-    var Tween = createjs.Tween,
-        empty = {},
+    var empty = {},
         createEvent = function (dictionary, key, defaults, entity) {
             var event = getProperty(dictionary, key, defaults);
 
@@ -39,7 +39,7 @@ export default (function () {
                 tweenDef = null,
                 arr = null,
                 arr2 = null,
-                tween = createjs.Tween.get(owner, mergeProperties(simpleDef ? empty : definition, this, owner));
+                tween = new Tween(owner, mergeProperties(simpleDef ? empty : definition, this, owner));
 
             if (Array.isArray(values)) {
                 tweens = values;

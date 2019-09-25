@@ -18,9 +18,9 @@
         "build:debug": "webpack --env.dev"
     },
     "dependencies": {
-        "createjs": "https://github.com/CreateJS/Combined.git#197c0c904872c8a07ae8a1e1c2a5ce3e318b6e34",
-        "pixi.js": "^4.5.1",
-        "@createjs/soundjs": "https://github.com/CreateJS/SoundJS.git#2.0",
+        "@tweenjs/tween.js": "^18.3.1",
+        "pixi-sound": "^3.0.3",
+        "pixi.js": "^5.1.3",
         "recycle": "https://github.com/gopherwood/recycle.git#master",
         "springroll": "2.0.0"
     },

@@ -1,4 +1,5 @@
-/* global console, document, PIXI, platypus, window */
+/* global console, document, platypus */
+import * as PIXI from 'pixi.js';
 import {arrayCache} from './utils/array.js';
 import {greenSplit} from './utils/string.js';
 
@@ -56,13 +57,11 @@ export default (function () {
             return versions;
         };
 
-    if (PIXI) { // Over-riding the pixi.js hello since we're creating our own.
-        PIXI.utils.skipHello();
-    }
-
+    // Over-riding the pixi.js hello since we're creating our own.
+    PIXI.utils.skipHello();
+    
     return function (app) {
-        var cJS     = window.createjs,
-            options = app.options,
+        var options = app.options,
             authorTag = document.getElementsByName('author'),
             docAuth = authorTag.length ? authorTag[0].getAttribute('content') || '' : '',
             author  = (docAuth ? 'by ' + docAuth : ''),
@@ -83,20 +82,6 @@ export default (function () {
             using.push('Pixi.js ' + pixi.VERSION);
             if (pixi.animate) {
                 using.push('PixiAnimate ' + pixi.animate.VERSION);
-            }
-        }
-        if (cJS) {
-            if (cJS.EaselJS) {
-                using.push('EaselJS ' + cJS.EaselJS.version);
-            }
-            if (cJS.PreloadJS) {
-                using.push('PreloadJS ' + cJS.PreloadJS.version);
-            }
-            if (cJS.SoundJS) {
-                using.push('SoundJS ' + cJS.SoundJS.version);
-            }
-            if (cJS.TweenJS) {
-                using.push('TweenJS ' + cJS.TweenJS.version);
             }
         }
         

@@ -1,20 +1,18 @@
 /**
- * This component uses its definition to load an AudioVO component and either a RenderSprite or RenderAnimation component. These work in an interconnected way to render animations corresponding to one or more audio tracks.
+ * This component uses its definition to load an AudioVO component and a RenderSprite component. These work in an interconnected way to render animations corresponding to one or more audio tracks.
  *
- * In addition to its own properties, this component also accepts all properties accepted by either [RenderSprite](platypus.components.RenderSprite.html), [RenderSprite](platypus.components.RenderAnimation.html), and [AudioVO](platypus.components.AudioVO.html) and passes them along when it creates those components.
+ * In addition to its own properties, this component also accepts all properties accepted by [RenderSprite](platypus.components.RenderSprite.html) and [AudioVO](platypus.components.AudioVO.html) and passes them along when it creates those components.
  *
  * @namespace platypus.components
  * @class VoiceOver
  * @uses platypus.Component
  * @uses platypus.AudioVO
- * @uses platypus.RenderAnimation
  * @uses platypus.RenderSprite
  */
 /* global platypus */
 import {arrayCache, greenSlice} from '../utils/array.js';
 import Async from '../Async.js';
 import AudioVO from './AudioVO.js';
-import RenderAnimation from './RenderAnimation.js';
 import RenderSprite from './RenderSprite.js';
 
 export default (function () {
@@ -224,7 +222,7 @@ export default (function () {
             if (this.renderComponent) {
                 componentInits.push(componentInit.bind(this, platypus.components[this.renderComponent], animationDefinition));
             } else {
-                componentInits.push(componentInit.bind(this, (definition.animation ? RenderAnimation : RenderSprite), animationDefinition));
+                componentInits.push(componentInit.bind(this, RenderSprite, animationDefinition));
             }
 
             for (i in this.voiceOverMap) {

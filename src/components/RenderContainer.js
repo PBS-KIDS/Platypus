@@ -6,7 +6,8 @@
  * @uses platypus.Component
  * @since 0.11.0
  */
-/* global PIXI, platypus */
+/* global platypus */
+import {Container, Graphics, Matrix, filters} from 'pixi.js';
 import AABB from '../AABB.js';
 import Data from '../Data.js';
 import Interactive from './Interactive.js';
@@ -14,10 +15,7 @@ import {arrayCache} from '../utils/array.js';
 import {greenSplit} from '../utils/string.js';
 
 export default (function () {
-    var ColorMatrixFilter = PIXI.filters.ColorMatrixFilter,
-        Container = PIXI.Container,
-        Graphics = PIXI.Graphics,
-        Matrix = PIXI.Matrix,
+    var ColorMatrixFilter = filters.ColorMatrixFilter,
         pixiMatrix = new Matrix(),
         castValue = function (color) {
             if (color === null) {

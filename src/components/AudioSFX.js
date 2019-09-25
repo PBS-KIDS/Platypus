@@ -6,10 +6,10 @@
  * @uses platypus.Component
  * @since 0.6.0
  */
-/*global createjs, platypus, setTimeout */
+/*global platypus */
+import * as Sound from 'pixi-sound';
 import {arrayCache, greenSplice} from '../utils/array.js';
 import Data from '../Data.js';
-import {Sound} from '@createjs/soundjs';
 import StateMap from '../StateMap.js';
 
 export default (function () {
@@ -197,7 +197,7 @@ export default (function () {
                 playClip = null,
                 sound    = null;
             
-            if (this.channel) {
+            if (this.channel) {/*
                 if (!platypus.game.audioChannels) { // Monkey-patch to add per-channel volume
                     const wasi = createjs.WebAudioSoundInstance;
 
@@ -231,7 +231,7 @@ export default (function () {
                             this._sourceNodeNext = this._createAndPlayAudioNode(this._playbackStartTime, 0);
                         }
                     };
-                }
+                }*/ //TODO: Need to implement channels.
             }
             
             this.activeAudioClips = arrayCache.setUp();

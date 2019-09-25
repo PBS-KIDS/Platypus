@@ -5,10 +5,9 @@
  * @class RenderProgress
  * @uses platypus.Component
  */
-/*global PIXI, platypus */
+/*global platypus */
+import {Container, Graphics, Point} from 'pixi.js';
 export default (function () {
-    
-    
     return platypus.createComponentClass({
         
         id: 'RenderProgress',
@@ -43,9 +42,9 @@ export default (function () {
         },
         
         initialize: function () {
-            var b   = new PIXI.Graphics(),
-                f   = new PIXI.Graphics(),
-                con = new PIXI.Container();
+            var b   = new Graphics(),
+                f   = new Graphics(),
+                con = new Container();
             
             this.parentContainer = null;
             this.background = b;
@@ -61,7 +60,7 @@ export default (function () {
             
             b.f(this.backgroundColor).r(-this.regX, -this.regY, this.width, this.height);
             f.f(this.color).r(-this.regX, -this.regY, this.width, this.height);
-            f.scale = new PIXI.Point(0.0001, 1);
+            f.scale = new Point(0.0001, 1);
             con.addChild(b);
             con.addChild(f);
         },

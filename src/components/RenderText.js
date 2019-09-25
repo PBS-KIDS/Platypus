@@ -6,13 +6,14 @@
  * @uses platypus.Component
  * @since v0.11.9
  */
-/*global PIXI, platypus */
+/*global platypus */
 import RenderContainer from './RenderContainer.js';
+import {Text} from 'pixi.js';
 
 export default (function () {
     "use strict";
     
-    var Text = PIXI.Text,
+    const
         alignments = {
             horizontal: {
                 left: 0,

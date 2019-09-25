@@ -5,15 +5,13 @@
  * @uses platypus.Component
  * @since 0.9.0
  */
-/*global PIXI, platypus */
+/*global platypus */
+import {Circle, Polygon, Rectangle} from 'pixi.js';
 import AABB from '../AABB.js';
 import Data from '../Data.js';
 
 export default (function () {
-    var Circle = PIXI.Circle,
-        Polygon = PIXI.Polygon,
-        Rectangle = PIXI.Rectangle,
-        pointerInstances = {};
+    var pointerInstances = {};
     
     return platypus.createComponentClass({
         id: 'Interactive',
