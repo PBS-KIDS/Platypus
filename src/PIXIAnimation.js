@@ -5,7 +5,7 @@
  * @extends PIXI.Sprite
  */
 /*global platypus */
-import {AnimatedSprite, BaseTexture, Container, Point, Rectangle, Sprite, Texture} from 'pixi.js';
+import {AnimatedSprite, BaseTexture, Container, Point, Rectangle, Sprite, Texture, utils} from 'pixi.js';
 import {arrayCache, greenSlice} from './utils/array.js';
 import Data from './Data.js';
 
@@ -188,7 +188,7 @@ export default (function () {
             * @private
             */
             this._animations = {};
-            for (let key in cache.animations) {
+            for (const key in cache.animations) {
                 if (cache.animations[key].frames.length === 1) {
                     this._animations[key] = new Sprite(cache.animations[key].frames[0]);
                 } else {
@@ -399,6 +399,8 @@ export default (function () {
                 btCache[key] = null;
             }
         }
+
+        utils.clearTextureCache();
     };
     
     PIXIAnimation.EmptySpriteSheet = {

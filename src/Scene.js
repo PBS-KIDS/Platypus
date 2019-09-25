@@ -257,6 +257,7 @@ export default (function () {
                     }
                 }
                 queue.load();
+                this.loader = queue;
             } else {
                 loadScene.call(this, callback);
             }
@@ -413,6 +414,10 @@ export default (function () {
             arrayCache.recycle(this.layers);
             this.layers = null;
             
+            if (this.loader) {
+                this.loader.reset();
+                this.loader = null;
+            }
             // Unload all base textures to prep for next scene
             PIXIAnimation.unloadBaseTextures();
 
