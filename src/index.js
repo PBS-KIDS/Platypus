@@ -29,6 +29,7 @@ export {default as PIXIAnimation} from './PIXIAnimation.js';
 export {default as Scene} from './Scene.js';
 export {default as StateMap} from './StateMap.js';
 export {default as Vector} from './Vector.js';
+export {default as createComponentClass} from './factory.js';
 
 export default (function () {
     var platypus = global.platypus = {},

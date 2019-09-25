@@ -179,14 +179,14 @@ export default (function () {
             dragMode: false,
 
             /**
-             * Determines the container this entity should use for rendering. Defaults to the top-most layer.
+             * The entity or id of the entity that will act as the parent container. If not set, the entity will be rendered in the layer's container.
              *
-             * @property renderGroup
-             * @type String
-             * @default ""
-             * @since 0.11.10
+             * @property renderParent
+             * @type String|Object
+             * @default null
+             * @since 2.0.0
              */
-            renderGroup: '',
+            renderParent: null,
 
             /**
              * Optional. The rotation of the sprite in degrees. All sprites on the same entity are rotated the same amount unless they ignore the rotation value by setting 'rotate' to false.
@@ -275,9 +275,7 @@ export default (function () {
                 definition = null,
                 initialTint = this.tint;
 
-            this.rootContainer = null;
             this.parentContainer = null;
-            this.renderGroups = null;
             this.wasVisible = this.visible;
             this.lastX = this.owner.x;
             this.lastY = this.owner.y;
@@ -315,55 +313,6 @@ export default (function () {
                     }
 
                     this._tint = color;
-                }.bind(this)
-            });
-
-            this.storedRenderGroup = this.renderGroup;
-            this._renderGroup = null;
-            Object.defineProperty(this.owner, 'renderGroup', {
-                get: function () {
-                    return this._renderGroup;
-                }.bind(this),
-                set: function (value) {
-                    var groups = this.renderGroups,
-                        i = groups.length,
-                        container = null,
-                        mask = null;
-
-                    if (value === this._renderGroup) {
-                        return;
-                    }
-
-                    this._renderGroup = value;
-
-                    if (this.mask) {
-                        mask = this.mask;
-                        this.setMask();
-                    }
-
-                    while (i--) {
-                        if (groups[i].name === value) {
-                            this.parentContainer = groups[i];
-                            groups[i].addChild(this.container);
-                            groups[i].reorder = true;
-                            if (mask) {
-                                this.setMask(mask);
-                            }
-                            return;
-                        }
-                    }
-
-                    container = new Container();
-                    container.name = value;
-                    container.z = this.owner.z;
-                    groups.push(container);
-                    this.rootContainer.addChild(container);
-                    this.rootContainer.reorder = true;
-                    this.parentContainer = container;
-                    container.addChild(this.container);
-                    if (mask) {
-                        this.setMask(mask);
-                    }
                 }.bind(this)
             });
         
@@ -429,12 +378,16 @@ export default (function () {
              * @method 'handle-render-load'
              * @param handlerData {Object} Data from the render handler
              * @param handlerData.container {PIXI.Container} The parent container.
+             * @param data.renderGroups {Array of PIXI.Container} Containers to categorize display of groups of entities.
              */
             "handle-render-load": function (handlerData) {
-                if (!this.rootContainer && handlerData && handlerData.container) {
-                    this.addStage(handlerData.container, handlerData.renderGroups);
-                    this.updateSprite(true); // Initial set up in case position, etc is needed prior to the first "render" event.
-                }
+                /**
+                 * This event is triggered once the RenderSprite is ready to handle interactivity.
+                 *
+                 * @event 'input-on'
+                 */
+                this.owner.triggerEvent('input-on');
+                this.updateSprite(true);
             },
             
             /**
@@ -447,8 +400,6 @@ export default (function () {
             "handle-render": function (renderData) {
                 if (!this.container) { // If this component's removal is pending
                     return;
-                } else if (!this.rootContainer && renderData && renderData.container) {
-                    this.addStage(renderData.container, renderData.renderGroups);
                 }
 
                 this.updateSprite(true);
@@ -484,29 +435,6 @@ export default (function () {
         },
         
         methods: {
-            addStage: function (stage, renderGroups) {
-                if (stage) {
-                    this.rootContainer = stage;
-                    this.renderGroups = renderGroups;
-                    this.renderGroup = this.storedRenderGroup;
-
-                    //Handle mask
-                    if (this.mask) {
-                        this.setMask(this.mask);
-                    }
-
-                    /**
-                     * This event is triggered once the RenderSprite is ready to handle interactivity.
-                     *
-                     * @event 'input-on'
-                     */
-                    this.owner.triggerEvent('input-on');
-                    return stage;
-                } else {
-                    return null;
-                }
-            },
-            
             updateSprite: (function () {
                 var sort = function (a, b) {
                     return a.z - b.z;
@@ -637,6 +565,30 @@ export default (function () {
                 }
                 this.container = null;
             }
+        },
+    
+        publicMethods: {// These are methods that are available on the entity.
+            removeFromParentContainer: function () {
+                if (this.parentContainer) {
+                    if (this.mask) {
+                        this.setMask();
+                    }
+
+                    this.parentContainer.removeChild(this.container);
+                }
+            },
+            
+            addToParentContainer: function (container) {
+                this.parentContainer = container;
+                this.parentContainer.addChild(this.container);
+                this.parentContainer.reorder = true;
+
+                if (this.mask) {
+                    this.setMask(this.mask);
+                }
+
+            }
+            
         }
     });
 }());
