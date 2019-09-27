@@ -291,7 +291,7 @@ export default (function () {
             
             if (typeof value === 'string') {
                 //This is going to assume that if you pass in something that starts with a number, it is a number and converts it to one.
-                numberProperty = parseFloat(value);
+                numberProperty = parseFloat(value) || parseInt(value); // to handle floats and 0x respectively.
                 if (numberProperty === 0 || (!!numberProperty)) {
                     return numberProperty;
                 } else if (value === 'true') {
