@@ -14,6 +14,7 @@ import {Container, Renderer, Ticker} from 'pixi.js';
 import Messenger from './Messenger.js';
 import {ScaleManager} from 'springroll';
 import Scene from './Scene.js';
+import TweenJS from '@tweenjs/tween.js';
 import {arrayCache} from './utils/array.js';
 import config from 'config';
 import sayHello from './sayHello.js';
@@ -305,6 +306,7 @@ export default (function () {
             tickMessage.delta = tickMessage.deltaMS = ticker.deltaMS;
             tickMessage.deltaTime = deltaTime;
 
+            TweenJS.update(tickMessage.deltaMS);
             if (this.currentScene) {
                 this.currentScene.triggerOnChildren('tick', tickMessage);
             }

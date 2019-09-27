@@ -9,7 +9,7 @@
 import AABB from '../AABB.js';
 import {Container} from 'pixi.js';
 import Data from '../Data.js';
-import {Tween} from '@tweenjs/tween.js';
+import {TweenJS} from '@tweenjs/tween.js';
 import Vector from '../Vector.js';
 
 export default (function () {
@@ -553,7 +553,7 @@ export default (function () {
 
                     if (location.time) {
                         v = Vector.setUp(worldVP.x, worldVP.y);
-                        new Tween(v).to({x: location.x, y: location.y}, location.time).easing(location.ease).onUpdate(move.bind(this, v)).onStop(stop.bind(v)).start();
+                        new TweenJS.Tween(v).to({x: location.x, y: location.y}, location.time).easing(location.ease).onUpdate(move.bind(this, v)).onStop(stop.bind(v)).start();
                     } else if (this.move(location.x, location.y)) {
                         this.viewportUpdate = true;
                     }

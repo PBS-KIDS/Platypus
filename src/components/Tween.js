@@ -1,266 +1,253 @@
 /**
- * This component takes a list of tween definitions and plays them as needed. This component requires CreateJS Tween.
- *
- * NOTE: This component handles ticking that's synchronized with the game's tick, NOT it's logic tick. As such, reading tweened values during the logic tick will show a changed value on the first logic tick, but all subsequent logic ticks comprising the game's full tick will show no change at all.
+ * This component takes a list of tween definitions and plays them as needed. This component requires TweenJS.
  *
  * @namespace platypus.components
  * @class Tween
  * @uses platypus.Component
  */
 /* global platypus */
-import {arrayCache, greenSlice} from '../utils/array.js';
-import Tween from '@tweenjs/tween.js';
+import Data from '../Data.js';
+import TweenJS from '@tweenjs/tween.js';
+import {arrayCache} from '../utils/array.js';
 
-export default (function () {
-    var empty = {},
-        createEvent = function (dictionary, key, defaults, entity) {
-            var event = getProperty(dictionary, key, defaults);
+const
+    Easing = TweenJS.Easing,
+    Group = TweenJS.Group,
+    Interpolation = TweenJS.Interpolation,
+    Tween = TweenJS.Tween,
+    eases = (function () {
+        const easing = {};
 
-            if (event) {
-                if (typeof event === 'string') {
-                    return createTrigger(entity, event);
-                } else {
-                    return event;
-                }
-            } else {
-                return null;
-            }
-        },
-        createTrigger = function (entity, event, message, debug) {
-            return function () {
-                entity.trigger(event, message, debug);
-            };
-        },
-        tween = function (definition, values) {
-            var i  = 0,
-                owner = this.owner,
-                simpleDef = Array.isArray(definition),
-                tweens = simpleDef ? definition : definition.tween,
-                tweenDef = null,
-                arr = null,
-                arr2 = null,
-                tween = new Tween(owner, mergeProperties(simpleDef ? empty : definition, this, owner));
-
-            if (Array.isArray(values)) {
-                tweens = values;
-            } else if (!Array.isArray(tweens)) {
-                platypus.debug.warn('Tween: no array was supplied for this tween.');
-                return;
-            }
-
-            for (i = 0; i < tweens.length; i++) {
-                tweenDef = tweens[i];
-                if (typeof tweenDef === 'string') {
-                    tween.call(createTrigger(owner, tweenDef));
-                } else if (Array.isArray(tweenDef)) {
-                    if (tweenDef[0] === 'call' && typeof tweenDef[1] === 'string') {
-                        tween.call(createTrigger(owner, tweenDef[1]));
-                    } else {
-                        arr = greenSlice(tweenDef);
-                        if (arr.shift() === 'to' && arr[2] && createjs.Ease[arr[2]]) {
-                            if (arr.length > 3) {
-                                arr2 = greenSlice(arr);
-                                arr2.shift();
-                                arr2.shift();
-                                arr[2] = createjs.Ease[arr2.shift()].apply(null, arr2);
-                                arrayCache.recycle(arr2);
-                            } else {
-                                arr[2] = createjs.Ease[arr[2]];
-                            }
-                        }
-                        tween[tweenDef[0]].apply(tween, arr);
-                        arrayCache.recycle(arr);
-                    }
-                } else if (tweenDef.method === 'call' && typeof tweenDef.params === 'string') {
-                    tween.call(createTrigger(owner, tweenDef.params));
-                } else {
-                    tween[tweenDef.method].apply(tween, tweenDef.params);
-                }
-            }
-        },
-        getProperty = function (dictionary, key, defaults) {
-            if (dictionary[key] !== 'undefined') {
-                return dictionary[key];
-            } else {
-                return defaults[key];
-            }
-        },
-        mergeProperties = function (overrides, defaults, entity) {
-            return {
-                useTicks: getProperty(overrides, 'useTicks', defaults),
-                ignoreGlobalPause: getProperty(overrides, 'ignoreGlobalPause', defaults),
-                loop: getProperty(overrides, 'loop', defaults),
-                reversed: getProperty(overrides, 'reversed', defaults),
-                bounce: getProperty(overrides, 'bounce', defaults),
-                timeScale: getProperty(overrides, 'timeScale', defaults),
-                pluginData: getProperty(overrides, 'pluginData', defaults),
-                paused: getProperty(overrides, 'paused', defaults),
-                position: getProperty(overrides, 'position', defaults),
-                onChange: createEvent(overrides, 'onChange', defaults, entity),
-                onComplete: createEvent(overrides, 'onComplete', defaults, entity),
-                override: getProperty(overrides, 'override', defaults)
-            };
-        };
-    
-    if (!Tween) {
-        return platypus.createComponentClass({
-            id: 'Tween',
-            initialize: function () {
-                platypus.debug.warn('CreateJS Tween must be included in the project to use the Tween component.');
-            }
-        });
-    }
-
-    Tween._inited = true; // Prevents Tween from using its own ticker.
-    
-    return platypus.createComponentClass({
-        id: 'Tween',
-
-        properties: {
-            /**
-             * Required. A key/value list of events and an array or object representing the tween they should trigger.
-             *
-             *      {
-             *          "begin-flying": [ // When "begin-flying" is triggered on this entity, the following tween begins. Tween definitions adhere to a similar structure outlined by the TweenJS documentation. Each milestone on the tween is an item in this array.
-             *              ["to", { // If the definition is an array, the first parameter is the type of milestone, in this case "to", with all following parameters passed directly to the equivalent Tween function.
-             *                  "scaleY": 1,
-             *                  "y": 400
-             *              }, 500],
-             *              ["call", "fly"], // "call" milestones can take a function or a string. If it's a string, the string will be triggered as an event on the entity. In this case, the component will trigger "fly".
-             *          ],
-             *
-             *          "stop-flying": { // Alternatively, an object can be used to include properties. It must include a `tween` property with an array of tween values like above. It may include any properties that the Tween component accepts and overrides the component's properties.
-             *              "tween": [["to", {"y": 0}, 250]],
-             *              "loop": 2 // This overrides this component's `loop` property value.
-             *          }
-             *      }
-             *
-             * @property events
-             * @type Object
-             * @default null
-             */
-            events: null,
-
-            /**
-             * Sets `useTicks` on the tween as defined here: https://www.createjs.com/docs/tweenjs/classes/Tween.html
-             *
-             * @property useTicks
-             * @type Boolean
-             * @default false
-             */
-            useTicks: false,
-            
-            /**
-             * Sets `ignoreGlobalPause` on the tween as defined here: https://www.createjs.com/docs/tweenjs/classes/Tween.html
-             *
-             * @property ignoreGlobalPause
-             * @type Boolean
-             * @default false
-             */
-            ignoreGlobalPause: false,
-            
-            /**
-             * Sets `loop` on the tween as defined here: https://www.createjs.com/docs/tweenjs/classes/Tween.html
-             *
-             * @property loop
-             * @type Number|Boolean
-             * @default 0
-             */
-            loop: 0,
-            
-            /**
-             * Sets `reversed` on the tween as defined here: https://www.createjs.com/docs/tweenjs/classes/Tween.html
-             *
-             * @property reversed
-             * @type Boolean
-             * @default false
-             */
-            reversed: false,
-            
-            /**
-             * Sets `bounce` on the tween as defined here: https://www.createjs.com/docs/tweenjs/classes/Tween.html
-             *
-             * @property bounce
-             * @type Boolean
-             * @default false
-             */
-            bounce: false,
-            
-            /**
-             * Sets `timeScale` on the tween as defined here: https://www.createjs.com/docs/tweenjs/classes/Tween.html
-             *
-             * @property timeScale
-             * @type Number
-             * @default 1
-             */
-            timeScale: 1,
-
-            /**
-             * Sets `pluginData` on the tween as defined here: https://www.createjs.com/docs/tweenjs/classes/Tween.html
-             *
-             * @property pluginData
-             * @type Object
-             * @default null
-             */
-            pluginData: null,
-            
-            /**
-             * Sets `paused` on the tween as defined here: https://www.createjs.com/docs/tweenjs/classes/Tween.html
-             *
-             * @property paused
-             * @type Boolean
-             * @default false
-             */
-            paused: false,
-
-            /**
-             * Sets `position` on the tween as defined here: https://www.createjs.com/docs/tweenjs/classes/Tween.html
-             *
-             * @property position
-             * @type Number
-             * @default false
-             */
-            position: 0,
-            
-            /**
-             * Sets `onChange` on the tween as defined here: https://www.createjs.com/docs/tweenjs/classes/Tween.html. If a string is specified, it is triggered as an event on the entity.
-             *
-             * @property onChange
-             * @type Function|String
-             * @default ''
-             */
-            onChange: '',
-            
-            /**
-             * Sets `onComplete` on the tween as defined here: https://www.createjs.com/docs/tweenjs/classes/Tween.html. If a string is specified, it is triggered as an event on the entity.
-             *
-             * @property onComplete
-             * @type Function|String
-             * @default ''
-             */
-            onComplete: '',
-            
-            /**
-             * Sets `override` on the tween as defined here: https://www.createjs.com/docs/tweenjs/classes/Tween.html
-             *
-             * @property override
-             * @type Boolean
-             * @default false
-             */
-            override: false
-        },
-        
-        initialize: function () {
-            var event = '',
-                events = this.events;
-            
-            if (events) {
-                for (event in events) {
-                    if (events.hasOwnProperty(event)) {
-                        this.addEventListener(event, tween.bind(this, events[event]));
+        for (const key in Easing) {
+            if (Easing.hasOwnProperty(key)) {
+                for (const type in Easing[key]) {
+                    if (Easing[key].hasOwnProperty(type)) {
+                        easing[key + '.' + type] = Easing[key][type];
                     }
                 }
             }
         }
-    });
-}());
+
+        return easing;
+    }()),
+    trigger = function () {
+        this.trigger.apply(this, arguments);
+    };
+
+export default platypus.createComponentClass({
+    id: 'Tween',
+
+    properties: {
+        /**
+         * Required. A key/value list of events and an array or object representing the tween they should trigger.
+         *
+         *      {
+         *          "begin-flying": { // When "begin-flying" is triggered on this entity, the following tween begins. Tween definitions adhere to a similar structure outlined by the [TweenJS documentation](https://github.com/tweenjs/tween.js/blob/master/docs/user_guide.md).
+         *              "target": "entityId", // This defaults to the entity that this component is on, but can be the id of any entity in this layer.
+         *              "to": { // Specifies the values to change and what they should tween to.
+         *                  "scaleY": 1,
+         *                  "y": [400, 450, 425]
+         *              },
+         *              "time": 1000, // Time in MS to make transition.
+         *              "easing": "Quadratic.In", Easing function to use.
+         *              "onUpdate": "flying", // Event to trigger while transition is running.
+         *              "onStart": "wave", // Event to trigger when tween begins (after delay).
+         *              "onStop": "whoa", // Event to trigger when tween is stopped (not completed normally).
+         *              "onComplete": "done", // Event to trigger when tween is complete.
+         *              "onRepeat": "going-again", // Event to trigger when tween is beginning again.
+         *              "chain": "stop-flying", // Specifies a tween to use next.
+         *              "repeat": 0, // Sets how many times to repeat this tween once it completes.
+         *              "yoyo": false, // If this tween repeats, yoyo makes it transition back-and-forth.
+         *              "delay": 500, // Time in MS to delay before starting transition.
+         *              "repeatDelay": 0, // Time in MS that the transition should wait between repeats if it shouldn't be the `delay` value.
+         *              "interpolation": "Linear" // Interpolation method to use for an array of values.
+         *          },
+         *
+         *          "stop-flying": [{ // May also chain tweens by specifying an array.
+         *              "to": {"y": 100},
+         *              "time": 250
+         *          }, {
+         *              "to": {"y": 0},
+         *              "time": 250
+         *          }]
+         *      }
+         *
+         * @property events
+         * @type Object
+         * @default null
+         */
+        events: null
+    },
+    
+    initialize: function () {
+        var event = '',
+            events = this.events;
+
+        this.group = new Group();
+
+        this.waitingToChain = Data.setUp();
+        this.tweens = Data.setUp();
+
+        this.time = 0;
+        
+        if (events) {
+            for (event in events) {
+                if (events.hasOwnProperty(event)) {
+                    const tween = this.tweens[event] = this.createTweens(events[event]);
+                    this.addEventListener(event, this.runTween.bind(this, event));
+
+                    if (this.waitingToChain[event]) {
+                        const waits = this.waitingToChain[event];
+
+                        for (let i = 0; i < waits.length; i++) {
+                            waits[i].chain(tween);
+                        }
+                        arrayCache.recycle(waits);
+                        delete this.waitingToChain[event];
+                    }
+                }
+            }
+        }
+    },
+
+    events: {
+        'tween': function (tween) {
+            this.runTween(tween);
+        },
+
+        'handle-logic': function (tick) {
+            this.time += tick.delta;
+            this.group.update(this.time);
+        }
+    },
+
+    methods: {
+        createTween: function (tweenDefinition, chainable) {
+            const owner = this.owner,
+                entity = tweenDefinition.target ? (typeof tweenDefinition.target === 'string' ? owner.parent.getEntityById(tweenDefinition.target) : tweenDefinition.target) : owner;
+
+            if (!entity) {
+                platypus.debug.warn('Component Tween: Could not find entity as specified by `target` - ' + tweenDefinition.target);
+                return null;
+            } else if (!tweenDefinition.to || !tweenDefinition.time) {
+                platypus.debug.warn('Component Tween: Both `time` and `to` must be specified to create tween.');
+                return null;
+            } else {
+                const tween = new Tween(entity, this.group);
+
+                tween.to(tweenDefinition.to, tweenDefinition.time);
+
+                if (tweenDefinition.onUpdate) {
+                    tween.onUpdate((typeof tweenDefinition.onUpdate !== 'function') ? trigger.bind(owner, tweenDefinition.onUpdate) : tweenDefinition.onUpdate);
+                }
+                if (tweenDefinition.onStart) {
+                    tween.onStart((typeof tweenDefinition.onStart !== 'function') ? trigger.bind(owner, tweenDefinition.onStart) : tweenDefinition.onStart);
+                }
+                if (tweenDefinition.onStop) {
+                    tween.onStop((typeof tweenDefinition.onStop !== 'function') ? trigger.bind(owner, tweenDefinition.onStop) : tweenDefinition.onStop);
+                }
+                if (tweenDefinition.onComplete) {
+                    tween.onComplete((typeof tweenDefinition.onComplete !== 'function') ? trigger.bind(owner, tweenDefinition.onComplete) : tweenDefinition.onComplete);
+                }
+                if (tweenDefinition.onRepeat) {
+                    tween.onRepeat((typeof tweenDefinition.onRepeat !== 'function') ? trigger.bind(owner, tweenDefinition.onRepeat) : tweenDefinition.onRepeat);
+                }
+
+                if (tweenDefinition.chain) {
+                    if (!chainable) {
+                        platypus.debug.warn('Component Tween: ignoring `chain` on tween since it is part of an array of tweens.');
+                    } else if (typeof tweenDefinition.chain === 'string') {
+                        if (this.tweens[tweenDefinition.chain]) {
+                            tween.chain(this.tweens[tweenDefinition.chain]);
+                        } else {
+                            if (!this.waitingToChain[tweenDefinition.chain]) {
+                                this.waitingToChain[tweenDefinition.chain] = arrayCache.setUp();
+                            }
+                            this.waitingToChain[tweenDefinition.chain].push(tween);
+                        }
+                    } else {
+                        tween.chain(tweenDefinition.chain);
+                    }
+                }
+
+                if (tweenDefinition.repeat) {
+                    tween.repeat(tweenDefinition.repeat);
+                }
+                if (tweenDefinition.yoyo) {
+                    tween.yoyo();
+                }
+                if (tweenDefinition.delay) {
+                    tween.delay(tweenDefinition.delay);
+                }
+                if (tweenDefinition.repeatDelay) {
+                    tween.repeatDelay(tweenDefinition.repeatDelay);
+                }
+                
+                if (tweenDefinition.interpolation) {
+                    if (typeof tweenDefinition.interpolation === 'function') {
+                        tween.interpolation(tweenDefinition.interpolation);
+                    } else if (Interpolation[tweenDefinition.interpolation]) {
+                        tween.interpolation(Interpolation[tweenDefinition.interpolation]);
+                    } else {
+                        platypus.debug.warn('Component Tween: "' + tweenDefinition.interpolation + '" is not a valid interpolation value; must be "Linear", "Bezier", or "CatmullRom".');
+                    }
+                }
+           
+                if (tweenDefinition.easing) {
+                    if (typeof tweenDefinition.easing === 'function') {
+                        tween.interpolation(tweenDefinition.easing);
+                    } else if (eases[tweenDefinition.easing]) {
+                        tween.interpolation(eases[tweenDefinition.easing]);
+                    } else {
+                        let str = '".',
+                            join = '", or "';
+
+                        for (const key in eases) {
+                            if (eases.hasOwnProperty(key)) {
+                                str = join + key + str;
+                                join = '", "';
+                            }
+                        }
+                        platypus.debug.warn('Component Tween: "' + tweenDefinition.easing + '" is not a valid easing value; must be ' + str.substring(3));
+                    }
+                }
+
+                return tween;
+            }
+        },
+
+        createTweens: function (tween) {
+            if (Array.isArray(tween)) {
+                let i = tween.length,
+                    lastTween = null;
+
+                while (i--) {
+                    const newTween = this.createTween(tween[i], !lastTween);
+
+                    if (lastTween) {
+                        newTween.chain(lastTween);
+                    }
+                    lastTween = newTween;
+                }
+
+                return lastTween;
+            } else {
+                return this.createTween(tween, true);
+            }
+        },
+
+        destroy: function () {
+            this.group.removeAll();
+        },
+
+        runTween: function (tweenDefinition) {
+            var tween = typeof tweenDefinition === 'string' ? this.tweens[tweenDefinition] : this.createTweens(tweenDefinition);
+
+            if (tween) {
+                tween.start(this.time);
+            } else {
+                platypus.debug.warn('Component Tween: Unable to run requested tween.', tweenDefinition);
+            }
+        }
+    }
+});
