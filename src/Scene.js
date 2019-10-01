@@ -29,8 +29,7 @@
  * @return {Scene} Returns the new scene made up of the provided layers.
  */
 /* global platypus */
-import * as Sound from 'pixi-sound';
-import {arrayCache, greenSlice, greenSplice, union} from './utils/array.js';
+import {arrayCache, greenSlice, union} from './utils/array.js';
 import Async from './Async.js';
 import Data from './Data.js';
 import Entity from './Entity.js';
@@ -39,7 +38,7 @@ import Messenger from './Messenger.js';
 import PIXIAnimation from './PIXIAnimation.js';
 
 export default (function () {
-    var fn = /^(?:\w+:\/{2}\w+(?:\.\w+)*\/?)?(?:[\/.]*?(?:[^?]+)?\/)?(?:([^\/?]+)\.(\w+))(?:\?\S*)?$/,
+    var fn = /^(?:\w+:\/{2}\w+(?:\.\w+)*\/?)?(?:[\/.]*?(?:[^?]+)?\/)?(?:([^\/?]+)\.(\w+|{\w+(?:,\w+)*}))(?:\?\S*)?$/,
         folders = {
             png: 'images',
             jpg: 'images',
@@ -47,7 +46,8 @@ export default (function () {
             ogg: 'audio',
             mp3: 'audio',
             m4a: 'audio',
-            wav: 'audio'
+            wav: 'audio',
+            "{ogg,mp3}": 'audio'
         },
         unloadAssets = function (lateAssets) {
             var i = lateAssets.length,
@@ -218,28 +218,13 @@ export default (function () {
             var lateAssets = this.getLateAssetList(definition),
                 assets = greenSlice(this.preload),
                 queue = null,
-                i = 0,
-                sounds = this.unloadSounds = arrayCache.setUp(),
-                src = '';
+                i = 0;
 
             if (lateAssets.length) {
                 union(assets, lateAssets);
                 this.unloadAssets = unloadAssets.bind(this, lateAssets);
             } else {
                 arrayCache.recycle(lateAssets);
-            }
-
-            i = assets.length;
-            while (i--) {
-                src = assets[i].src || assets[i];
-                src = src.substring(src.lastIndexOf('.')).toLowerCase();
-                if (src === '.ogg' || src === '.mp3' || src === '.wav') {
-                    sounds.push(greenSplice(assets, i));
-                }
-            }
-
-            if (sounds.length) {
-                Sound.registerSounds(sounds);
             }
 
             i = assets.length;
@@ -416,12 +401,6 @@ export default (function () {
             }
             // Unload all base textures to prep for next scene
             PIXIAnimation.unloadBaseTextures();
-
-            if (this.unloadSounds.length) {
-                Sound.removeSounds(this.unloadSounds);
-                arrayCache.recycle(this.unloadSounds);
-                this.unloadSounds = null;
-            }
 
             if (this.unloadAssets) {
                 this.unloadAssets();

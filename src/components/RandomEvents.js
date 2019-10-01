@@ -18,7 +18,6 @@
 */
 /*global platypus */
 export default (function () {
-    
 
     var createTrigger = function (eventList) {
         return function (value, debug) {

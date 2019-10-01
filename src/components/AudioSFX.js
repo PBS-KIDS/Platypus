@@ -7,9 +7,9 @@
  * @since 0.6.0
  */
 /*global platypus */
-import * as Sound from 'pixi-sound';
 import {arrayCache, greenSplice} from '../utils/array.js';
 import Data from '../Data.js';
+import Sound from 'pixi-sound';
 import StateMap from '../StateMap.js';
 
 export default (function () {
@@ -83,6 +83,14 @@ export default (function () {
                 );
                 data.complete = completed.bind(this, data);
                 data.audio = this.player.play(sound, data);
+                if (data.pan) {
+                    data.audio.filters = [
+                        new Sound.filters.StereoFilter(data.audio.pan)
+                    ];
+                }
+                if (data.volume) {
+                    data.audio.volume = data.volume;
+                }
                 
                 if (data.audio) {
                     data.audio.soundId = sound;
@@ -590,7 +598,7 @@ export default (function () {
             
             for (key in audioMap) {
                 if (audioMap.hasOwnProperty(key)) {
-                    const item = (audioMap[key].sound || audioMap[key]) + '.ogg';
+                    const item = (audioMap[key].sound || audioMap[key]) + '.{ogg,mp3}';
                     if (preload.indexOf(item) === -1) {
                         preload.push(item);
                     }
