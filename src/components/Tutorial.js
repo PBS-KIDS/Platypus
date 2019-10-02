@@ -204,15 +204,6 @@ export default (function () {
              */
             "peer-entity-removed": entityRemoved,
             
-            //Using both logic-tick and handle-logic allows this to work at the Scene level or entity level.
-             /**
-             * Checks tutorials to determine if they should play.
-             *
-             * @method 'logic-tick'
-             * @param tick.delta {Number} The length of the tick.
-             */
-            "logic-tick": updateLogic,
-
             /**
              * Checks tutorials to determine if they should play.
              *

@@ -87,15 +87,6 @@ export default (function () {
         },
 
         events: {
-            //Using both logic-tick and handle-logic allows this to work at the Scene level or entity level.
-            /**
-             * Checks game clock against timelines and triggers events as needed.
-             *
-             * @method 'logic-tick'
-             * @param tick.delta {Number} The length of the tick.
-             */
-            "logic-tick": updateLogic,
-
             /**
              * Checks game clock against timelines and triggers events as needed.
              *
