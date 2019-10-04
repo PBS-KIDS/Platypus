@@ -10,10 +10,11 @@
  * @return {platypus.Game} Returns the instantiated game.
  */
 /* global document, platypus, window */
+import {Application, ScaleManager} from 'springroll';
 import {Container, Renderer, Ticker} from 'pixi.js';
 import Messenger from './Messenger.js';
-import {ScaleManager} from 'springroll';
 import Scene from './Scene.js';
+import Sound from 'pixi-sound';
 import TweenJS from '@tweenjs/tween.js';
 import {arrayCache} from './utils/array.js';
 import config from 'config';
@@ -252,12 +253,16 @@ export default (function () {
                         return a;
                     }.bind(this);
 
-                    // START GAME!
-                    ticker.add(this.tick.bind(this, ticker, {
+                    this.ticker = ticker;
+                    this.tickInstance = this.tick.bind(this, ticker, {
                         delta: 0, // standard, backwards-compatible parameter for `deltaMS`
                         deltaMS: 0, // MS from last frame (matches above)
                         deltaTime: 0 // PIXI ticker frame value
-                    }));
+                    });
+
+                    // START GAME!
+                    ticker.add(this.tickInstance);
+                    this.paused = false;
 
                     if (config.dev) {
                         setUpFPS(ticker, this.canvas);
@@ -287,6 +292,61 @@ export default (function () {
             this.canvas.width = this.canvas.offsetWidth;
             this.canvas.height = this.canvas.offsetHeight;
 
+            this.springroll = (function () {
+                const
+                    springroll = new Application({
+                        features: options.features || {
+                            sfx: true,
+                            vo: true,
+                            music: true,
+                            sound: true
+                        }
+                    }),
+                    state = springroll.state;
+
+                state.pause.subscribe(function (current) {
+                    if (current) {
+                        if (!this.paused) {
+                            this.ticker.remove(this.tickInstance);
+                            this.paused = true;
+                            Sound.pauseAll();
+                        }
+                    } else {
+                        if (this.paused) {
+                            this.ticker.add(this.tickInstance);
+                            this.paused = false;
+                            Sound.resumeAll();
+                        }
+                    }
+                }.bind(this));
+                
+                state.soundVolume.subscribe(function (current) {
+                    /* SR seems to trigger this too aggressively. We rely on the others instead.
+                    if (current) {
+                        Sound.muteAll();
+                    } else {
+                        Sound.unmuteAll();
+                    } */
+                });
+                
+                state.musicVolume.subscribe((current) => {
+                    if (current) {
+                        this.triggerOnChildren('mute-music');
+                    } else {
+                        this.triggerOnChildren('unmute-music');
+                    }
+                });
+                
+                state.voVolume.subscribe(function (current) {
+                    // toggleChannelMute('vo', 'mutedBySR', 'mutedBySRGlobal', current);
+                    // toggleChannelMute('tutorial', 'mutedBySR', 'mutedBySRGlobal', current);
+                });
+                
+                state.sfxVolume.subscribe(function (current) {
+                    // toggleChannelMute('sfx', 'mutedBySR', 'mutedBySRGlobal', current);
+                });
+            }.bind(this))();
+
             if (typeof definition === 'string') {
                 loadJSONLinks(definition, load.bind(this, displayOptions));
             } else {
@@ -306,11 +366,20 @@ export default (function () {
             tickMessage.delta = tickMessage.deltaMS = ticker.deltaMS;
             tickMessage.deltaTime = deltaTime;
 
-            TweenJS.update(tickMessage.deltaMS);
-            if (this.currentScene) {
-                this.currentScene.triggerOnChildren('tick', tickMessage);
-            }
+            TweenJS.update();
+            this.triggerOnChildren('tick', tickMessage);
             this.renderer.render(this.stage);
+        }
+
+        /**
+        * This method triggers an event on the scene if there is a current scene.
+        *
+        * @method triggerEventOnChildren
+        **/
+        triggerOnChildren (...args) {
+            if (this.currentScene) {
+                this.currentScene.triggerOnChildren(...args);
+            }
         }
         
         /**

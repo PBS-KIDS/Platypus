@@ -30,6 +30,7 @@
 		"src/components/StateRender.js",
 		"src/components/AIChaser.js",
 		"src/components/AIPacer.js",
+		"src/components/AudioMusic.js",
 		"src/components/AudioSFX.js",
 		"src/components/AudioVO.js",
 		"src/components/Camera.js",
