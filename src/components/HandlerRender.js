@@ -222,7 +222,7 @@ export default (function () {
 
                 } else if (typeof entityOrId === "string") {
 
-                    const otherEntity = this.owner.getEntityById(entityOrId)();
+                    const otherEntity = this.owner.getEntityById(entityOrId);
                     if (otherEntity) {
                         container = otherEntity.container;
                     } else {
