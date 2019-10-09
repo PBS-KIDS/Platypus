@@ -195,9 +195,9 @@ export default platypus.createComponentClass({
            
                 if (tweenDefinition.easing) {
                     if (typeof tweenDefinition.easing === 'function') {
-                        tween.interpolation(tweenDefinition.easing);
+                        tween.easing(tweenDefinition.easing);
                     } else if (eases[tweenDefinition.easing]) {
-                        tween.interpolation(eases[tweenDefinition.easing]);
+                        tween.easing(eases[tweenDefinition.easing]);
                     } else {
                         let str = '".',
                             join = '", or "';
