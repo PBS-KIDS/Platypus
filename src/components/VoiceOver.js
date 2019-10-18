@@ -200,7 +200,6 @@ export default (function () {
                     regX: definition.regX,
                     regY: definition.regY,
                     restart: definition.restart,
-                    rotate: definition.rotate,
                     scaleX: definition.scaleX,
                     scaleY: definition.scaleY,
                     spriteSheet: definition.spriteSheet,

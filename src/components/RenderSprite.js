@@ -69,7 +69,7 @@ export default (function () {
             animationMap: null,
 
             /**
-             * Optional. A mask definition that determines where the image should clip. A string can also be used to create more complex shapes via the PIXI graphics API like: "mask": "r(10,20,40,40).dc(30,10,12)". Defaults to no mask or, if simply set to true, a rectangle using the entity's dimensions.
+             * Optional. A mask definition that determines where the image should clip. A string can also be used to create more complex shapes via the PIXI graphics API like: "mask": "r(10,20,40,40).drawCircle(30,10,12)". Defaults to no mask or, if simply set to true, a rectangle using the entity's dimensions.
              *
              *  "mask": {
              *      "x": 10,
@@ -80,7 +80,7 @@ export default (function () {
              *
              *  -OR-
              *
-             *  "mask": "r(10,20,40,40).dc(30,10,12)"
+             *  "mask": "r(10,20,40,40).drawCircle(30,10,12)"
              *
              * @property mask
              * @type Object
@@ -146,15 +146,6 @@ export default (function () {
              * @since 0.9.2
              */
             restart: true,
-
-            /**
-             * Optional. Whether this object can be rotated. It's rotational angle is set by setting the this.owner.rotation value on the entity.
-             *
-             * @property rotate
-             * @type Boolean
-             * @default false
-             */
-            rotate: false,
 
             /**
              * Whether this object can be mirrored over X. To mirror it over X set the this.owner.rotation value to be > 90  and < 270.
@@ -298,16 +289,7 @@ export default (function () {
              * @type Number
              * @default 0
              */
-            skewY: 0,
-
-            /**
-             * Optional. The rotation of the sprite in degrees. All sprites on the same entity are rotated the same amount unless they ignore the rotation value by setting 'rotate' to false.
-             *
-             * @property rotation
-             * @type Number
-             * @default 1
-             */
-            rotation: 0
+            skewY: 0
         },
 
         initialize: (function () {
@@ -393,7 +375,6 @@ export default (function () {
                     definition = Data.setUp(
                         'interactive', this.interactive,
                         'mask', this.mask,
-                        'rotate', this.rotate,
                         'mirror', this.mirror,
                         'flip', this.flip,
                         'visible', this.visible,
@@ -402,8 +383,7 @@ export default (function () {
                         'scaleX', this.scaleX,
                         'scaleY', this.scaleY,
                         'skewX', this.skewX,
-                        'skewY', this.skewY,
-                        'rotation', this.rotation
+                        'skewY', this.skewY
                     );
                     this.owner.addComponent(new RenderContainer(this.owner, definition, this.addToContainer.bind(this)));
                     definition.recycle();
@@ -514,7 +494,7 @@ export default (function () {
                     i = 0,
                     images = null,
                     spriteSheets = platypus.game.settings.spriteSheets,
-                    ss = component.spriteSheet || props.spriteSheet || defaultProps.spriteSheet;
+                    ss = component.spriteSheet || props.spriteSheet || (defaultProps && defaultProps.spriteSheet) || null;
                 
                 if (Array.isArray(ss)) {
                     i = ss.length;

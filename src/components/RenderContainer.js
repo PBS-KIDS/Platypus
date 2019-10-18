@@ -64,7 +64,7 @@ export default (function () {
         
         properties: {
             /**
-             * Optional. A mask definition that determines where the image should clip. A string can also be used to create more complex shapes via the PIXI graphics API like: "mask": "r(10,20,40,40).dc(30,10,12)". Defaults to no mask or, if simply set to true, a rectangle using the entity's dimensions. Note that the mask is in world coordinates by default. To make the mask local to the entity's coordinates, set `localMask` to `true` in the RenderContainer properties.
+             * Optional. A mask definition that determines where the image should clip. A string can also be used to create more complex shapes via the PIXI graphics API like: "mask": "r(10,20,40,40).drawCircle(30,10,12)". Defaults to no mask or, if simply set to true, a rectangle using the entity's dimensions. Note that the mask is in world coordinates by default. To make the mask local to the entity's coordinates, set `localMask` to `true` in the RenderContainer properties.
              *
              *  "mask": {
              *      "x": 10,
@@ -75,7 +75,7 @@ export default (function () {
              *
              *  -OR-
              *
-             *  "mask": "r(10,20,40,40).dc(30,10,12)"
+             *  "mask": "r(10,20,40,40).drawCircle(30,10,12)"
              *
              * @property mask
              * @type Object
@@ -104,13 +104,13 @@ export default (function () {
             interactive: false,
 
             /**
-             * Optional. Whether this object can be rotated. It's rotational angle is set by setting the this.owner.rotation value on the entity.
+             * Optional. What field this object should use to rotate.
              *
              * @property rotate
-             * @type Boolean
-             * @default false
+             * @type String
+             * @default 'rotation'
              */
-            rotate: false,
+            rotate: 'rotation',
 
             /**
              * Whether this object can be mirrored over X. To mirror it over X set the this.owner.rotation value to be > 90  and < 270.
@@ -189,7 +189,9 @@ export default (function () {
             renderParent: null,
 
             /**
-             * Optional. The rotation of the sprite in degrees. All sprites on the same entity are rotated the same amount unless they ignore the rotation value by setting 'rotate' to false.
+             * Optional. The rotation of the sprite in degrees. All sprites on the same entity are rotated the same amount unless they ignore the rotation value by setting 'rotate' to "".
+             *
+             * Boolean values for the "rotate" property has been deprecated. Use "rotation" or "orientationMatrix" to specify the source of rotation for the render container.
              *
              * @property rotation
              * @type Number
@@ -274,6 +276,11 @@ export default (function () {
             var container = this.container = this.owner.container = new Container(),
                 definition = null,
                 initialTint = this.tint;
+
+            if (this.rotate === true) {
+                this.rotate = 'rotation';
+                platypus.debug.warn('RenderContainer: Boolean values for the "rotate" property has been deprecated. Use "rotation", "orientationMatrix", or "" to specify the source of rotation for the render container. This property defaults to "rotation".');
+            }
 
             this.parentContainer = null;
             this.wasVisible = this.visible;
@@ -443,7 +450,6 @@ export default (function () {
                 return function (uncached) {
                     var x = 0,
                         y = 0,
-                        o = this.owner.orientationMatrix,
                         rotation = 0,
                         matrix = pixiMatrix,
                         mirrored = 1,
@@ -452,7 +458,7 @@ export default (function () {
                     
                     x = this.owner.x;
                     y = this.owner.y;
-                    if (this.rotate) {
+                    if (this.rotate === 'rotation') {
                         rotation = this.rotation;
                     }
                     if (this.container.z !== this.owner.z) {
@@ -484,7 +490,9 @@ export default (function () {
                         }
                     }
                     
-                    if (o) { // This is a 3x3 2D matrix describing an affine transformation.
+                    if (this.rotate === 'orientationMatrix') { // This is a 3x3 2D matrix describing an affine transformation.
+                        const o = this.owner.orientationMatrix;
+
                         matrix.a = o[0][0];
                         matrix.b = o[1][0];
                         matrix.tx = x + o[0][2];
@@ -496,6 +504,16 @@ export default (function () {
                         this.container.setTransform(x, y, this.scaleX * mirrored, this.scaleY * flipped, (rotation ? (rotation / 180) * Math.PI : 0), this.skewX, this.skewY);
                     }
                     
+                    if (this.parentContainer && this.parentContainer.parentUpdated) {
+                        this.needsCameraCheck = true;
+                    }
+                    if (this.container) {
+                        if (this.container.childUpdated) {
+                            this.needsCameraCheck = true;
+                            this.container.childUpdated = false;
+                        }
+                        this.container.parentUpdated = false;
+                    }
                     // Set isCameraOn of sprite if within camera bounds
                     if (!this.needsCameraCheck) {
                         this.needsCameraCheck = (this.lastX !== this.owner.x) || (this.lastY !== this.owner.y);
@@ -503,6 +521,10 @@ export default (function () {
                     if (uncached && this.container && (this.needsCameraCheck || (!this.wasVisible && this.visible))) {
                         this.isOnCamera = this.owner.parent.isOnCanvas(this.container.getBounds(false));
                         this.needsCameraCheck = false;
+                        if (this.parentContainer) {
+                            this.parentContainer.childUpdated = true;
+                        }
+                        this.container.parentUpdated = true;
                     }
                     
                     this.lastX = this.owner.x;
@@ -528,7 +550,7 @@ export default (function () {
                     return;
                 }
                 
-                if (shape instanceof Graphics) {
+                if (shape.isMask || (shape instanceof Graphics)) {
                     gfx = shape;
                 } else {
                     gfx = new Graphics();
@@ -536,9 +558,9 @@ export default (function () {
                     if (typeof shape === 'string') {
                         processGraphics(gfx, shape);
                     } else if (shape.radius) {
-                        gfx.dc(shape.x || 0, shape.y || 0, shape.radius);
+                        gfx.drawCircle(shape.x || 0, shape.y || 0, shape.radius);
                     } else if (shape.width && shape.height) {
-                        gfx.r(shape.x || 0, shape.y || 0, shape.width, shape.height);
+                        gfx.drawRect(shape.x || 0, shape.y || 0, shape.width, shape.height);
                     }
                     gfx.endFill();
                 }

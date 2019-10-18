@@ -18,8 +18,6 @@ export default (function () {
             
             color: 0xffffff,
             
-            rotate: false,
-            
             mirror: false,
             
             flip: false,
@@ -58,8 +56,8 @@ export default (function () {
                 this.color = +this.color.replace('#', '0x');
             }
             
-            b.f(this.backgroundColor).r(-this.regX, -this.regY, this.width, this.height);
-            f.f(this.color).r(-this.regX, -this.regY, this.width, this.height);
+            b.f(this.backgroundColor).drawRect(-this.regX, -this.regY, this.width, this.height);
+            f.f(this.color).drawRect(-this.regX, -this.regY, this.width, this.height);
             f.scale = new Point(0.0001, 1);
             con.addChild(b);
             con.addChild(f);
