@@ -15,6 +15,7 @@ import {Container, Renderer, Ticker} from 'pixi.js';
 import Messenger from './Messenger.js';
 import Scene from './Scene.js';
 import Sound from 'pixi-sound';
+import Storage from './Storage.js';
 import TweenJS from '@tweenjs/tween.js';
 import {arrayCache} from './utils/array.js';
 import config from 'config';
@@ -345,6 +346,10 @@ export default (function () {
                 state.sfxVolume.subscribe(function (current) {
                     // toggleChannelMute('sfx', 'mutedBySR', 'mutedBySRGlobal', current);
                 });
+
+                this.storage = new Storage(springroll, options);
+
+                return springroll;
             }.bind(this))();
 
             if (typeof definition === 'string') {
