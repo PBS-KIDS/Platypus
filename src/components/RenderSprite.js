@@ -364,7 +364,7 @@ export default (function () {
                  * PIXIAnimation created here:
                  */
                 this.sprite = new PIXIAnimation(ss, animation);
-                this.sprite.on('complete', animationEnded.bind(this));
+                this.sprite.onComplete = animationEnded.bind(this);
                 this.sprite.x = this.offsetX;
                 this.sprite.y = this.offsetY;
                 this.sprite.z = this.offsetZ;

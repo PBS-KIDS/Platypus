@@ -117,7 +117,19 @@ export default (function () {
              * @param text {String} The text to insert.
              */
             "set-text": function (text) {
-                this.sprite.text = text;
+                if (typeof text === 'string') {
+                    this.sprite.text = text;
+                } else {
+                    if (text.style) {
+                        const textStyle = this.sprite.style;
+                        for (const key in text.style) {
+                            if (text.style.hasOwnProperty(key)) {
+                                textStyle[key] = text.style[key];
+                            }
+                        }
+                    }
+                    this.sprite.text = text.text;
+                }
             }
         },
         
