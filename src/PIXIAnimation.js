@@ -332,7 +332,10 @@ export default (function () {
             this.removeChildren();
             this.addChild(this._animation);
         }
-            
+        
+        if (this._animation.play) {
+            this._animation.play();
+        }
         this.play();
     };
     
