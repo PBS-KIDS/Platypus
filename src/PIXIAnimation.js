@@ -305,6 +305,9 @@ export default (function () {
     */
     prototype.gotoAndStop = function (animation) {
         this.stop();
+        if (this._animation && this._animation.stop) {
+            this._animation.stop();
+        }
     
         this._animation = this._animations[animation];
         if (!this._animation) {
@@ -323,6 +326,9 @@ export default (function () {
     */
     prototype.gotoAndPlay = function (animation, restart) {
         if ((this.currentAnimation !== animation) || (restart !== false)) {
+            if (this._animation && this._animation.stop) {
+                this._animation.stop();
+            }
             this._animation = this._animations[animation];
             this.currentAnimation = animation;
             if (!this._animation) {
@@ -359,6 +365,9 @@ export default (function () {
         var key = '';
         
         this.stop();
+        if (this._animation && this._animation.stop) {
+            this._animation.stop();
+        }
         Container.prototype.destroy.call(this);
         if (this.cacheId) {
             animationCache[this.cacheId].viable -= 1;
