@@ -24,7 +24,9 @@ export default class Storage {
                         data = JSON.parse(str);
                     } catch (e) {} console.warn('had to use LS');
         
-                    handleData(data);
+                    handleData({
+                        data: data
+                    });
                 });
             },
             handleData = (resp) => {
