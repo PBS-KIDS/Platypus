@@ -7,6 +7,7 @@
  * @return {Data} Returns the new Data object.
  * @since 0.7.1
  */
+/* global platypus, window */
 import DataMap from './DataMap.js';
 import {UserData} from 'springroll';
 
@@ -14,21 +15,9 @@ export default class Storage {
     constructor (springroll, options) {
         const
             gameId = options.name,
+            storageKey = gameId + '-data',
+            unconnectedData = window.localStorage.getItem(storageKey),
             keys = options.storageKeys || null,
-            readData = () => {
-                UserData.read(this.storageKey).then(handleData).catch(() => {
-                    const str = window.localStorage.getItem(this.storageKey);
-                    let data = null;
-        
-                    try {
-                        data = JSON.parse(str);
-                    } catch (e) {} console.warn('had to use LS');
-        
-                    handleData({
-                        data: data
-                    });
-                });
-            },
             handleData = (resp) => {
                 if (resp && resp.data) {
                     const data = resp.data;
@@ -46,7 +35,8 @@ export default class Storage {
             };
 
         this.map = DataMap.setUp();
-        this.storageKey = gameId + '-data';
+        this.storageKey = storageKey;
+        this.connected = false;
 
         if (keys) {
             for (let i = 0; i < keys.length; i++) {
@@ -54,8 +44,18 @@ export default class Storage {
             }
         }
 
-        readData();
-        springroll.container.on('connected', readData);
+        try { // May throw if data is not parseable. If so, we'll just ignore it.
+            handleData({
+                data: JSON.parse(unconnectedData)
+            });
+        } catch (e) {}
+
+        springroll.container.on('connected', () => {
+            this.connected = true;
+            UserData.read(this.storageKey).then(handleData).catch((e) => {
+                platypus.debug.warn('Storage: connected but received an error', e);
+            });
+        });
     }
 
     addKey (key, value) {
@@ -84,9 +84,13 @@ export default class Storage {
     save () {
         const save = this.map.toJSON();
         
-        UserData.write(this.storageKey, save).catch(() => {
+        if (this.connected) {
+            UserData.write(this.storageKey, save).catch((e) => {
+                platypus.debug.warn('Storage: tried to save but received an error', e);
+            });
+        } else {
             window.localStorage.setItem(this.storageKey, JSON.stringify(save));
-        });
+        }
     }
 
     set (key, value) {
