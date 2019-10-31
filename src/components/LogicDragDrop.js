@@ -14,14 +14,13 @@ export default (function () {
         
         properties: {
             /**
-             * Sets the z-order of the item while being dragged.
+             * Sets the renderParent while being dragged.
              *
-             * @property dragZ
-             * @type Number
-             * @default 10000
-             * @since 0.8.3
+             * @property dragRenderParent
+             * @type string
+             * @default ''
              */
-            dragZ: 10000,
+            dragRenderParent: '',
             
             /**
              * Sets whether a click-move should start the dragging behavior in addition to click-drag. This value is ignored for mobile devices.
@@ -46,6 +45,7 @@ export default (function () {
             this.tryDrop = false;
             this.hitSomething = false;
             this.hasCollision = false;
+            this.originalRenderParent = this.owner.renderParent;
             
             if (platypus.supports.mobile) {
                 this.stickyClick = false;
@@ -121,8 +121,9 @@ export default (function () {
                     this.lastZ = this.owner.z;
                     this.grabOffsetX = eventData.x - this.owner.x;
                     this.grabOffsetY = eventData.y - this.owner.y;
-                    this.owner.z = this.dragZ;
                     this.state.set('dragging', true);
+                    this.originalRenderParent = this.owner.renderParent;
+                    this.owner.renderParent = this.dragRenderParent || this.owner.renderParent;
                     this.owner.dragMode = true;
                     this.sticking = this.stickyClick;
                 }
@@ -194,6 +195,7 @@ export default (function () {
                 } else {
                     this.state.set('noDrop', false);
                     this.state.set('dragging', false);
+                    this.owner.renderParent = this.originalRenderParent;
                     this.owner.dragMode = false;
                     this.owner.z = this.lastZ;
                 }
