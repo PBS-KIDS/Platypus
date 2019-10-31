@@ -45,7 +45,6 @@ export default (function () {
             this.tryDrop = false;
             this.hitSomething = false;
             this.hasCollision = false;
-            this.originalRenderParent = this.owner.renderParent;
             
             if (platypus.supports.mobile) {
                 this.stickyClick = false;
@@ -122,8 +121,10 @@ export default (function () {
                     this.grabOffsetX = eventData.x - this.owner.x;
                     this.grabOffsetY = eventData.y - this.owner.y;
                     this.state.set('dragging', true);
-                    this.originalRenderParent = this.owner.renderParent;
-                    this.owner.renderParent = this.dragRenderParent || this.owner.renderParent;
+                    if (this.dragRenderParent !== this.owner.renderParent) {
+                        this.originalRenderParent = this.owner.renderParent;
+                        this.owner.parent.triggerEvent("set-parent-render-container", this.owner, this.dragRenderParent);
+                    }
                     this.owner.dragMode = true;
                     this.sticking = this.stickyClick;
                 }
@@ -195,7 +196,9 @@ export default (function () {
                 } else {
                     this.state.set('noDrop', false);
                     this.state.set('dragging', false);
-                    this.owner.renderParent = this.originalRenderParent;
+                    if (this.originalRenderParent) {
+                        this.owner.parent.triggerEvent("set-parent-render-container", this.owner, this.originalRenderParent);
+                    }
                     this.owner.dragMode = false;
                     this.owner.z = this.lastZ;
                 }
