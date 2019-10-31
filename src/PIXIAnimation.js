@@ -190,8 +190,10 @@ export default (function () {
                 if (cache.animations[key].frames.length === 1) {
                     this._animations[key] = new Sprite(cache.animations[key].frames[0]);
                 } else {
-                    this._animations[key] = new AnimatedSprite(cache.animations[key].frames);
-                    this._animations[key].onComplete = this._animations[key].onLoop = function (animation, properties) {
+                    const anim = this._animations[key] = new AnimatedSprite(cache.animations[key].frames);
+
+                    anim.animationSpeed = speed * cache.animations[key].speed;
+                    anim.onComplete = anim.onLoop = function (animation, properties) {
                         if (this.onComplete) {
                             this.onComplete(animation);
                         }
