@@ -29,12 +29,12 @@ export default (function () {
                 instance = instances[i];
                 if (instance.remove) {
                     greenSplice(instances, i);
-                    arrayCache.recycle(instance.timeline, 2);
+                    arrayCache.recycle(instance.timeline);
                     instance.recycle();
                 } else if (instance.active) {
                     if (instance.timeline.length === 0) {
                         greenSplice(instances, i);
-                        arrayCache.recycle(instance.timeline, 2);
+                        arrayCache.recycle(instance.timeline);
                         instance.recycle();
                     } else {
                         this.progressTimeline(instance, delta);
@@ -197,7 +197,7 @@ export default (function () {
                 
                 while (i--) {
                     instance = instances[i];
-                    arrayCache.recycle(instance.timeline, 2);
+                    arrayCache.recycle(instance.timeline);
                     instance.recycle();
                 }
                 arrayCache.recycle(instances);
