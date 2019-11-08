@@ -128,7 +128,9 @@ export default (function () {
                             }
                         }
                     }
-                    this.sprite.text = text.text;
+                    if (typeof text.text === 'string') {
+                        this.sprite.text = text.text;
+                    }
                 }
             }
         },
