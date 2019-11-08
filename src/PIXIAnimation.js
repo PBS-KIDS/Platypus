@@ -201,6 +201,7 @@ export default (function () {
                             this.gotoAndPlay(properties.next);
                         }
                     }.bind(this, key, cache.animations[key]);
+                    anim.updateAnchor = true;
                 }
                 animationCount += 1;
             }
