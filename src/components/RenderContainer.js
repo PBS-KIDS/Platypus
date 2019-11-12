@@ -48,8 +48,8 @@ export default (function () {
                         gfx[func](values);
                     } else {
                         gfx[func].apply(gfx, values);
+                        arrayCache.recycle(values); // cannot recycle polygon above since it's used by the polygon shape.
                     }
-                    arrayCache.recycle(values);
                 } else {
                     gfx[func]();
                 }
