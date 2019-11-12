@@ -31,15 +31,24 @@ export default (function () {
                 var i = 0,
                     paren  = value.indexOf('('),
                     func   = value.substring(0, paren),
-                    values = value.substring(paren + 1, value.indexOf(')'));
+                    values = value.substring(paren + 1, value.indexOf(')')),
+                    polyRay = false;
 
                 if (values.length) {
+                    if (values[0] === '[') {
+                        values = values.substring(1, values.length - 1);
+                        polyRay = true;
+                    }
                     values = greenSplit(values, ',');
                     i = values.length;
                     while (i--) {
                         values[i] = +values[i];
                     }
-                    gfx[func].apply(gfx, values);
+                    if (polyRay) {
+                        gfx[func](values);
+                    } else {
+                        gfx[func].apply(gfx, values);
+                    }
                     arrayCache.recycle(values);
                 } else {
                     gfx[func]();
