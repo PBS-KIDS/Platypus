@@ -21,13 +21,15 @@ export default (function () {
         BaseTexture = PIXI.BaseTexture,
         SkeletonJson = core && core.SkeletonJson,
         Spine = spine && spine.Spine,
-        getBaseTexture = function (path) {
+        getBaseTexture = function (path, pma) {
             var asset = platypus.assetCache.get(path.substring(path.lastIndexOf('/') + 1, path.lastIndexOf('.')));
             
             if (!asset) {
                 platypus.debug.warn('RenderSpine: "' + path + '" is not a loaded asset.');
             }
-            return new BaseTexture(asset);
+            return new BaseTexture(asset, {
+                alphaMode: pma ? PIXI.ALPHA_MODES.PMA : PIXI.ALPHA_MODES.UNPACK
+            });
         };
     
     // If PIXI.spine is unavailable, this component doesn't work.
@@ -195,6 +197,15 @@ export default (function () {
             eventBased: false,
 
             /**
+             * Optional. Specifies whether the spine image alpha has been premultiplied. Set this to `false` if you see bright borders around image parts. Make sure it's `true` if you see thin black lines around image pieces.
+             *
+             * @property preMultipliedAlpha
+             * @type Boolean
+             * @default true
+             */
+            preMultipliedAlpha: true,
+
+            /**
              * Optional. Specifies whether this component should create a StateRender component to handle changes in the entity's state that match the animationMap to animate. Set this to true if the component should animate based on `this.owner.state`. Default is `true`.
              *
              * @property stateBased
@@ -297,9 +308,9 @@ export default (function () {
                         return map;
                     }
                 },
-                imageCallback = function (loadFinished, line, callback) {
+                imageCallback = function (pma, loadFinished, line, callback) {
                     // Not sure if this handles memory well - keeping it in for now.
-                    var baseTexture = getBaseTexture(line);
+                    var baseTexture = getBaseTexture(line, pma);
 
                     callback(baseTexture);
 
@@ -335,7 +346,7 @@ export default (function () {
                     atlas = settings.atlases[this.atlas],
                     map = null,
                     skeleton = settings.skeletons[this.skeleton],
-                    spineAtlas = new TextureAtlas(atlas, imageCallback.bind(null, callback)),
+                    spineAtlas = new TextureAtlas(atlas, imageCallback.bind(null, this.preMultipliedAlpha, callback)),
                     spineJsonParser = new SkeletonJson(new AtlasAttachmentLoader(spineAtlas)),
                     skeletonData = spineJsonParser.readSkeletonData(skeleton),
                     spine = this.spine = new Spine(skeletonData);
