@@ -108,10 +108,18 @@ export default (function () {
                 for (i = 0; i < componentDefinitions.length; i++) {
                     componentDefinition = componentDefinitions[i];
                     if (componentDefinition) {
-                        if (platypus.components[componentDefinition.type]) {
-                            componentInits.push(componentInit.bind(this, platypus.components[componentDefinition.type], componentDefinition));
+                        if (componentDefinition.type) {
+                            if (platypus.components[componentDefinition.type]) {
+                                componentInits.push(componentInit.bind(this, platypus.components[componentDefinition.type], componentDefinition));
+                            } else {
+                                platypus.debug.warn('Entity "' + this.type + '": Component "' + componentDefinition.type + '" is not defined.', componentDefinition);
+                            }
+                        } else if (componentDefinition.id) { // "type" not specified, so we create the component directly.
+                            componentInits.push(componentInit.bind(this, platypus.createComponentClass(componentDefinition), null));
+                        } else if (typeof componentDefinition === 'function') {
+                            componentInits.push(componentInit.bind(this, componentDefinition, null));
                         } else {
-                            platypus.debug.warn('Entity "' + this.type + '": Component "' + componentDefinition.type + '" is not defined.', componentDefinition);
+                            platypus.debug.warn('Entity "' + this.type + '": Component must have an `id` or `type` value.', componentDefinition);
                         }
                     }
                 }
