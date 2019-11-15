@@ -9,9 +9,8 @@
 import "pixi-spine";
 import {arrayCache, union} from '../utils/array.js';
 import Data from '../Data.js';
-import EventRender from './EventRender.js';
+import RenderAnimator from './RenderAnimator.js';
 import RenderContainer from './RenderContainer.js';
-import StateRender from './StateRender.js';
 
 export default (function () {
     var spine = PIXI.spine,
@@ -45,7 +44,43 @@ export default (function () {
 
         properties: {
             /**
-             * Optional. An object containg key-value pairs that define a mapping from triggered events or entity states to the animation that should play. The list is processed from top to bottom, so the most important actions should be listed first (for example, a jumping animation might take precedence over an idle animation). If not specified, an 1-to-1 animation map is created from the list of animations in the skeleton definition using the animation names as the keys.
+             * An object containg key-value pairs that define a mapping from entity states to the animation that should play. The list is processed from top to bottom, so the most important actions should be listed first (for example, a jumping animation might take precedence over an idle animation). If not specified, an 1-to-1 animation map is created from the list of animations in the sprite sheet definition using the animation names as the keys.
+             *
+             *  "animationStates":{
+             *      "standing": "default-animation"  // On receiving a "standing" event, or when this.owner.state.standing === true, the "default" animation will begin playing.
+             *      "ground,moving": "walking",  // Comma separated values have a special meaning when evaluating "state-changed" messages. The above example will cause the "walking" animation to play ONLY if the entity's state includes both "moving" and "ground" equal to true.
+             *      "ground,striking": "swing!", // Putting an exclamation after an animation name causes this animation to complete before going to the next animation. This is useful for animations that would look poorly if interrupted.
+             *      "default": "default-animation" // Optional. "default" is a special property that matches all states. If none of the above states are valid for the entity, it will use the default animation listed here.
+             *  }
+             *
+             * If `stateBased` is `true` and this property is not set, this component will use the `animationMap` property value to define state mappings.
+             *
+             * @property animationStates
+             * @type Object
+             * @default animationMap
+             */
+            animationStates: null,
+
+            /**
+             * An object containg key-value pairs that define a mapping from triggered events to the animation that should play.
+             *
+             *     "animationEvents":{
+             *         "move": "walk-animation",
+             *         "jump": "jumping-animation"
+             *     }
+             *
+             * The above will create two event listeners on the entity, "move" and "jump", that will play their corresponding animations when the events are triggered.
+             *
+             * If `eventBased` is `true` and this property is not set, this component will use the `animationMap` property value to define event mappings.
+             *
+             * @property animationEvents
+             * @type Object
+             * @default animationMap
+             */
+            animationEvents: null,
+
+            /**
+             * Optional. An object containing key-value pairs that define a mapping from triggered events or entity states to the animation that should play. The list is processed from top to bottom, so the most important actions should be listed first (for example, a jumping animation might take precedence over an idle animation). If not specified, an 1-to-1 animation map is created from the list of animations in the skeleton definition using the animation names as the keys.
              *
              *  "animationMap":{
              *      "standing": "default-animation"  // On receiving a "standing" event, or when this.owner.state.standing === true, the "default" animation will begin playing.
@@ -188,7 +223,7 @@ export default (function () {
             visible: true,
 
             /**
-             * Optional. Specifies whether this component should create an EventRender component to listen to events matching the animationMap to animate. Set this to true if the component should animate for on events. Default is `false`.
+             * Optional. Specifies whether this component should create a RenderAnimator component to listen to events matching the animationMap to animate. Set this to true if the component should animate for on events. Default is `false`.
              *
              * @property eventBased
              * @type Boolean
@@ -206,7 +241,7 @@ export default (function () {
             preMultipliedAlpha: true,
 
             /**
-             * Optional. Specifies whether this component should create a StateRender component to handle changes in the entity's state that match the animationMap to animate. Set this to true if the component should animate based on `this.owner.state`. Default is `true`.
+             * Optional. Specifies whether this component should create a RenderAnimator component to handle changes in the entity's state that match the animationMap to animate. Set this to true if the component should animate based on `this.owner.state`. Default is `true`.
              *
              * @property stateBased
              * @type Boolean
@@ -363,24 +398,14 @@ export default (function () {
                 if (map) {
                     animation = map.default || '';
 
-                    if (this.eventBased) {
-                        definition = Data.setUp(
-                            'animationMap', map,
-                            'component', this
-                        );
-                        this.owner.addComponent(new EventRender(this.owner, definition));
-                        definition.recycle();
-                    }
-
-                    if (this.stateBased) {
-                        definition = Data.setUp(
-                            'animationMap', map,
-                            'forcePlayThrough', this.forcePlayThrough,
-                            'component', this
-                        );
-                        this.owner.addComponent(new StateRender(this.owner, definition));
-                        definition.recycle();
-                    }
+                    definition = Data.setUp(
+                        'animationEvents', this.eventBased ? this.animationEvents || map : null,
+                        'animationStates', this.stateBased ? this.animationStates || map : null,
+                        'forcePlayThrough', this.forcePlayThrough,
+                        'component', this
+                    );
+                    this.owner.addComponent(new RenderAnimator(this.owner, definition));
+                    definition.recycle();
                 }
 
                 // set up the mixes!

@@ -1,9 +1,9 @@
 /**
- * This component is typically added to an entity automatically by a render component. It handles mapping entity states to playable animations.
+ * This component is typically added to an entity automatically by a render component. It handles mapping entity states and events to playable animations.
  *
- * @class StateRender
+ * @class RenderAnimator
  * @uses platypus.Component
- * @since 0.9.0
+ * @since 1.0.0
  */
 /*global platypus */
 import StateMap from '../StateMap.js';
@@ -54,24 +54,40 @@ export default (function () {
         };
 
     return platypus.createComponentClass({
-        id: 'StateRender',
+        id: 'RenderAnimator',
 
         properties: {
             /**
              * An object containg key-value pairs that define a mapping from entity states to the animation that should play. The list is processed from top to bottom, so the most important actions should be listed first (for example, a jumping animation might take precedence over an idle animation). If not specified, an 1-to-1 animation map is created from the list of animations in the sprite sheet definition using the animation names as the keys.
              *
-             *  "animationMap":{
+             *  "animationStates":{
              *      "standing": "default-animation"  // On receiving a "standing" event, or when this.owner.state.standing === true, the "default" animation will begin playing.
              *      "ground,moving": "walking",  // Comma separated values have a special meaning when evaluating "state-changed" messages. The above example will cause the "walking" animation to play ONLY if the entity's state includes both "moving" and "ground" equal to true.
              *      "ground,striking": "swing!", // Putting an exclamation after an animation name causes this animation to complete before going to the next animation. This is useful for animations that would look poorly if interrupted.
              *      "default": "default-animation" // Optional. "default" is a special property that matches all states. If none of the above states are valid for the entity, it will use the default animation listed here.
              *  }
              *
-             * @property animationMap
+             * @property animationStates
              * @type Object
              * @default null
              */
-            "animationMap": null,
+            animationStates: null,
+
+            /**
+             * An object containg key-value pairs that define a mapping from triggered events to the animation that should play.
+             *
+             *     "animationEvents":{
+             *         "move": "walk-animation",
+             *         "jump": "jumping-animation"
+             *     }
+             *
+             * The above will create two event listeners on the entity, "move" and "jump", that will play their corresponding animations when the events are triggered.
+             *
+             * @property animationEvents
+             * @type Object
+             * @default null
+             */
+            animationEvents: null,
 
             /**
              * Sets a component that this component should be connected to.
@@ -90,49 +106,95 @@ export default (function () {
              * @type Boolean
              * @default false
              */
-            forcePlayThrough: false
+            forcePlayThrough: false,
+
+            /**
+             * Whether to restart a playing animation on event.
+             *
+             * @property restart
+             * @type Boolean
+             * @default true
+             * @since 0.9.2
+             */
+            restart: true
         },
 
-        initialize: function () {
-            var anim      = '',
-                animation = '',
-                map = this.animationMap;
+        initialize: (function () {
+            const
+                trigger = function (animation, restart) {
+                    /**
+                     * On receiving an animation-mapped event, this component triggers this event to play an animation.
+                     *
+                     * @event 'play-animation'
+                     * @param animation {String} Describes the animation to play.
+                     * @param restart {Boolean} Whether to restart a playing animation.
+                     */
+                    this.override = animation;
+                    this.owner.triggerEvent('play-animation', animation, restart);
+                },
+                method = function (animation, restart) {
+                    this.override = animation;
+                    this.playAnimation(animation, restart);
+                };
 
-            this.followThroughs = {};
-            this.checkStates = arrayCache.setUp();
-            this.state = this.owner.state;
-            this.stateChange = true; //Check state against entity's prior state to update animation if necessary on instantiation.
-            this.lastState = -1;
+            return function () {
+                const
+                    events = this.animationEvents,
+                    states = this.animationStates;
 
-            for (anim in map) {
-                if (map.hasOwnProperty(anim)) {
-                    animation = map[anim];
-
-                    //TODO: Should probably find a cleaner way to accomplish this. Maybe in the animationMap definition? - DDD
-                    if (animation[animation.length - 1] === '!') {
-                        animation = animation.substring(0, animation.length - 1);
-                        this.followThroughs[animation] = true;
-                    } else {
-                        this.followThroughs[animation] = false;
+                //Handle Events:
+                this.override = false;
+                if (events) {
+                    for (const animation in events) {
+                        if (events.hasOwnProperty(animation)) {
+                            if (this.component) {
+                                this.addEventListener(animation, method.bind(this.component, events[animation], this.restart));
+                            } else {
+                                this.addEventListener(animation, trigger.bind(this, events[animation], this.restart));
+                            }
+                        }
                     }
-
-                    this.checkStates.push(createTest(anim, animation));
                 }
-            }
 
-            this.waitingAnimation = false;
-            this.waitingState = 0;
-            this.playWaiting = false;
-            this.animationFinished = false;
+                //Handle States:
+                this.followThroughs = {};
+                this.checkStates = arrayCache.setUp();
+                this.state = this.owner.state;
+                this.stateChange = true; //Check state against entity's prior state to update animation if necessary on instantiation.
+                this.lastState = -1;
 
-            if (this.component) {
-                this.playAnimation = methodPlay;
-                this.stopAnimation = methodStop;
-            } else {
-                this.playAnimation = triggerPlay;
-                this.stopAnimation = triggerStop;
-            }
-        },
+                if (states) {
+                    for (const anim in states) {
+                        if (states.hasOwnProperty(anim)) {
+                            const animation = states[anim];
+
+                            //TODO: Should probably find a cleaner way to accomplish this. Maybe in the animationMap definition? - DDD
+                            if (animation[animation.length - 1] === '!') {
+                                animation = animation.substring(0, animation.length - 1);
+                                this.followThroughs[animation] = true;
+                            } else {
+                                this.followThroughs[animation] = false;
+                            }
+
+                            this.checkStates.push(createTest(anim, animation));
+                        }
+                    }
+                }
+
+                this.waitingAnimation = false;
+                this.waitingState = 0;
+                this.playWaiting = false;
+                this.animationFinished = false;
+
+                if (this.component) {
+                    this.playAnimation = methodPlay;
+                    this.stopAnimation = methodStop;
+                } else {
+                    this.playAnimation = triggerPlay;
+                    this.stopAnimation = triggerStop;
+                }
+            };
+        } ()),
 
         events: {
             /**
@@ -152,6 +214,11 @@ export default (function () {
              */
             "animation-ended": function (animation) {
                 if (animation === this.currentAnimation) {
+                    if (this.override && (animation === this.override)) {
+                        this.stateChange = true;
+                        this.override = false;
+                    }
+
                     if (this.waitingAnimation) {
                         this.currentAnimation = this.waitingAnimation;
                         this.waitingAnimation = false;
@@ -175,33 +242,31 @@ export default (function () {
                 var i = 0,
                     testCase = false;
 
-                if (this.stateChange) {
+                if (this.stateChange && !this.override) {
                     if (this.state.has('visible')) {
                         this.visible = this.state.get('visible');
                     }
-                    if (this.checkStates) {
-                        for (i = 0; i < this.checkStates.length; i++) {
-                            testCase = this.checkStates[i](this.state);
-                            if (testCase) {
-                                if (this.currentAnimation !== testCase) {
-                                    if (!this.followThroughs[this.currentAnimation] && (!this.forcePlaythrough || (this.animationFinished || (this.lastState >= +i)))) {
-                                        this.currentAnimation = testCase;
-                                        this.lastState = +i;
-                                        this.animationFinished = false;
-                                        if (playing) {
-                                            this.playAnimation(this.currentAnimation);
-                                        } else {
-                                            this.stopAnimation(this.currentAnimation);
-                                        }
+                    for (i = 0; i < this.checkStates.length; i++) {
+                        testCase = this.checkStates[i](this.state);
+                        if (testCase) {
+                            if (this.currentAnimation !== testCase) {
+                                if (!this.followThroughs[this.currentAnimation] && (!this.forcePlaythrough || (this.animationFinished || (this.lastState >= +i)))) {
+                                    this.currentAnimation = testCase;
+                                    this.lastState = +i;
+                                    this.animationFinished = false;
+                                    if (playing) {
+                                        this.playAnimation(this.currentAnimation);
                                     } else {
-                                        this.waitingAnimation = testCase;
-                                        this.waitingState = +i;
+                                        this.stopAnimation(this.currentAnimation);
                                     }
-                                } else if (this.waitingAnimation && !this.followThroughs[this.currentAnimation]) {// keep animating this animation since this animation has already overlapped the waiting animation.
-                                    this.waitingAnimation = false;
+                                } else {
+                                    this.waitingAnimation = testCase;
+                                    this.waitingState = +i;
                                 }
-                                break;
+                            } else if (this.waitingAnimation && !this.followThroughs[this.currentAnimation]) {// keep animating this animation since this animation has already overlapped the waiting animation.
+                                this.waitingAnimation = false;
                             }
+                            break;
                         }
                     }
                     this.stateChange = false;
