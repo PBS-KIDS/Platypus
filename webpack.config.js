@@ -19,6 +19,7 @@ module.exports = env => {
         externals: {
             "@tweenjs/tween.js": "@tweenjs/tween.js",
             "pixi-sound": "pixi-sound",
+            "pixi-spine": "pixi-spine",
             "pixi.js": "pixi.js",
             "springroll": "springroll"
         }

@@ -1,5 +1,5 @@
 /* global console, document, platypus */
-import * as PIXI from 'pixi.js';
+import {VERSION, utils} from 'pixi.js';
 import {arrayCache} from './utils/array.js';
 import {greenSplit} from './utils/string.js';
 
@@ -58,14 +58,13 @@ export default (function () {
         };
 
     // Over-riding the pixi.js hello since we're creating our own.
-    PIXI.utils.skipHello();
+    utils.skipHello();
     
     return function (app) {
         var options = app.options,
             authorTag = document.getElementsByName('author'),
             docAuth = authorTag.length ? authorTag[0].getAttribute('content') || '' : '',
             author  = (docAuth ? 'by ' + docAuth : ''),
-            pixi    = PIXI,
             title   = options.name || app.name || document.title || '',
             engine  = 'Platypus ' + platypus.version,
             version = options.version || '(?)',
@@ -78,12 +77,7 @@ export default (function () {
             using.push('SpringRoll ' + sr.version);
         }
         
-        if (pixi) {
-            using.push('Pixi.js ' + pixi.VERSION);
-            if (pixi.animate) {
-                using.push('PixiAnimate ' + pixi.animate.VERSION);
-            }
-        }
+        using.push('Pixi.js ' + VERSION);
         
         if (version !== '(?)') {
             title += ' ' + version;
