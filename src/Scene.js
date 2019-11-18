@@ -59,8 +59,10 @@ export default (function () {
                 lateAsset = lateAssets[i];
                 id = lateAsset.id;
                 img = platypus.assetCache.get(id);
-                img.src = '';
-                platypus.assetCache.delete(id);
+                if (img) {
+                    img.src = '';
+                    platypus.assetCache.delete(id);
+                } // TODO: Unload audio.
                 lateAsset.recycle();
             }
             
