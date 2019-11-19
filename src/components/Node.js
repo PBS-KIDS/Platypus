@@ -22,12 +22,12 @@ This component causes an entity to be a position on a [[NodeMap]]. This componen
       // Optional. Determines whether the entity's orientation is updated by movement across the NodeMap. Default is false.
     }
 */
-/* global platypus */
 import {arrayCache, greenSplice} from '../utils/array.js';
 import Vector from '../Vector.js';
+import createComponentClass from '../factory.js';
 
 export default (function () {
-    return platypus.createComponentClass({
+    return createComponentClass({
         
         id: 'Node',
         
@@ -47,7 +47,7 @@ export default (function () {
             this.owner.nodeId = this.nodeId;
             
             this.owner.isNode = true;
-            this.map = this.owner.map = this.owner.map || null;
+            this.map = this.owner.map = this.owner.map || this.owner.parent || null;
             this.contains = this.owner.contains = arrayCache.setUp();
             this.edgesContain = this.owner.edgesContain = arrayCache.setUp();
             

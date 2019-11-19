@@ -5,8 +5,8 @@
  * @class Motion
  * @uses platypus.Component
  */
-/* global platypus */
 import Vector from '../Vector.js';
+import createComponentClass from '../factory.js';
 
 export default (function () {
     var isTrue = function () {
@@ -65,7 +65,7 @@ export default (function () {
             }
         };
     
-    return platypus.createComponentClass({
+    return createComponentClass({
         
         id: 'Motion',
 

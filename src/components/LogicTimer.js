@@ -41,11 +41,10 @@ A timer that can used to trigger events. The timer can increment and decrement. 
       //Optional - The max value, positive or negative, that the timer will count to. At which it stops counting. Default to 3600000 which equals an hour.
     }
 */
-/*global platypus */
-export default (function () {
-    
+import createComponentClass from '../factory.js';
 
-    return platypus.createComponentClass({
+export default (function () {
+    return createComponentClass({
         id: 'LogicTimer',
         initialize: function (definition) {
             this.time = this.owner.time || definition.time ||  0;

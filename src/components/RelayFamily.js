@@ -5,11 +5,12 @@
  * @class RelayFamily
  * @uses platypus.Component
  */
-/*global platypus */
+/* global platypus */
 import {arrayCache, greenSlice, greenSplice, union} from '../utils/array.js';
+import createComponentClass from '../factory.js';
 
 export default (function () {
-    return platypus.createComponentClass({
+    return createComponentClass({
         id: 'RelayFamily',
         
         properties: {

@@ -7,8 +7,9 @@
  * @class LevelBuilder
  * @uses platypus.Component
  */
-/*global platypus */
+/* global platypus */
 import {arrayCache, greenSlice, greenSplice, union} from '../utils/array.js';
+import createComponentClass from '../factory.js';
 
 export default (function () {
     var
@@ -166,7 +167,7 @@ export default (function () {
             return level;
         };
 
-    return platypus.createComponentClass({
+    return createComponentClass({
         id: 'LevelBuilder',
         
         properties: {

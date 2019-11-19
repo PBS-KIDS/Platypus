@@ -32,12 +32,12 @@ This component works with `CollisionBasic` to cause entities to bounce away on s
       // Optional. Bounciness of the entity. Defaults to 0.8.
     }
 */
-/* global platypus */
 import Vector from '../Vector.js';
 import {arrayCache} from '../utils/array.js';
+import createComponentClass from '../factory.js';
 
 export default (function () {
-    return platypus.createComponentClass({
+    return createComponentClass({
         id: 'LogicRebounder',
         
         initialize: function (definition) {

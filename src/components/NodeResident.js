@@ -61,8 +61,8 @@ This component connects an entity to its parent's [[NodeMap]]. It manages naviga
  * @class NodeResident
  * @uses platypus.Component
  */
-/* global platypus */
 import {arrayCache, greenSlice} from '../utils/array.js';
+import createComponentClass from '../factory.js';
 
 export default (function () {
     var createGateway = function (nodeDefinition, map, gateway) {
@@ -144,7 +144,7 @@ export default (function () {
             return true;
         };
 
-    return platypus.createComponentClass({
+    return createComponentClass({
         
         id: 'NodeResident',
         

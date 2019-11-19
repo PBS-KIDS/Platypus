@@ -14,6 +14,7 @@ import {arrayCache, greenSlice} from '../utils/array.js';
 import Async from '../Async.js';
 import AudioVO from './AudioVO.js';
 import RenderSprite from './RenderSprite.js';
+import createComponentClass from '../factory.js';
 
 export default (function () {
     var getEventName = function (msg, VO) {
@@ -109,7 +110,7 @@ export default (function () {
             }
         };
 
-    return platypus.createComponentClass({
+    return createComponentClass({
         id: 'VoiceOver',
         
         properties: {

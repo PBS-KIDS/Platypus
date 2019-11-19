@@ -5,8 +5,8 @@
  * @class RelayLinker
  * @uses platypus.Component
  */
-/*global platypus */
 import {arrayCache, greenSplice} from '../utils/array.js';
+import createComponentClass from '../factory.js';
 
 export default (function () {
     var broadcast = function () {
@@ -19,7 +19,7 @@ export default (function () {
         }
     };
 
-    return platypus.createComponentClass({
+    return createComponentClass({
         id: 'RelayLinker',
 
         properties: {

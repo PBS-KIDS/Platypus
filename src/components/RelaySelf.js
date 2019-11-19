@@ -5,17 +5,16 @@
  * @class RelaySelf
  * @uses platypus.Component
  */
-/*global platypus */
+import createComponentClass from '../factory.js';
+
 export default (function () {
-    
-    
     var trigger = function () {
         var owner = this.owner;
         
         owner.trigger.apply(owner, arguments);
     };
 
-    return platypus.createComponentClass({
+    return createComponentClass({
         id: 'RelaySelf',
         
         properties: {

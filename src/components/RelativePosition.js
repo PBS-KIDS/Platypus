@@ -5,11 +5,11 @@
  * @uses platypus.Component
  * @since 1.0.0
  */
-/* global platypus */
 import AABB from '../AABB.js';
+import createComponentClass from '../factory.js';
 
 export default (function () {
-    return platypus.createComponentClass({
+    return createComponentClass({
         
         id: 'RelativePosition',
 
@@ -70,6 +70,9 @@ export default (function () {
              * @default null
              */
             "top": null,
+
+            scaleX: 1,
+            scaleY: 1,
 
             /**
              * This sets the `x` coordinate for the entity. It is overridden by `left` and `right` properties if supplied.
@@ -164,6 +167,12 @@ export default (function () {
                 }
                 if (typeof props.y === 'number') {
                     this.y = props.y;
+                }
+                if (typeof props.scaleX === 'number') {
+                    this.scaleX = props.scaleX;
+                }
+                if (typeof props.scaleY === 'number') {
+                    this.scaleY = props.scaleY;
                 }
             },
 

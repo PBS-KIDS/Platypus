@@ -5,11 +5,11 @@
  * @class LogicCarrier
  * @uses platypus.Component
  */
-/*global platypus */
-export default (function () {
-    
+/* global platypus */
+import createComponentClass from '../factory.js';
 
-    return platypus.createComponentClass({
+export default (function () {
+    return createComponentClass({
         id: 'LogicCarrier',
         initialize: function () {},
         events: {

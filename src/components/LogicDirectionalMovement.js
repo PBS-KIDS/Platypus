@@ -7,6 +7,7 @@
  */
 /* global platypus */
 import Vector from '../Vector.js';
+import createComponentClass from '../factory.js';
 
 export default (function () {
     var processDirection = function (direction) {
@@ -37,7 +38,7 @@ export default (function () {
             }
         };
     
-    return platypus.createComponentClass({
+    return createComponentClass({
         id: 'LogicDirectionalMovement',
         
         properties: {

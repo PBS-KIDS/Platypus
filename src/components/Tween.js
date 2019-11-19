@@ -9,6 +9,7 @@
 import Data from '../Data.js';
 import TweenJS from '@tweenjs/tween.js';
 import {arrayCache} from '../utils/array.js';
+import createComponentClass from '../factory.js';
 
 const
     Easing = TweenJS.Easing,
@@ -34,7 +35,7 @@ const
         this.trigger.apply(this, arguments);
     };
 
-export default platypus.createComponentClass({
+export default createComponentClass({
     id: 'Tween',
 
     properties: {

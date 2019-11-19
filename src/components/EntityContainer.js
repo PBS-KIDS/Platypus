@@ -51,6 +51,7 @@ import Async from '../Async.js';
 import Data from '../Data.js';
 import Entity from '../Entity.js';
 import Messenger from '../Messenger.js';
+import createComponentClass from '../factory.js';
 
 export default (function () {
     var childBroadcast = function (event) {
@@ -58,7 +59,7 @@ export default (function () {
                 this.triggerOnChildren(event, value, debug);
             };
         },
-        EntityContainer = platypus.createComponentClass({
+        EntityContainer = createComponentClass({
             id: 'EntityContainer',
             
             properties: {

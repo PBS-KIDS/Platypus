@@ -5,12 +5,12 @@
  * @class EntityController
  * @uses platypus.Component
  */
-/* global platypus */
 import ActionState from '../ActionState.js';
 import Data from '../Data.js';
 import DataMap from '../DataMap.js';
 import StateMap from '../StateMap.js';
 import {arrayCache} from '../utils/array.js';
+import createComponentClass from '../factory.js';
 
 export default (function () {
     var distance = function (origin, destination) {
@@ -52,7 +52,7 @@ export default (function () {
             }
         };
 
-    return platypus.createComponentClass({
+    return createComponentClass({
         id: 'EntityController',
         
         properties: {

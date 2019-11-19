@@ -11,9 +11,10 @@ import Data from '../Data.js';
 import PIXIAnimation from '../PIXIAnimation.js';
 import RenderAnimator from './RenderAnimator.js';
 import RenderContainer from './RenderContainer.js';
+import createComponentClass from '../factory.js';
 
 export default (function () {
-    return platypus.createComponentClass({
+    return createComponentClass({
         
         id: 'RenderSprite',
         

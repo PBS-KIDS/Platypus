@@ -29,16 +29,15 @@ A component that enables an entity to be pushed.
       //Optional - The distance per millisecond this object can be pushed in x and y. Overwritten by the more specific values xPush and yPush. Defaults to .01.
     }
 */
-
-/* global platypus */
 import {arrayCache} from '../utils/array.js';
+import createComponentClass from '../factory.js';
 
 export default (function () {
     var setMagnitude = function (direction, magnitude) {
         return (direction / Math.abs(direction)) * magnitude;
     };
     
-    return platypus.createComponentClass({
+    return createComponentClass({
         id: 'LogicPushable',
         initialize: function (definition) {
             this.yPush = definition.push || definition.yPush || 0;

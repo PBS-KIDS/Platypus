@@ -8,6 +8,7 @@
 /* global platypus */
 import {arrayCache, greenSplice} from '../utils/array.js';
 import Data from '../Data.js';
+import createComponentClass from '../factory.js';
 
 export default (function () {
     var pause = function () {
@@ -43,7 +44,7 @@ export default (function () {
             }
         };
     
-    return platypus.createComponentClass({
+    return createComponentClass({
         
         id: 'Timeline',
         

@@ -6,10 +6,10 @@
  * @uses platypus.Component
  */
 /* global platypus, window */
-export default (function () {
-    
+import createComponentClass from '../factory.js';
 
-    var
+export default (function () {
+    const
         keyMap = { //Note: if this list is changed, be sure to update https://github.com/PBS-KIDS/Platypus/wiki/Handler-controller-key-list
             kc0: 'unknown',
             kc8: 'backspace',
@@ -111,7 +111,7 @@ export default (function () {
             kc222: 'quote'
         };
 
-    return platypus.createComponentClass({
+    return createComponentClass({
         
         id: 'HandlerController',
         

@@ -31,12 +31,12 @@ This component spawns new entities within a given area at set intervals.
       }
     }
 */
-/* global platypus */
 import Entity from '../Entity.js';
 import {arrayCache} from '../utils/array.js';
+import createComponentClass from '../factory.js';
 
 export default (function () {
-    return platypus.createComponentClass({
+    return createComponentClass({
         
         id: 'LogicRegionSpawner',
         

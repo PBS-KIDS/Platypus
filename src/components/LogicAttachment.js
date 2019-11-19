@@ -5,9 +5,9 @@
  * @class LogicAttachment
  * @uses platypus.Component
  */
-/* global platypus */
 import Entity from '../Entity.js';
 import {arrayCache} from '../utils/array.js';
+import createComponentClass from '../factory.js';
 
 export default (function () {
     var
@@ -19,7 +19,7 @@ export default (function () {
             }
         };
 
-    return platypus.createComponentClass({
+    return createComponentClass({
 
         id: 'LogicAttachment',
 

@@ -6,13 +6,11 @@
  * @uses platypus.Component
  * @since v0.11.9
  */
-/*global platypus */
 import RenderContainer from './RenderContainer.js';
 import {Text} from 'pixi.js';
+import createComponentClass from '../factory.js';
 
 export default (function () {
-    "use strict";
-    
     const
         alignments = {
             horizontal: {
@@ -29,7 +27,7 @@ export default (function () {
             }
         };
     
-    return platypus.createComponentClass({
+    return createComponentClass({
         
         id: 'RenderText',
         

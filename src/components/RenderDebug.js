@@ -5,10 +5,11 @@
  * @class RenderDebug
  * @uses platypus.Component
  */
-/*global platypus */
+/* global platypus */
 import {Graphics} from 'pixi.js';
 import RenderContainer from './RenderContainer.js';
 import {arrayCache} from '../utils/array.js';
+import createComponentClass from '../factory.js';
 
 export default (function () {
     var createShape = function (shape, color, left, top, width, height, z, outline) {
@@ -38,7 +39,7 @@ export default (function () {
             }
         };
     
-    return platypus.createComponentClass({
+    return createComponentClass({
         
         id: 'RenderDebug',
 

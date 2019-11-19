@@ -32,11 +32,10 @@ This component listens for redirected collision messages and fires a message on 
     }
 
 */
-/*global platypus */
-export default (function () {
-    
+import createComponentClass from '../factory.js';
 
-    return platypus.createComponentClass({
+export default (function () {
+    return createComponentClass({
         id: 'LogicTeleporter',
 
         initialize: function (definition) {

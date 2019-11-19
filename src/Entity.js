@@ -35,13 +35,13 @@
  * @param [parent] {Entity} Presets the parent of the entity so that the parent entity is available during component instantiation. Overrides `parent` in properties definitions.
  * @return {Entity} Returns the new entity made up of the provided components.
 **/
-
-/*global platypus */
+/* global platypus */
 import {arrayCache, greenSplice, union} from './utils/array.js';
 import Async from './Async.js';
 import Data from './Data.js';
 import Messenger from './Messenger.js';
 import StateMap from './StateMap.js';
+import createComponentClass from './factory.js';
         
 export default (function () {
     var componentInit = function (Component, componentDefinition, callback) {
@@ -115,7 +115,7 @@ export default (function () {
                                 platypus.debug.warn('Entity "' + this.type + '": Component "' + componentDefinition.type + '" is not defined.', componentDefinition);
                             }
                         } else if (componentDefinition.id) { // "type" not specified, so we create the component directly.
-                            componentInits.push(componentInit.bind(this, platypus.createComponentClass(componentDefinition), null));
+                            componentInits.push(componentInit.bind(this, createComponentClass(componentDefinition), null));
                         } else if (typeof componentDefinition === 'function') {
                             componentInits.push(componentInit.bind(this, componentDefinition, null));
                         } else {

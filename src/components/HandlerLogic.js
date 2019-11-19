@@ -5,9 +5,9 @@
  * @class HandlerLogic
  * @uses platypus.Component
  **/
-/* global platypus */
 import {arrayCache, greenSplice} from '../utils/array.js';
 import AABB from '../AABB.js';
+import createComponentClass from '../factory.js';
 
 export default (function () {
     var addAll = function (all, active) {
@@ -37,7 +37,7 @@ export default (function () {
             return (item === 'handle-logic' || item === 'handle-post-collision-logic' || item === 'prepare-logic' || item === 'state-changed' || item === 'handle-movement');
         };
 
-    return platypus.createComponentClass({
+    return createComponentClass({
         id: "HandlerLogic",
         properties: {
             /**

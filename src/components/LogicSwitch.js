@@ -24,11 +24,10 @@ This component serves as a switch in the game world, typically tied to collision
       // Optional. Whether a pressed switch should stay pressed once collision messages cease. Defaults to `false`.
     }
 */
-/*global platypus */
-export default (function () {
-    
+import createComponentClass from '../factory.js';
 
-    return platypus.createComponentClass({
+export default (function () {
+    return createComponentClass({
         
         id: 'LogicSwitch',
         

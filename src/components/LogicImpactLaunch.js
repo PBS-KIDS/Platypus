@@ -34,9 +34,10 @@ This component will cause the entity to move in a certain direction on colliding
 */
 /* global platypus */
 import Vector from '../Vector.js';
+import createComponentClass from '../factory.js';
 
 export default (function () {
-    return platypus.createComponentClass({
+    return createComponentClass({
         id: 'LogicImpactLaunch',
         
         properties: {

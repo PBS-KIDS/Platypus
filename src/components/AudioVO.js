@@ -9,6 +9,7 @@
 /*global platypus */
 import Data from '../Data.js';
 import {arrayCache} from '../utils/array.js';
+import createComponentClass from '../factory.js';
 
 export default (function () {
     var sortByTime = function (a, b) {
@@ -111,7 +112,7 @@ export default (function () {
             this.playingAudio = true;
         };
     
-    return platypus.createComponentClass({
+    return createComponentClass({
         id: 'AudioVO',
         
         properties: {

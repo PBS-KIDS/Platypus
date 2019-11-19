@@ -8,6 +8,7 @@
 /* global platypus */
 import {arrayCache, greenSplice} from '../utils/array.js';
 import Vector from '../Vector.js';
+import createComponentClass from '../factory.js';
 
 export default (function () {
     var tempVector = Vector.setUp(),
@@ -60,7 +61,7 @@ export default (function () {
             }
         };
         
-    return platypus.createComponentClass({
+    return createComponentClass({
         
         id: 'Mover',
 

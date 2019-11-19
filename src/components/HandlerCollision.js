@@ -5,7 +5,6 @@
  * @class HandlerCollision
  * @uses platypus.Component
  */
-/* global platypus */
 import {arrayCache, greenSplice, union} from '../utils/array.js';
 import AABB from '../AABB.js';
 import CollisionData from '../CollisionData.js';
@@ -13,6 +12,7 @@ import CollisionDataContainer from '../CollisionDataContainer.js';
 import Data from '../Data.js';
 import DataMap from '../DataMap.js';
 import Vector from '../Vector.js';
+import createComponentClass from '../factory.js';
 
 export default (function () {
     /**
@@ -47,7 +47,7 @@ export default (function () {
             return a.collisionGroup.getAllEntities() - b.collisionGroup.getAllEntities();
         };
     
-    return platypus.createComponentClass({
+    return createComponentClass({
         id: 'HandlerCollision',
         
         properties: {

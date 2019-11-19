@@ -12,6 +12,7 @@ import AABB from '../AABB.js';
 import Data from '../Data.js';
 import Interactive from './Interactive.js';
 import {arrayCache} from '../utils/array.js';
+import createComponentClass from '../factory.js';
 import {greenSplit} from '../utils/string.js';
 
 export default (function () {
@@ -67,7 +68,7 @@ export default (function () {
             };
         }());
     
-    return platypus.createComponentClass({
+    return createComponentClass({
         
         id: 'RenderContainer',
         

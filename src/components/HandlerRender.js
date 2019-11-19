@@ -5,13 +5,14 @@
  * @class HandlerRender
  * @uses platypus.Component
  */
-/*global platypus */
+/* global platypus */
 import {Container} from 'pixi.js';
 import Data from '../Data.js';
 import Interactive from './Interactive.js';
+import createComponentClass from '../factory.js';
 
 export default (function () {
-    return platypus.createComponentClass({
+    return createComponentClass({
 
         id: "HandlerRender",
 
@@ -50,8 +51,7 @@ export default (function () {
         },
 
         initialize: function () {
-            let x = 0,
-                definition = null;
+            let definition = null;
             
             this.worldContainer = this.worldContainer || new Container();
             this.worldContainer.name = '';
@@ -227,7 +227,7 @@ export default (function () {
                         container = otherEntity.container;
                     } else {
                         //Didn't find group.
-                        console.warn("Trying to add to non-existent entity, added to World container instead.");
+                        platypus.debug.warn("Trying to add to non-existent entity, added to World container instead.");
                         container = this.worldContainer;
                     }
 

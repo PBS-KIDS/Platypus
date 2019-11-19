@@ -5,11 +5,10 @@
  * @class LogicWindUpRacer
  * @uses platypus.Component
  */
-/*global platypus */
-export default (function () {
-    
+import createComponentClass from '../factory.js';
 
-    return platypus.createComponentClass({
+export default (function () {
+    return createComponentClass({
         
         id: 'LogicWindUpRacer',
         

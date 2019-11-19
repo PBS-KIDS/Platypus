@@ -36,12 +36,13 @@
  * @class TiledLoader
  * @uses platypus.Component
  */
-/*global atob, pako, platypus */
+/* global atob, pako, platypus */
 import {arrayCache, greenSlice, union} from '../utils/array.js';
 import AABB from '../AABB.js';
 import Data from '../Data.js';
 import Entity from '../Entity.js';
 import Vector from '../Vector.js';
+import createComponentClass from '../factory.js';
 
 export default (function () {
     var FILENAME_TO_ID = /^(?:(\w+:)\/{2}(\w+(?:\.\w+)*\/?))?([\/.]*?(?:[^?]+)?\/)?(?:(([^\/?]+)\.(\w+))|([^\/?]+))(?:\?((?:(?:[^&]*?[\/=])?(?:((?:(?:[^\/?&=]+)\.(\w+)))\S*?)|\S+))?)?$/,
@@ -63,7 +64,7 @@ export default (function () {
                     step1 = atob(data.replace(/\\/g, ''));
                     
                 if (compression === 'zlib') {
-                    step1 = pako.inflate(step1);
+                    step1 = pako.inflate(step1); //TODO: Need to fix this for sr2
                     while (index <= step1.length) {
                         arr.push(decodeArray(step1, index - 4));
                         index += 4;
@@ -419,7 +420,7 @@ export default (function () {
             return tilesets;
         };
 
-    return platypus.createComponentClass({
+    return createComponentClass({
         id: 'TiledLoader',
 
         properties: {
@@ -944,24 +945,12 @@ export default (function () {
             },
             
             setUpEntities: (function () {
-                const offsetPoints = function (points, mapOffsetX, mapOffsetY) {
-                        const coords = [];
-                        let p = 0;
-
-                        for (p = 0; p < points.length; p++) {
-                            coords.push({
-                                "x": points[p].x + mapOffsetX,
-                                "y": points[p].y + mapOffsetY
-                            });
-                        }
-
-                        return coords;
-                    },
-                    getPolyShape = function (type, points, decomposed, mapOffsetX, mapOffsetY) {
+                const
+                    getPolyShape = function (type, points, decomposed) {
                         const
                             shape = {
                                 type: type,
-                                points: offsetPoints(points, mapOffsetX, mapOffsetY)
+                                points: points.slice()
                             };
 
                         if (decomposed) {
@@ -969,7 +958,7 @@ export default (function () {
                             let p = 0;
 
                             for (p = 0; p < decomposed.length; p++) {
-                                decomposedPoints.push(offsetPoints(decomposed[p], mapOffsetX, mapOffsetY));
+                                decomposedPoints.push(decomposed[p].slice());
                             }
     
                             shape.decomposedPolygon = decomposedPoints;
@@ -1052,19 +1041,16 @@ export default (function () {
                                 }
                                 properties.width = largestX - smallestX;
                                 properties.height = largestY - smallestY;
-                                properties.x = entity.x;// + smallestX;
-                                properties.y = entity.y;// + smallestY;
+                                properties.x = entity.x + mapOffsetX;
+                                properties.y = entity.y + mapOffsetY;
     
                                 widthOffset = 0;
                                 heightOffset = 0;
     
-                                properties.x = properties.x + mapOffsetX;
-                                properties.y = properties.y + mapOffsetY;
-    
                                 if (entity.polygon) {
-                                    properties.shape = getPolyShape('polygon', polyPoints, properties.decomposedPolygon, mapOffsetX, mapOffsetY);
+                                    properties.shape = getPolyShape('polygon', polyPoints, properties.decomposedPolygon);
                                 } else if (entity.polyline) {
-                                    properties.shape = getPolyShape('polyline', polyPoints, null, mapOffsetX, mapOffsetY);
+                                    properties.shape = getPolyShape('polyline', polyPoints, null);
                                 }
 
                                 if (entity.rotation) {

@@ -5,11 +5,11 @@
  * @class LogicRotationalMovement
  * @uses platypus.Component
  */
-/* global platypus */
-export default (function () {
-    
+import createComponentClass from '../factory.js';
 
-    var cos = Math.cos,
+export default (function () {
+    const
+        cos = Math.cos,
         sin = Math.sin,
         polarToCartesianX = function (m, a) {
             return m * cos(a);
@@ -18,7 +18,7 @@ export default (function () {
             return m * sin(a);
         };
     
-    return platypus.createComponentClass({
+    return createComponentClass({
         id: 'LogicRotationalMovement',
 
         properties: {
@@ -93,7 +93,7 @@ export default (function () {
                 state.set('turningLeft', this.turningLeft);
                 state.set('turningRight', this.turningRight);
                 
-                if (this.owner.orientation !== this.angle) {
+                if (this.owner.orientation !== this.angle * Math.PI / 180) {
                     this.owner.orientation = this.angle * Math.PI / 180;
                     this.owner.triggerEvent('orientation-updated');
                 }

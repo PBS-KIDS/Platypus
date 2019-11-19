@@ -5,13 +5,13 @@
  * @class XHR
  * @uses platypus.Component
  */
-/* global platypus, window */
+/* global window */
+import createComponentClass from '../factory.js';
+
 export default (function () {
-    
-    
     var XMLHttpRequest = window.XMLHttpRequest;
 
-    return platypus.createComponentClass({
+    return createComponentClass({
         id: 'XHR',
         
         properties: {

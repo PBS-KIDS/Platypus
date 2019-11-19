@@ -5,11 +5,11 @@
  * @class NodeMap
  * @uses platypus.Component
  */
-/* global platypus */
 import {arrayCache, greenSplice} from '../utils/array.js';
 import Entity from '../Entity.js';
 import Vector from '../Vector.js';
 import config from 'config';
+import createComponentClass from '../factory.js';
 import recycle from 'recycle';
 
 export default (function () {
@@ -91,7 +91,7 @@ export default (function () {
         arrayCache.recycle(this.contains);
     }, true, config.dev);
     
-    return platypus.createComponentClass({
+    return createComponentClass({
         id: 'NodeMap',
         
         publicProperties: {

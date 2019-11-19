@@ -5,15 +5,15 @@
  * @uses platypus.Component
  * @since 0.9.0
  */
-/*global platypus */
 import {Circle, Polygon, Rectangle} from 'pixi.js';
 import AABB from '../AABB.js';
 import Data from '../Data.js';
+import createComponentClass from '../factory.js';
 
 export default (function () {
     var pointerInstances = {};
     
-    return platypus.createComponentClass({
+    return createComponentClass({
         id: 'Interactive',
 
         properties: {

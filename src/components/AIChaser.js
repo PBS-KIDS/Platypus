@@ -7,9 +7,10 @@
  */
 /* global platypus */
 import Vector from '../Vector.js';
+import createComponentClass from '../factory.js';
 
 export default (function () {
-    return platypus.createComponentClass({
+    return createComponentClass({
         
         id: 'AIChaser',
         

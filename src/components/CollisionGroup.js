@@ -5,14 +5,14 @@
  * @class CollisionGroup
  * @uses platypus.Component
  */
-/* global platypus */
 import {arrayCache, greenSplice, union} from '../utils/array.js';
 import AABB from '../AABB.js';
 import DataMap from '../DataMap.js';
 import Vector from '../Vector.js';
+import createComponentClass from '../factory.js';
 
 export default (function () {
-    return platypus.createComponentClass({
+    return createComponentClass({
         id: 'CollisionGroup',
         
         initialize: function () {

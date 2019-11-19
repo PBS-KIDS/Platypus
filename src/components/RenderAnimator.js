@@ -5,9 +5,9 @@
  * @uses platypus.Component
  * @since 1.0.0
  */
-/*global platypus */
 import StateMap from '../StateMap.js';
 import {arrayCache} from '../utils/array.js';
+import createComponentClass from '../factory.js';
 
 export default (function () {
     var createTest = function (testStates, animation) {
@@ -53,7 +53,7 @@ export default (function () {
             this.owner.triggerEvent('stop-animation', animation);
         };
 
-    return platypus.createComponentClass({
+    return createComponentClass({
         id: 'RenderAnimator',
 
         properties: {

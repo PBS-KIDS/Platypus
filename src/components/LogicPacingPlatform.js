@@ -28,11 +28,10 @@ This component changes the (x, y) position of an object according to its speed a
       // Optional. Position in the cycle that the movement should begin. Defaults in the middle at 0; PI/2 and -PI/2 will put you at the extremes.
     }
 */
-/*global platypus */
-export default (function () {
-    
+import createComponentClass from '../factory.js';
 
-    return platypus.createComponentClass({
+export default (function () {
+    return createComponentClass({
         
         id: 'LogicPacingPlatform',
         

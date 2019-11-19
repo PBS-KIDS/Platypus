@@ -5,7 +5,8 @@
  * @class RelayParent
  * @uses platypus.Component
  */
-/*global platypus */
+import createComponentClass from '../factory.js';
+
 export default (function () {
     
 
@@ -17,7 +18,7 @@ export default (function () {
         }
     };
     
-    return platypus.createComponentClass({
+    return createComponentClass({
         id: 'RelayParent',
         
         properties: {

@@ -11,6 +11,7 @@ import {Container} from 'pixi.js';
 import Data from '../Data.js';
 import TweenJS from '@tweenjs/tween.js';
 import Vector from '../Vector.js';
+import createComponentClass from '../factory.js';
 
 export default (function () {
     var DPR = window.devicePixelRatio || 1,
@@ -59,7 +60,7 @@ export default (function () {
             return event.clientY;
         };
     
-    return platypus.createComponentClass({
+    return createComponentClass({
         id: 'Camera',
         properties: {
             /**

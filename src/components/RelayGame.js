@@ -5,17 +5,17 @@
  * @class RelayGame
  * @uses platypus.Component
  */
-/*global platypus */
-export default (function () {
-    
+/* global platypus */
+import createComponentClass from '../factory.js';
 
+export default (function () {
     var broadcast = function () {
         var currentScene = platypus.game.currentScene;
         
         currentScene.triggerOnChildren.apply(currentScene, arguments);
     };
 
-    return platypus.createComponentClass({
+    return createComponentClass({
         id: 'RelayGame',
         
         properties: {

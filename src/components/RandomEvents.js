@@ -16,7 +16,8 @@
  * @class RandomEvents
  * @uses platypus.Component
 */
-/*global platypus */
+import createComponentClass from '../factory.js';
+
 export default (function () {
 
     var createTrigger = function (eventList) {
@@ -25,7 +26,7 @@ export default (function () {
         };
     };
 
-    return platypus.createComponentClass({
+    return createComponentClass({
         id: 'RandomEvents',
         
         initialize: function (definition) {

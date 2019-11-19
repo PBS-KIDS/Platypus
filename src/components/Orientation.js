@@ -21,10 +21,10 @@
  * @class Orientation
  * @uses platypus.Component
  */
-/* global platypus */
 import {arrayCache, greenSplice} from '../utils/array.js';
 import Data from '../Data.js';
 import Vector from '../Vector.js';
+import createComponentClass from '../factory.js';
 import {greenSplit} from '../utils/string.js';
 
 export default (function () {
@@ -105,7 +105,7 @@ export default (function () {
             return m;
         };
     
-    return platypus.createComponentClass({
+    return createComponentClass({
         id: 'Orientation',
         publicProperties: {
             /**
@@ -178,6 +178,16 @@ export default (function () {
                     },
                     set: function (value) {
                         vector.setVector(origin).rotate(value);
+                    },
+                    enumerable: true
+                });
+
+                Object.defineProperty(owner, 'rotation', {
+                    get: function () {
+                        return owner.orientation / Math.PI * 180;
+                    },
+                    set: function (value) {
+                        owner.orientation = value * Math.PI / 180;
                     },
                     enumerable: true
                 });

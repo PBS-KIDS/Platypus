@@ -5,12 +5,11 @@
  * @class LogicAngularMovement
  * @uses platypus.Component
  */
-
-/*global platypus */
 import {arrayCache} from '../utils/array.js';
+import createComponentClass from '../factory.js';
 
 export default (function () {
-    return platypus.createComponentClass({
+    return createComponentClass({
         
         id: 'LogicAngularMovement',
         

@@ -7,6 +7,7 @@
  */
 /* global platypus */
 import {arrayCache, union} from '../utils/array.js';
+import createComponentClass from '../factory.js';
 
 export default (function () {
     var
@@ -14,7 +15,7 @@ export default (function () {
             this.switches.push(event);
         };
     
-    return platypus.createComponentClass({
+    return createComponentClass({
         id: 'ComponentSwitcher',
         
         properties: {

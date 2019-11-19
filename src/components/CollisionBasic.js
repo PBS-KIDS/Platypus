@@ -7,13 +7,13 @@
  * @class CollisionBasic
  * @uses platypus.Component
  */
-/* global platypus */
 import {arrayCache, greenSplice} from '../utils/array.js';
 import AABB from '../AABB.js';
 import CollisionShape from '../CollisionShape.js';
 import Data from '../Data.js';
 import DataMap from '../DataMap.js';
 import Vector from '../Vector.js';
+import createComponentClass from '../factory.js';
 
 export default (function () {
     var
@@ -254,7 +254,7 @@ export default (function () {
             };
         }());
 
-    return platypus.createComponentClass({
+    return createComponentClass({
         
         id: 'CollisionBasic',
 

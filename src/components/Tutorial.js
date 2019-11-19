@@ -5,7 +5,8 @@
  * @uses platypus.Component
  * @since 0.8.7
  */
-/*global platypus */
+/* global platypus */
+import createComponentClass from '../factory.js';
 import {greenSlice} from '../utils/array.js';
 
 export default (function () {
@@ -96,7 +97,7 @@ export default (function () {
             }
         };
 
-    return platypus.createComponentClass({
+    return createComponentClass({
         
         id: 'Tutorial',
         

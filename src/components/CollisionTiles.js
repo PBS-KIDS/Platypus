@@ -5,11 +5,11 @@
  * @class CollisionTiles
  * @uses platypus.Component
  */
-/* global platypus */
 import AABB from '../AABB.js';
 import CollisionShape from '../CollisionShape.js';
 import Data from '../Data.js';
 import {arrayCache} from '../utils/array.js';
+import createComponentClass from '../factory.js';
 
 export default (function () {
     var maskJumpThrough = 0x10000000,
@@ -228,7 +228,7 @@ export default (function () {
             }
         };
 
-    return platypus.createComponentClass({
+    return createComponentClass({
         id: 'CollisionTiles',
         
         properties: {

@@ -43,10 +43,10 @@ This component is a general purpose state-machine for an entity, taking in vario
       }
     }
 */
-/* global platypus */
 import {arrayCache, greenSplice} from '../utils/array.js';
 import DataMap from '../DataMap.js';
 import StateMap from '../StateMap.js';
+import createComponentClass from '../factory.js';
 
 export default (function () {
     var changeState = function (changes, state) {
@@ -154,7 +154,7 @@ export default (function () {
         }
     };
 
-    return platypus.createComponentClass({
+    return createComponentClass({
         id: 'LogicStateMachine',
         
         properties: {

@@ -6,16 +6,16 @@
  * @uses platypus.Component
  * @since 6.0.0
  */
-/*global platypus */
 import {arrayCache, greenSplice} from '../utils/array.js';
 import Sound from 'pixi-sound';
 import TweenJS from '@tweenjs/tween.js';
+import createComponentClass from '../factory.js';
 
 const
     Tween = TweenJS.Tween,
     tracks = {}; // List of actively-playing tracks.
 
-export default platypus.createComponentClass({
+export default createComponentClass({
     id: 'AudioMusic',
     
     properties: {

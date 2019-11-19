@@ -16,6 +16,7 @@ import AABB from '../AABB.js';
 import PIXIAnimation from '../PIXIAnimation.js';
 import RenderContainer from './RenderContainer.js';
 import config from 'config';
+import createComponentClass from '../factory.js';
 import recycle from 'recycle';
 
 export default (function () {
@@ -112,7 +113,7 @@ export default (function () {
 
     recycle.add(Template, 'Template', Template, null, true, config.dev);
 
-    return platypus.createComponentClass({
+    return createComponentClass({
 
         id: 'RenderTiles',
 

@@ -1,9 +1,9 @@
 /**
- * This is the extendable Component class. Typically specific component classes should be created using `platypus.createComponentClass()`. This method accepts component definitions and creates component classes that can be used to create components by entities.  It adds properties and methods that are common to all components so that component definitions can focus on unique properties and methods.
+ * This is the extendable Component class. Typically specific component classes should be created using `createComponentClass()`. This method accepts component definitions and creates component classes that can be used to create components by entities.  It adds properties and methods that are common to all components so that component definitions can focus on unique properties and methods.
  *
  * To create an extended component class, use the following syntax:
  *
- *      platypus.createComponentClass(componentDefinition, prototype);
+ *      createComponentClass(componentDefinition, prototype);
  *
  *  * `componentDefinition` is list of key/value pairs that describe the component's behavior.
  *  * `prototype` is an optional prototype that this component extends.
