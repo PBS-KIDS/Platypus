@@ -226,7 +226,9 @@ export default (function () {
                         keys = state.keys;
                         i = keys.length;
                         while (i--) {
-                            thisState.set(keys[i], false);
+                            if (!thisState.has(keys[i])) { // set initial value to false if it's currently undefined.
+                                thisState.set(keys[i], false);
+                            }
                         }
                     }
                 }
