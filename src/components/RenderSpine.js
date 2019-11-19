@@ -5,8 +5,8 @@
  * @class RenderSpine
  * @uses platypus.Component
  */
-/* global PIXI, platypus */
-import "pixi-spine";
+/* global platypus */
+import * as PIXI from 'pixi.js';
 import {arrayCache, union} from '../utils/array.js';
 import Data from '../Data.js';
 import RenderAnimator from './RenderAnimator.js';
