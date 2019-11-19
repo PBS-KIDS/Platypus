@@ -9,7 +9,7 @@
 import AABB from '../AABB.js';
 import {Container} from 'pixi.js';
 import Data from '../Data.js';
-import {TweenJS} from '@tweenjs/tween.js';
+import TweenJS from '@tweenjs/tween.js';
 import Vector from '../Vector.js';
 
 export default (function () {

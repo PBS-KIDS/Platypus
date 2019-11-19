@@ -1,7 +1,7 @@
 const
     path = require('path'),
     webpack = require('webpack');
-    
+
 module.exports = env => {
     const mode = env.dev ? 'development' : 'production';
 
@@ -22,13 +22,6 @@ module.exports = env => {
             new webpack.ProvidePlugin({ // Needed to import pixi-spine correctly.
                 PIXI: 'pixi.js'
             })
-        ],
-        externals: {
-            "@tweenjs/tween.js": "@tweenjs/tween.js",
-            "pixi-sound": "pixi-sound",
-            "pixi-spine": "pixi-spine",
-            "pixi.js": "pixi.js",
-            "springroll": "springroll"
-        }
+        ]
     };
 };
