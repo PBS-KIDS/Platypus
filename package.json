@@ -18,9 +18,9 @@
         "build:debug": "webpack --env.dev"
     },
     "dependencies": {
-        "@tweenjs/tween.js": "^18.3.1",
-        "pixi-sound": "^3.0.3",
-        "pixi-spine": "^2.1.4",
+        "@tweenjs/tween.js": "18.3.1",
+        "pixi-sound": "3.0.3",
+        "pixi-spine": "2.1.4",
         "pixi.js": "5.2.0",
         "recycle": "https://github.com/gopherwood/recycle.git#master",
         "springroll": "2.0.3"
