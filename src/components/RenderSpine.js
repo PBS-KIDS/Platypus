@@ -13,13 +13,8 @@ import RenderAnimator from './RenderAnimator.js';
 import RenderContainer from './RenderContainer.js';
 
 export default (function () {
-    var spine = PIXI.spine,
-        core = spine && spine.core,
-        TextureAtlas = core && core.TextureAtlas,
-        AtlasAttachmentLoader = core && core.AtlasAttachmentLoader,
+    const
         BaseTexture = PIXI.BaseTexture,
-        SkeletonJson = core && core.SkeletonJson,
-        Spine = spine && spine.Spine,
         getBaseTexture = function (path, pma) {
             var asset = platypus.assetCache.get(path.substring(path.lastIndexOf('/') + 1, path.lastIndexOf('.')));
             
@@ -31,13 +26,6 @@ export default (function () {
             });
         };
     
-    // If PIXI.spine is unavailable, this component doesn't work.
-    if (!Spine) {
-        return function () {
-            platypus.debug.error('RenderSpine requires `PIXI.spine` to function.');
-        };
-    }
-
     return platypus.createComponentClass({
 
         id: 'RenderSpine',
@@ -375,72 +363,88 @@ export default (function () {
                 };
             
             return function (def, callback) {
-                var animation = '',
-                    definition = null,
-                    settings = platypus.game.settings,
-                    atlas = settings.atlases[this.atlas],
-                    map = null,
-                    skeleton = settings.skeletons[this.skeleton],
-                    spineAtlas = new TextureAtlas(atlas, imageCallback.bind(null, this.preMultipliedAlpha, callback)),
-                    spineJsonParser = new SkeletonJson(new AtlasAttachmentLoader(spineAtlas)),
-                    skeletonData = spineJsonParser.readSkeletonData(skeleton),
-                    spine = this.spine = new Spine(skeletonData);
-
-                spine.state.addListener({
-                    event: handleSpineEvent.bind(this),
-                    complete: animationEnded.bind(this)
-                });
-                spine.autoUpdate = false;
-
-                map = createAnimationMap(this.animationMap, skeleton.animations);
-                this.stateBased = map && this.stateBased;
-                this.eventBased = map && this.eventBased;
-                if (map) {
-                    animation = map.default || '';
-
-                    definition = Data.setUp(
-                        'animationEvents', this.eventBased ? this.animationEvents || map : null,
-                        'animationStates', this.stateBased ? this.animationStates || map : null,
-                        'forcePlayThrough', this.forcePlayThrough,
-                        'component', this
-                    );
-                    this.owner.addComponent(new RenderAnimator(this.owner, definition));
-                    definition.recycle();
-                }
-
-                // set up the mixes!
-                if (this.mixTimes) {
-                    this.setMixTimes(this.mixTimes);
-                }
-
-                // play animation
-                if (animation) {
-                    this.currentAnimation = animation;
-                    spine.state.setAnimation(0, animation, true);
-                }
-
-                spine.x = this.offsetX;
-                spine.y = this.offsetY;
-                spine.z = this.offsetZ;
-
-                if (!this.owner.container) {
-                    definition = Data.setUp(
-                        'interactive', this.interactive,
-                        'mask', this.mask,
-                        'mirror', this.mirror,
-                        'flip', this.flip,
-                        'visible', this.visible,
-                        'cache', this.cache,
-                        'ignoreOpacity', this.ignoreOpacity,
-                        'scaleX', this.scaleX,
-                        'scaleY', this.scaleY,
-                        'skewX', this.skewX,
-                        'skewY', this.skewY
-                    );
-                    this.owner.addComponent(new RenderContainer(this.owner, definition, this.addToContainer.bind(this)));
-                    definition.recycle();
+                const PIXIspine = PIXI.spine,
+                    core = PIXIspine && PIXIspine.core,
+                    Spine = PIXIspine && PIXIspine.Spine;
+                
+                // If PIXI.spine is unavailable, this component doesn't work.
+                if (!Spine || !core) {
+                    platypus.debug.error('RenderSpine requires `PIXI.spine` to function.');
+                    return false;
                 } else {
-                    this.addToContainer();
+                    const
+                        TextureAtlas = core.TextureAtlas,
+                        AtlasAttachmentLoader = core.AtlasAttachmentLoader,
+                        SkeletonJson = core.SkeletonJson,
+                        settings = platypus.game.settings,
+                        atlas = settings.atlases[this.atlas],
+                        skeleton = settings.skeletons[this.skeleton],
+                        spineAtlas = new TextureAtlas(atlas, imageCallback.bind(null, this.preMultipliedAlpha, callback)),
+                        spineJsonParser = new SkeletonJson(new AtlasAttachmentLoader(spineAtlas)),
+                        skeletonData = spineJsonParser.readSkeletonData(skeleton),
+                        spine = this.spine = new Spine(skeletonData),
+                        map = createAnimationMap(this.animationMap, skeleton.animations);
+
+                    let animation = '';
+
+                    spine.state.addListener({
+                        event: handleSpineEvent.bind(this),
+                        complete: animationEnded.bind(this)
+                    });
+                    spine.autoUpdate = false;
+    
+                    this.stateBased = map && this.stateBased;
+                    this.eventBased = map && this.eventBased;
+                    if (map) {
+                        const
+                            definition = Data.setUp(
+                                'animationEvents', this.eventBased ? this.animationEvents || map : null,
+                                'animationStates', this.stateBased ? this.animationStates || map : null,
+                                'forcePlayThrough', this.forcePlayThrough,
+                                'component', this
+                            );
+
+                        this.owner.addComponent(new RenderAnimator(this.owner, definition));
+                        definition.recycle();
+
+                        animation = map.default || '';
+                    }
+    
+                    // set up the mixes!
+                    if (this.mixTimes) {
+                        this.setMixTimes(this.mixTimes);
+                    }
+    
+                    // play animation
+                    if (animation) {
+                        this.currentAnimation = animation;
+                        spine.state.setAnimation(0, animation, true);
+                    }
+    
+                    spine.x = this.offsetX;
+                    spine.y = this.offsetY;
+                    spine.z = this.offsetZ;
+    
+                    if (!this.owner.container) {
+                        const
+                            definition = Data.setUp(
+                                'interactive', this.interactive,
+                                'mask', this.mask,
+                                'mirror', this.mirror,
+                                'flip', this.flip,
+                                'visible', this.visible,
+                                'cache', this.cache,
+                                'ignoreOpacity', this.ignoreOpacity,
+                                'scaleX', this.scaleX,
+                                'scaleY', this.scaleY,
+                                'skewX', this.skewX,
+                                'skewY', this.skewY
+                            );
+                        this.owner.addComponent(new RenderContainer(this.owner, definition, this.addToContainer.bind(this)));
+                        definition.recycle();
+                    } else {
+                        this.addToContainer();
+                    }
                 }
 
                 return true; //using callback
@@ -528,12 +532,12 @@ export default (function () {
                 container.reorder = true;
             },
             
-            playAnimation: function (animation) {
+            playAnimation: function (animation, loop = true) {
                 var spine = this.spine;
 
                 if (animation && spine.state.hasAnimation(animation)) {
                     this.currentAnimation = animation;
-                    spine.state.setAnimation(0, animation, true);
+                    spine.state.setAnimation(0, animation, loop);
                     this.paused = false;
 
                     return true;
