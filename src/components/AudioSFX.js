@@ -21,7 +21,8 @@ export default (function () {
             volume: 1,
             pan: 0,
             mute: false,
-            paused: false
+            paused: false,
+            speed: 1
         },
         playSound = function (soundDefinition, channel) {
             var sound      = '',
@@ -59,7 +60,8 @@ export default (function () {
                     duration: soundDefinition.duration,
                     mute: soundDefinition.mute,
                     paused: soundDefinition.paused,
-                    channel: channel
+                    channel: channel,
+                    speed: soundDefinition.speed
                 };
             }
 
@@ -79,7 +81,8 @@ export default (function () {
                     "pan",       value.pan       || attributes.pan    || defaultSettings.pan,
                     "mute",      value.mute      || attributes.mute   || defaultSettings.mute,
                     "paused",    value.paused    || attributes.paused || defaultSettings.paused,
-                    "channel",    value.channel    || attributes.channel || defaultSettings.channel
+                    "channel",    value.channel    || attributes.channel || defaultSettings.channel,
+                    "speed",    (typeof value.speed !== 'undefined') ? value.speed : ((typeof attributes.speed !== 'undefined') ? attributes.speed : defaultSettings.speed)
                 );
                 data.complete = completed.bind(this, data);
                 data.audio = this.player.play(sound, data);
@@ -90,6 +93,9 @@ export default (function () {
                 }
                 if (data.volume) {
                     data.audio.volume = data.volume;
+                }
+                if (data.speed) {
+                    data.audio.speed = data.speed;
                 }
                 
                 if (data.audio) {
@@ -156,6 +162,9 @@ export default (function () {
              *
              *               "volume": 0.75,
              *               // Optional. Used to specify how loud to play audio on a range from 0 (mute) to 1 (full volume). Default is 1.
+             *
+             *               "speed": 0.75,
+             *               // Optional. Used to specify how fast to play audio. Default is 1 (100% speed).
              *
              *               "pan": -0.25
              *               // Optional. Used to specify the pan of audio on a range of -1 (left) to 1 (right). Default is 0.
@@ -271,6 +280,7 @@ export default (function () {
                          * @param message.length (integer) - Optional. Time in milliseconds to play audio before stopping it. If 0 or not specified, play continues to the end of the audio clip.
                          * @param message.loop (integer) - Optional. Determines how many more times to play the audio clip once it finishes. Set to -1 for an infinite loop. Default is 0.
                          * @param message.volume (float) - Optional. Used to specify how loud to play audio on a range from 0 (mute) to 1 (full volume). Default is 1.
+                         * @param message.speed (float) - Optional. Used to specify how fast to play audio. Default is 1.
                          * @param message.pan (float) - Optional. Used to specify the pan of audio on a range of -1 (left) to 1 (right). Default is 0.
                          * @param message.next (string) - Optional. Used to specify the next audio clip to play once this one is complete.
                          */
@@ -457,6 +467,28 @@ export default (function () {
                     this.handleClip(id, handler.bind(null, volume));
                 } else {
                     this.getAllClips(handler.bind(null, volume));
+                }
+            },
+
+            /**
+             * This message sets the speed of playing audio.
+             *
+             * @method 'set-speed'
+             * @param speed {Number} A number that sets the speed.
+             * @param [soundId] {String} If an soundId is provided, that particular sound instance's speed is set. Otherwise all audio speed is changed.
+             */
+            "set-speed": function (speed, soundId) {
+                var id = soundId || '',
+                    handler = function (spd, clip) {
+                        if (clip) {
+                            clip.speed = spd;
+                        }
+                    };
+
+                if (soundId) {
+                    this.handleClip(id, handler.bind(null, speed));
+                } else {
+                    this.getAllClips(handler.bind(null, speed));
                 }
             }
         },
