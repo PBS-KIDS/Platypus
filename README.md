@@ -8,12 +8,12 @@ The Platypus Engine allows rapid development of 2D orthogonal tile based games f
 Platypus uses:
 
  * The [Tiled](http://www.mapeditor.org/) map editor for level creation.
- * [SpringRoll (v1)](http://springroll.io) for application management.
+ * [SpringRoll (v2)](http://springroll.io) for application management.
  * [Pixi.js](http://www.pixijs.com/) for rendering visuals.
 
 ## Key Features
 
-* Deploy on any HTML5 platform supported by SpringRoll v1
+* Deploy on any HTML5 platform supported by SpringRoll v2
 * Multi-platform support
 * Automatic scaling
 * Touch and keyboard input
