@@ -32,9 +32,7 @@ export default (function () {
         },
         plugin = new ApplicationPlugin(),
         resizeFunction = function (game, event) {
-            if (game.currentScene) {
-                game.currentScene.triggerOnChildren('resize', event);
-            }
+            game.triggerOnChildren('resize', event);
         },
         setSpriteSheetIds = function (ss) { // Putting this here for now. May handle differently in the future. - DDD 2/2/2016
             var key = '';

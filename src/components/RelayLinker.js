@@ -85,23 +85,37 @@ export default (function () {
                 linkId: this.linkId,
                 reciprocate: false
             };
+
+            this.connected = false;
+            this.addEventListener('prepare-logic', () => {
+                if (!this.connected) {
+                    this.attemptConnection();
+                }
+                if (this.connected) {
+                    this.removeEventListener('prepare-logic');
+                }
+            });
         },
         
         events: {
-
             /**
              * Called when the object is added to its parent, on receiving this message, the component tries to link itself with objects with the same link id.
              *
              * @method 'load'
              */
             "load": function () {
-                var grandparent = this.owner.parent;
+                this.attemptConnection();
+            },
 
-                while (grandparent.parent) {
-                    grandparent = grandparent.parent;
+            /**
+             * Called when the object is added to its parent, on receiving this message, the component tries to link itself with objects with the same link id.
+             *
+             * @method 'layer-connected'
+             */
+            "layer-connected": function () {
+                if (!this.connected) {
+                    this.attemptConnection();
                 }
-                this.linkMessage.reciprocate = true;
-                grandparent.triggerOnChildren('link-entity', this.linkMessage);
             },
             
             /**
@@ -139,6 +153,21 @@ export default (function () {
         },
         
         methods: {
+            attemptConnection: function () {
+                var grandparent = this.owner.parent;
+
+                while (grandparent.parent) {
+                    if (grandparent.loadingComponents) {
+                        // Bail because we're not connected to the rest of the scene yet.
+                        return;
+                    }
+                    grandparent = grandparent.parent;
+                }
+                this.linkMessage.reciprocate = true;
+                grandparent.triggerOnChildren('link-entity', this.linkMessage);
+                this.connected = true;
+            },
+
             destroy: function () {
                 var i = 0;
                 

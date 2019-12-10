@@ -11,16 +11,20 @@ export const arrayCache = recycle.add(Array, 'Array', null, null, false, config.
  *
  * @method union
  * @param arrayTo {Array} The array into which items will be inserted.
- * @param arrayFrom {Array} The array containing items to be merged.
+ * @param ...arrayFrom {Array} The array(s) containing items to be merged.
  * @return Array
  */
-export function union (arrayTo, arrayFrom) {
-    var i = 0,
-        bL = arrayFrom.length;
-        
-    for (i = 0; i < bL; i++) {
-        if (arrayTo.indexOf(arrayFrom[i]) === -1) {
-            arrayTo.push(arrayFrom[i]);
+export function union (arrayTo, ...arrayFrom) {
+
+    for (let i = 0; i < arrayFrom.length; i++) {
+        const incoming = arrayFrom[i];
+
+        if (incoming && incoming.length) {
+            for (let j = 0; j < incoming.length; j++) {
+                if (arrayTo.indexOf(incoming[j]) === -1) {
+                    arrayTo.push(incoming[j]);
+                }
+            }
         }
     }
     

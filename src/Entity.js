@@ -18,7 +18,10 @@
       
              "x": 240
              // For example, `x` becomes `entity.x` on the new entity.
-         }
+         },
+
+         "preload": ['image.png', 'sound.{ogg,mp3}']
+         // assets that need to be loaded before this entity loads
      }
  *
  * @namespace platypus
@@ -59,8 +62,7 @@ export default (function () {
                 defaultProperties    = Data.setUp(def.properties),
                 instance             = Data.setUp(instanceDefinition),
                 instanceProperties   = Data.setUp(instance.properties),
-                savedEvents          = arrayCache.setUp(),
-                savedMessages        = arrayCache.setUp();
+                savedEvents          = arrayCache.setUp();
 
             // Set properties of messenger on this entity.
             super();
@@ -97,12 +99,11 @@ export default (function () {
                 this.parent = parent;
             }
 
-            this.trigger = this.triggerEvent = function (event, message) {
-                savedEvents.push(event);
-                savedMessages.push(message);
+            this.trigger = this.triggerEvent = function (trigger, ...args) {
+                savedEvents.push(trigger.bind(this, ...args));
 
                 return -1; // Message has not been delivered yet.
-            };
+            }.bind(this, this.trigger);
             
             if (componentDefinitions) {
                 for (i = 0; i < componentDefinitions.length; i++) {
@@ -130,11 +131,10 @@ export default (function () {
                 // Trigger saved events that were being fired during component addition.
                 delete this.trigger;
                 delete this.triggerEvent;
-                for (i = 0; i < savedEvents.length; i++) {
-                    this.trigger(savedEvents[i], savedMessages[i]);
+                for (let i = 0; i < savedEvents.length; i++) {
+                    savedEvents[i]();
                 }
                 arrayCache.recycle(savedEvents);
-                arrayCache.recycle(savedMessages);
 
                 /**
                  * The entity triggers `load` on itself once all the properties and components have been attached, notifying the components that all their peer components are ready for messages.
@@ -313,9 +313,10 @@ export default (function () {
          * @method getAssetList
          * @param definition {Object} The definition for the Entity.
          * @param properties {Object} Properties for this instance of the Entity.
+         * @param data {Object} Layer data that affects asset list.
          * @return {Array} A list of the necessary assets to load.
          */
-        static getAssetList (def, props) {
+        static getAssetList (def, props, data) {
             var i = 0,
                 component = null,
                 arr = null,
@@ -328,15 +329,15 @@ export default (function () {
                     platypus.debug.warn('Entity "' + def.type + '": This entity is not defined.', def);
                     return assets;
                 }
-                return Entity.getAssetList(definition, def.properties);
+                return Entity.getAssetList(definition, def.properties, data);
             }
             
-            assets = arrayCache.setUp();
+            assets = union(arrayCache.setUp(), def.preload);
 
             for (i = 0; i < def.components.length; i++) {
                 component = def.components[i] && def.components[i].type && platypus.components[def.components[i].type];
                 if (component) {
-                    arr = component.getAssetList(def.components[i], def.properties, props);
+                    arr = component.getAssetList(def.components[i], def.properties, props, data);
                     union(assets, arr);
                     arrayCache.recycle(arr);
                 }
@@ -344,38 +345,6 @@ export default (function () {
             
             return assets;
         }
-        
-        /**
-         * Returns all of the assets required for this Entity. This method calls the corresponding method on all components to determine the list of assets.
-         *
-         * @method getLateAssetList
-         * @param definition {Object} The definition for the Entity.
-         * @param data {Object} Scene data that affects asset list.
-         * @return {Array} A list of the necessary assets to load.
-         */
-        static getLateAssetList (def, props, data) {
-            var i = 0,
-                component = null,
-                arr = null,
-                assets = null;
-            
-            if (def.type) {
-                return Entity.getLateAssetList(platypus.game.settings.entities[def.type], props, data);
-            }
-            
-            assets = arrayCache.setUp();
-
-            for (i = 0; i < def.components.length; i++) {
-                component = def.components[i] && def.components[i].type && platypus.components[def.components[i].type];
-                if (component) {
-                    arr = component.getLateAssetList(def.components[i], def.properties, props, data);
-                    union(assets, arr);
-                    arrayCache.recycle(arr);
-                }
-            }
-            
-            return assets;
-        };
     }
     
     return Entity;

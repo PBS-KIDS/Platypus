@@ -5,7 +5,7 @@
  */
 /* global global, navigator, window */
 
-import DataMap from './DataMap.js';
+import AssetManager from './AssetManager.js';
 import {Debugger} from 'springroll';
 import Game from './Game.js';
 import config from 'config';
@@ -241,7 +241,7 @@ export default (function () {
         olive: log.bind(null, 'log') // Backwards compatibility - need to deprecate.
     };
 
-    platypus.assetCache = DataMap.setUp();
+    platypus.assetCache = new AssetManager();
 
     /**
      * The version string for this release.

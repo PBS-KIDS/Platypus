@@ -530,14 +530,14 @@ export default (function () {
             /**
              * On receiving this message, the component commences loading the Tiled map JSON definition. Once finished, it removes itself from the entity's list of components.
              *
-             * @method 'scene-loaded'
+             * @method 'layer-loaded'
              * @param persistentData {Object} Data passed from the last scene into this one.
              * @param persistentData.level {Object} A level name or definition to load if the level is not already specified.
              * @param holds {platypus.Data} An object that handles any holds on before making the scene live.
              * @param holds.count {Number} The number of holds to wait for before triggering "scene-live"
              * @param holds.release {Function} The method to trigger to let the scene loader know that one hold has been released.
              */
-            "scene-loaded": function (persistentData, holds) {
+            "layer-loaded": function (persistentData, holds) {
                 if (!this.manuallyLoad) {
                     holds.count += 1;
                     this.loadLevel({
@@ -1270,12 +1270,12 @@ export default (function () {
             }
         },
         
-        getAssetList: function (def, props, defaultProps) {
+        getAssetList: function (def, props, defaultProps, data) {
             var ps = props || {},
                 dps = defaultProps || {},
                 ss     = def.spriteSheet || ps.spriteSheet || dps.spriteSheet,
                 images = def.images || ps.images || dps.images,
-                assets = checkLevel(def.level || ps.level || dps.level, ss);
+                assets = checkLevel(data.level || def.level || ps.level || dps.level, ss);
             
             if (ss) {
                 if (typeof ss === 'string') {
@@ -1290,18 +1290,6 @@ export default (function () {
             }
             
             return assets;
-        },
-        
-        getLateAssetList: function (def, props, defaultProps, data) {
-            var ps  = props || {},
-                dps = defaultProps || {},
-                ss  = def.spriteSheet || ps.spriteSheet || dps.spriteSheet;
-
-            if (data && data.level) {
-                return checkLevel(data.level, ss);
-            } else {
-                return arrayCache.setUp();
-            }
         }
     });
 }());

@@ -263,9 +263,6 @@ export default (function () {
         if (componentDefinition.getAssetList) {
             NewComponent.getAssetList = componentDefinition.getAssetList;
         }
-        if (componentDefinition.getLateAssetList) {
-            NewComponent.getLateAssetList = componentDefinition.getLateAssetList;
-        }
 
         return NewComponent;
     };

@@ -10,9 +10,7 @@ import createComponentClass from '../factory.js';
 
 export default (function () {
     var broadcast = function () {
-        var currentScene = platypus.game.currentScene;
-        
-        currentScene.triggerOnChildren.apply(currentScene, arguments);
+        platypus.game.triggerOnChildren.apply(platypus.game, arguments);
     };
 
     return createComponentClass({

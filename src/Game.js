@@ -12,17 +12,46 @@
 /* global document, platypus, window */
 import {Application, ScaleManager} from 'springroll';
 import {Container, Renderer, Ticker} from 'pixi.js';
+import {arrayCache, greenSlice, greenSplice, union} from './utils/array.js';
+import Data from './Data.js';
+import Entity from './Entity.js';
 import Messenger from './Messenger.js';
-import Scene from './Scene.js';
 import Sound from 'pixi-sound';
 import Storage from './Storage.js';
 import TweenJS from '@tweenjs/tween.js';
-import {arrayCache} from './utils/array.js';
 import config from 'config';
 import sayHello from './sayHello.js';
+import Async from './Async.js';
 
 export default (function () {
-    var XMLHttpRequest = window.XMLHttpRequest,
+    const XMLHttpRequest = window.XMLHttpRequest,
+        fn = /^(?:\w+:\/{2}\w+(?:\.\w+)*\/?)?(?:[\/.]*?(?:[^?]+)?\/)?(?:([^\/?]+)\.(\w+|{\w+(?:,\w+)*}))(?:\?\S*)?$/,
+        folders = {
+            png: 'images',
+            jpg: 'images',
+            jpeg: 'images',
+            ogg: 'audio',
+            mp3: 'audio',
+            m4a: 'audio',
+            wav: 'audio',
+            "{ogg,mp3}": 'audio'
+        },
+        formatAsset = function (asset) {
+            var match = asset.match(fn),
+                a = Data.setUp(
+                    'id', asset,
+                    'src', (platypus.game.options[folders[match[2].toLowerCase()]] || '') + asset
+                );
+            
+            //TODO: Make this behavior less opaque.
+            if (match) {
+                a.id = match[1];
+            } else {
+                platypus.debug.warn('Layer: A listed asset should provide the entire file path.');
+            }
+            
+            return a;
+        },
         getJSON = function (path, callback) {
             var xhr = new XMLHttpRequest();
             
@@ -112,47 +141,6 @@ export default (function () {
             
             callback(obj);
         },
-        load = function (scene, data) {
-            var id = '',
-                sceneInstance = null;
-            
-            if (!scene) {
-                platypus.debug.warn('Game: A scene id or scene definition must be provided to load a scene.');
-                return;
-            } else if (typeof scene === 'string') {
-                if (!this.scenes[scene]) {
-                    platypus.debug.warn('Game: A scene with the id "' + scene + '" has not been defined in the game settings.');
-                    return;
-                }
-                this.scenes[scene].data = data; //sets data to send to next scene.
-                id = scene;
-            } else {
-                id = scene.id = scene.id || "new-scene";
-                sceneInstance = new Scene(new Container(), scene);
-                sceneInstance.data = data;
-                this.scenes[id] = sceneInstance;
-                this.stage.addChild(sceneInstance.panel);
-            }
-
-            if (this.isTransitioning) {
-                return;
-            }
-
-            this.outgoingScene = this.currentScene;
-            this.incomingScene = this.scenes[id];
-
-            if (!this.outgoingScene) {
-                this.incomingScene.trigger('load-scene', () => {
-                    this.incomingScene.trigger('show-scene');
-                });
-            } else {
-                this.outgoingScene.trigger('exit-scene', () => {
-                    this.incomingScene.trigger('load-scene', () => {
-                        this.incomingScene.trigger('show-scene');
-                    });
-                });
-            }
-        },
         setUpFPS = function (ticker, canvas) {
             var framerate = document.createElement("div"),
                 framerateTimer = 0;
@@ -176,14 +164,10 @@ export default (function () {
         constructor (definition, options, onFinishedLoading) {
             var displayOptions = options.display || {},
                 load = function (displayOptions, settings) {
-                    var id = '',
-                        scene  = '',
-                        scenes = {},
-                        ticker = Ticker.shared;
+                    var ticker = Ticker.shared;
                         
                     platypus.game = this; //Make this instance the only Game instance.
                     
-                    this.currentScene = null;
                     this.settings = settings;
                     this.stage = new Container();
                     this.renderer = new Renderer({
@@ -208,15 +192,6 @@ export default (function () {
                         renderer.render(this.stage); // to prevent flickering from canvas adjustment.
                     });
 
-                    // Create Game Scenes.
-                    for (scene in settings.scenes) {
-                        if (settings.scenes.hasOwnProperty(scene)) {
-                            id = settings.scenes[scene].id = settings.scenes[scene].id || scene;
-                            scenes[id] = new Scene(new Container(), settings.scenes[scene]);
-                        }
-                    }
-                    this.scenes = scenes;
-                    
                     if (onFinishedLoading) {
                         onFinishedLoading(this);
                     }
@@ -352,6 +327,11 @@ export default (function () {
                 return springroll;
             }.bind(this))();
 
+            this.layers = arrayCache.setUp();
+            this.sceneLayers = arrayCache.setUp();
+            this.loading = arrayCache.setUp();
+            this.loadingQueue = arrayCache.setUp();
+
             if (typeof definition === 'string') {
                 loadJSONLinks(definition, load.bind(this, displayOptions));
             } else {
@@ -368,8 +348,18 @@ export default (function () {
         * @param deltaTime {number} The time elapsed since the last tick.
         **/
         tick (ticker, tickMessage, deltaTime) {
+            const loading = this.loading;
+
             tickMessage.delta = tickMessage.deltaMS = ticker.deltaMS;
             tickMessage.deltaTime = deltaTime;
+
+            // If layers need to be loaded, load them!
+            if (loading.length) {
+                for (let i = 0; i < loading.length; i++) {
+                    loading[i]();
+                }
+                loading.length = 0;
+            }
 
             TweenJS.update();
             this.triggerOnChildren('tick', tickMessage);
@@ -377,58 +367,325 @@ export default (function () {
         }
 
         /**
-        * This method triggers an event on the scene if there is a current scene.
-        *
-        * @method triggerEventOnChildren
-        **/
+         * This method is used by external objects to trigger messages on the layers as well as internal entities broadcasting messages across the scope of the scene.
+         *
+         * @method triggerOnChildren
+         * @param {String} eventId This is the message to process.
+         * @param {*} event This is a message object or other value to pass along to component functions.
+         **/
         triggerOnChildren (...args) {
-            if (this.currentScene) {
-                this.currentScene.triggerOnChildren(...args);
+            const layers = this.layers;
+
+            for (let i = 0; i < layers.length; i++) {
+                layers[i].trigger(...args);
             }
         }
         
         /**
-        * Loads a scene.
-        *
-        * @method loadScene
-        * @param sceneId {String} The scene to load.
-        * @param transition="instant" {String} What type of transition to make. Currently there are: 'fade-to-black', 'crossfade', and 'instant'.
-        * @param data {Object} A list of key/value pairs describing options or settings for the loading scene.
-        * @param preloading=false {boolean} Whether the scene should appear immediately or just be loaded and not shown.
+         * Loads one or more layers.
+         *
+         * If one layer is specified, it will complete loading if no other layers are already loading. If other layers are presently loading, it will complete as soon as other layers are complete.
+         *
+         * If an array of layers is specified, all layers must finish loading before any receive a completion event.
+         *
+         * @method load
+         * @param layerId {Array|String} The layer(s) to load.
+         * @param data {Object} A list of key/value pairs describing options or settings for the loading scene.
+         * @param isScene {Boolean} Whether the layers from a previous scene should be replaced by these layers.
+         * @param progressIdOrFunction {String|Function} Whether to report progress. A string sets the id of progress events whereas a function is called directly with progress.
         **/
-        loadScene (scene, data) {
-            // Delay load so it doesn't end a scene mid-tick.
-            window.setTimeout(load.bind(this, scene, data), 1);
-        }
+        load (layerId, data, isScene, progressIdOrFunction) {
+            this.loadingQueue.push(layerId);
+            // Delay load so it doesn't begin a scene mid-tick.
+            this.loading.push(() => {
+                const
+                    layers = Array.isArray(layerId) ? greenSlice(layerId) : arrayCache.setUp(layerId),
+                    assets = arrayCache.setUp(),
+                    properties = arrayCache.setUp(),
+                    loader = arrayCache.setUp((callback) => {
+                        const
+                            queue = this.loadingQueue,
+                            index = queue.indexOf(layerId);
+
+                        // Make sure previous layers have already gone live.
+                        if (index === 0) {
+                            queue.shift();
+                            callback();
+                            while (typeof queue[0] === 'function') {
+                                const prevCallback = queue[0];
+                                queue.shift();
+                                prevCallback();
+                            }
+                        } else { // Not the next in line, so we'll handle this later. (ie bracket above on another group of layers completion)
+                            queue[index] = callback;
+                        }
+                    }),
+                    getDefinition = (layer) => {
+                        const id = layer ? layer.type || layer : null;
+
+                        let layerDefinition = null;
+                        
+                        if (!id) {
+                            platypus.debug.warn('Game: A layer id or layer definition must be provided to load a layer.');
+                            return null;
+                        } else if (typeof id === 'string') {
+                            if (!this.settings.entities[id]) {
+                                platypus.debug.warn('Game: A layer with the id "' + id + '" has not been defined in the game settings.');
+                                return null;
+                            }
+                            layerDefinition = this.settings.entities[id];
+                        } else {
+                            layerDefinition = layer;
+                        }
+
+                        return layerDefinition;
+                    },
+                    loadAssets = function (layerDefinitions, properties, data, assetLists, progressCallback, completeCallback) {
+                        const assets = arrayCache.setUp();
         
-        /**
-        * This method will return the first entity it finds with a matching id.
-        *
-        * @method getEntityById
-        * @param {string} id The entity id to find.
-        * @return {platypus.Entity} Returns the entity that matches the specified entity id.
-        **/
-        getEntityById (id) {
-            if (this.currentScene) {
-                return this.currentScene.getEntityById(id);
-            } else {
-                return null;
-            }
+                        for (let i = 0; i < layerDefinitions.length; i++) {
+                            const
+                                props = Data.setUp(properties[i]),
+                                arr = assetLists[i] = Entity.getAssetList(layerDefinitions[i], props, data);
+
+                            for (let j = 0; j < arr.length; j++) {
+                                arr[j] = formatAsset(arr[j]);
+                                assets.push(arr[j]); // We don't union so that we can remove individual layers as needed and their asset dependencies.
+                            }
+                            props.recycle();
+                        }
+
+                        platypus.assetCache.load(assets, (ratio) => {
+                            if (progressCallback) {
+                                progressCallback(ratio);
+                            }
+                        }, completeCallback);
+                    },
+                    loadLayer = function (layers, assetLists, index, layerDefinition, properties, data, completeCallback) {
+                        const props = Data.setUp(properties);
+        
+                        props.stage = this.stage;
+                        props.parent = this;
+
+                        if (layerDefinition) { // Load layer
+                            const
+                                holds = Data.setUp('count', 1, 'release', () => {
+                                    holds.count -= 1;
+                                    if (!holds.count) { // All holds have been released
+                                        holds.recycle();
+                                        
+                                        completeCallback();
+                                    }
+                                }),
+                                layer = new Entity(layerDefinition, {
+                                    properties: props
+                                }, (entity) => {
+                                    layers[index] = entity;
+                                    holds.release();
+                                });
+        
+                            layer.unloadLayer = () => {
+                                const
+                                    release = () => {
+                                        holds -= 1;
+                                        if (holds === 0) {
+                                            // Delay load so it doesn't end a layer mid-tick.
+                                            window.setTimeout(() => {
+                                                /**
+                                                 * This event is triggered on the layers once the Scene is over.
+                                                 *
+                                                 * @event 'layer-unloaded'
+                                                 */
+                                                layer.triggerEvent('layer-unloaded');
+    
+                                                platypus.debug.olive('Layer unloaded: ' + layer.id);
+                                    
+                                                greenSplice(this.layers, this.layers.indexOf(layer));
+    
+                                                layer.destroy();
+                                                platypus.assetCache.unload(assetLists[index]);
+                                                arrayCache.recycle(assetLists[index]);
+                                            }, 1);
+                                        }
+                                    };
+                                let holds = 1;
+    
+                                /**
+                                 * This event is triggered on the layer to allow children of the layer to place a hold on the closing until they're ready.
+                                 *
+                                 * @event 'unload-layer'
+                                 * @param data {Object} A list of key-value pairs of data sent into this Scene from the previous Scene.
+                                 * @param hold {Function} Calling this function places a hold; `release` must be called to release this hold and unload the layer.
+                                 * @param release {Function} Calling this function releases a previous hold.
+                                 */
+                                layer.triggerEvent('unload-layer', () => {
+                                    holds += 1;
+                                }, release);
+    
+                                platypus.debug.olive('Layer unloading: ' + layer.id);
+                                release();
+                            };
+                            
+                            /**
+                             * This event is triggered on the layers once all assets have been readied and the layer is created.
+                             *
+                             * @event 'layer-loaded'
+                             * @param data {Object} A list of key-value pairs of data sent into this Scene from the previous Scene.
+                             */
+                            layer.triggerEvent('layer-loaded', data, holds);
+                        }
+                    },
+                    progressHandler = progressIdOrFunction ? ((typeof progressIdOrFunction === 'string') ? function (progress, ratio) {
+                        progress.progress = ratio;
+                        this.triggerOnChildren('load-progress', progress);
+                    }.bind(this, Data.setUp(
+                        'id', progressIdOrFunction,
+                        'progress', 0
+                    )) : progressIdOrFunction) : null;
+
+                for (let i = 0; i < layers.length; i++) {
+                    const
+                        layer = layers[i],
+                        layerDefinition = getDefinition(layer),
+                        layerProps = (layer && layer.type && layer.properties) || null;
+
+                    loader.push(loadLayer.bind(this, layers, assets, i, layerDefinition, layerProps, data));
+                    layers[i] = layerDefinition;
+                    properties[i] = layerProps;
+                }
+
+                loadAssets(layers, properties, data, assets, progressHandler, () => {
+                    Async.setUp(loader, () => {
+                        for (let i = 0; i < layers.length; i++) {
+                            const layer = layers[i];
+
+                            this.layers.push(layer);
+
+                            if (isScene) {
+                                this.sceneLayers.push(layer);
+                            }
+
+                            platypus.debug.olive('Layer live: ' + layer.id);
+    
+                            /**
+                             * This event is triggered on each newly-live layer once it is finished loading and ready to display.
+                             *
+                             * @event 'layer-live'
+                             * @param data {Object} A list of key-value pairs of data sent into this Scene from the previous Scene.
+                             */
+                            layer.triggerEvent('layer-live', data);
+                        }
+                    });
+                });
+            });
         }
 
         /**
-        * This method will return all game entities that match the provided type.
-        *
-        * @method getEntitiesByType
-        * @param {String} type The entity type to find.
-        * @return entities {Array} Returns the entities that match the specified entity type.
-        **/
-        getEntitiesByType (type) {
-            if (this.currentScene) {
-                return this.currentScene.getEntitiesByType(type);
-            } else {
-                return arrayCache.setUp();
+         * Loads a scene.
+         *
+         * @method loadScene
+         * @param layersOrId {Array|Object|String} The list of layers, an object with a `layers` Array property, or scene id to load.
+         * @param data {Object} A list of key/value pairs describing options or settings for the loading scene.
+         **/
+        loadScene (layersOrId, data) {
+            const sceneLayers = this.sceneLayers;
+            let layers = layersOrId;
+            
+            if (typeof layers === 'string') {
+                layers = this.settings.scenes && this.settings.scenes[layers];
             }
+
+            if (!layers) {
+                platypus.debug.warn('Game: "' + layersOrId + '" is an invalid scene.');
+                return;
+            }
+
+            if (layers.layers) { // Object containing a list of layers.
+                layers = layers.layers;
+            }
+            
+            while (sceneLayers.length) {
+                this.unload(sceneLayers[0]);
+            }
+
+            this.load(layers, data, true, 'scene');
+        }
+        
+        /**
+         * Unloads a layer.
+         *
+         * @method unload
+         * @param layer {String|Object} The layer to unload.
+        **/
+        unload (layer) {
+            let layerToUnload = layer,
+                sceneIndex = 0;
+
+            if (typeof layerToUnload === 'string') {
+                for (let i = 0; i < this.layers.length; i++) {
+                    if (this.layers[i].type === layerToUnload) {
+                        layerToUnload = this.layers[i];
+                        break;
+                    }
+                }
+            }
+
+            sceneIndex = this.sceneLayers.indexOf(layerToUnload); // remove scene entry if it exists
+            if (sceneIndex) {
+                greenSplice(this.sceneLayers, sceneIndex);
+            }
+
+            layerToUnload.unloadLayer();
+        }
+        
+        /**
+         * This method will return the first entity it finds with a matching id.
+         *
+         * @method getEntityById
+         * @param {string} id The entity id to find.
+         * @return {Entity} Returns the entity that matches the specified entity id.
+         **/
+        getEntityById (id) {
+            var i = 0,
+                selection = null;
+            
+            for (i = 0; i < this.layers.length; i++) {
+                if (this.layers[i].id === id) {
+                    return this.layers[i];
+                }
+                if (this.layers[i].getEntityById) {
+                    selection = this.layers[i].getEntityById(id);
+                    if (selection) {
+                        return selection;
+                    }
+                }
+            }
+            return null;
+        }
+
+        /**
+         * This method will return all game entities that match the provided type.
+         *
+         * @method getEntitiesByType
+         * @param {String} type The entity type to find.
+         * @return entities {Array} Returns the entities that match the specified entity type.
+         **/
+        getEntitiesByType (type) {
+            var i = 0,
+                selection = null,
+                entities  = arrayCache.setUp();
+            
+            for (i = 0; i < this.layers.length; i++) {
+                if (this.layers[i].type === type) {
+                    entities.push(this.layers[i]);
+                }
+                if (this.layers[i].getEntitiesByType) {
+                    selection = this.layers[i].getEntitiesByType(type);
+                    union(entities, selection);
+                    arrayCache.recycle(selection);
+                }
+            }
+            return entities;
         }
         
         /**
@@ -437,6 +694,12 @@ export default (function () {
         * @method destroy
         **/
         destroy () {
+            const layers = this.layers;
+
+            for (let i = 0; i < layers.length; i++) {
+                layers[i].destroy();
+            }
+            layers.recycle();
         }
     }
     

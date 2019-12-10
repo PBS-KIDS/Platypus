@@ -195,15 +195,6 @@ export default (function () {
      * @return {Array} A list of the necessary assets to load.
      */
     Component.getAssetList = getAssetList;
-
-    /**
-     * This method can be overwritten to provide the list of assets this component requires. This method is invoked when the list of game scenes is created to determine assets for each scene.
-     *
-     * @method getLateAssetList
-     * @param data {Object} Scene data that affects the list of assets.
-     * @return {Array} A list of the necessary assets to load.
-     */
-    Component.getLateAssetList = getAssetList;
     
     return Component;
 }());
