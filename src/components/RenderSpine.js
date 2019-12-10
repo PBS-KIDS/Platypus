@@ -602,21 +602,23 @@ export default (function () {
         getAssetList: (function () {
             var
                 getImages = function (atlas, atlases) {
-                    var images = arrayCache.setUp(),
-                        lines = null,
-                        j = 0;
+                    const images = arrayCache.setUp();
 
                     if (atlas) {
-                        lines = atlas.split('\n');
+                        const findReturns = /\r/g;
+                        let lines = atlas.replace(findReturns, '').split('\n'),
+                            j = lines.length;
+
                         if (lines.length === 1) { // id, not an actual atlas
                             atlas = atlases[atlas];
                             if (atlas) {
-                                lines = atlas.split('\n');
+                                lines = atlas.replace(findReturns, '').split('\n');
                             } else {
                                 return images;
                             }
+                            j = lines.length;
                         }
-                        j = lines.length;
+
                         while (j--) { // Fix up relative image location paths.
                             if (lines[j].substr(lines[j].length - 4) === '.png') {
                                 images.push(lines[j]);
