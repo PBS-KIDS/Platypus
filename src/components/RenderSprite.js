@@ -459,10 +459,12 @@ export default (function () {
              *
              * @method 'play-animation'
              * @param [animation] {String} The animation to play. If not specified, this method simply unpauses the current animation.
+             * @param [loop = true] {Boolean} Whether this animation should loop.
+             * @param [restart = true] {Boolean} Whether to restart the animation if it's currently playing.
              * @since 0.9.0
              */
-            "play-animation": function (animation, restart) {
-                this.playAnimation(animation, restart);
+            "play-animation": function (animation, loop, restart) {
+                this.playAnimation(animation, loop, restart);
             }
         },
         
@@ -474,11 +476,11 @@ export default (function () {
                 container.reorder = true;
             },
             
-            playAnimation: function (animation, restart) {
+            playAnimation: function (animation, loop, restart) {
                 var sprite = this.sprite;
 
                 if (animation && sprite.has(animation)) {
-                    sprite.gotoAndPlay(animation, restart);
+                    sprite.gotoAndPlay(animation, loop, restart);
                 } else {
                     sprite.play();
                 }

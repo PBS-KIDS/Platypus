@@ -325,10 +325,11 @@ export default (function () {
     *
     * @method gotoAndPlay
     * @param animation {string} The animation to begin playing.
+    * @param [loop = true] {Boolean} Whether this animation should loop.
     * @param [restart = true] {Boolean} Whether to restart the animation if it's currently playing.
     */
-    prototype.gotoAndPlay = function (animation, restart) {
-        if ((this.currentAnimation !== animation) || (restart !== false)) {
+    prototype.gotoAndPlay = function (animation, loop = true, restart = true) {
+        if ((this.currentAnimation !== animation) || restart) {
             if (this._animation && this._animation.stop) {
                 this._animation.stop();
             }
@@ -341,6 +342,8 @@ export default (function () {
             this.removeChildren();
             this.addChild(this._animation);
         }
+
+        this._animation.loop = loop;
         
         if (this._animation.play) {
             this._animation.play();

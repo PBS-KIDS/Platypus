@@ -21,8 +21,8 @@ export default (function () {
         defaultTest = function (animation) {
             return animation;
         },
-        methodPlay = function (animation, restart) {
-            this.component.playAnimation(animation, restart);
+        methodPlay = function (animation, loop, restart) {
+            this.component.playAnimation(animation, loop, restart);
         },
         methodStop = function (animation) {
             this.component.stopAnimation(animation);
@@ -33,15 +33,16 @@ export default (function () {
             }
             return false;
         },
-        triggerPlay = function (animation, restart) {
+        triggerPlay = function (animation, loop, restart) {
             /**
              * On entering a new animation-mapped state, this component triggers this event to play an animation.
              *
              * @event 'play-animation'
              * @param animation {String} Describes the animation to play.
+             * @param loop {Boolean} Whether to loop a playing animation.
              * @param restart {Boolean} Whether to restart a playing animation.
              */
-            this.owner.triggerEvent('play-animation', animation, restart);
+            this.owner.triggerEvent('play-animation', animation, loop, restart);
         },
         triggerStop = function (animation) {
             /**
@@ -95,7 +96,6 @@ export default (function () {
              * @property component
              * @type Component
              * @default null
-             * @since 0.9.2
              */
             component: null,
 
@@ -114,27 +114,36 @@ export default (function () {
              * @property restart
              * @type Boolean
              * @default true
-             * @since 0.9.2
              */
-            restart: true
+            restart: true,
+
+            /**
+             * Whether to loop a playing animation on event.
+             *
+             * @property loop
+             * @type Boolean
+             * @default false
+             */
+            loop: false
         },
 
         initialize: (function () {
             const
-                trigger = function (animation, restart) {
+                trigger = function (animation, loop, restart) {
                     /**
                      * On receiving an animation-mapped event, this component triggers this event to play an animation.
                      *
                      * @event 'play-animation'
                      * @param animation {String} Describes the animation to play.
+                     * @param loop {Boolean} Whether to loop a playing animation.
                      * @param restart {Boolean} Whether to restart a playing animation.
                      */
                     this.override = animation;
-                    this.owner.triggerEvent('play-animation', animation, restart);
+                    this.owner.triggerEvent('play-animation', animation, loop, restart);
                 },
-                method = function (animation, restart) {
+                method = function (animation, loop, restart) {
                     this.override = animation;
-                    this.playAnimation(animation, restart);
+                    this.playAnimation(animation, loop, restart);
                 };
 
             return function () {
@@ -148,9 +157,9 @@ export default (function () {
                     for (const animation in events) {
                         if (events.hasOwnProperty(animation)) {
                             if (this.component) {
-                                this.addEventListener(animation, method.bind(this.component, events[animation], this.restart));
+                                this.addEventListener(animation, method.bind(this.component, events[animation], this.loop, this.restart));
                             } else {
-                                this.addEventListener(animation, trigger.bind(this, events[animation], this.restart));
+                                this.addEventListener(animation, trigger.bind(this, events[animation], this.loop, this.restart));
                             }
                         }
                     }

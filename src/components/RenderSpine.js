@@ -518,10 +518,11 @@ export default (function () {
              *
              * @method 'play-animation'
              * @param [animation] {String} The animation to play. If not specified, this method simply unpauses the current animation.
+             * @param [loop] {String} Whether the played animation should be looped. Loops by default.
              * @since 0.9.0
              */
-            "play-animation": function (animation) {
-                this.playAnimation(animation);
+            "play-animation": function (animation, loop) {
+                this.playAnimation(animation, loop);
             }
         },
 
