@@ -22,14 +22,6 @@ import recycle from 'recycle';
 export default (function () {
     var EDGE_BLEED = 1,
         EDGES_BLEED = EDGE_BLEED * 2,
-        clearRenderTexture = function (renderer, renderTexture, clearColor) { // This is pulled from https://github.com/pixijs/pixi.js/pull/3647 and should be in a future build of PIXI
-            var baseTexture = renderTexture.baseTexture,
-                renderTarget = baseTexture._glRenderTargets[renderer.CONTEXT_UID];
-                
-            if (renderTarget) {
-                renderTarget.clear(clearColor);
-            }
-        },
         doNothing = function () {
             return null;
         },
@@ -83,12 +75,12 @@ export default (function () {
 
         if (!instance) {
             template = this.instances[0];
-            instance = this.instances[this.index] = new Sprite(template.texture);
+            instance = this.instances[this.index] = new Sprite(template._animation.texture);
 
             // Copy properties
             instance.scale    = template.scale;
             instance.rotation = template.rotation;
-            instance.anchor   = template.anchor;
+            instance.anchor   = template.anchor || template._animation.anchor;
         }
 
         this.index += 1;
@@ -878,7 +870,7 @@ export default (function () {
                     src.addChild(oldCache); // To copy last rendering over.
                 }
 
-                clearRenderTexture(renderer, dest);
+                //clearRenderTexture(renderer, dest);
                 src.x = -bounds.left * this.tileWidth;
                 src.y = -bounds.top * this.tileHeight;
                 renderer.render(wrapper, dest);
@@ -894,7 +886,7 @@ export default (function () {
                 border.lineStyle(1, 0x000000);
                 border.drawRect(0.5, 0.5, this.cacheClipWidth + 1, this.cacheClipHeight + 1);
 
-                clearRenderTexture(renderer, dest);
+                //clearRenderTexture(renderer, dest);
 
                 // There is probably a better way to do this. Currently for the extrusion, everything is rendered once offset in the n, s, e, w directions and then once in the middle to create the effect.
                 wrapper.mask = border;

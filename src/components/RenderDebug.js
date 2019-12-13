@@ -9,6 +9,7 @@
 import {Graphics} from 'pixi.js';
 import RenderContainer from './RenderContainer.js';
 import {arrayCache} from '../utils/array.js';
+import config from 'config';
 import createComponentClass from '../factory.js';
 
 export default (function () {
@@ -123,6 +124,10 @@ export default (function () {
             this.collisionColor = standardizeColor(this.collisionColor);
             this.groupColor = standardizeColor(this.groupColor);
             this.renderColor = standardizeColor(this.renderColor);
+
+            if (config.dev && !this.owner.container) {
+                this.owner.addComponent(new RenderContainer(this.owner, null));
+            }
         },
         
         events: {// These are messages that this component listens for
@@ -133,11 +138,9 @@ export default (function () {
              * @since 0.11.3
              */
             "load": function () {
-                if (!platypus.game.settings.debug) {
+                if (!config.dev) {
                     this.owner.removeComponent(this);
                     return;
-                } else if (!this.owner.container) {
-                    this.owner.addComponent(new RenderContainer(this.owner, null));
                 }
             },
 

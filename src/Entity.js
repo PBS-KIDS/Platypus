@@ -327,7 +327,7 @@ export default (function () {
                 definition = platypus.game.settings.entities[def.type];
                 if (!definition) {
                     platypus.debug.warn('Entity "' + def.type + '": This entity is not defined.', def);
-                    return assets;
+                    return arrayCache.setUp();
                 }
                 return Entity.getAssetList(definition, def.properties, data);
             }

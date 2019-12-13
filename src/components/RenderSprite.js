@@ -470,7 +470,7 @@ export default (function () {
         
         methods: {
             addToContainer: function () {
-                var container = this.owner.container;
+                const container = this.owner.container;
 
                 container.addChild(this.sprite);
                 container.reorder = true;

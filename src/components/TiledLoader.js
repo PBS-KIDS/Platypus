@@ -36,13 +36,15 @@
  * @class TiledLoader
  * @uses platypus.Component
  */
-/* global atob, pako, platypus */
+/* global atob, platypus */
 import {arrayCache, greenSlice, union} from '../utils/array.js';
 import AABB from '../AABB.js';
 import Data from '../Data.js';
+import DataMap from '../DataMap.js';
 import Entity from '../Entity.js';
 import Vector from '../Vector.js';
 import createComponentClass from '../factory.js';
+import {inflate} from 'pako';
 
 export default (function () {
     var FILENAME_TO_ID = /^(?:(\w+:)\/{2}(\w+(?:\.\w+)*\/?))?([\/.]*?(?:[^?]+)?\/)?(?:(([^\/?]+)\.(\w+))|([^\/?]+))(?:\?((?:(?:[^&]*?[\/=])?(?:((?:(?:[^\/?&=]+)\.(\w+)))\S*?)|\S+))?)?$/,
@@ -64,7 +66,7 @@ export default (function () {
                     step1 = atob(data.replace(/\\/g, ''));
                     
                 if (compression === 'zlib') {
-                    step1 = pako.inflate(step1); //TODO: Need to fix this for sr2
+                    step1 = inflate(step1);
                     while (index <= step1.length) {
                         arr.push(decodeArray(step1, index - 4));
                         index += 4;
@@ -79,6 +81,13 @@ export default (function () {
                 return arr;
             };
         }()),
+        decodeLayer = function (layer) {
+            if (layer.encoding === 'base64') {
+                layer.data = decodeBase64(layer.data, layer.compression);
+                layer.encoding = 'csv'; // So we won't have to decode again.
+            }
+            return layer;
+        },
         getImageId = function (path) {
             var result = path.match(FILENAME_TO_ID);
 
@@ -194,6 +203,21 @@ export default (function () {
             }
             return resp;
         },
+        createTilesetObjectGroupReference = function (reference, tilesets) {
+            for (let i = 0; i < tilesets.length; i++) {
+                const
+                    tileset = tilesets[i],
+                    tiles = tileset.tiles;
+                
+                if (tiles) {
+                    for (let j = 0; j < tiles.length; j++) {
+                        const tile = tiles[j];
+
+                        reference.set(tile.id + tileset.firstgid, tile);
+                    }
+                }
+            }
+        },
         getEntityData = function (obj, tilesets) {
             var x = 0,
                 gid = obj.gid || -1,
@@ -213,41 +237,28 @@ export default (function () {
                 gid = data.gid = transform.id;
             }
             
-            for (x = 0; x < tilesets.length; x++) {
-                if (tilesets[x].firstgid > gid) {
-                    break;
-                } else {
-                    tileset = tilesets[x];
+            if (tilesets) {
+                for (x = 0; x < tilesets.length; x++) {
+                    if (tilesets[x].firstgid > gid) {
+                        break;
+                    } else {
+                        tileset = tilesets[x];
+                    }
                 }
-            }
-            
-            if (tileset) {
-                entityTilesetIndex = gid - tileset.firstgid;
-                if (tileset.tileproperties && tileset.tileproperties[entityTilesetIndex]) {
-                    props = tileset.tileproperties[entityTilesetIndex];
-                }
-                if (tileset.tiles && tileset.tiles[entityTilesetIndex]) {
-                    data.type = tileset.tiles[entityTilesetIndex].type || '';
+                
+                if (tileset) {
+                    entityTilesetIndex = gid - tileset.firstgid;
+                    if (tileset.tileproperties && tileset.tileproperties[entityTilesetIndex]) {
+                        props = tileset.tileproperties[entityTilesetIndex];
+                    }
+                    if (tileset.tiles && tileset.tiles[entityTilesetIndex]) {
+                        data.type = tileset.tiles[entityTilesetIndex].type || '';
+                    }
                 }
             }
 
             // Check Tiled data to find this object's type
             data.type = obj.type || data.type;
-            // Deprecating the following methods in v0.11 due to better "type" property support in Tiled 1.0.0
-            if (data.type === '') {
-                if (obj.name) {
-                    data.type = obj.name;
-                    platypus.debug.warn('Component TiledLoader (loading "' + data.type + '"): Defining the entity type using the "name" property has been deprecated. Define the type using the object\'s "type" property in Tiled instead.');
-                } else if (props) {
-                    if (props.entity) {
-                        data.type = props.entity;
-                        platypus.debug.warn('Component TiledLoader (loading "' + data.type + '"): Defining the entity type using the "entity" property in the object properties has been deprecated. Define the type using the object\'s "type" property in Tiled instead.');
-                    } else if (props.type) {
-                        data.type = props.type;
-                        platypus.debug.warn('Component TiledLoader (loading "' + data.type + '"): Defining the entity type in the object properties has been deprecated. Define the type using the object\'s "type" property in Tiled instead.');
-                    }
-                }
-            }
 
             if (!data.type) { // undefined entity
                 return null;
@@ -310,14 +321,26 @@ export default (function () {
             return value;
         },
         checkLevel = function (level, ss) {
+            const
+                addObjectGroupAssets = (assets, objectGroup, tilesets) => {
+                    const objects = objectGroup.objects;
+
+                    for (let i = 0; i < objects.length; i++) {
+                        const entity = getEntityData(objects[i], tilesets);
+                        if (entity) {
+                            const entityAssets = Entity.getAssetList(entity);
+                            union(assets, entityAssets);
+                            arrayCache.recycle(entityAssets);
+                        }
+                    }
+                };
+
             var i = 0,
-                j = 0,
                 tilesets = arrayCache.setUp(),
                 arr = null,
                 assets = arrayCache.setUp(),
                 data = null,
-                entity = null,
-                entityAssets = null;
+                entity = null;
 
             if (typeof level === 'string') {
                 level = platypus.game.settings.levels[level];
@@ -332,18 +355,37 @@ export default (function () {
                     union(assets, level.assets);
                 } else if (level.layers) {
                     for (i = 0; i < level.layers.length; i++) {
-                        if (level.layers[i].type === 'objectgroup') {
-                            for (j = 0; j < level.layers[i].objects.length; j++) {
-                                entity = getEntityData(level.layers[i].objects[j], level.tilesets);
-                                if (entity) {
-                                    entityAssets = Entity.getAssetList(entity);
-                                    union(assets, entityAssets);
-                                    arrayCache.recycle(entityAssets);
+                        const layer = level.layers[i];
+
+                        if (layer.type === 'objectgroup') {
+                            addObjectGroupAssets(assets, layer, level.tilesets);
+                        } else if (layer.type === 'imagelayer') {
+                            union(assets, [layer.image]);
+                        } else {
+                            const
+                                tiles = arrayCache.setUp();
+
+                            // must decode first so we can check for tiles' objects
+                            decodeLayer(layer);
+
+                            // Check for relevant objectgroups in tileset
+                            union(tiles, layer.data); // merge used tiles into one-off list
+                            for (let j = 0; j < tiles.length; j++) {
+                                const id = maskId & tiles[j];
+                                for (let k = 0; k < level.tilesets.length; k++) {
+                                    const tiles = level.tilesets[k].tiles;
+                                    if (tiles) {
+                                        for (let l = 0; l < tiles.length; l++) {
+                                            const tile = tiles[l];
+                                            if ((tile.id === id) && tile.objectgroup) {
+                                                addObjectGroupAssets(assets, tile.objectgroup);
+                                            }
+                                        }
+                                    }
                                 }
                             }
-                        } else if (level.layers[i].type === 'imagelayer') {
-                            union(assets, [level.layers[i].image]);
-                        } else {
+
+                            // Check for custom layer entity
                             entity = getProperty(level.layers[i].properties, 'entity');
                             if (entity) {
                                 data = Data.setUp('type', entity);
@@ -562,7 +604,7 @@ export default (function () {
         },
 
         methods: {
-            createLayer: function (entityKind, layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, images, combineRenderLayer, progress) {
+            createLayer: function (entityKind, layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, tilesetObjectGroups, images, combineRenderLayer, progress) {
                 var lastSet = null,
                     props = null,
                     width = layer.width,
@@ -585,12 +627,9 @@ export default (function () {
                         animations: importAnimation
                     },
                     renderTiles = false,
-                    tileset = null,
-                    jumpthroughs = null,
                     index = 0,
                     x = 0,
                     y = 0,
-                    prop = "",
                     data = null,
                     createFrames = function (frames, index, tileset, modifier) {
                         var margin = tileset.margin || 0,
@@ -631,7 +670,7 @@ export default (function () {
                         }
                     };
                 
-                this.decodeLayer(layer);
+                decodeLayer(layer);
                 data = layer.data;
                 mapOffsetX += layer.offsetx || 0;
                 mapOffsetY += layer.offsety || 0;
@@ -671,22 +710,6 @@ export default (function () {
                     mergeAndFormatProperties(layer.properties, tileDefinition.properties);
                 }
 
-                if (entityKind === 'collision-layer') {
-                    jumpthroughs = [];
-                    for (x = 0; x < tilesets.length; x++) {
-                        tileset = tilesets[x];
-                        if (tileset.tileproperties) {
-                            for (prop in tileset.tileproperties) {
-                                if (tileset.tileproperties.hasOwnProperty(prop)) {
-                                    if (tileset.tileproperties[prop].jumpThrough) {
-                                        jumpthroughs.push(tileset.firstgid + parseInt(prop, 10));
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                
                 tileDefinition.properties.width = tWidth * width;
                 tileDefinition.properties.height = tHeight * height;
                 tileDefinition.properties.columns = width;
@@ -718,10 +741,15 @@ export default (function () {
                         index = +data[x + y * width] - 1; // -1 from original src to make it zero-based.
                         importRender[x][y] = 'tile' + index;
                         index += 1; // So collision map matches original src indexes. Render (above) should probably be changed at some point as well. DDD 3/30/2016
-                        if (jumpthroughs && jumpthroughs.length && (jumpthroughs[0] === (maskId & index))) {
-                            index = maskJumpThrough | index;
-                        }
                         importCollision[x][y] = index;
+
+                        if (tilesetObjectGroups) {
+                            const transform = entityTransformCheck(index);
+
+                            if (tilesetObjectGroups.has(transform.id)) {
+                                this.setUpEntities(tilesetObjectGroups.get(transform.id).objectgroup, mapOffsetX + tileWidth * x, mapOffsetY + tileHeight * y, tileWidth, tileHeight, tilesets, transform, progress);
+                            }
+                        }
                     }
                 }
                 for (x = 0; x < tileDefinition.components.length; x++) {
@@ -844,8 +872,7 @@ export default (function () {
             },
             
             loadLevel: function (levelData, callback) {
-                var actionLayerCollides = true,
-                    asset = null,
+                var asset = null,
                     layers = null,
                     level = null,
                     height = 0,
@@ -856,6 +883,7 @@ export default (function () {
                     layerDefinition = null,
                     tileset = null,
                     tilesets = null,
+                    tilesetObjectGroups = DataMap.setUp(),
                     tileWidth = 0,
                     tileHeight = 0,
                     progress = Data.setUp('count', 0, 'progress', 0, 'total', 0),
@@ -873,6 +901,8 @@ export default (function () {
                 tilesets = importTilesetData(level.tilesets);
                 tileWidth = level.tilewidth;
                 tileHeight = level.tileheight;
+
+                createTilesetObjectGroupReference(tilesetObjectGroups, tilesets);
 
                 if (level.properties) {
                     mergeAndFormatProperties(level.properties, this.owner);
@@ -915,8 +945,6 @@ export default (function () {
                 while (i--) { // Preparatory pass through layers.
                     if (layers[i].type === 'objectgroup') {
                         progress.total += layers[i].objects.length;
-                    } else if (actionLayerCollides && ((layers[i].name === 'collision') || (getProperty(layers[i].properties, 'entity') === 'collision-layer'))) {
-                        actionLayerCollides = false;
                     }
                 }
 
@@ -927,21 +955,23 @@ export default (function () {
                     switch (layerDefinition.type) {
                     case 'imagelayer':
                         layer = this.convertImageLayer(layerDefinition);
-                        layer = this.createLayer('image-layer', layer, x, y, layer.tilewidth, layer.tileheight, [layer.tileset], images, layer, progress);
+                        layer = this.createLayer('image-layer', layer, x, y, layer.tilewidth, layer.tileheight, [layer.tileset], null, images, layer, progress);
                         break;
                     case 'objectgroup':
-                        this.setUpEntities(layerDefinition, x, y, tileWidth, tileHeight, tilesets, progress);
+                        this.setUpEntities(layerDefinition, x, y, tileWidth, tileHeight, tilesets, null, progress);
                         layer = null;
                         this.updateLoadingProgress(progress);
                         break;
                     case 'tilelayer':
-                        layer = this.setupLayer(layerDefinition, actionLayerCollides, layer, x, y, tileWidth, tileHeight, tilesets, images, progress);
+                        layer = this.setupLayer(layerDefinition, layer, x, y, tileWidth, tileHeight, tilesets, tilesetObjectGroups, images, progress);
                         break;
                     default:
                         platypus.debug.warn('Component TiledLoader: Platypus does not support Tiled layers of type "' + layerDefinition.type + '". This layer will not be loaded.');
                         this.updateLoadingProgress(progress);
                     }
                 }
+
+                tilesetObjectGroups.recycle();
             },
             
             setUpEntities: (function () {
@@ -967,7 +997,7 @@ export default (function () {
                         return shape;
                     };
 
-                return function (layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, progress) {
+                return function (layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, transform, progress) {
                     var clamp = 1000,
                         widthOffset = 0,
                         heightOffset = 0,
@@ -1145,6 +1175,10 @@ export default (function () {
                                 properties.scaleX *= (entityDefProps.scaleX || 1);
                                 properties.scaleY *= (entityDefProps.scaleY || 1);
                             }
+                            if (transform) {
+                                properties.scaleX *= transform.x;
+                                properties.scaleY *= transform.y;
+                            }
                             properties.layerZ = this.layerZ;
     
                             //Setting the z value. All values are getting added to the layerZ value.
@@ -1176,52 +1210,30 @@ export default (function () {
                 };
             }()),
 
-            setupLayer: function (layer, layerCollides, combineRenderLayer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, images, progress) {
+            setupLayer: function (layer, combineRenderLayer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, tilesetObjectGroups, images, progress) {
                 var canCombine = false,
                     specified = getProperty(layer.properties, 'entity'),
                     entity = specified || 'render-layer', // default
                     entityDefinition = null,
                     i = 0;
                 
-                // First determine which type of entity this layer should behave as:
-                if (!specified) {
-                    if (layer.name === "collision") {
-                        entity = 'collision-layer';
-                    } else if (layer.name === "action") {
-                        if (layerCollides) {
-                            entity = 'tile-layer';
-                        } else {
-                            entity = 'render-layer';
+                // Need to check whether the entity can be combined for optimization. This combining of tile layers might be a nice addition to the compilation tools so it's not happening here.
+                entityDefinition = platypus.game.settings.entities[entity];
+                if (entityDefinition) {
+                    i = entityDefinition.components.length;
+                    while (i--) {
+                        if (entityDefinition.components[i].type === "RenderTiles") {
+                            canCombine = true;
+                            break;
                         }
                     }
                 }
 
-                if (entity === 'tile-layer' || (this.showCollisionTiles && platypus.game.settings.debug)) {
-                    progress.count += 1; // to compensate for creating 2 layers. The "tile-layer" option should probably be deprecated as soon as support for Tiled's tile collision is added.
-                    this.createLayer('collision-layer', layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, images, combineRenderLayer, progress);
-                    return this.createLayer('render-layer', layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, images, combineRenderLayer, progress);
-                } else if (entity === 'collision-layer') {
-                    this.createLayer('collision-layer', layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, images, combineRenderLayer, progress);
-                    return null;
+                if (canCombine) {
+                    return this.createLayer(entity, layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, tilesetObjectGroups, images, combineRenderLayer, progress);
                 } else {
-                    // Need to check whether the entity can be combined for optimization. This combining of tile layers might be a nice addition to the compilation tools so it's not happening here.
-                    entityDefinition = platypus.game.settings.entities[entity];
-                    if (entityDefinition) {
-                        i = entityDefinition.components.length;
-                        while (i--) {
-                            if (entityDefinition.components[i].type === "RenderTiles") {
-                                canCombine = true;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (canCombine) {
-                        return this.createLayer(entity, layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, images, combineRenderLayer, progress);
-                    } else {
-                        this.createLayer(entity, layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, images, combineRenderLayer, progress);
-                        return null;
-                    }
+                    this.createLayer(entity, layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, tilesetObjectGroups, images, combineRenderLayer, progress);
+                    return null;
                 }
             },
             
@@ -1251,31 +1263,12 @@ export default (function () {
             }
         },
         
-        publicMethods: {
-            /**
-             * This method decodes a Tiled layer and sets its data to CSV format.
-             *
-             * @method decodeLayer
-             * @param layer {Object} An object describing a Tiled JSON-exported layer.
-             * @return {Object} The same object provided, but with the data field updated.
-             * @chainable
-             * @since 0.7.1
-             */
-            decodeLayer: function (layer) {
-                if (layer.encoding === 'base64') {
-                    layer.data = decodeBase64(layer.data, layer.compression);
-                    layer.encoding = 'csv'; // So we won't have to decode again.
-                }
-                return layer;
-            }
-        },
-        
         getAssetList: function (def, props, defaultProps, data) {
             var ps = props || {},
                 dps = defaultProps || {},
                 ss     = def.spriteSheet || ps.spriteSheet || dps.spriteSheet,
                 images = def.images || ps.images || dps.images,
-                assets = checkLevel(data.level || def.level || ps.level || dps.level, ss);
+                assets = checkLevel((data && data.level) || def.level || ps.level || dps.level, ss);
             
             if (ss) {
                 if (typeof ss === 'string') {
