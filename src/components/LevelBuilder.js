@@ -7,12 +7,49 @@
  * @class LevelBuilder
  * @uses platypus.Component
  */
-/* global platypus */
+/* global atob, platypus */
 import {arrayCache, greenSlice, greenSplice, union} from '../utils/array.js';
 import createComponentClass from '../factory.js';
+import {inflate} from 'pako';
 
 export default (function () {
-    var
+    const
+        decodeBase64 = (function () {
+            var decodeString = function (str, index) {
+                    return (((str.charCodeAt(index)) + (str.charCodeAt(index + 1) << 8) + (str.charCodeAt(index + 2) << 16) + (str.charCodeAt(index + 3) << 24 )) >>> 0);
+                },
+                decodeArray = function (arr, index) {
+                    return ((arr[index] + (arr[index + 1] << 8) + (arr[index + 2] << 16) + (arr[index + 3] << 24 )) >>> 0);
+                };
+            
+            return function (data, compression) {
+                var index = 4,
+                    arr   = [],
+                    step1 = atob(data.replace(/\\/g, ''));
+                    
+                if (compression === 'zlib') {
+                    step1 = inflate(step1);
+                    while (index <= step1.length) {
+                        arr.push(decodeArray(step1, index - 4));
+                        index += 4;
+                    }
+                } else {
+                    while (index <= step1.length) {
+                        arr.push(decodeString(step1, index - 4));
+                        index += 4;
+                    }
+                }
+                
+                return arr;
+            };
+        }()),
+        decodeLayer = function (layer) {
+            if (layer.encoding === 'base64') {
+                layer.data = decodeBase64(layer.data, layer.compression);
+                layer.encoding = 'csv'; // So we won't have to decode again.
+            }
+            return layer;
+        },
         mergeData = function (levelData, levelMergeAxisLength, segmentData, segmentMergeAxisLength, nonMergeAxisLength, mergeAxis) {
             var x        = 0,
                 y        = 0,
@@ -54,7 +91,7 @@ export default (function () {
             }
             return list;
         },
-        mergeSegment  = function (level, segment, mergeAxis, decoder) {
+        mergeSegment  = function (level, segment, mergeAxis) {
             var i = 0,
                 j = '';
 
@@ -83,7 +120,7 @@ export default (function () {
             for (i = 0; i < segment.layers.length; i++) {
                 if (!level.layers[i]) {
                     //if the level doesn't have a layer yet, we're creating it and then copying it from the segment.
-                    decoder(segment.layers[i]);
+                    decodeLayer(segment.layers[i]);
                     level.layers[i] = {};
                     for (j in segment.layers[i]) {
                         if (segment.layers[i].hasOwnProperty(j)) {
@@ -94,7 +131,7 @@ export default (function () {
                     //if the level does have a layer, we're appending the new data to it.
                     if (level.layers[i].data && segment.layers[i].data) {
                         // Make sure we're not trying to merge compressed levels.
-                        decoder(segment.layers[i]);
+                        decodeLayer(segment.layers[i]);
                         
                         if (mergeAxis === 'horizontal') {
                             level.layers[i].data = mergeData(level.layers[i].data, level.width, segment.layers[i].data, segment.width, level.height, mergeAxis);
@@ -128,7 +165,7 @@ export default (function () {
                 }
             }
         },
-        mergeLevels = function (levelSegments, decoder) {
+        mergeLevels = function (levelSegments) {
             var i = 0,
                 j = 0,
                 levelDefinitions = platypus.game.settings.levels,
@@ -156,13 +193,13 @@ export default (function () {
                 for (j = 0; j < levelSegments[i].length; j++) {
                     //Merge horizontally
                     if (typeof levelSegments[i][j] === 'string') {
-                        mergeSegment(row, levelDefinitions[levelSegments[i][j]], 'horizontal', decoder);
+                        mergeSegment(row, levelDefinitions[levelSegments[i][j]], 'horizontal');
                     } else {
-                        mergeSegment(row, levelSegments[i][j], 'horizontal', decoder);
+                        mergeSegment(row, levelSegments[i][j], 'horizontal');
                     }
                 }
                 //Then merge vertically
-                mergeSegment(level, row, 'vertical', decoder);
+                mergeSegment(level, row, 'vertical');
             }
             return level;
         };
@@ -215,12 +252,12 @@ export default (function () {
         events: {// These are messages that this component listens for
 
             /**
-             * When the scene has loaded, LevelBuilder compiles the level based on the template and pieces and sends it to the TiledLoader.
+             * When the layer has loaded, LevelBuilder compiles the level based on the template and pieces and sends it to the TiledLoader.
              *
-             * @method 'scene-loaded'
+             * @method 'layer-loaded'
              * @param persistentData {Object} The persistent data from the previous scene.
              */
-            "scene-loaded": function (persistentData) {
+            "layer-loaded": function (data) {
                 var templateRow  = null,
                     piecesToCopy = null,
                     x            = '',
@@ -228,11 +265,11 @@ export default (function () {
                     i            = 0,
                     j            = 0;
                 
-                this.levelMessage.persistentData = persistentData;
+                this.levelMessage.persistentData = data;
 
-                this.levelTemplate = persistentData.levelTemplate || this.levelTemplate;
-                this.useUniques = persistentData.useUniques || this.useUniques;
-                piecesToCopy = persistentData.levelPieces || this.levelPieces;
+                this.levelTemplate = (data && data.levelTemplate) || this.levelTemplate;
+                this.useUniques = (data && data.useUniques) || this.useUniques;
+                piecesToCopy = (data && data.levelPieces) || this.levelPieces;
                 this.levelPieces = {};
                 if (piecesToCopy) {
                     for (x in piecesToCopy) {
@@ -275,7 +312,7 @@ export default (function () {
                 }
                 
                 if (this.levelMessage.level) {
-                    this.levelMessage.level = mergeLevels(this.levelMessage.level, this.owner.decodeLayer);
+                    this.levelMessage.level = mergeLevels(this.levelMessage.level);
                     /**
                      * Dispatched when the scene has loaded and the level has been composited so TileLoader can begin loading the level.
                      *
@@ -330,7 +367,7 @@ export default (function () {
         
         publicMethods: {
             mergeLevels: function (levels) {
-                return mergeLevels(levels, this.owner.decodeLayer);
+                return mergeLevels(levels);
             }
         },
         

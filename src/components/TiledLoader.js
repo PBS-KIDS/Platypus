@@ -49,7 +49,6 @@ import {inflate} from 'pako';
 export default (function () {
     var FILENAME_TO_ID = /^(?:(\w+:)\/{2}(\w+(?:\.\w+)*\/?))?([\/.]*?(?:[^?]+)?\/)?(?:(([^\/?]+)\.(\w+))|([^\/?]+))(?:\?((?:(?:[^&]*?[\/=])?(?:((?:(?:[^\/?&=]+)\.(\w+)))\S*?)|\S+))?)?$/,
         maskId = 0x0fffffff,
-        maskJumpThrough = 0x10000000, // This is not passed in via Tiled - rather it's additional information sent to CollisionTiles.
         maskXFlip = 0x80000000,
         maskYFlip = 0x40000000,
         decodeBase64 = (function () {
