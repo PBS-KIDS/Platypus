@@ -119,12 +119,23 @@ export default (function () {
 
             for (i = 0; i < segment.layers.length; i++) {
                 if (!level.layers[i]) {
+                    const layer = level.layers[i] = {};
+
                     //if the level doesn't have a layer yet, we're creating it and then copying it from the segment.
                     decodeLayer(segment.layers[i]);
-                    level.layers[i] = {};
+                    
                     for (j in segment.layers[i]) {
                         if (segment.layers[i].hasOwnProperty(j)) {
-                            level.layers[i][j] = segment.layers[i][j];
+                            layer[j] = segment.layers[i][j];
+                        }
+                    }
+
+                    // If we're adding objects, make sure that they're offset correctly.
+                    if (layer.objects) {
+                        if (mergeAxis === 'horizontal') {
+                            layer.objects = mergeObjects([], layer.objects, level.width * level.tilewidth, mergeAxis);
+                        } else if (mergeAxis === 'vertical') {
+                            layer.objects = mergeObjects([], layer.objects, level.height * level.tileheight, mergeAxis);
                         }
                     }
                 } else if (level.layers[i].type === segment.layers[i].type) {
