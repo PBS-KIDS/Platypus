@@ -772,7 +772,6 @@ export default (function () {
                         tileDefinition.components[x].imageMap = importRender;
                     }
                 }
-                this.layerZ += this.layerIncrement;
 
                 if ((entityKind === 'render-layer') && (!this.separateTiles) && combineRenderLayer && (combineRenderLayer.tileHeight === tHeight) && (combineRenderLayer.tileWidth === tWidth) && (combineRenderLayer.columns === width) && (combineRenderLayer.rows === height)) {
                     combineRenderLayer.triggerEvent('add-tiles', renderTiles);
@@ -968,6 +967,7 @@ export default (function () {
                         platypus.debug.warn('Component TiledLoader: Platypus does not support Tiled layers of type "' + layerDefinition.type + '". This layer will not be loaded.');
                         this.updateLoadingProgress(progress);
                     }
+                    this.layerZ += this.layerIncrement;
                 }
 
                 tilesetObjectGroups.recycle();
@@ -1205,7 +1205,6 @@ export default (function () {
                             this.updateLoadingProgress(progress);
                         }
                     }
-                    this.layerZ += this.layerIncrement;
                 };
             }()),
 
