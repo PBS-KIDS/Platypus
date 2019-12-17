@@ -181,11 +181,7 @@ export default (function () {
                         backgroundColor: displayOptions.backgroundColor || 0,
                         autoResize: false
                     });
-                    this.scaleManager = new ScaleManager({
-                        width: this.canvas.width,
-                        height: this.canvas.height
-                    });
-                    this.scaleManager.enable(({width, height/*, ratio*/}) => {
+                    this.scaleManager = new ScaleManager(({width, height/*, ratio*/}) => {
                         var renderer = this.renderer;
 
                         renderer.resize(width, height);
