@@ -214,7 +214,7 @@ export default (function () {
                         if (arr && arr.length) {
                             tList = data[type];
                             if (!tList) {
-                                data[type] = arrayCache.setUp.apply(null, arr);
+                                data[type] = union(arrayCache.setUp(), arr);
                             } else {
                                 union(tList, arr);
                             }
