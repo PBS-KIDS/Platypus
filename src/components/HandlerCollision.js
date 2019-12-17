@@ -156,13 +156,9 @@ export default (function () {
             
             getAgainstGrid: function (entity, sweep, types) {
                 var aabb = this.mapDown(sweep),
-                    arr = null,
                     data = Data.setUp(),
-                    i = 0,
                     list = null,
                     thisAgainstGrid = this.againstGrid,
-                    tList = null,
-                    type = '',
                     x = 0,
                     y = 0;
                 
@@ -174,19 +170,7 @@ export default (function () {
                     for (y = aabb.top; y <= aabb.bottom; y++) {
                         list = thisAgainstGrid[combine(x, y)];
                         if (list) {
-                            i = types.length;
-                            while (i--) {
-                                type = types[i];
-                                arr = list.get(type);
-                                if (arr && arr.length) {
-                                    tList = data[type];
-                                    if (!tList) {
-                                        data[type] = union(arrayCache.setUp(), arr);
-                                    } else {
-                                        union(tList, arr);
-                                    }
-                                }
-                            }
+                            this.mergeAGCell(list, data, types);
                         }
                     }
                 }
@@ -196,33 +180,35 @@ export default (function () {
             },
             
             getEntityAgainstGrid: function (entity, types) {
-                var ag = entity.againstGrid,
-                    arr = null,
-                    data = Data.setUp(),
-                    i = ag.length,
-                    j = 0,
-                    list = null,
-                    tList = null,
-                    type = '';
+                const
+                    ag = entity.againstGrid,
+                    data = Data.setUp();
+                let i = ag.length;
 
                 while (i--) {
-                    list = ag[i];
-                    j = types.length;
-                    while (j--) {
-                        type = types[j];
-                        arr = list.get(type);
-                        if (arr && arr.length) {
-                            tList = data[type];
-                            if (!tList) {
-                                data[type] = union(arrayCache.setUp(), arr);
-                            } else {
-                                union(tList, arr);
-                            }
-                        }
-                    }
+                    this.mergeAGCell(ag[i], data, types);
                 }
                 
                 return data;
+            },
+
+            mergeAGCell: function (list, data, types) {
+                let i = types.length;
+
+                while (i--) {
+                    const
+                        type = types[i],
+                        arr = list.get(type);
+
+                    if (arr && arr.length) {
+                        const tList = data[type];
+                        if (!tList) {
+                            data[type] = union(arrayCache.setUp(), arr);
+                        } else {
+                            union(tList, arr);
+                        }
+                    }
+                }
             },
             
             removeAgainst: function (entity) {
