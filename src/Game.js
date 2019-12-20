@@ -627,7 +627,7 @@ export default (function () {
             }
 
             sceneIndex = this.sceneLayers.indexOf(layerToUnload); // remove scene entry if it exists
-            if (sceneIndex) {
+            if (sceneIndex >= 0) {
                 greenSplice(this.sceneLayers, sceneIndex);
             }
 
