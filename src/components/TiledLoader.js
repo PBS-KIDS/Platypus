@@ -212,7 +212,9 @@ export default (function () {
                     for (let j = 0; j < tiles.length; j++) {
                         const tile = tiles[j];
 
-                        reference.set(tile.id + tileset.firstgid, tile);
+                        if (tile.objectgroup) { // Could just be other information, like terrain
+                            reference.set(tile.id + tileset.firstgid, tile.objectgroup);
+                        }
                     }
                 }
             }
@@ -746,7 +748,7 @@ export default (function () {
                             const transform = entityTransformCheck(index);
 
                             if (tilesetObjectGroups.has(transform.id)) {
-                                this.setUpEntities(tilesetObjectGroups.get(transform.id).objectgroup, mapOffsetX + tileWidth * x, mapOffsetY + tileHeight * y, tileWidth, tileHeight, tilesets, transform, progress);
+                                this.setUpEntities(tilesetObjectGroups.get(transform.id), mapOffsetX + tileWidth * x, mapOffsetY + tileHeight * y, tileWidth, tileHeight, tilesets, transform, progress);
                             }
                         }
                     }

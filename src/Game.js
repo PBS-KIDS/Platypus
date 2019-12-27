@@ -13,6 +13,7 @@
 import {Application, ScaleManager} from 'springroll';
 import {Container, Renderer, Ticker} from 'pixi.js';
 import {arrayCache, greenSlice, greenSplice, union} from './utils/array.js';
+import Async from './Async.js';
 import Data from './Data.js';
 import Entity from './Entity.js';
 import Messenger from './Messenger.js';
@@ -21,7 +22,6 @@ import Storage from './Storage.js';
 import TweenJS from '@tweenjs/tween.js';
 import config from 'config';
 import sayHello from './sayHello.js';
-import Async from './Async.js';
 
 export default (function () {
     const XMLHttpRequest = window.XMLHttpRequest,
