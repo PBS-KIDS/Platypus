@@ -22,7 +22,8 @@ export default (function () {
             pan: 0,
             mute: false,
             paused: false,
-            speed: 1
+            speed: 1,
+            playthrough: false
         },
         playSound = function (soundDefinition, channel) {
             var sound      = '',
@@ -61,7 +62,8 @@ export default (function () {
                     mute: soundDefinition.mute,
                     paused: soundDefinition.paused,
                     channel: channel,
-                    speed: soundDefinition.speed
+                    speed: soundDefinition.speed,
+                    playthrough: soundDefinition.playthrough
                 };
             }
 
@@ -82,9 +84,9 @@ export default (function () {
                     "mute",      value.mute      || attributes.mute   || defaultSettings.mute,
                     "paused",    value.paused    || attributes.paused || defaultSettings.paused,
                     "channel",    value.channel    || attributes.channel || defaultSettings.channel,
-                    "speed",    (typeof value.speed !== 'undefined') ? value.speed : ((typeof attributes.speed !== 'undefined') ? attributes.speed : defaultSettings.speed)
+                    "speed",    (typeof value.speed !== 'undefined') ? value.speed : ((typeof attributes.speed !== 'undefined') ? attributes.speed : defaultSettings.speed),
+                    "playthrough", value.playthrough || attributes.playthrough || defaultSettings.playthrough
                 );
-                data.complete = completed.bind(this, data);
                 data.audio = this.player.play(sound, data);
                 if (data.pan) {
                     data.audio.filters = [
@@ -97,6 +99,10 @@ export default (function () {
                 if (data.speed) {
                     data.audio.speed = data.speed;
                 }
+                if (data.playthrough) {
+                    data.audio.playthrough = true;
+                }
+                data.audio.on('end', completed.bind(this, data));
                 
                 if (data.audio) {
                     data.audio.soundId = sound;
@@ -550,7 +556,6 @@ export default (function () {
                         while (i--) {
                             if (clips[i].soundId === audioId) {
                                 if (clips[i].playthrough || playthrough) {
-                                    clips[i].addEventListener('loop', func);
                                 } else {
                                     clips[i].stop();
                                     greenSplice(clips, i);
@@ -560,7 +565,6 @@ export default (function () {
                     } else {
                         while (i--) {
                             if (playthrough || clips[i].playthrough) {
-                                clips[i].addEventListener('loop', func);
                             } else {
                                 clips[i].stop();
                             }
