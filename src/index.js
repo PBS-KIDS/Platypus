@@ -103,7 +103,6 @@ export {default as Entity} from './Entity.js';
 export {default as Game} from './Game.js';
 export {default as Messenger} from './Messenger.js';
 export {default as PIXIAnimation} from './PIXIAnimation.js';
-export {default as Scene} from './Scene.js';
 export {default as StateMap} from './StateMap.js';
 export {default as Vector} from './Vector.js';
 

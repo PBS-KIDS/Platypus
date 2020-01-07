@@ -15,7 +15,6 @@
 		"src/Component.js",
 		"src/Messenger.js",
 		"src/Entity.js",
-		"src/Scene.js",
 		"src/Game.js",
 		"src/Vector.js",
 		"src/AABB.js",
