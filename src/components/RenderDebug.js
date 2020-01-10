@@ -12,6 +12,31 @@ import {arrayCache} from '../utils/array.js';
 import config from 'config';
 import createComponentClass from '../factory.js';
 
+const
+    collisionColors = {},
+    createCollisionColor = function (collisionType) {
+        let
+            r = collisionType.charCodeAt(0) || 0,
+            g = collisionType.charCodeAt(1) || 0,
+            b = collisionType.charCodeAt(2) || 0,
+            min = 0,
+            max = 0;
+        
+        min = Math.min(r, g, b);
+
+        r -= min;
+        g -= min;
+        b -= min;
+
+        max = Math.max(r, g, b, 1);
+            
+        r = (0xCC * r / max) >> 0;
+        g = (0xCC * g / max) >> 0;
+        b = (0xCC * b / max) >> 0;
+
+        return (r << 8) + (g << 4) + b;
+    };
+
 export default (function () {
     var createShape = function (shape, color, left, top, width, height, z, outline) {
             var newShape = new Graphics().beginFill(color, 0.1);
@@ -56,14 +81,14 @@ export default (function () {
             aabbColor: 0xff88ff,
 
             /**
-             * The color to use to highlight an entity's collision shape. For example, use `"#ffffff"` or `0xffffff` to set as white.
+             * The color to use to highlight an entity's collision shape. For example, use `"#ffffff"` or `0xffffff` to set as white. Will generate a color based on the collision type if not specified.
              *
              * @property collisionColor
              * @type Number|String
-             * @default 0xff00ff
+             * @default 0
              * @since 0.11.3
              */
-            collisionColor: 0xff00ff,
+            collisionColor: 0,
 
             /**
              * The color to use to highlight the AABB for a group of entities attached to this entity. For example, use `"#ffffff"` or `0xffffff` to set as white.
@@ -121,7 +146,7 @@ export default (function () {
             this.isOutdated = true;
 
             this.aabbColor = standardizeColor(this.aabbColor);
-            this.collisionColor = standardizeColor(this.collisionColor);
+            this.collisionColor = this.collisionColor ? standardizeColor(this.collisionColor) : 0;
             this.groupColor = standardizeColor(this.groupColor);
             this.renderColor = standardizeColor(this.renderColor);
 
@@ -177,8 +202,29 @@ export default (function () {
              * @method 'orientation-updated'
              */
             "orientation-updated": function () {
+                // We don't need to update if the entity is already flipping the art around.
+                if (this.rotate !== 'orientationMatrix') {
+                    this.isOutdated = true;
+                }
+            },
+            
+            /**
+             * On receiving this message, will update collision shapes.
+             *
+             * @method 'collide-on'
+             */
+            "collide-on": function () {
                 this.isOutdated = true;
-            }            
+            },
+            
+            /**
+             * On receiving this message, will update collision shapes.
+             *
+             * @method 'collide-off'
+             */
+            "collide-off": function () {
+                this.isOutdated = true;
+            }
         },
         
         methods: {
@@ -201,10 +247,19 @@ export default (function () {
 
                 if (owner.getAABB) {
                     for (j = 0; j < owner.collisionTypes.length; j++) {
-                        aabb   = owner.getAABB(owner.collisionTypes[j]);
+                        const
+                            collisionType = owner.collisionTypes[j];
+
+                        let collisionColor = this.collisionColor || collisionColors[collisionType];
+
+                        if (!collisionColor) {
+                            collisionColor = collisionColors[collisionType] = createCollisionColor(collisionType);
+                        }
+
+                        aabb   = owner.getAABB(collisionType);
                         width  = this.initialWidth  = aabb.width;
                         height = this.initialHeight = aabb.height;
-                        shapes = owner.getShapes(owner.collisionTypes[j]);
+                        shapes = owner.getShapes(collisionType);
                         
                         shape  = createShape('rectangle', this.aabbColor, aabb.left - owner.x, aabb.top - owner.y, width, height, z--);
                         this.shapes.push(shape);
@@ -214,7 +269,7 @@ export default (function () {
                         for (i = 0; i < shapes.length; i++) {
                             width = shapes[i].width - lineWidth;
                             height = shapes[i].height - lineWidth;
-                            shape = createShape(shapes[i].type, this.collisionColor, shapes[i].offsetX - width / 2, shapes[i].offsetY - height / 2, (shapes[i].radius ? shapes[i].radius - lineWidth : width), height, z--, lineWidth);
+                            shape = createShape(shapes[i].type, collisionColor, shapes[i].offsetX - width / 2, shapes[i].offsetY - height / 2, (shapes[i].radius ? shapes[i].radius - lineWidth : width), height, z--, lineWidth);
                             this.shapes.push(shape);
                             owner.container.addChild(shape);
                             this.addInput(shape);

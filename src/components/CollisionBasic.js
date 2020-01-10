@@ -538,6 +538,7 @@ export default (function () {
                  * @param entity {platypus.Entity} The entity this component is attached to.
                  */
                 if (!this.active && ((typeof type !== 'string') || (type === colType))) {
+                    owner.parent.triggerEvent('remove-collision-entity', owner);
                     if (colTypes.indexOf(colType) === -1) {
                         colTypes.push(colType);
                     }
