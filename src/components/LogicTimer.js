@@ -46,17 +46,23 @@ import createComponentClass from '../factory.js';
 export default (function () {
     return createComponentClass({
         id: 'LogicTimer',
-        initialize: function (definition) {
-            this.time = this.owner.time || definition.time ||  0;
-            this.prevTime = this.time;
-            this.alarmTime = this.owner.alarmTime || definition.alarmTime || 0;
-            this.isInterval = this.owner.isInterval || definition.isInterval || false;
-            this.alarmMessage =  this.owner.alarmMessage || definition.alarmMessage || '';
-            this.updateMessage = this.owner.updateMessage || definition.updateMessage || '';
-            this.isOn = this.owner.on || definition.on || true;
-            this.isIncrementing = this.owner.isIncrementing || definition.isIncrementing || true;
-            this.maxTime = this.owner.maxTime || definition.maxTime || 3600000; //Max time is 1hr by default.
+
+        properties: {
+            time: 0,
+            alarmTime: 0,
+            isInterval: false,
+            alarmMessage: '',
+            updateMessage: '',
+            isOn: true,
+            isIncrementing: true,
+            maxTime: 3600000, //Max time is 1hr by default.
+            resetOnStop: false
         },
+
+        initialize: function (definition) {
+            this.prevTime = this.time;
+        },
+
         events: {
             "handle-logic": function (data) {
                 if (this.isOn) {
@@ -105,6 +111,9 @@ export default (function () {
             },
             "stop-timer": function () {
                 this.isOn = false;
+                if (this.resetOnStop) {
+                    this.time = 0;
+                }
             }
         }
     });
