@@ -178,7 +178,7 @@ export default createComponentClass({
         "pressmove": function (eventData) {
             this.nextX = eventData.x - this.grabOffsetX;
             this.nextY = eventData.y - this.grabOffsetY;
-            if (this.nextX !== this.owner.x || this.nextY !== this.owner.y) {
+            if (this.sticking && (this.nextX !== this.owner.x || this.nextY !== this.owner.y)) {
                 this.sticking = false;
                 this.releasePointer();
             }
@@ -220,6 +220,7 @@ export default createComponentClass({
                 this.owner.dragMode = false;
                 this.owner.z = this.lastZ;
             }
+            this.owner.triggerEvent('dropped', this.owner);
         },
         
         destroy: function () {
