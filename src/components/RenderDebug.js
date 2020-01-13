@@ -6,7 +6,7 @@
  * @uses platypus.Component
  */
 /* global platypus */
-import {Graphics} from 'pixi.js';
+import {Container, Graphics} from 'pixi.js';
 import RenderContainer from './RenderContainer.js';
 import {arrayCache} from '../utils/array.js';
 import config from 'config';
@@ -142,6 +142,12 @@ export default (function () {
         },
         
         initialize: function () {
+            this.container = new Container();
+            this.parentContainer = this.owner.parent.worldContainer;
+            this.parentContainer.addChild(this.container);
+            this.parentContainer.reorder = true;
+            this.needsCameraCheck = true;
+
             this.shapes = arrayCache.setUp();
             this.isOutdated = true;
 
@@ -149,10 +155,6 @@ export default (function () {
             this.collisionColor = this.collisionColor ? standardizeColor(this.collisionColor) : 0;
             this.groupColor = standardizeColor(this.groupColor);
             this.renderColor = standardizeColor(this.renderColor);
-
-            if (config.dev && !this.owner.container) {
-                this.owner.addComponent(new RenderContainer(this.owner, null));
-            }
         },
         
         events: {// These are messages that this component listens for
@@ -167,6 +169,17 @@ export default (function () {
                     this.owner.removeComponent(this);
                     return;
                 }
+            },
+
+            /**
+             * Listens for this event to determine whether this sprite is visible.
+             *
+             * @method 'camera-update'
+             * @param camera.viewport {platypus.AABB} Camera position and size.
+             */
+            "camera-update": function () {
+                // Set visiblity of sprite if within camera bounds
+                this.needsCameraCheck = true;
             },
 
             /**
@@ -187,13 +200,15 @@ export default (function () {
                     aabb = this.owner.getCollisionGroupAABB();
                     if (!this.groupShape) {
                         this.groupShape = createShape('rectangle', this.groupColor, offset, offset, 1, 1, this.offsetZ);
-                        this.owner.container.addChild(this.groupShape);
+                        this.container.addChild(this.groupShape);
                     }
                     this.groupShape.scaleX = aabb.width;
                     this.groupShape.scaleY = aabb.height;
                     this.groupShape.x      = aabb.x - this.owner.x;
                     this.groupShape.y      = aabb.y - this.owner.y;
                 }
+
+                this.update();
             },
             
             /**
@@ -228,6 +243,34 @@ export default (function () {
         },
         
         methods: {
+            update: function () {
+                var x = 0,
+                    y = 0;
+                
+                x = this.owner.x;
+                y = this.owner.y;
+
+                if (this.container.z !== this.owner.z + 0.000001) {
+                    this.parentContainer.reorder = true;
+                    this.container.z = this.owner.z + 0.000001;
+                }
+
+                this.container.setTransform(x, y, 1, 1, 0, 0, 0);
+                
+                // Set isCameraOn of sprite if within camera bounds
+                if (!this.needsCameraCheck) {
+                    this.needsCameraCheck = (this.lastX !== this.owner.x) || (this.lastY !== this.owner.y);
+                }
+                if (this.needsCameraCheck) {
+                    this.isOnCamera = this.owner.parent.isOnCanvas(this.container.getBounds(false));
+                    this.needsCameraCheck = false;
+                }
+                
+                this.lastX = this.owner.x;
+                this.lastY = this.owner.y;
+                this.container.visible = this.isOnCamera;
+            },
+
             updateSprites: function () {
                 var owner = this.owner,
                     z        = this.offsetZ,
@@ -241,7 +284,7 @@ export default (function () {
                     shape    = null;
 
                 for (i = 0; i < this.shapes.length; i++) {
-                    owner.container.removeChild(this.shapes[i]);
+                    this.container.removeChild(this.shapes[i]);
                 }
                 this.shapes.length = 0;
 
@@ -263,52 +306,33 @@ export default (function () {
                         
                         shape  = createShape('rectangle', this.aabbColor, aabb.left - owner.x, aabb.top - owner.y, width, height, z--);
                         this.shapes.push(shape);
-                        owner.container.addChild(shape);
-                        this.addInput(shape);
+                        this.container.addChild(shape);
                         
                         for (i = 0; i < shapes.length; i++) {
                             width = shapes[i].width - lineWidth;
                             height = shapes[i].height - lineWidth;
                             shape = createShape(shapes[i].type, collisionColor, shapes[i].offsetX - width / 2, shapes[i].offsetY - height / 2, (shapes[i].radius ? shapes[i].radius - lineWidth : width), height, z--, lineWidth);
                             this.shapes.push(shape);
-                            owner.container.addChild(shape);
-                            this.addInput(shape);
+                            this.container.addChild(shape);
                         }
                     }
                 } else {
                     shape = createShape('rectangle', this.renderColor, -width / 2, -height / 2, width, height, z--);
                     this.shapes.push(shape);
-                    owner.container.addChild(shape);
-                    this.addInput(shape);
+                    this.container.addChild(shape);
                 }
-
-                owner.container.reorder = true;
             },
-            
-            addInput: (function () {
-                var lastEntityLog = null,
-                    handler = function () {
-                        if (lastEntityLog !== this.owner) {
-                            lastEntityLog = this.owner;
-                            platypus.debug.olive('Entity "' + lastEntityLog.type + '":', lastEntityLog);
-                        }
-
-                        return false;
-                    };
-                
-                return function (sprite) {
-                    sprite.interactive = true;
-                    sprite.addListener('rightdown', handler.bind(this));
-                };
-            }()),
             
             destroy: function () {
                 var i = 0;
                 
                 for (i = 0; i < this.shapes.length; i++) {
-                    this.owner.container.removeChild(this.shapes[i]);
+                    this.container.removeChild(this.shapes[i]);
                 }
                 arrayCache.recycle(this.shapes);
+
+                this.parentContainer.removeChild(this.container);
+                this.container = null;
             }
         }
     });
