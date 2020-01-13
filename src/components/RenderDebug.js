@@ -217,10 +217,7 @@ export default (function () {
              * @method 'orientation-updated'
              */
             "orientation-updated": function () {
-                // We don't need to update if the entity is already flipping the art around.
-                if (this.owner.rotate !== 'orientationMatrix') {
-                    this.isOutdated = true;
-                }
+                this.isOutdated = true;
             },
             
             /**

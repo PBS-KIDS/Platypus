@@ -118,6 +118,34 @@ export default (function () {
         proto = CollisionShape.prototype;
 
     /**
+     * Updates the shape to match another shape.
+     *
+     * @method updateAll
+     * @param updateAll {platypus.CollisionShape} The shape to copy into this one.
+     */
+    proto.updateAll = function (shape) {
+        this.owner = shape.owner;
+        this.collisionType = shape.collisionType;
+        this.type = shape.type;
+        this.subType = shape.subType;
+        this.offset.x = shape.offset.x;
+        this.offset.y = shape.offset.y;
+        this.position.x = shape.position.x;
+        this.position.y = shape.position.y;
+        this.size.x = shape.size.x;
+        this.size.y = shape.size.y;
+        this.radius = shape.radius;
+        this.aABB.setAll(this.x, this.y, this.width, this.height);
+        if (this.type === 'circle') {
+            this.collides = collidesCircle;
+        } else if (this.type === 'rectangle') {
+            this.collides = collidesRectangle;
+        } else {
+            this.collides = collidesDefault;
+        }
+    };
+
+    /**
      * Updates the location of the shape and AABB. The position you send should be that of the owner, the offset of the shape is added inside the function.
      *
      * @method update
