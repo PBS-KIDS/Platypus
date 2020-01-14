@@ -119,6 +119,10 @@ export default createComponentClass({
         'handle-logic': function (tick) {
             this.time += tick.delta;
             this.group.update(this.time);
+        },
+
+        'stop': function () {
+            this.group.removeAll();
         }
     },
 
