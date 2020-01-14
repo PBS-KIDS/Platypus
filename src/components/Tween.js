@@ -121,7 +121,7 @@ export default createComponentClass({
             this.group.update(this.time);
         },
 
-        'stop': function () {
+        'stop-tween': function () {
             this.group.removeAll();
         }
     },
