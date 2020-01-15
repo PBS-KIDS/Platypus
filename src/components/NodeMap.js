@@ -30,6 +30,10 @@ export default (function () {
             this.map = map;
             this.contains = arrayCache.setUp();
             this.type = definition.type || '';
+
+            if (!this.position) {
+                Vector.assign(this, 'position', 'x', 'y', 'z');
+            }
             this.x = definition.x || 0;
             this.y = definition.y || 0;
             this.z = definition.z || 0;
