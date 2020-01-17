@@ -401,6 +401,8 @@ export default createComponentClass({
     },
     
     publicProperties: {
+        collisionDirty: false,
+
         /**
          * This property should be set to true if entity doesn't move for better optimization. This causes other entities to check against this entity, but this entity performs no checks of its own. Available on the entity as `entity.immobile`.
          *
@@ -567,6 +569,7 @@ export default createComponentClass({
                 }
                 owner.parent.triggerEvent('add-collision-entity', owner);
                 this.active = true;
+                this.collisionDirty = true;
             }
         },
         
@@ -690,6 +693,7 @@ export default createComponentClass({
                     this.shapes[i].multiply(matrix);
                 }
                 this.updateShapes = updateShapesFull;
+                this.collisionDirty = true;
             }
         }
     },
@@ -727,6 +731,10 @@ export default createComponentClass({
             aabb.reset();
             
             this.updateShapes(shapes, prevShapes, aabb, x, y);
+            
+            if (this.collisionDirty) {
+                this.collisionDirty = false;
+            }
         },
         
         movePreviousX: function (x) {
@@ -741,7 +749,7 @@ export default createComponentClass({
         destroy: function () {
             var colFuncs = this.owner.collisionFunctions,
                 collisionType = this.collisionType,
-                i = this.owner.collisionTypes.indexOf(collisionType),
+                i = this.owner.collisionTypes ? this.owner.collisionTypes.indexOf(collisionType) : -1,
                 owner = this.owner;
             
             owner.parent.triggerEvent('remove-collision-entity', owner);
@@ -755,14 +763,16 @@ export default createComponentClass({
                 greenSplice(owner.collisionTypes, i);
             }
             
-            if (owner.solidCollisionMap.has(collisionType)) {
-                arrayCache.recycle(owner.solidCollisionMap.delete(collisionType));
-            }
-            if (owner.softCollisionMap.has(collisionType)) {
-                arrayCache.recycle(owner.softCollisionMap.delete(collisionType));
-            }
+            if (owner.collisionTypes) {
+                if (owner.solidCollisionMap.has(collisionType)) {
+                    arrayCache.recycle(owner.solidCollisionMap.delete(collisionType));
+                }
+                if (owner.softCollisionMap.has(collisionType)) {
+                    arrayCache.recycle(owner.softCollisionMap.delete(collisionType));
+                }
 
-            colFuncs.delete(collisionType).recycle();
+                colFuncs.delete(collisionType).recycle();
+            }
             
             i = this.shapes.length;
             while (i--) {
@@ -776,19 +786,21 @@ export default createComponentClass({
 
             this.entities = null;
 
-            if (owner.collisionTypes.length) {
-                owner.parent.triggerEvent('add-collision-entity', owner);
-            } else { //remove collision functions
-                colFuncs.recycle();
-                owner.collisionFunctions = null;
-                owner.solidCollisionMap.recycle();
-                owner.solidCollisionMap = null;
-                owner.softCollisionMap.recycle();
-                owner.softCollisionMap = null;
-                owner.aabb.recycle();
-                owner.aabb = null;
-                arrayCache.recycle(owner.collisionTypes);
-                owner.collisionTypes = null;
+            if (owner.collisionTypes) {
+                if (owner.collisionTypes.length) {
+                    owner.parent.triggerEvent('add-collision-entity', owner);
+                } else { //remove collision functions
+                    colFuncs.recycle();
+                    owner.collisionFunctions = null;
+                    owner.solidCollisionMap.recycle();
+                    owner.solidCollisionMap = null;
+                    owner.softCollisionMap.recycle();
+                    owner.softCollisionMap = null;
+                    owner.aabb.recycle();
+                    owner.aabb = null;
+                    arrayCache.recycle(owner.collisionTypes);
+                    owner.collisionTypes = null;
+                }
             }
         }
     }

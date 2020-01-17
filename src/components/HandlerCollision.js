@@ -526,7 +526,7 @@ export default (function () {
                 
                 finalMovementInfo = Vector.setUp(ent.position);
 
-                if (dX || dY) {
+                if (dX || dY || ent.collisionDirty) {
                     
                     if (ent.bullet) {
                         min = Math.min;
