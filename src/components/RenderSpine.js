@@ -11,11 +11,29 @@ import {arrayCache, union} from '../utils/array.js';
 import Data from '../Data.js';
 import RenderAnimator from './RenderAnimator.js';
 import RenderContainer from './RenderContainer.js';
+import StateMap from '../StateMap.js';
 import createComponentClass from '../factory.js';
 
 export default (function () {
     const
         BaseTexture = PIXI.BaseTexture,
+        createTest = function (testStates, skin) {
+            if (testStates === 'default') {
+                return defaultTest.bind(null, skin);
+            } else {
+                //TODO: Better clean-up: Create a lot of these without removing them later... DDD 2/5/2016
+                return stateTest.bind(null, skin, StateMap.setUp(testStates));
+            }
+        },
+        defaultTest = function (skin) {
+            return skin;
+        },
+        stateTest = function (skin, states, ownerState) {
+            if (ownerState.includes(states)) {
+                return skin;
+            }
+            return false;
+        },
         getBaseTexture = function (path, pma) {
             var asset = platypus.assetCache.get(path.substring(path.lastIndexOf('/') + 1, path.lastIndexOf('.')));
             
@@ -83,6 +101,20 @@ export default (function () {
              * @default null
              */
             animationMap: null,
+
+            /**
+             * Optional. No, this isn't a Stephen R. Lawhead novel. Use this to specify a skin according to the entity's state.
+             *
+             *  "skinMap":{
+             *      "cloaked": "cloak"  // On receiving a "cloaked" event, or when `this.owner.state.get('cloaked') === true`, this skin will be activated.
+             *      "default": "normal_attire" // Optional. "default" is a special property that matches all states. If none of the above states are valid for the entity, it will use the default skin listed here.
+             *  }
+             *
+             * @property skinMap
+             * @type Object
+             * @default null
+             */
+            skinMap: null,
 
             /**
              * Optional. A mask definition that determines where the image should clip. A string can also be used to create more complex shapes via the PIXI graphics API like: "mask": "r(10,20,40,40).drawCircle(30,10,12)". Defaults to no mask or, if simply set to true, a rectangle using the entity's dimensions.
@@ -344,14 +376,14 @@ export default (function () {
                         loadFinished();
                     }
                 },
-                animationEnded = function () {
+                animationEnded = function (index, count) {
                     /**
                      * This event fires each time an animation completes.
                      *
                      * @event 'animation-ended'
                      * @param animation {String} The id of the animation that ended.
                      */
-                    this.owner.triggerEvent('animation-ended', this.currentAnimation);
+                    this.owner.triggerEvent('animation-ended', this.currentAnimations[index], count);
                 },
                 handleSpineEvent = function (entry, event) {
                     var eventName = event.data.name;
@@ -417,14 +449,74 @@ export default (function () {
                     }
     
                     // play animation
+                    this.currentAnimations = arrayCache.setUp();
                     if (animation) {
-                        this.currentAnimation = animation;
-                        spine.state.setAnimation(0, animation, true);
+                        this.playAnimation(animation);
                     }
     
                     spine.x = this.offsetX;
                     spine.y = this.offsetY;
                     spine.z = this.offsetZ;
+
+                    if (this.skinMap) { // Set up skin map handling.
+                        const switchSkin = function (skin) {
+                                if (this.currentSkin !== skin) {
+                                    this.currentSkin = skin;
+                                    this.spine.skeleton.setSkin(null);
+                                    //this.spine.skeleton.skin = null;
+                                    this.spine.skeleton.setSlotsToSetupPose();
+                                    this.spine.state.apply(this.spine.skeleton);
+                                    this.spine.skeleton.setSkinByName(skin);
+                                    this.spine.skeleton.setSlotsToSetupPose();
+                                    //this.playAnimation(this.currentAnimations.join(';'));
+                                    this.spine.state.apply(this.spine.skeleton);
+                                }
+                            },
+                            map = this.skinMap;
+        
+                        this.currentSkin = null;
+
+                            //Handle Events:
+                        if (this.eventBased) {
+                            for (const state in map) {
+                                if (map.hasOwnProperty(state)) {
+                                    this.addEventListener(state, switchSkin.bind(this, map[state]));
+                                }
+                            }
+                        }
+        
+                        //Handle States:
+                        if (this.stateBased) {
+                            this.state = this.owner.state;
+                            this.stateChange = true; //Check state against entity's prior state to update skin if necessary on instantiation.
+                            this.checkStates = arrayCache.setUp();
+                            this.skins = arrayCache.setUp();
+
+                            for (const state in map) {
+                                if (map.hasOwnProperty(state)) {
+                                    this.checkStates.push(createTest(state, map[state]));
+                                    this.skins.push(state);
+                                }
+                            }
+
+                            this.addEventListener('state-changed', () => {
+                                this.stateChange = true;
+                            });
+                            this.addEventListener('handle-render', () => {
+                                if (this.stateChange) {
+                                    for (let i = 0; i < this.checkStates.length; i++) {
+                                        const testCase = this.checkStates[i](this.state);
+
+                                        if (testCase) {
+                                            switchSkin.call(this, testCase);
+                                            break;
+                                        }
+                                    }
+                                    this.stateChange = false;
+                                }
+                            });
+                        }
+                    }
     
                     if (!this.owner.container) {
                         const
@@ -535,28 +627,48 @@ export default (function () {
             },
             
             playAnimation: function (animation, loop = true) {
-                var spine = this.spine;
+                const spine = this.spine;
+                let animated = 0,
+                    remaining = animation;
 
-                if (animation && spine.state.hasAnimation(animation)) {
-                    this.currentAnimation = animation;
-                    spine.state.setAnimation(0, animation, loop);
-                    this.paused = false;
+                while (remaining) {
+                    const
+                        semicolon = remaining.indexOf(';'),
+                        next = (semicolon >= 0) ? remaining.substring(0, semicolon) : remaining;
+                    
+                    remaining = (semicolon >= 0) ? remaining.substring(semicolon + 1) : '';
 
-                    return true;
+                    if (spine.state.hasAnimation(next)) {
+                        this.currentAnimations[animated] = next;
+                        spine.state.setAnimation(animated, next, loop);
+                    }
+                    animated += 1;
                 }
 
-                return false;
+                return animated;
             },
 
             stopAnimation: function (animation) {
-                var spine = this.spine;
+                const spine = this.spine;
+                let animated = 0,
+                    remaining = animation;
 
-                if (animation && spine.state.hasAnimation(animation)) {
-                    this.currentAnimation = animation;
-                    spine.state.setAnimation(0, animation, false);
+                while (remaining) {
+                    const
+                        semicolon = remaining.indexOf(';'),
+                        next = (semicolon >= 0) ? remaining.substring(0, semicolon) : remaining;
+                    
+                    remaining = (semicolon >= 0) ? remaining.substring(semicolon + 1) : '';
+
+                    if (spine.state.hasAnimation(next)) {
+                        this.currentAnimations[animated] = next;
+                        spine.state.setAnimation(animated, next, false);
+                    }
+                    animated += 1;
                 }
 
                 this.paused = true;
+                return animated;
             },
 
             setMixTimes: function (mixTimes) {
