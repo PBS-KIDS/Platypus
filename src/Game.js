@@ -167,6 +167,10 @@ export default (function () {
                     var ticker = Ticker.shared;
                         
                     platypus.game = this; //Make this instance the only Game instance.
+
+                    if (config.dev) {
+                        settings.debug = true;
+                    }
                     
                     this.settings = settings;
                     this.stage = new Container();
