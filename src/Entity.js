@@ -286,13 +286,12 @@ export default (function () {
         * @method destroy
         **/
         destroy () {
-            var components = this.components,
-                i = 0,
-                length = components.length;
+            var components = this.components;
             
             if (!this._destroyed) {
-                for (i = 0; i < length; i++) {
-                    components[i].destroy();
+                while (components.length) {
+                    components[0].destroy();
+                    components.shift();
                 }
                 arrayCache.recycle(components);
                 this.components = null;
