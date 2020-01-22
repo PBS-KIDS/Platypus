@@ -14,6 +14,7 @@ import {inflate} from 'pako';
 
 export default (function () {
     const
+        maskXFlip = 0x80000000,
         decodeBase64 = (function () {
             var decodeString = function (str, index) {
                     return (((str.charCodeAt(index)) + (str.charCodeAt(index + 1) << 8) + (str.charCodeAt(index + 2) << 16) + (str.charCodeAt(index + 3) << 24 )) >>> 0);
@@ -200,7 +201,21 @@ export default (function () {
                 for (j = 0; j < levelSegments[i].length; j++) {
                     //Merge horizontally
                     if (typeof levelSegments[i][j] === 'string') {
-                        mergeSegment(row, levelDefinitions[levelSegments[i][j]], 'horizontal');
+                        const
+                            levelDefinitionLabel = levelSegments[i][j],
+                            transformIndex = levelDefinitionLabel.indexOf(':');
+                        let levelDefinition = levelDefinitions[levelDefinitionLabel];
+                        
+                        // check for transform
+                        if (!levelDefinition && (transformIndex >= 0)) {
+                            const transform = levelDefinitionLabel.substring(transformIndex + 1);
+
+                            levelDefinition = levelDefinitions[levelDefinitionLabel.substring(0, transformIndex)];
+                            if (transform === 'mirror') {
+                                levelDefinition = levelDefinitions[levelDefinitionLabel] = mirrorSegment(levelDefinition);
+                            }
+                        }
+                        mergeSegment(row, levelDefinition, 'horizontal');
                     } else {
                         mergeSegment(row, levelSegments[i][j], 'horizontal');
                     }
@@ -209,6 +224,68 @@ export default (function () {
                 mergeSegment(level, row, 'vertical');
             }
             return level;
+        },
+        mirrorSegment = function (segment) {
+            const
+                newSegment = {
+                    layers: []
+                },
+                width = segment.width * segment.tilewidth;
+
+            for (let i = 0; i < segment.layers.length; i++) {
+                const
+                    toLayer = newSegment.layers[i] = {},
+                    fromLayer = segment.layers[i];
+
+                decodeLayer(fromLayer);
+                
+                for (const key in fromLayer) {
+                    if (fromLayer.hasOwnProperty(key)) {
+                        toLayer[key] = fromLayer[key];
+                    }
+                }
+
+                if (fromLayer.data) {
+                    const fromData = fromLayer.data,
+                        toData = toLayer.data = [],
+                        segmentWidth = segment.width;
+
+                    for (let j = 0; j < fromData.length; j++) {
+                        const cell = fromData[segmentWidth * ((j / segmentWidth) >> 0) + segmentWidth - 1 - (j % segmentWidth)];
+
+                        toData[j] = cell ? maskXFlip ^ cell : 0;
+                    }
+                }
+
+                // If we're adding objects, make sure that they're mirrored correctly.
+                if (fromLayer.objects) {
+                    const
+                        fromObjects = fromLayer.objects,
+                        toObjects = toLayer.objects = [];
+
+                    for (let j = 0; j < fromObjects.length; j++) {
+                        const
+                            fromObject = fromObjects[j],
+                            toObject = toObjects[j] = {};
+
+                        for (const key in fromObject) {
+                            if (fromObject.hasOwnProperty(key)) {
+                                toObject[key] = fromObject[key];
+                            }
+                        }
+                        toObject.x = width - fromObject.x;
+                    }
+                }
+            }
+
+            //Go through all the STUFF in segment and copy it to the level if it's not already there.
+            for (const key in segment) {
+                if (segment.hasOwnProperty(key) && !newSegment[key]) {
+                    newSegment[key] = segment[key];
+                }
+            }
+
+            return newSegment;
         };
 
     return createComponentClass({
