@@ -100,20 +100,20 @@ export default (function () {
                 level.tilewidth  = segment.tilewidth;
                 level.tileheight = segment.tileheight;
             } else if (level.tilewidth !== segment.tilewidth || level.tileheight !== segment.tileheight) {
-                platypus.debug.warn('Tiled-Loader: Your map has segments with different tile sizes. All tile sizes must match. Segment: ' + segment);
+                platypus.debug.warn('Component LevelBuilder: Your map has segments with different tile sizes. All tile sizes must match. Segment: ' + segment);
             }
 
             if (mergeAxis === 'horizontal') {
                 if (level.height === 0) {
                     level.height = segment.height;
                 } else if (level.height !== segment.height) {
-                    platypus.debug.warn('Tiled-Loader: You are trying to merge segments with different heights. All segments need to have the same height. Level: ' + level + ' Segment: ' + segment);
+                    platypus.debug.warn('Component LevelBuilder: You are trying to merge segments with different heights. All segments need to have the same height. Level: ' + level + ' Segment: ' + segment);
                 }
             } else if (mergeAxis === 'vertical') {
                 if (level.width === 0) {
                     level.width = segment.width;
                 } else if (level.width !== segment.width) {
-                    platypus.debug.warn('Tiled-Loader: You are trying to merge segments with different widths. All segments need to have the same width. Level: ' + level + ' Segment: ' + segment);
+                    platypus.debug.warn('Component LevelBuilder: You are trying to merge segments with different widths. All segments need to have the same width. Level: ' + level + ' Segment: ' + segment);
                 }
             }
 
@@ -159,7 +159,7 @@ export default (function () {
                         }
                     }
                 } else {
-                    platypus.debug.warn('Tiled-Loader: The layers in your level segments do not match. Level: ' + level + ' Segment: ' + segment);
+                    platypus.debug.warn('Component LevelBuilder: The layers in your level segments do not match. Level: ' + level + ' Segment: ' + segment);
                 }
             }
 
@@ -189,13 +189,9 @@ export default (function () {
                     height: 0,
                     width: 0,
                     layers: []
-                },
-                segmentsWide = levelSegments[i].length;
+                };
 
             for (i = 0; i < levelSegments.length; i++) {
-                if (segmentsWide !== levelSegments[i].length) {
-                    platypus.debug.warn('Tiled-Loader: Your map is not square. Maps must have an equal number of segments in every row.');
-                }
                 row = {
                     height: 0,
                     width: 0,
