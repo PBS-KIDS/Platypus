@@ -32,7 +32,7 @@ export default (function () {
             if (ownerState.includes(states)) {
                 return skin;
             }
-            return false;
+            return null;
         },
         getBaseTexture = function (path, pma) {
             var asset = platypus.assetCache.get(path.substring(path.lastIndexOf('/') + 1, path.lastIndexOf('.')));
@@ -115,6 +115,24 @@ export default (function () {
              * @default null
              */
             skinMap: null,
+
+            /**
+            * The scaling factor for this sprite relative to the scale of the container.
+            *
+            * @property localScaleX
+            * @type Number|Array|Object
+            * @default 1
+            */
+           localScaleX: 1,
+
+           /**
+            * The scaling factor for this sprite relative to the scale of the container.
+            *
+            * @property localScaleY
+            * @type Number|Array|Object
+            * @default 1
+            */
+            localScaleY: 1,
 
             /**
              * Optional. A mask definition that determines where the image should clip. A string can also be used to create more complex shapes via the PIXI graphics API like: "mask": "r(10,20,40,40).drawCircle(30,10,12)". Defaults to no mask or, if simply set to true, a rectangle using the entity's dimensions.
@@ -457,7 +475,9 @@ export default (function () {
                     spine.x = this.offsetX;
                     spine.y = this.offsetY;
                     spine.z = this.offsetZ;
-
+                    spine.scale.x = this.localScaleX;
+                    spine.scale.y = this.localScaleY;
+    
                     if (this.skinMap) { // Set up skin map handling.
                         const switchSkin = function (skin) {
                                 if (this.currentSkin !== skin) {
@@ -466,10 +486,12 @@ export default (function () {
                                     //this.spine.skeleton.skin = null;
                                     this.spine.skeleton.setSlotsToSetupPose();
                                     this.spine.state.apply(this.spine.skeleton);
-                                    this.spine.skeleton.setSkinByName(skin);
-                                    this.spine.skeleton.setSlotsToSetupPose();
-                                    //this.playAnimation(this.currentAnimations.join(';'));
-                                    this.spine.state.apply(this.spine.skeleton);
+                                    if (skin) {
+                                        this.spine.skeleton.setSkinByName(skin);
+                                        this.spine.skeleton.setSlotsToSetupPose();
+                                        //this.playAnimation(this.currentAnimations.join(';'));
+                                        this.spine.state.apply(this.spine.skeleton);
+                                    }
                                 }
                             },
                             map = this.skinMap;
@@ -507,7 +529,7 @@ export default (function () {
                                     for (let i = 0; i < this.checkStates.length; i++) {
                                         const testCase = this.checkStates[i](this.state);
 
-                                        if (testCase) {
+                                        if (testCase !== null) {
                                             switchSkin.call(this, testCase);
                                             break;
                                         }
