@@ -748,7 +748,11 @@ export default (function () {
                             const transform = entityTransformCheck(index);
 
                             if (tilesetObjectGroups.has(transform.id)) {
-                                this.setUpEntities(tilesetObjectGroups.get(transform.id), mapOffsetX + tileWidth * x, mapOffsetY + tileHeight * y, tileWidth, tileHeight, tilesets, transform, progress);
+                                const // These values cause a flipped tile to find x/y by starting on the opposite side of the tile (and subtracting x/y once in the called function).
+                                    offsetX = mapOffsetX + tileWidth * (transform.x > 0 ? x : x + 1),
+                                    offsetY = mapOffsetY + tileHeight * (transform.y > 0 ? y : y + 1);
+                                    
+                                this.setUpEntities(tilesetObjectGroups.get(transform.id), offsetX, offsetY, tileWidth, tileHeight, tilesets, transform, progress);
                             }
                         }
                     }
@@ -1023,7 +1027,9 @@ export default (function () {
                         properties = null,
                         polyPoints = null,
                         fallbackWidth = 0,
-                        fallbackHeight = 0;
+                        fallbackHeight = 0,
+                        transformX = transform ? transform.x : 1,
+                        transformY = transform ? transform.y : 1;
     
                     mapOffsetX += layer.offsetx || 0;
                     mapOffsetY += layer.offsety || 0;
@@ -1140,7 +1146,7 @@ export default (function () {
                                     properties.regX = properties.width;
                                     properties.x += widthOffset;
                                 }
-                                properties.x += mapOffsetX;
+                                properties.x = mapOffsetX + properties.x * transformX;
     
                                 if (gid === -1) {
                                     properties.y += properties.height;
@@ -1154,7 +1160,7 @@ export default (function () {
                                     properties.regY = 0;
                                     properties.y -= heightOffset;
                                 }
-                                properties.y += mapOffsetY;
+                                properties.y = mapOffsetY + properties.y * transformY;
     
                                 if (entity.ellipse) {
                                     properties.shape = {};
@@ -1176,10 +1182,8 @@ export default (function () {
                                 properties.scaleX *= (entityDefProps.scaleX || 1);
                                 properties.scaleY *= (entityDefProps.scaleY || 1);
                             }
-                            if (transform) {
-                                properties.scaleX *= transform.x;
-                                properties.scaleY *= transform.y;
-                            }
+                            properties.scaleX *= transformX;
+                            properties.scaleY *= transformY;
                             properties.layerZ = this.layerZ;
     
                             //Setting the z value. All values are getting added to the layerZ value.
