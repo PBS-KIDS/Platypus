@@ -25,33 +25,6 @@ import sayHello from './sayHello.js';
 
 export default (function () {
     const XMLHttpRequest = window.XMLHttpRequest,
-        fn = /^(?:\w+:\/{2}\w+(?:\.\w+)*\/?)?(?:[\/.]*?(?:[^?]+)?\/)?(?:([^\/?]+)\.(\w+|{\w+(?:,\w+)*}))(?:\?\S*)?$/,
-        folders = {
-            png: 'images',
-            jpg: 'images',
-            jpeg: 'images',
-            ogg: 'audio',
-            mp3: 'audio',
-            m4a: 'audio',
-            wav: 'audio',
-            "{ogg,mp3}": 'audio'
-        },
-        formatAsset = function (asset) {
-            var match = asset.match(fn),
-                a = Data.setUp(
-                    'id', asset,
-                    'src', (platypus.game.options[folders[match[2].toLowerCase()]] || '') + asset
-                );
-            
-            //TODO: Make this behavior less opaque.
-            if (match) {
-                a.id = match[1];
-            } else {
-                platypus.debug.warn('Layer: A listed asset should provide the entire file path.');
-            }
-            
-            return a;
-        },
         getJSON = function (path, callback) {
             var xhr = new XMLHttpRequest();
             
@@ -449,17 +422,12 @@ export default (function () {
                                 arr = assetLists[i] = Entity.getAssetList(layerDefinitions[i], props, data);
 
                             for (let j = 0; j < arr.length; j++) {
-                                arr[j] = formatAsset(arr[j]);
                                 assets.push(arr[j]); // We don't union so that we can remove individual layers as needed and their asset dependencies.
                             }
                             props.recycle();
                         }
 
-                        platypus.assetCache.load(assets, (ratio) => {
-                            if (progressCallback) {
-                                progressCallback(ratio);
-                            }
-                        }, completeCallback);
+                        platypus.assetCache.load(assets, progressCallback, completeCallback);
                     },
                     loadLayer = function (layers, assetLists, index, layerDefinition, properties, data, completeCallback) {
                         const props = Data.setUp(properties);

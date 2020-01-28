@@ -4,11 +4,41 @@
  * @class AssetManager
  * @constructor
 **/
+/* global platypus */
 import Data from './Data.js';
 import DataMap from './DataMap.js';
 import {Loader} from 'pixi.js';
 import {arrayCache} from './utils/array.js';
+
+const
+    fn = /^(?:\w+:\/{2}\w+(?:\.\w+)*\/?)?(?:[\/.]*?(?:[^?]+)?\/)?(?:([^\/?]+)\.(\w+|{\w+(?:,\w+)*}))(?:\?\S*)?$/,
+    folders = {
+        png: 'images',
+        jpg: 'images',
+        jpeg: 'images',
+        ogg: 'audio',
+        mp3: 'audio',
+        m4a: 'audio',
+        wav: 'audio',
+        "{ogg,mp3}": 'audio'
+    },
+    formatAsset = function (asset) {
+        var match = asset.match(fn),
+            a = Data.setUp(
+                'id', asset,
+                'src', (platypus.game.options[folders[match[2].toLowerCase()]] || '') + asset
+            );
         
+        //TODO: Make this behavior less opaque.
+        if (match) {
+            a.id = match[1];
+        } else {
+            platypus.debug.warn('Layer: A listed asset should provide the entire file path.');
+        }
+        
+        return a;
+    };
+
 export default class AssetManager {
     constructor () {
         this.assets = DataMap.setUp();
@@ -59,7 +89,7 @@ export default class AssetManager {
 
         for (let i = 0; i < list.length; i++) {
             const
-                item = list[i],
+                item = formatAsset(list[i]),
                 id = item.id || item.src || item;
 
             if (this.has(id)) {
@@ -77,10 +107,14 @@ export default class AssetManager {
             queue.onLoad.add((loader, response) => {
                 this.set(response.name, response.data);
                 progress += 1;
-                one(progress / total);
+                if (one) {
+                    one(progress / total);
+                }
             });
 
-            queue.onComplete.add(all);
+            if (all) {
+                queue.onComplete.add(all);
+            }
             
             for (let i = 0; i < total; i++) {
                 const
@@ -91,7 +125,7 @@ export default class AssetManager {
             }
 
             queue.load();
-        } else {
+        } else if (all) {
             all();
         }
 

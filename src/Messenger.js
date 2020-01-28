@@ -57,7 +57,7 @@ export default (function () {
             var listener = this._listeners[name],
                 index = 0;
 
-            if (this._destroyed) return;
+            if (this._destroyed || !listener) return;
 
             // remove all
             if (typeof name === 'undefined') {
