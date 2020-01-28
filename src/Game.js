@@ -20,6 +20,7 @@ import Messenger from './Messenger.js';
 import Sound from 'pixi-sound';
 import Storage from './Storage.js';
 import TweenJS from '@tweenjs/tween.js';
+import VOPlayer from './VOPlayer.js';
 import config from 'config';
 import sayHello from './sayHello.js';
 
@@ -241,6 +242,9 @@ export default (function () {
             this.canvas.width = this.canvas.offsetWidth;
             this.canvas.height = this.canvas.offsetHeight;
 
+            this.voPlayer = new VOPlayer(this, platypus.assetCache);
+            this.voPlayer.trackSound = platypus.supports.iOS;
+
             this.springroll = (function () {
                 const
                     springroll = new Application({
@@ -287,8 +291,7 @@ export default (function () {
                 });
                 
                 state.voVolume.subscribe(function (current) {
-                    // toggleChannelMute('vo', 'mutedBySR', 'mutedBySRGlobal', current);
-                    // toggleChannelMute('tutorial', 'mutedBySR', 'mutedBySRGlobal', current);
+                    platypus.game.voPlayer.setVolume(current);
                 });
                 
                 state.sfxVolume.subscribe(function (current) {
