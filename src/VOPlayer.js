@@ -114,6 +114,9 @@ export default class VOPlayer extends Messenger {
          * @private
          */
         this._captions = null;
+
+        this.volume = 1;
+        this.captionMute = false;
     }
 
     /**
@@ -160,9 +163,9 @@ export default class VOPlayer extends Messenger {
      */
     set captions (captions) {
         this._captions = captions;
-        if (captions)
-        {
+        if (captions) {
             captions.selfUpdate = false;
+            this.setCaptionMute(this.captionMute);
         }
     }
 
@@ -274,7 +277,7 @@ export default class VOPlayer extends Messenger {
         if (this._soundInstance)
             this._soundInstance.resume();
         //captions for solo captions or VO
-        if (this._captions.playing) {
+        if (this._captions.activeCaption) {
             if (this._soundInstance) {
                 this.game.on("update", this._syncCaptionToSound);
             }
@@ -335,9 +338,10 @@ export default class VOPlayer extends Messenger {
         this.game.off("update", this._updateSilence);
 
         //if we have captions and an audio instance, set the caption time to the length of the audio
-        if (this._captions && this._soundInstance)
-        {
-            this._captions.seek(this._soundInstance.length);
+        if (this._captions && this._captions.activeCaption && this._soundInstance) {
+            const activeCaption = this._captions.activeCaption;
+            
+            activeCaption.lineIndex = activeCaption.lines.length;
         }
         this._soundInstance = null; //clear the audio instance
         this._listCounter++; //advance list
@@ -401,7 +405,7 @@ export default class VOPlayer extends Messenger {
     _syncCaptionToSound (elapsed) {
         if (!this._soundInstance) return;
 
-        this._captions.seek(this._soundInstance.position);
+        this._captions.update(elapsed / 1000);
     }
 
     /**
@@ -417,18 +421,20 @@ export default class VOPlayer extends Messenger {
 
         if (this.assetCache.has(this._currentVO)) {
             this._soundInstance = Sound.play(this._currentVO, this._onSoundFinished);
+            this._soundInstance.volume = this.volume;
         } else {
             const arr = arrayCache.setUp(this._currentVO + '.{ogg,mp3}');
 
             this.assetCache.load(arr, null, () => {
                 this._soundInstance = Sound.play(this._currentVO, this._onSoundFinished);
+                this._soundInstance.volume = this.volume;
             });
 
             arrayCache.recycle(arr);
         }
 
         if (this._captions) {
-            this._captions.play(this._currentVO);
+            this._captions.start(this._currentVO);
             this.game.on("update", this._syncCaptionToSound);
         }
 
@@ -461,7 +467,7 @@ export default class VOPlayer extends Messenger {
             this._soundInstance = null;
         }
         this._currentVO = null;
-        if (this._captions) {
+        if (this._captions && this._captions.activeCaption) {
             this._captions.stop();
         }
         this.game.off("update", this._syncCaptionToSound);
@@ -473,6 +479,20 @@ export default class VOPlayer extends Messenger {
         this._cancelledCallback = null;
         if (c) {
             c();
+        }
+    }
+
+    setVolume (volume) {
+        this.volume = volume;
+        if (this._soundInstance) {
+            this._soundInstance.volume = this.volume;
+        }
+    }
+
+    setCaptionMute (muted) {
+        this.captionMute = muted;
+        if (this._captions) {
+            this._captions.renderer.renderTarget.style.display = muted ? 'none' : 'block';
         }
     }
 

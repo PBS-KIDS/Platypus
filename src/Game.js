@@ -10,7 +10,7 @@
  * @return {platypus.Game} Returns the instantiated game.
  */
 /* global document, platypus, window */
-import {Application, ScaleManager} from 'springroll';
+import {Application, CaptionPlayer, ScaleManager, TextRenderer} from 'springroll';
 import {Container, Renderer, Ticker} from 'pixi.js';
 import {arrayCache, greenSlice, greenSplice, union} from './utils/array.js';
 import Async from './Async.js';
@@ -147,6 +147,18 @@ export default (function () {
                     }
                     
                     this.settings = settings;
+
+                    if (settings.captions) {
+                        const captionsElement = document.getElementById("captions") || (function (canvas) {
+                            const element = document.createElement('div');
+                            
+                            element.setAttribute('id', 'captions');
+                            canvas.parentNode.insertBefore(element, canvas);
+                            return element;
+                        }(this.canvas));
+                        this.voPlayer.captions = new CaptionPlayer(settings.captions, new TextRenderer(captionsElement));
+                    }
+
                     this.stage = new Container();
                     this.renderer = new Renderer({
                         width: this.canvas.width,
@@ -244,7 +256,7 @@ export default (function () {
 
             this.voPlayer = new VOPlayer(this, platypus.assetCache);
             this.voPlayer.trackSound = platypus.supports.iOS;
-
+            
             this.springroll = (function () {
                 const
                     springroll = new Application({
@@ -252,7 +264,8 @@ export default (function () {
                             sfx: true,
                             vo: true,
                             music: true,
-                            sound: true
+                            sound: true,
+                            captions: true
                         }
                     }),
                     state = springroll.state;
@@ -292,6 +305,10 @@ export default (function () {
                 
                 state.voVolume.subscribe(function (current) {
                     platypus.game.voPlayer.setVolume(current);
+                });
+
+                state.captionsMuted.subscribe(function (current) {
+                    platypus.game.voPlayer.setCaptionMute(current);
                 });
                 
                 state.sfxVolume.subscribe(function (current) {
