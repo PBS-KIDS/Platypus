@@ -11,7 +11,7 @@
  */
 /* global platypus */
 import {Container, Graphics, Rectangle, RenderTexture, Sprite} from 'pixi.js';
-import {arrayCache, greenSlice, union} from '../utils/array.js';
+import {arrayCache, greenSlice, greenSplice, union} from '../utils/array.js';
 import AABB from '../AABB.js';
 import PIXIAnimation from '../PIXIAnimation.js';
 import RenderContainer from './RenderContainer.js';
@@ -38,10 +38,7 @@ export default (function () {
 
             return x;
         },
-        transformCheck = function (value, tile) {
-            var v = +(value.substring(4)),
-                x = 0;
-
+        transformCheck = function (v, tile) {
             if (0x80000000 & v) {
                 tile.scale.x = -1;
             }
@@ -49,19 +46,22 @@ export default (function () {
                 tile.scale.y = -1;
             }
             if (0x20000000 & v) {
-                x = tile.scale.x;
+                const x = tile.scale.x;
                 tile.scale.x = tile.scale.y;
                 tile.scale.y = -x;
                 tile.rotation = Math.PI / 2;
             }
-
-            return 0x0fffffff & v;
         },
-        Template = function (tile, id) {
+        Template = function (tileSpriteSheet, id, uninitializedTiles) {
             this.id = id;
-            this.instances = arrayCache.setUp(tile);
+            this.instances = arrayCache.setUp();
             this.index = 0;
-            tile.template = this; // backwards reference for clearing index later.
+
+            // jit sprite
+            this.tileSpriteSheet = tileSpriteSheet;
+            this.getNext = this.initializeAndGetNext;
+            this.uninitializedTiles = uninitializedTiles;
+            uninitializedTiles.push(this);
         },
         nullTemplate = {
             getNext: doNothing,
@@ -69,13 +69,34 @@ export default (function () {
         },
         prototype = Template.prototype;
 
+    prototype.initializeAndGetNext = function () {
+        this.initialize();
+
+        this.index += 1;
+        return this.instances[0];
+    };
+
+    prototype.initialize = function () {
+        const
+            index = +(this.id.substring(4)),
+            anim = 'tile' + (0x0fffffff & index),
+            tile = new Sprite((this.tileSpriteSheet._animations[anim] || this.tileSpriteSheet._animations.default).texture);
+            
+        transformCheck(index, tile);
+        tile.template = this; // backwards reference for clearing index later.
+        this.instances.push(tile);
+        greenSplice(this.uninitializedTiles, this.uninitializedTiles.indexOf(this));
+
+        delete this.getNext;
+    };
+
     prototype.getNext = function () {
         var instance = this.instances[this.index],
             template = null;
 
         if (!instance) {
             template = this.instances[0];
-            instance = this.instances[this.index] = new Sprite(template._animation.texture);
+            instance = this.instances[this.index] = new Sprite(template.texture);
 
             // Copy properties
             instance.scale    = template.scale;
@@ -255,8 +276,11 @@ export default (function () {
             this.cache = AABB.setUp();
             this.cachePixels = AABB.setUp();
 
+            this.uninitializedTiles = arrayCache.setUp();
+
             // Set up containers
             this.spriteSheet = PIXIAnimation.formatSpriteSheet(this.spriteSheet);
+            this.tileSpriteSheet = new PIXIAnimation(this.spriteSheet);
             this.tileContainer = new Container();
             this.mapContainer = new Container();
             this.mapContainer.addChild(this.tileContainer);
@@ -387,6 +411,8 @@ export default (function () {
                     } else {
                         this.update(this.cacheTexture, this.cache);
                     }
+                } else if (this.uninitializedTiles.length) { // Pre-render any tiles left to be prerendered to reduce lag on camera movement
+                    this.uninitializedTiles[0].initialize();
                 }
             }
         },
@@ -540,19 +566,12 @@ export default (function () {
             },
 
             createTile: function (imageName) {
-                var tile = null,
-                    anim = '';
-
                 // "tile-1" is empty, so it remains a null reference.
                 if (imageName === 'tile-1') {
                     return nullTemplate;
                 }
 
-                tile = new PIXIAnimation(this.spriteSheet);
-                anim = 'tile' + transformCheck(imageName, tile);
-                tile.gotoAndStop(anim);
-
-                return Template.setUp(tile, imageName);
+                return Template.setUp(this.tileSpriteSheet, imageName, this.uninitializedTiles);
             },
 
             createMap: function (mapDefinition) {
@@ -1020,6 +1039,7 @@ export default (function () {
                 this.laxCam.recycle();
                 this.cache.recycle();
                 this.cachePixels.recycle();
+                arrayCache.recycle(this.uninitializedTiles);
             }
         },
         
