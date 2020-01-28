@@ -1222,7 +1222,7 @@ export default (function () {
                     i = 0;
                 
                 // Need to check whether the entity can be combined for optimization. This combining of tile layers might be a nice addition to the compilation tools so it's not happening here.
-                entityDefinition = platypus.game.settings.entities[entity];
+                entityDefinition = platypus.game.settings.entities[entity] || standardEntityLayers[entity];
                 if (entityDefinition) {
                     i = entityDefinition.components.length;
                     while (i--) {
