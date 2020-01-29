@@ -123,7 +123,34 @@ export default (function () {
             message.tile.recycle();
             message.recycle();
             
-            this.owner.removeComponent(this);
+            if (this.lazyLoads.length) {
+                this.lazyLoads.sort((a, b) => b.aabb.left - a.aabb.left); // Maybe a smidge faster since we can cut out once it's too far to the right.
+                this.addEventListener("camera-update", (camera) => {
+                    const
+                        lazyLoads = this.lazyLoads,
+                        viewport = camera.viewport;
+                    let i = lazyLoads.length;
+
+                    while (i--) {
+                        const entity = lazyLoads[i],
+                            aabb = entity.aabb;
+
+                        if (viewport.intersects(aabb)) {
+                            aabb.recycle();
+                            entity.aabb = null;
+                            this.owner.addEntity(entity);
+                            for (let j = i + 1; j < lazyLoads.length; j++) {
+                                lazyLoads[j - 1] = lazyLoads[j];
+                            }
+                            lazyLoads.length -= 1;
+                        } else if (aabb.left > viewport.right) { // we're at the end of viable aabb's
+                            break;
+                        }
+                    }
+                });
+            } else {
+                this.owner.removeComponent(this);
+            }
 
             if (callback) {
                 callback();
@@ -566,6 +593,7 @@ export default (function () {
             this.assetCache = platypus.assetCache;
             this.layerZ = 0;
             this.followEntity = false;
+            this.lazyLoads = arrayCache.setUp();
         },
 
         events: {
@@ -782,6 +810,7 @@ export default (function () {
                 if ((entityKind === 'render-layer') && (!this.separateTiles) && combineRenderLayer && (combineRenderLayer.tileHeight === tHeight) && (combineRenderLayer.tileWidth === tWidth) && (combineRenderLayer.columns === width) && (combineRenderLayer.rows === height)) {
                     combineRenderLayer.triggerEvent('add-tiles', renderTiles);
                     this.updateLoadingProgress(progress);
+                    console.log('combined!');
                     return combineRenderLayer;
                 } else {
                     props = {};
@@ -895,6 +924,8 @@ export default (function () {
                     x = 0,
                     y = 0;
                 
+                let debugTime = Date.now();
+
                 //format level appropriately
                 if (typeof levelData.level === 'string') {
                     level = platypus.game.settings.levels[levelData.level];
@@ -946,13 +977,11 @@ export default (function () {
                 }
 
                 progress.total = i = layers.length;
-                while (i--) { // Preparatory pass through layers.
-                    if (layers[i].type === 'objectgroup') {
-                        progress.total += layers[i].objects.length;
-                    }
-                }
 
                 this.finishedLoading = finishedLoading.bind(this, level, x, y, width, height, tileWidth, tileHeight, callback);
+
+                console.log('    preparation: ' + (Date.now() - debugTime) + 'ms');
+                debugTime = Date.now();
 
                 for (i = 0; i < layers.length; i++) {
                     layerDefinition = layers[i];
@@ -974,6 +1003,10 @@ export default (function () {
                         this.updateLoadingProgress(progress);
                     }
                     this.layerZ += this.layerIncrement;
+
+                    console.log('    ' + layerDefinition.type + ': ' + (Date.now() - debugTime) + 'ms');
+                    debugTime = Date.now();
+    
                 }
 
                 tilesetObjectGroups.recycle();
@@ -1012,41 +1045,49 @@ export default (function () {
                         a = 0,
                         v = null,
                         obj = 0,
-                        entity = null,
                         entityDefinition = null,
                         entityDefProps = null,
                         entityPositionX = getProperty(layer.properties, 'entityPositionX') || this.entityPositionX,
                         entityPositionY = getProperty(layer.properties, 'entityPositionY') || this.entityPositionY,
-                        entityType = '',
                         gid = -1,
                         smallestX = Infinity,
                         largestX = -Infinity,
                         smallestY = Infinity,
                         largestY = -Infinity,
-                        entityData = null,
-                        properties = null,
                         polyPoints = null,
                         fallbackWidth = 0,
                         fallbackHeight = 0,
                         transformX = transform ? transform.x : 1,
-                        transformY = transform ? transform.y : 1;
+                        transformY = transform ? transform.y : 1,
+                        len = layer.objects.length;
     
                     mapOffsetX += layer.offsetx || 0;
                     mapOffsetY += layer.offsety || 0;
+
+                    progress.total += len;
     
-                    for (obj = 0; obj < layer.objects.length; obj++) {
-                        entity     = layer.objects[obj];
-                        entityData = getEntityData(entity, tilesets);
+                    for (obj = 0; obj < len; obj++) {
+                        const
+                            entity = layer.objects[obj],
+                            entityData = getEntityData(entity, tilesets);
+                        
                         if (entityData) {
+                            const
+                                properties = entityData.properties,
+                                entityType = entityData.type,
+                                entityPackage = {
+                                    properties: properties
+                                };
+
                             gid = entityData.gid;
-                            entityType = entityData.type;
                             entityDefinition = platypus.game.settings.entities[entityType];
                             if (entityDefinition) {
                                 entityDefProps = entityDefinition.properties || null;
+                                entityPackage.type = entityType;
                             } else {
                                 entityDefProps = null;
+                                entityPackage.id = entityType;
                             }
-                            properties = entityData.properties;
     
                             if (entity.polygon || entity.polyline) {
                                 //Figuring out the width of the polygon and shifting the origin so it's in the top-left.
@@ -1195,17 +1236,20 @@ export default (function () {
                                 properties.z = this.layerZ;
                             }
     
-                            entity = this.owner.addEntity(new Entity(entityDefinition, {
-                                properties: properties
-                            }, this.updateLoadingProgress.bind(this, progress), this.owner));
-                            if (entity) {
-                                if (entity.camera) {
+                            if (properties.lazyLoad || (entityDefProps && entityDefProps.lazyLoad)) {
+                                entityPackage.aabb = AABB.setUp(properties.x, properties.y, properties.width || 1, properties.height || 1);
+                                this.lazyLoads.push(entityPackage);
+                                this.updateLoadingProgress(progress);
+                            } else {
+                                const
+                                    createdEntity = this.owner.addEntity(entityPackage, this.updateLoadingProgress.bind(this, progress));
+
+                                if (createdEntity && createdEntity.camera) {
                                     this.followEntity = {
-                                        entity: entity,
-                                        mode: entity.camera
+                                        entity: createdEntity,
+                                        mode: createdEntity.camera
                                     }; //used by camera
                                 }
-                                this.owner.triggerEvent('entity-created', entity);
                             }
                         } else {
                             this.updateLoadingProgress(progress);
@@ -1264,6 +1308,8 @@ export default (function () {
             },
 
             destroy: function () {
+                arrayCache.recycle(this.lazyLoads);
+                this.lazyLoads = null;
             }
         },
         
