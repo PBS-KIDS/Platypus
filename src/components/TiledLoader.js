@@ -97,8 +97,11 @@ export default (function () {
                     "level", null,
                     "world", AABB.setUp(),
                     "tile", AABB.setUp(),
-                    "camera", null
+                    "camera", null,
+                    "lazyLoads", this.lazyLoads
                 );
+
+            this.lazyLoads.sort((a, b) => b.aabb.left - a.aabb.left); // Maybe a smidge faster since we can cut out once it's too far to the right.
 
             /**
              * Once finished loading the map, this message is triggered on the entity to notify other components of completion.
@@ -111,6 +114,7 @@ export default (function () {
              * @param message.tile {platypus.AABB} Dimensions of the world tiles.
              * @param message.world {platypus.AABB} Dimensions of the world.
              * @param message.camera {platypus.Entity} If a camera property is found on one of the loaded entities, this property will point to the entity on load that a world camera should focus on.
+             * @param message.lazyLoads {Array} List of objects representing entity definitions that will await camera focus before generating actual entities.
              */
             message.level = level;
             message.camera = this.followEntity; // TODO: in 0.9.0 this should probably be removed, using something like "child-entity-added" instead. Currently this is particular to TiledLoader and Camera and should be generalized. - DDD 3/15/2016
@@ -124,7 +128,6 @@ export default (function () {
             message.recycle();
             
             if (this.lazyLoads.length) {
-                this.lazyLoads.sort((a, b) => b.aabb.left - a.aabb.left); // Maybe a smidge faster since we can cut out once it's too far to the right.
                 this.addEventListener("camera-update", (camera) => {
                     const
                         lazyLoads = this.lazyLoads,
