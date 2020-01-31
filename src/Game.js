@@ -139,6 +139,7 @@ export default (function () {
             var displayOptions = options.display || {},
                 load = function (displayOptions, settings) {
                     const
+                        dpi = window.devicePixelRatio || 1,
                         ticker = Ticker.shared;
                         
                     platypus.game = this; //Make this instance the only Game instance.
@@ -189,21 +190,21 @@ export default (function () {
                                 frame = document.getElementById('content'),
                                 newHeight = (width / smallRatio) >> 0,
                                 newWidth = (height * largeRatio) >> 0;
-                            let h = height,
-                                w = width;
+                            let h = height * dpi,
+                                w = width * dpi;
                 
                             if (height > newHeight) {
                                 frame.style.height = newHeight + 'px';
                                 frame.style.top = (((height - newHeight) / 2) >> 0) + 'px';
                                 frame.style.width = '';
                                 frame.style.left = '';
-                                h = newHeight;
+                                h = newHeight * dpi;
                             } else if (width > newWidth) {
                                 frame.style.width = newWidth + 'px';
                                 frame.style.left = (((width - newWidth) / 2) >> 0) + 'px';
                                 frame.style.height = '';
                                 frame.style.top = '';
-                                w = newWidth;
+                                w = newWidth * dpi;
                             } else {
                                 frame.style.height = '';
                                 frame.style.top = '';
@@ -219,7 +220,7 @@ export default (function () {
                             const
                                 renderer = this.renderer;
 
-                            renderer.resize(width, height);
+                            renderer.resize(width * dpi, height * dpi);
                             renderer.render(this.stage); // to prevent flickering from canvas adjustment.
                         });
                     }
