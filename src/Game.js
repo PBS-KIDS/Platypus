@@ -138,10 +138,11 @@ export default (function () {
         constructor (definition, options, onFinishedLoading) {
             var displayOptions = options.display || {},
                 load = function (displayOptions, settings) {
-                    var ticker = Ticker.shared;
+                    const
+                        ticker = Ticker.shared;
                         
                     platypus.game = this; //Make this instance the only Game instance.
-
+                    
                     if (config.dev) {
                         settings.debug = true;
                     }
@@ -171,11 +172,59 @@ export default (function () {
                         backgroundColor: displayOptions.backgroundColor || 0,
                         autoResize: false
                     });
-                    this.scaleManager = new ScaleManager(({width, height/*, ratio*/}) => {
-                        var renderer = this.renderer;
 
-                        renderer.resize(width, height);
-                        renderer.render(this.stage); // to prevent flickering from canvas adjustment.
+                    if (displayOptions.aspectRatio) { // Aspect ratio may be a single value like "4:3" or "4:3-2:1" for a range
+                        const
+                            aspectRatioRange = displayOptions.aspectRatio.split('-'),
+                            ratioArray1 = aspectRatioRange[0].split(':'),
+                            ratioArray2 = aspectRatioRange[aspectRatioRange.length - 1].split(':'),
+                            ratio1 = ratioArray1[0] / ratioArray1[1],
+                            ratio2 = ratioArray2[0] / ratioArray2[1],
+                            smallRatio = Math.min(ratio1, ratio2),
+                            largeRatio = Math.max(ratio1, ratio2);
+
+                        this.scaleManager = new ScaleManager(({width, height/*, ratio*/}) => {
+                            const
+                                renderer = this.renderer,
+                                frame = document.getElementById('content'),
+                                newHeight = (width / smallRatio) >> 0,
+                                newWidth = (height * largeRatio) >> 0;
+                            let h = height,
+                                w = width;
+                
+                            if (height > newHeight) {
+                                frame.style.height = newHeight + 'px';
+                                frame.style.top = (((height - newHeight) / 2) >> 0) + 'px';
+                                frame.style.width = '';
+                                frame.style.left = '';
+                                h = newHeight;
+                            } else if (width > newWidth) {
+                                frame.style.width = newWidth + 'px';
+                                frame.style.left = (((width - newWidth) / 2) >> 0) + 'px';
+                                frame.style.height = '';
+                                frame.style.top = '';
+                                w = newWidth;
+                            } else {
+                                frame.style.height = '';
+                                frame.style.top = '';
+                                frame.style.width = '';
+                                frame.style.left = '';
+                            }
+
+                            renderer.resize(w, h);
+                            renderer.render(this.stage); // to prevent flickering from canvas adjustment.
+                        });
+                    } else {
+                        this.scaleManager = new ScaleManager(({width, height/*, ratio*/}) => {
+                            const
+                                renderer = this.renderer;
+
+                            renderer.resize(width, height);
+                            renderer.render(this.stage); // to prevent flickering from canvas adjustment.
+                        });
+                    }
+                    this.scaleManager.onResize({ // Run once to resize content div.
+                        target: window
                     });
 
                     if (onFinishedLoading) {
