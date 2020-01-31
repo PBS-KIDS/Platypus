@@ -359,7 +359,7 @@ export default (function () {
         );
         
         this.multiply(arr);
-        
+
         temp.recycle();
         arrayCache.recycle(arr, 2);
         
@@ -395,25 +395,29 @@ export default (function () {
      * @chainable
      */
     proto.multiply = function (multiplier, limit) {
-        var i = 0,
-            j = 0,
-            arr = null,
-            l = 0;
+        const
+            matrix = this.matrix;
         
         if (Array.isArray(multiplier)) {
-            arr = greenSlice(this.matrix);
-            l = limit || multiplier.length;
-            for (i = 0; i < l; i++) {
-                this.matrix[i] = 0;
-                for (j = 0; j < l; j++) {
-                    this.matrix[i] += arr[j] * multiplier[i][j];
-                }
+            const
+                arr = greenSlice(matrix);
+
+            if (multiplier.length === 2) {
+                matrix[0] = arr[0] * multiplier[0][0] + arr[1] * multiplier[0][1];
+                matrix[1] = arr[0] * multiplier[1][0] + arr[1] * multiplier[1][1];
+            } else if (multiplier.length >= 3) {
+                matrix[0] = arr[0] * multiplier[0][0] + arr[1] * multiplier[0][1] + arr[2] * multiplier[0][2];
+                matrix[1] = arr[0] * multiplier[1][0] + arr[1] * multiplier[1][1] + arr[2] * multiplier[1][2];
+                matrix[2] = arr[0] * multiplier[2][0] + arr[1] * multiplier[2][1] + arr[2] * multiplier[2][2];
             }
+
             arrayCache.recycle(arr);
         } else {
-            l = limit || this.matrix.length;
-            for (i = 0; i < l; i++) {
-                this.matrix[i] *= multiplier;
+            const
+                l = limit || matrix.length;
+
+            for (let i = 0; i < l; i++) {
+                matrix[i] *= multiplier;
             }
         }
         

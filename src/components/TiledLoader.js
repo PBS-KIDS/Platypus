@@ -1240,7 +1240,7 @@ export default (function () {
                             }
     
                             if (properties.lazyLoad || (entityDefProps && entityDefProps.lazyLoad)) {
-                                entityPackage.aabb = AABB.setUp(properties.x, properties.y, properties.width || 1, properties.height || 1);
+                                entityPackage.aabb = AABB.setUp(properties.x + properties.width / 2 - properties.regX, properties.y + properties.height / 2 - properties.regY, properties.width || 1, properties.height || 1);
                                 this.lazyLoads.push(entityPackage);
                                 this.updateLoadingProgress(progress);
                             } else {

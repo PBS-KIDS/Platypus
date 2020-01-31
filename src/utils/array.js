@@ -39,11 +39,11 @@ export function union (arrayTo, ...arrayFrom) {
  * @return Array
  */
 export function greenSlice (array) {
-    var arr = arrayCache.setUp(),
-        i = 0,
-        length = array.length;
+    const
+        arr = arrayCache.setUp(),
+        len = array.length;
         
-    for (i = 0; i < length; i++) {
+    for (let i = 0; i < len; i++) {
         arr[i] = array[i];
     }
     
@@ -59,19 +59,19 @@ export function greenSlice (array) {
  * @return {any}
  */
 export function greenSplice (array, index) {
-    var i = 0,
+    const
         item = array[index],
-        length = array.length;
+        len = array.length;
         
-    if ((index < 0) || (index >= length)) {
+    if ((index < 0) || (index >= len)) {
         return null;
     }
     
-    for (i = index + 1; i < length; i++) {
+    for (let i = index + 1; i < len; i++) {
         array[i - 1] = array[i];
     }
     
-    if (length) {
+    if (len) {
         array.length -= 1;
     }
     
