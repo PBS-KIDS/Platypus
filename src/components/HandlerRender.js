@@ -182,16 +182,20 @@ export default (function () {
                     }
                 }
 
-                if (!this.paused && this.owner.triggerEventOnChildren) {
+                if (!this.paused) {
                     /**
-                     * Triggered every tick on the children entities.
+                     * Triggered every tick on owner and its children entities.
                      *
                      * @event 'handle-render'
                      * @param data {Object}
                      * @param data.delta {Number} The delta time for this tick.
                      * @param data.container {PIXI.Container} The display Container the entities display objects should be added to.
                      */
-                    this.owner.triggerEventOnChildren('handle-render', message);
+                    this.owner.triggerEvent('handle-render', message);
+
+                    if (this.owner.triggerEventOnChildren) {
+                        this.owner.triggerEventOnChildren('handle-render', message);
+                    }
                 }
 
                 if (worldContainer.reorder) {
