@@ -607,14 +607,17 @@ export default createComponentClass({
         },
         
         /**
-         * This message causes the entity's x,y coordinates to update.
+         * This message causes the entity's x,y coordinates to update. (Usually after collision checks, but can be used to avoid collision checks during logic handling.)
          *
          * @method 'relocate-entity'
-         * @param position {platypus.Vector} The new coordinates.
-         * @param [position.relative=false] {boolean} Determines whether the provided x,y coordinates are relative to the entity's current position.
+         * @param location {Object|platypus.Vector} The new coordinates.
+         * @param [location.position] {platypus.Vector} If specified, this vector is used instead of the passed-in object as the location.
+         * @param [location.relative=false] {boolean} Determines whether the provided x,y coordinates are relative to the entity's current position.
+         * @param [location.unstick=null] {platypus.Vector} Where the entity should be moved to unstick from collision contact.
+         * @param [relative] If `location.relative` is not specified, this parameter is also checked.
          */
-        "relocate-entity": function (resp) {
-            var unstick = resp.unstick,
+        "relocate-entity": function (location, relative) {
+            var unstick = location.unstick,
                 um      = 0,
                 i       = 0,
                 x       = 0,
@@ -622,7 +625,8 @@ export default createComponentClass({
                 aabb    = this.aabb,
                 owner   = this.owner,
                 shape   = null,
-                shapes  = this.shapes;
+                shapes  = this.shapes,
+                v = location.position || location;
             
             if (unstick) {
                 um = unstick.magnitude();
@@ -633,10 +637,10 @@ export default createComponentClass({
                 this.move = null;
             }
             
-            if (resp.relative) {
-                owner.position.setVector(owner.previousPosition).add(resp.position);
+            if (location.relative || relative) {
+                owner.position.setVector(owner.previousPosition).add(v);
             } else {
-                owner.position.setVector(resp.position);
+                owner.position.setVector(v);
             }
 
             if (this.stuck) {
