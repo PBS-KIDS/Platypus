@@ -79,37 +79,6 @@ export default (function () {
                 this.owner.triggerEvent('sequence-complete');
             }
             arrayCache.recycle(soundList);
-        },
-        playSound = function (soundDefinition, value) {
-            var soundList = null,
-                eventList = arrayCache.setUp(),
-                player = this.player;
-
-            if (typeof soundDefinition === 'string') {
-                soundList = arrayCache.setUp(soundDefinition);
-            } else if (Array.isArray(soundDefinition)) {
-                soundList = setupEventList(soundDefinition, eventList, player);
-            } else {
-                if (soundDefinition.events) {
-                    addEvents(soundDefinition.events, eventList);
-                }
-                if (Array.isArray(soundDefinition.sound)) {
-                    soundList = setupEventList(soundDefinition.sound, eventList, player);
-                } else {
-                    soundList = arrayCache.setUp(soundDefinition.sound);
-                }
-            }
-            
-            if (value && value.events) {
-                addEvents(value.events, eventList);
-            }
-
-            player.play(soundList, onComplete.bind(this, true, soundList), onComplete.bind(this, false, soundList));
-
-            // Removing `this.eventList` after play call since playing a VO clip could be stopping a currently playing clip with events in progress.
-            arrayCache.recycle(this.eventList);
-            this.eventList = eventList;
-            this.playingAudio = true;
         };
     
     return createComponentClass({
@@ -162,7 +131,7 @@ export default (function () {
                          * @method '*'
                          * @param [message.events] {Array} Used to specify the list of events to trigger while playing this audio sequence.
                          */
-                        this.addEventListener(key, playSound.bind(this, this.audioMap[key]));
+                        this.addEventListener(key, this.playSound.bind(this, this.audioMap[key]));
                     }
                 }
             }
@@ -180,6 +149,10 @@ export default (function () {
                 if (!this.paused) {
                     this.checkTimeEvents(false);
                 }
+            },
+
+            "play-voice-over": function (vo) {
+                this.playSound(vo);
             },
 
             /**
@@ -218,6 +191,38 @@ export default (function () {
                 }
                 arrayCache.recycle(this.eventList);
                 this.eventList = null;
+            },
+
+            playSound: function (soundDefinition, value) {
+                var soundList = null,
+                    eventList = arrayCache.setUp(),
+                    player = this.player;
+    
+                if (typeof soundDefinition === 'string') {
+                    soundList = arrayCache.setUp(soundDefinition);
+                } else if (Array.isArray(soundDefinition)) {
+                    soundList = setupEventList(soundDefinition, eventList, player);
+                } else {
+                    if (soundDefinition.events) {
+                        addEvents(soundDefinition.events, eventList);
+                    }
+                    if (Array.isArray(soundDefinition.sound)) {
+                        soundList = setupEventList(soundDefinition.sound, eventList, player);
+                    } else {
+                        soundList = arrayCache.setUp(soundDefinition.sound);
+                    }
+                }
+                
+                if (value && value.events) {
+                    addEvents(value.events, eventList);
+                }
+    
+                player.play(soundList, onComplete.bind(this, true, soundList), onComplete.bind(this, false, soundList));
+    
+                // Removing `this.eventList` after play call since playing a VO clip could be stopping a currently playing clip with events in progress.
+                arrayCache.recycle(this.eventList);
+                this.eventList = eventList;
+                this.playingAudio = true;
             }
         }
     });
