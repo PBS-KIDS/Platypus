@@ -269,7 +269,8 @@ export default (function () {
                     this.tickInstance = this.tick.bind(this, ticker, {
                         delta: 0, // standard, backwards-compatible parameter for `deltaMS`
                         deltaMS: 0, // MS from last frame (matches above)
-                        deltaTime: 0 // PIXI ticker frame value
+                        deltaTime: 0, // PIXI ticker frame value
+                        elapsed: 0 // MS since game start (minus pauses)
                     });
 
                     // START GAME!
@@ -395,6 +396,7 @@ export default (function () {
 
             tickMessage.delta = tickMessage.deltaMS = ticker.deltaMS;
             tickMessage.deltaTime = deltaTime;
+            tickMessage.elapsed += ticker.deltaMS;
 
             // If layers need to be loaded, load them!
             if (loading.length) {
@@ -405,6 +407,7 @@ export default (function () {
             }
 
             TweenJS.update();
+            this.triggerEvent('tick', tickMessage);
             this.triggerOnChildren('tick', tickMessage);
             this.renderer.render(this.stage);
         }

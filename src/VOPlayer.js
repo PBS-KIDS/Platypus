@@ -262,8 +262,8 @@ export default class VOPlayer extends Messenger {
             this._soundInstance.pause();
         
         //remove any update callback
-        this.game.off("update", this._syncCaptionToSound);
-        this.game.off("update", this._updateSilence);
+        this.game.off("tick", this._syncCaptionToSound);
+        this.game.off("tick", this._updateSilence);
     }
 
     /**
@@ -280,12 +280,12 @@ export default class VOPlayer extends Messenger {
         //captions for solo captions or VO
         if (this._captions.activeCaption) {
             if (this._soundInstance) {
-                this.game.on("update", this._syncCaptionToSound);
+                this.game.on("tick", this._syncCaptionToSound);
             }
 
             //timer
         } else {
-            this.game.on("update", this._updateSilence);
+            this.game.on("tick", this._updateSilence);
         }
     }
 
@@ -335,8 +335,8 @@ export default class VOPlayer extends Messenger {
         if (this._listCounter >= 0)
             this.trigger("end", this._currentVO);
         //remove any update callback
-        this.game.off("update", this._syncCaptionToSound);
-        this.game.off("update", this._updateSilence);
+        this.game.off("tick", this._syncCaptionToSound);
+        this.game.off("tick", this._updateSilence);
 
         //if we have captions and an audio instance, set the caption time to the length of the audio
         if (this._captions && this._captions.activeCaption && this._soundInstance) {
@@ -374,7 +374,7 @@ export default class VOPlayer extends Messenger {
             } else {
                 this._timer = this._currentVO; //set up a timer to wait
                 this._currentVO = null;
-                this.game.on("update", this._updateSilence);
+                this.game.on("tick", this._updateSilence);
                 this.trigger("start", null);
             }
         }
@@ -387,11 +387,10 @@ export default class VOPlayer extends Messenger {
      * @private
      * @param {int} elapsed The time elapsed since the previous frame, in milliseconds.
      */
-    _updateSilence (elapsed) {
-        this._timer -= elapsed;
+    _updateSilence (tick) {
+        this._timer -= tick.delta;
 
-        if (this._timer <= 0)
-        {
+        if (this._timer <= 0) {
             this._onSoundFinished();
         }
     }
@@ -403,10 +402,10 @@ export default class VOPlayer extends Messenger {
      * @private
      * @param {int} elapsed The time elapsed since the previous frame, in milliseconds.
      */
-    _syncCaptionToSound (elapsed) {
+    _syncCaptionToSound (tick) {
         if (!this._soundInstance) return;
 
-        this._captions.update(elapsed / 1000);
+        this._captions.update(tick.delta / 1000);
     }
 
     /**
@@ -436,7 +435,7 @@ export default class VOPlayer extends Messenger {
 
         if (this._captions) {
             this._captions.start(this._currentVO);
-            this.game.on("update", this._syncCaptionToSound);
+            this.game.on("tick", this._syncCaptionToSound);
         }
 
         for (let i = this._listCounter + 1; i < this.voList.length; ++i) {
@@ -471,8 +470,8 @@ export default class VOPlayer extends Messenger {
         if (this._captions && this._captions.activeCaption) {
             this._captions.stop();
         }
-        this.game.off("update", this._syncCaptionToSound);
-        this.game.off("update", this._updateSilence);
+        this.game.off("tick", this._syncCaptionToSound);
+        this.game.off("tick", this._updateSilence);
         this.voList = null;
         this._timer = 0;
         this._callback = null;
