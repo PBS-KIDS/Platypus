@@ -4,7 +4,6 @@
  * @namespace platypus
  * @class VOPlayer
  */
-import CaptionPlayer from 'springroll';
 import Messenger from './Messenger.js';
 import Sound from 'pixi-sound';
 import {arrayCache} from './utils/array.js';
@@ -239,7 +238,9 @@ export default class VOPlayer extends Messenger {
         if (index < this.voList.length) {
             const item = this.voList[index];
             if (typeof item === "string") {
-                total += this._soundInstance.progress * this._soundInstance.duration; // progress is aledgedly 0-1 :shrug:
+                if (this._soundInstance) {
+                    total += this._soundInstance._elapsed * 1000;
+                } // Otherwise it's not yet loaded so progress is `0`
             } else if (typeof item === "number") {
                 total += item - this._timer;
             }
