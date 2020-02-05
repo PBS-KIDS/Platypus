@@ -1,6 +1,6 @@
 {
     "name": "platypus",
-    "version": "2.0.0-alpha2",
+    "version": "2.0.0-alpha3",
     "description": "Platypus Docs",
     "license": "MIT",
     "main": "lib/platypus.js",
@@ -23,7 +23,7 @@
         "pixi-spine": "2.1.4",
         "pixi.js": "5.2.0",
         "recycle": "https://github.com/gopherwood/recycle.git#master",
-        "springroll": "2.1.1"
+        "springroll": "2.2.0"
     },
     "devDependencies": {
         "grunt": "^0.4.5",
