@@ -423,7 +423,10 @@ export default class VOPlayer extends Messenger {
             this._soundInstance = Sound.play(this._currentVO, this._onSoundFinished);
             this._soundInstance.volume = this.volume;
         } else {
-            const arr = arrayCache.setUp(this._currentVO + '.{ogg,mp3}');
+            const arr = arrayCache.setUp({
+                id: this._currentVO,
+                src: this._currentVO + '.{ogg,mp3}'
+            });
 
             this.assetCache.load(arr, null, () => {
                 this._soundInstance = Sound.play(this._currentVO, this._onSoundFinished);

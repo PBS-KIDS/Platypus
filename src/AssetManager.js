@@ -22,21 +22,15 @@ const
         wav: 'audio',
         "{ogg,mp3}": 'audio'
     },
-    formatAsset = function (asset) {
-        var match = asset.match(fn),
-            a = Data.setUp(
-                'id', asset,
-                'src', (platypus.game.options[folders[match[2].toLowerCase()]] || '') + asset
-            );
-        
-        //TODO: Make this behavior less opaque.
-        if (match) {
-            a.id = match[1];
-        } else {
-            platypus.debug.warn('Layer: A listed asset should provide the entire file path.');
-        }
-        
-        return a;
+    formatAsset = function (asset) { //TODO: Make this behavior less opaque.
+        const
+            path = asset.src || asset,
+            match = path.match(fn);
+            
+        return Data.setUp(
+            'id', asset.id || (match ? match[1] : path),
+            'src', (platypus.game.options[folders[match[2].toLowerCase()]] || '') + path
+        );
     };
 
 export default class AssetManager {
