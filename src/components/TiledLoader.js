@@ -151,6 +151,22 @@ export default (function () {
                         }
                     }
                 });
+                if (this.backgroundLoad) {
+                    this.addEventListener('tick', function () {
+                        const
+                            lazyLoads = this.lazyLoads,
+                            i = lazyLoads.length;
+
+                        if (i) {
+                            const entity = lazyLoads.pop(i - 1),
+                                aabb = entity.aabb;
+
+                            aabb.recycle();
+                            entity.aabb = null;
+                            this.owner.addEntity(entity);
+                        }
+                    });
+                }
             } else {
                 this.owner.removeComponent(this);
             }
@@ -551,7 +567,16 @@ export default (function () {
              * @default null
              * @since 0.6.6
              */
-            spriteSheet: null
+            spriteSheet: null,
+
+            /**
+             * Whether to continue loading `lazyLoad` entities in the background after level starts regardless of camera position. If `false`, entities with a `lazyLoad` property will only load once within camera range.
+             *
+             * @property backgroundLoad
+             * @type Boolean
+             * @default true
+             */
+            backgroundLoad: true
         },
 
         publicProperties: {
