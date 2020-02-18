@@ -1042,11 +1042,43 @@ export default (function () {
             
             setUpEntities: (function () {
                 const
-                    getPolyShape = function (type, points, decomposed) {
+                    tBoth = function (point) {
+                        return Data.setUp('x', -point.x, 'y', -point.y);
+                    },
+                    tNone = function (point) {
+                        return Data.setUp('x', point.x, 'y', point.y);
+                    },
+                    tX = function (point) {
+                        return Data.setUp('x', -point.x, 'y', point.y);
+                    },
+                    tY = function (point) {
+                        return Data.setUp('x', point.x, 'y', -point.y);
+                    },
+                    transformPoints = function (points, transformX, transformY) {
+                        const
+                            arr = arrayCache.setUp(),
+                            reverseCycle = transformX ^ transformY,
+                            transform = transformX ? transformY ? tBoth : tX : transformY ? tY : tNone;
+
+                        if (reverseCycle) {
+                            let i = points.length;
+                            while (i--) {
+                                arr.push(transform(points[i]));
+                            }
+                            arr.unshift(arr.pop()); // so the same point is at the beginning.
+                        } else {
+                            for (let i = 0; i < points.length; i++) {
+                                arr.push(transform(points[i]));
+                            }
+                        }
+
+                        return arr;
+                    },
+                    getPolyShape = function (type, points, transformX, transformY, decomposed) {
                         const
                             shape = {
                                 type: type,
-                                points: points.slice()
+                                points: transformPoints(points, transformX, transformY)
                             };
 
                         if (decomposed) {
@@ -1054,7 +1086,7 @@ export default (function () {
                             let p = 0;
 
                             for (p = 0; p < decomposed.length; p++) {
-                                decomposedPoints.push(decomposed[p].slice());
+                                decomposedPoints.push(transformPoints(decomposed[p], transformX, transformY));
                             }
     
                             shape.decomposedPolygon = decomposedPoints;
@@ -1154,9 +1186,9 @@ export default (function () {
                                 heightOffset = 0;
     
                                 if (entity.polygon) {
-                                    properties.shape = getPolyShape('polygon', polyPoints, properties.decomposedPolygon);
+                                    properties.shape = getPolyShape('polygon', polyPoints, transformX === -1, transformY === -1, properties.decomposedPolygon);
                                 } else if (entity.polyline) {
-                                    properties.shape = getPolyShape('polyline', polyPoints, null);
+                                    properties.shape = getPolyShape('polyline', polyPoints, transformX === -1, transformY === -1, null);
                                 }
 
                                 if (entity.rotation) {

@@ -274,6 +274,12 @@ export default (function () {
                             }
                         }
                         toObject.x = width - fromObject.x;
+                        if (fromObject.polygon) {
+                            toObject.polygon = mirrorPoints(fromObject.polygon);
+                        }
+                        if (fromObject.polyline) {
+                            toObject.polyline = mirrorPoints(fromObject.polyline);
+                        }
                     }
                 }
             }
@@ -286,6 +292,21 @@ export default (function () {
             }
 
             return newSegment;
+        },
+        mirrorPoints = function (points) {
+            const
+                arr = [];
+            let i = points.length;
+
+            while (i--) {
+                arr.push({
+                    x: -points[i].x,
+                    y: points[i].y
+                });
+            }
+            arr.unshift(arr.pop()); // so the same point is at the beginning.
+
+            return arr;
         };
 
     return createComponentClass({
