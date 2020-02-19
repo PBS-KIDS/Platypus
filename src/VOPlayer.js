@@ -414,6 +414,9 @@ export default class VOPlayer extends Messenger {
      * @private
      */
     _playSound () {
+        const
+            currentVO = this._currentVO;
+
         // Only add a sound once
         if (this.trackSound && this._trackedSounds.indexOf(this._currentVO) === -1) {
             this._trackedSounds.push(this._currentVO);
@@ -429,8 +432,10 @@ export default class VOPlayer extends Messenger {
             });
 
             this.assetCache.load(arr, null, () => {
-                this._soundInstance = Sound.play(this._currentVO, this._onSoundFinished);
-                this._soundInstance.volume = this.volume;
+                if (currentVO === this._currentVO) { // so we don't interrupt vo started while this one was loading.
+                    this._soundInstance = Sound.play(this._currentVO, this._onSoundFinished);
+                    this._soundInstance.volume = this.volume;
+                }
             });
 
             arrayCache.recycle(arr);
