@@ -510,11 +510,19 @@ export default class VOPlayer extends Messenger {
      * @public
      */
     unloadSound () {
-        for (let i = 0; i < this._trackedSounds.length; i++) {
-            Sound.remove(this._trackedSounds[i]);
+        const
+            assetCache = this.assetCache,
+            _trackedSounds = this._trackedSounds;
+
+        for (let i = 0; i < _trackedSounds.length; i++) {
+            const trackedSound = _trackedSounds[i];
+
+            // We only remove if this is the only remaining requested instance of this audio.
+            if (assetCache.delete(trackedSound)) {
+                Sound.remove(trackedSound);
+            }
         }
-        this.assetCache.unload(this._trackedSounds);
-        this._trackedSounds.length = 0;
+        _trackedSounds.length = 0;
     }
 
     /**

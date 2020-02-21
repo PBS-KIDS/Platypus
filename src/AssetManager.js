@@ -39,12 +39,19 @@ export default class AssetManager {
         this.counts = Data.setUp();
     }
 
+    /**
+     * @method delete
+     * @param {*} id
+     * @return {Boolean} Returns `true` if asset was removed from asset cache.
+     */
     delete (id) {
         const assets = this.assets;
 
         if (assets.has(id)) {
-            this.count -= 1;
-            if (this.count === 0) {
+            const counts = this.counts;
+
+            counts[id] -= 1;
+            if (counts[id] === 0) {
                 const asset = assets.get(id);
                 
                 if (asset && asset.src) {
@@ -52,6 +59,10 @@ export default class AssetManager {
                 }
                 assets.delete(id);
             }
+
+            return !counts[id];
+        } else {
+            return false;
         }
     }
 

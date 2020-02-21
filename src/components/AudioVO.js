@@ -67,9 +67,9 @@ export default (function () {
         },
         onComplete = function (complete, soundList) {
             this.playingAudio = false;
-            this.player.unloadSound();
             if (!this.owner.destroyed) {
                 this.checkTimeEvents(true);
+                this.player.unloadSound(); // Do this after, so sound times are still referenceable in line above.
                 
                 /**
                  * When an audio sequence is finished playing, this event is triggered.
@@ -77,6 +77,8 @@ export default (function () {
                  * @event sequence-complete
                  */
                 this.owner.triggerEvent('sequence-complete');
+            } else {
+                this.player.unloadSound();
             }
             arrayCache.recycle(soundList);
         };
