@@ -115,7 +115,7 @@ export default class VOPlayer extends Messenger {
         this._captions = null;
 
         this.volume = 1;
-        this.captionMute = false;
+        this.captionMute = true;
     }
 
     /**
