@@ -136,7 +136,8 @@ export default (function () {
 
     class Game extends Messenger {
         constructor (definition, options, onFinishedLoading) {
-            var displayOptions = options.display || {},
+            const
+                displayOptions = options.display || {},
                 load = function (displayOptions, settings) {
                     const
                         dpi = window.devicePixelRatio || 1,
@@ -281,6 +282,7 @@ export default (function () {
                         setUpFPS(ticker, this.canvas);
                     }
                 };
+            let canvas = null;
             
             super();
 
@@ -293,17 +295,24 @@ export default (function () {
 
             // Get or set canvas.
             if (options.canvasId) {
-                this.canvas = window.document.getElementById(options.canvasId);
+                canvas = window.document.getElementById(options.canvasId);
             }
-            if (!this.canvas) {
-                this.canvas = window.document.createElement('canvas');
-                window.document.body.appendChild(this.canvas);
+            if (!canvas) {
+                canvas = window.document.createElement('canvas');
+                window.document.body.appendChild(canvas);
                 if (options.canvasId) {
-                    this.canvas.setAttribute('id', options.canvasId);
+                    canvas.setAttribute('id', options.canvasId);
                 }
             }
-            this.canvas.width = this.canvas.offsetWidth;
-            this.canvas.height = this.canvas.offsetHeight;
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+
+            // Fix for MS Edge so that "no-drag" icon doesn't appear on drag.
+            canvas.ondragstart = function () {
+                return false;
+            };
+
+            this.canvas = canvas;
 
             this.voPlayer = new VOPlayer(this, platypus.assetCache);
             this.voPlayer.trackSound = platypus.supports.iOS;
