@@ -415,7 +415,15 @@ export default class VOPlayer extends Messenger {
      */
     _playSound () {
         const
-            currentVO = this._currentVO;
+            currentVO = this._currentVO,
+            play = () => {
+                this._soundInstance = Sound.play(this._currentVO, this._onSoundFinished);
+                this._soundInstance.volume = this.volume;
+                if (this._captions) {
+                    this._captions.start(this._currentVO);
+                    this.game.on("tick", this._syncCaptionToSound);
+                }
+            };
 
         // Only add a sound once
         if (this.trackSound && this._trackedSounds.indexOf(this._currentVO) === -1) {
@@ -423,8 +431,7 @@ export default class VOPlayer extends Messenger {
         }
 
         if (this.assetCache.has(this._currentVO)) {
-            this._soundInstance = Sound.play(this._currentVO, this._onSoundFinished);
-            this._soundInstance.volume = this.volume;
+            play();
         } else {
             const arr = arrayCache.setUp({
                 id: this._currentVO,
@@ -433,17 +440,11 @@ export default class VOPlayer extends Messenger {
 
             this.assetCache.load(arr, null, () => {
                 if (currentVO === this._currentVO) { // so we don't interrupt vo started while this one was loading.
-                    this._soundInstance = Sound.play(this._currentVO, this._onSoundFinished);
-                    this._soundInstance.volume = this.volume;
+                    play();
                 }
             });
 
             arrayCache.recycle(arr);
-        }
-
-        if (this._captions) {
-            this._captions.start(this._currentVO);
-            this.game.on("tick", this._syncCaptionToSound);
         }
 
         for (let i = this._listCounter + 1; i < this.voList.length; ++i) {
