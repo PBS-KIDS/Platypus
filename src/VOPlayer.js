@@ -4,9 +4,10 @@
  * @namespace platypus
  * @class VOPlayer
  */
+import {arrayCache, greenSplice} from './utils/array.js';
+import Data from './Data.js';
 import Messenger from './Messenger.js';
 import Sound from 'pixi-sound';
-import {arrayCache} from './utils/array.js';
 
     /**
      * A class for managing audio by only playing one at a time, playing a list,
@@ -116,6 +117,8 @@ export default class VOPlayer extends Messenger {
 
         this.volume = 1;
         this.captionMute = true;
+        this.currentlyLoadingAudio = false;
+        this.playQueue = arrayCache.setUp();
     }
 
     /**
@@ -303,15 +306,15 @@ export default class VOPlayer extends Messenger {
      * <code>true</code> then callback will be used instead.
      */
     play (idOrList, callback, cancelledCallback) {
-        this.stop();
-
-        //Handle the case where a cancel callback starts
-        //A new VO play. Inline VO call should take priority
-        //over the cancelled callback VO play.
-        if (this.playing)
-        {
-            this.stop();
+        if (this.currentlyLoadingAudio) {
+            this.playQueue.push(Data.setUp(
+                'idOrList', idOrList,
+                'callback', callback,
+                'cancelledCallback', cancelledCallback
+            ));
+            return;
         }
+        this.stop();
 
         this._listCounter = -1;
         if (typeof idOrList === "string") {
@@ -415,13 +418,34 @@ export default class VOPlayer extends Messenger {
      */
     _playSound () {
         const
-            currentVO = this._currentVO,
             play = () => {
                 this._soundInstance = Sound.play(this._currentVO, this._onSoundFinished);
                 this._soundInstance.volume = this.volume;
                 if (this._captions) {
                     this._captions.start(this._currentVO);
                     this.game.on("tick", this._syncCaptionToSound);
+                }
+                if (this.playQueue.length) { // We need to skip on ahead, because new VO was played while this or a prior one was loading.
+                    const
+                        vo = greenSplice(this.playQueue, 0);
+
+                    this.play(vo.idOrList, vo.callback, vo.cancelledCallback);
+
+                    vo.recycle();
+                } else {
+                    for (let i = this._listCounter + 1; i < this.voList.length; ++i) {
+                        const next = this.voList[i];
+                        if (typeof next === "string") {
+                            if (!this.assetCache.has(next)) {
+                                const arr = arrayCache.setUp(next + '.{ogg,mp3}');
+            
+                                this.assetCache.load(arr);
+                    
+                                arrayCache.recycle(arr);
+                            }
+                            break;
+                        }
+                    }
                 }
             };
 
@@ -433,32 +457,19 @@ export default class VOPlayer extends Messenger {
         if (this.assetCache.has(this._currentVO)) {
             play();
         } else {
-            const arr = arrayCache.setUp({
-                id: this._currentVO,
-                src: this._currentVO + '.{ogg,mp3}'
-            });
+            const
+                arr = arrayCache.setUp({
+                    id: this._currentVO,
+                    src: this._currentVO + '.{ogg,mp3}'
+                });
 
+            this.currentlyLoadingAudio = true;
             this.assetCache.load(arr, null, () => {
-                if (currentVO === this._currentVO) { // so we don't interrupt vo started while this one was loading.
-                    play();
-                }
+                this.currentlyLoadingAudio = false;
+                play();
             });
 
             arrayCache.recycle(arr);
-        }
-
-        for (let i = this._listCounter + 1; i < this.voList.length; ++i) {
-            const next = this.voList[i];
-            if (typeof next === "string") {
-                if (!this.assetCache.has(next)) {
-                    const arr = arrayCache.setUp(next + '.{ogg,mp3}');
-
-                    this.assetCache.load(arr);
-        
-                    arrayCache.recycle(arr);
-                }
-                break;
-            }
         }
     }
 
