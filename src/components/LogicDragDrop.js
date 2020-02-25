@@ -6,6 +6,7 @@
  * @uses platypus.Component
  */
 /* global platypus */
+import AABB from '../AABB.js';
 import {Rectangle} from 'pixi.js';
 import createComponentClass from '../factory.js';
 
@@ -37,6 +38,7 @@ export default createComponentClass({
     },
     
     initialize: function () {
+        this.aabb = AABB.setUp();
         this.nextX = this.owner.x;
         this.nextY = this.owner.y;
         this.lastZ = this.owner.z;
@@ -56,6 +58,19 @@ export default createComponentClass({
 
     events: {
         /**
+         * This component listens for camera updates to know when a dragged item goes off-camera.
+         *
+         * @method 'camera-update'
+         * @param camera {platypus.Data} Camera update information
+         * @param camera.viewport {platypus.AABB} The bounding box describing the camera viewport location in the world.
+         */
+        "camera-update": function (camera) {
+            this.aabb.set(camera.viewport);
+            this.checkCamera();
+        },
+
+
+        /**
          * This component listens for added components to determine whether it should check for collision.
          *
          * @method 'component-added'
@@ -68,6 +83,10 @@ export default createComponentClass({
             }
         },
         
+        "prepare-logic": function () {
+            this.checkCamera(); // may end dragging
+        },
+
         /**
          * Updates the object's location on the handle-logic tick.
          *
@@ -198,6 +217,16 @@ export default createComponentClass({
     },
     
     methods: {// These are methods that are called by this component.
+        checkCamera: function () {
+            if (this.state && this.state.get('dragging') && !this.aabb.containsPoint(this.nextX + this.grabOffsetX, this.nextY + this.grabOffsetY)) {
+                if (this.sticking) {
+                    this.sticking = false;
+                    this.releasePointer();
+                }
+                this.release();
+            }
+        },
+
         claimPointer: function () {
             this.lastHitArea = this.owner.container.hitArea;
 
@@ -228,6 +257,8 @@ export default createComponentClass({
             this.owner.dragMode = false;
             this.state.set('noDrop', false);
             this.state = null;
+            this.aabb.recycle();
+            this.aabb = null;
             this.owner.z = this.lastZ;
         }
     }
