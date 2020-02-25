@@ -6,6 +6,7 @@
  * @uses platypus.Component
  * @since 0.6.0
  */
+/* global platypus */
 import {arrayCache, greenSplice} from '../utils/array.js';
 import Data from '../Data.js';
 import Sound from 'pixi-sound';
@@ -68,8 +69,7 @@ export default (function () {
             }
 
             return function (value) {
-                var data = null,
-                    wait = null;
+                let data = null;
 
                 value = value || attributes;
                 
@@ -110,12 +110,14 @@ export default (function () {
 
                     if (data.audio.playState === 'playFailed') {
                         // Let's try again - maybe it was a loading issue.
-                        wait = function (event) {
-                            if (event.id === sound) {
-                                data.audio.play(data);
-                                Sound.off('fileload', wait);
-                            }
-                        };
+                        const
+                            wait = function (event) {
+                                if (event.id === sound) {
+                                    data.audio.play(data);
+                                    Sound.off('fileload', wait);
+                                }
+                            };
+
                         Sound.on('fileload', wait);
                     }
                 }
@@ -262,7 +264,7 @@ export default (function () {
             this.state = this.owner.state;
             this.stateChange = false;
             
-            this.player = Sound;
+            this.player = platypus.game.sfxPlayer;
     
             if (this.audioMap) {
                 if (this.stateBased) {

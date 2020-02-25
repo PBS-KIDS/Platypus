@@ -17,6 +17,7 @@ import Async from './Async.js';
 import Data from './Data.js';
 import Entity from './Entity.js';
 import Messenger from './Messenger.js';
+import SFXPlayer from './SFXPlayer.js';
 import Sound from 'pixi-sound';
 import Storage from './Storage.js';
 import TweenJS from '@tweenjs/tween.js';
@@ -316,6 +317,8 @@ export default (function () {
 
             this.voPlayer = new VOPlayer(this, platypus.assetCache);
             this.voPlayer.trackSound = platypus.supports.iOS;
+
+            this.sfxPlayer = new SFXPlayer();
             
             this.springroll = (function () {
                 const
@@ -347,7 +350,7 @@ export default (function () {
                 }.bind(this));
                 
                 state.soundVolume.subscribe(function (current) {
-                    /* SR seems to trigger this too aggressively. We rely on the others instead.
+                    /* SR seems to trigger this too aggressively, in that it already calls mute/unmute on the comprising sfx/music/vo channels. We rely on the others instead.
                     if (current) {
                         Sound.muteAll();
                     } else {
@@ -372,7 +375,7 @@ export default (function () {
                 });
                 
                 state.sfxVolume.subscribe(function (current) {
-                    // toggleChannelMute('sfx', 'mutedBySR', 'mutedBySRGlobal', current);
+                    platypus.game.sfxPlayer.setVolume(current);
                 });
 
                 this.storage = new Storage(springroll, options);
