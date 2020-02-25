@@ -24,7 +24,8 @@ const
     },
     formatAsset = function (asset) { //TODO: Make this behavior less opaque.
         const
-            path = asset.src || asset,
+            standardPath = asset.src || asset,
+            path = platypus.supports.ie ? standardPath.replace('{ogg,mp3}', 'mp3') : standardPath,
             match = path.match(fn);
             
         return Data.setUp(
