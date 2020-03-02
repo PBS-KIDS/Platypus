@@ -131,8 +131,10 @@ export default (function () {
                 this.addEventListener("camera-update", (camera) => {
                     const
                         lazyLoads = this.lazyLoads,
-                        viewport = camera.viewport;
+                        viewport = AABB.setUp(camera.viewport);
                     let i = lazyLoads.length;
+
+                    viewport.resize(viewport.width * 1.5, viewport.height * 1.5);
 
                     while (i--) {
                         const entity = lazyLoads[i],
@@ -350,6 +352,7 @@ export default (function () {
             
             if (typeof value === 'string') {
                 //This is going to assume that if you pass in something that starts with a number, it is a number and converts it to one.
+                // eslint-disable-next-line radix
                 numberProperty = parseFloat(value) || parseInt(value); // to handle floats and 0x respectively.
                 if (numberProperty === 0 || (!!numberProperty)) {
                     return numberProperty;
@@ -838,7 +841,6 @@ export default (function () {
                 if ((entityKind === 'render-layer') && (!this.separateTiles) && combineRenderLayer && (combineRenderLayer.tileHeight === tHeight) && (combineRenderLayer.tileWidth === tWidth) && (combineRenderLayer.columns === width) && (combineRenderLayer.rows === height)) {
                     combineRenderLayer.triggerEvent('add-tiles', renderTiles);
                     this.updateLoadingProgress(progress);
-                    console.log('combined!');
                     return combineRenderLayer;
                 } else {
                     props = {};
@@ -952,8 +954,6 @@ export default (function () {
                     x = 0,
                     y = 0;
                 
-                let debugTime = Date.now();
-
                 //format level appropriately
                 if (typeof levelData.level === 'string') {
                     level = platypus.game.settings.levels[levelData.level];
@@ -1008,9 +1008,6 @@ export default (function () {
 
                 this.finishedLoading = finishedLoading.bind(this, level, x, y, width, height, tileWidth, tileHeight, callback);
 
-                console.log('    preparation: ' + (Date.now() - debugTime) + 'ms');
-                debugTime = Date.now();
-
                 for (i = 0; i < layers.length; i++) {
                     layerDefinition = layers[i];
                     switch (layerDefinition.type) {
@@ -1031,10 +1028,6 @@ export default (function () {
                         this.updateLoadingProgress(progress);
                     }
                     this.layerZ += this.layerIncrement;
-
-                    console.log('    ' + layerDefinition.type + ': ' + (Date.now() - debugTime) + 'ms');
-                    debugTime = Date.now();
-    
                 }
 
                 tilesetObjectGroups.recycle();
