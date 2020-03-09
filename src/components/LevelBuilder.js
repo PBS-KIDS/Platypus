@@ -274,6 +274,9 @@ export default (function () {
                             }
                         }
                         toObject.x = width - fromObject.x - (fromObject.width || 0); // subtract object width since its top-left corner is the origin.
+                        if (fromObject.rotation) {
+                            toObject.rotation = -fromObject.rotation;
+                        }
                         if (fromObject.polygon) {
                             toObject.polygon = mirrorPoints(fromObject.polygon);
                         }
