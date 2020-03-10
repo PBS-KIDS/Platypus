@@ -1093,8 +1093,6 @@ export default (function () {
                         widthOffset = 0,
                         heightOffset = 0,
                         x = 0,
-                        w = 0,
-                        h = 0,
                         a = 0,
                         v = null,
                         obj = 0,
@@ -1221,14 +1219,19 @@ export default (function () {
                                 properties.y = entity.y;
     
                                 if (entity.rotation) {
-                                    w = (entity.width || fallbackWidth) / 2;
-                                    h = (entity.height || fallbackHeight) / 2;
-                                    a = ((entity.rotation / 180) % 2) * Math.PI;
-                                    v = Vector.setUp(w, -h).rotate(a);
+                                    const
+                                        w = properties.width / 2,
+                                        h = properties.height / 2;
+
                                     properties.rotation = entity.rotation;
-                                    properties.x = Math.round((properties.x + v.x - w) * clamp) / clamp;
-                                    properties.y = Math.round((properties.y + v.y + h) * clamp) / clamp;
-                                    v.recycle();
+
+                                    if (w || h) {
+                                        a = ((entity.rotation / 180) % 2) * Math.PI;
+                                        v = Vector.setUp(w, -h).rotate(a);
+                                        properties.x = Math.round((properties.x + v.x - w) * clamp) / clamp;
+                                        properties.y = Math.round((properties.y + v.y + h) * clamp) / clamp;
+                                        v.recycle();
+                                    }
                                 }
     
                                 if (entityPositionX === 'left') {
