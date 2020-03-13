@@ -422,6 +422,19 @@ export default (function () {
                 if (this.levelMessage.level) {
                     this.levelMessage.level = mergeLevels(this.levelMessage.level);
                     /**
+                     * Dispatched when the scene has loaded and the level has been composited. This occurs before "load-level" to send out level before it's loaded in case it needs to be saved or edited before being loaded.
+                     *
+                     * @event 'created-level'
+                     * @param data {Object}
+                     * @param data.level {Object} An object describing the level dimensions, tiles, and entities.
+                     * @param data.persistentData {Object} The persistent data passed from the last scene. We add levelBuilder data to it to pass on.
+                     * @param data.persistentData.levelTemplate {Object} A 1D or 2D array of level piece ids. The template defines how the pieces will be arranged and which pieces can be used where. The template must be rectangular in dimensions.
+                     * @param data.persistentData.levelPieces {Object} An object of key/value pairs listing the pieces that map to an id in the level template.
+                     * @param data.persistentData.useUniques {Boolean} If true, no single map piece is used twice in the creation of the combined map.
+                     */
+                    this.owner.triggerEvent('created-level', this.levelMessage);
+
+                    /**
                      * Dispatched when the scene has loaded and the level has been composited so TileLoader can begin loading the level.
                      *
                      * @event 'load-level'
