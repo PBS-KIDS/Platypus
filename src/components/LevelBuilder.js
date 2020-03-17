@@ -413,10 +413,10 @@ export default (function () {
                             }
                         }
                     } else {
-                        throw ('Level Builder: Template is not defined');
+                        platypus.debug.warn('Level Builder: Template is not defined');
                     }
                 } else {
-                    throw ('Level Builder: There is no level template.');
+                    platypus.debug.warn('Level Builder: There is no level template.');
                 }
                 
                 if (this.levelMessage.level) {
