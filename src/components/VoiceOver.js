@@ -57,8 +57,8 @@ export default (function () {
                 }
             }
 
-            if (!voice && !mouthCues && platypus.game.app.config.mouthCues) {
-                mouthCues = platypus.game.app.config.mouthCues[definition.sound];
+            if (!voice && !mouthCues && platypus.game.settings.mouthCues) {
+                mouthCues = platypus.game.settings.mouthCues[definition.sound.substring(definition.sound.lastIndexOf('/') + 1)];
             }
 
             if (voice) {
