@@ -228,7 +228,7 @@ export default class VOPlayer extends Messenger {
         for (let i = 0; i < this._listCounter; ++i) {
             const item = this.voList[i];
             if (typeof item === "string") {
-                total += Sound.duration(item);
+                total += Sound.duration(item) * 1000;
             }
             else if (typeof item === "number")
             {
@@ -461,12 +461,15 @@ export default class VOPlayer extends Messenger {
                 arr = arrayCache.setUp({
                     id: this._currentVO,
                     src: this._currentVO + '.{ogg,mp3}'
-                });
+                }),
+                currentVO = this._currentVO;
 
             this.currentlyLoadingAudio = true;
             this.assetCache.load(arr, null, () => {
                 this.currentlyLoadingAudio = false;
-                play();
+                if (currentVO === this._currentVO) {
+                    play();
+                }
             });
 
             arrayCache.recycle(arr);

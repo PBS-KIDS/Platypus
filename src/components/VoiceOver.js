@@ -42,7 +42,11 @@ export default (function () {
                 definition.events = arrayCache.setUp();
             } else if (typeof sound.sound === 'string') {
                 definition.sound = sound.sound;
-                definition.events = arrayCache.setUp();
+                if (sound.events) {
+                    definition.events = greenSlice(sound.events);
+                } else {
+                    definition.events = arrayCache.setUp();
+                }
             } else {
                 for (key in sound.sound) {
                     if (sound.sound.hasOwnProperty(key)) {

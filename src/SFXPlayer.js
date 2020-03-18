@@ -24,7 +24,8 @@ export default class SFXPlayer {
         this.playingAudio.push(audio);
         this.sounds.push(sound);
         audio.on('end', () => {
-            const index = this.playingAudio.indexOf(audio)
+            const index = this.playingAudio.indexOf(audio);
+            
             greenSplice(this.playingAudio, index);
             greenSplice(this.sounds, index);
         });
