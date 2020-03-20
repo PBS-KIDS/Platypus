@@ -4,6 +4,7 @@
  * @namespace platypus
  * @class VOPlayer
  */
+/* global platypus */
 import {arrayCache, greenSplice} from './utils/array.js';
 import Data from './Data.js';
 import Messenger from './Messenger.js';
@@ -524,20 +525,31 @@ export default class VOPlayer extends Messenger {
      * @method unloadSound
      * @public
      */
-    unloadSound () {
+    unloadSound (sound) {
         const
             assetCache = this.assetCache,
-            _trackedSounds = this._trackedSounds;
+            _trackedSounds = this._trackedSounds,
+            index = sound ? _trackedSounds.indexOf(sound) : -1;
 
-        for (let i = 0; i < _trackedSounds.length; i++) {
-            const trackedSound = _trackedSounds[i];
-
-            // We only remove if this is the only remaining requested instance of this audio.
+        if (index >= 0) {
+            const trackedSound = greenSplice(_trackedSounds, index);
+            
             if (assetCache.delete(trackedSound)) {
                 Sound.remove(trackedSound);
             }
+        } else if (!sound) {
+            for (let i = 0; i < _trackedSounds.length; i++) {
+                const trackedSound = _trackedSounds[i];
+    
+                // We only remove if this is the only remaining requested instance of this audio.
+                if (assetCache.delete(trackedSound)) {
+                    Sound.remove(trackedSound);
+                }
+            }
+            _trackedSounds.length = 0;
+        } else {
+            platypus.debug.warn('VOPlayer: "' + sound + '" not found to unload.');
         }
-        _trackedSounds.length = 0;
     }
 
     /**

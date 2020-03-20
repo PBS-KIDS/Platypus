@@ -68,10 +68,18 @@ export default (function () {
             return soundList;
         },
         onComplete = function (completed, soundList) {
+            let i = soundList.length;
+
             this.playingAudio = false;
             if (!this.owner.destroyed) {
                 this.checkTimeEvents(true, completed);
-                this.player.unloadSound(); // Do this after, so sound times are still referenceable in line above.
+
+                // Do this after, so sound times are still referenceable in line above.
+                while (i--) {
+                    if (typeof soundList[i] === 'string') {
+                        this.player.unloadSound(soundList[i]);
+                    }
+                }
                 
                 /**
                  * When an audio sequence is finished playing, this event is triggered.
@@ -80,7 +88,11 @@ export default (function () {
                  */
                 this.owner.triggerEvent('sequence-complete');
             } else {
-                this.player.unloadSound();
+                while (i--) {
+                    if (typeof soundList[i] === 'string') {
+                        this.player.unloadSound(soundList[i]);
+                    }
+                }
             }
             arrayCache.recycle(soundList);
         };
