@@ -96,7 +96,7 @@ export default createComponentClass({
             }, fade);
             tween.onComplete(() => {
                 sound.stop();
-                sound.unload();
+                //sound.unload();
                 delete tracks[value];
             });
             tween.start();
