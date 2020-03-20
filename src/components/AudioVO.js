@@ -65,10 +65,10 @@ export default (function () {
             }
             return soundList;
         },
-        onComplete = function (complete, soundList) {
+        onComplete = function (completed, soundList) {
             this.playingAudio = false;
             if (!this.owner.destroyed) {
-                this.checkTimeEvents(true);
+                this.checkTimeEvents(true, completed);
                 this.player.unloadSound(); // Do this after, so sound times are still referenceable in line above.
                 
                 /**
@@ -169,18 +169,20 @@ export default (function () {
         },
         
         methods: {
-            checkTimeEvents: function (finished) {
+            checkTimeEvents: function (finished, completed) {
                 var event = null,
                     events = this.eventList,
                     currentTime = 0,
                     owner = this.owner;
                 
                 if (events && events.length) {
-                    currentTime = this.player.getElapsed();
+                    currentTime = finished ? Infinity : this.player.getElapsed();
 
-                    while (events.length && (finished || (events[0].time <= currentTime))) {
+                    while (events.length && (events[0].time <= currentTime)) {
                         event = events.shift();
-                        owner.trigger(event.event, event.message);
+                        if (!finished || completed || !event.interruptable) {
+                            owner.trigger(event.event, event.message);
+                        }
                         event.recycle();
                     }
                 }
