@@ -16,13 +16,14 @@ export default (function () {
             return a.time - b.time;
         },
         addEvents = function (fromList, toList) {
-            var i = 0;
+            let i = 0;
             
             for (i = 0; i < fromList.length; i++) {
                 toList.push(Data.setUp(
                     'event', fromList[i].event,
                     'time', fromList[i].time || 0,
-                    'message', fromList[i].message
+                    'message', fromList[i].message || null,
+                    'interruptable', !!fromList[i].interruptable
                 ));
             }
             
@@ -33,14 +34,15 @@ export default (function () {
             return toList;
         },
         offsetEvents = function (fromList, toList, player) {
-            var i = 0,
-                offset = player.getElapsed();
+            const offset = player.getElapsed();
+            let i = 0;
             
             for (i = 0; i < fromList.length; i++) {
                 toList.push(Data.setUp(
                     'event', fromList[i].event,
                     'time', (fromList[i].time || 0) + offset,
-                    'message', fromList[i].message || null
+                    'message', fromList[i].message || null,
+                    'interruptable', !!fromList[i].interruptable
                 ));
             }
             
