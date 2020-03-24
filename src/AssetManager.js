@@ -75,23 +75,24 @@ export default class AssetManager {
         return this.assets.has(id);
     }
 
-    set (id, value) {
+    set (id, value, count = 1) {
         const
             assets = this.assets,
             counts = this.counts;
 
         if (assets.has(id)) {
-            counts[id] += 1;
+            counts[id] += count;
         } else {
             assets.set(id, value);
-            counts[id] = 1;
+            counts[id] = count;
         }
     }
 
     load (list, one, all) {
         const
             counts = this.counts,
-            needsLoading = arrayCache.setUp();
+            needsLoading = arrayCache.setUp(),
+            adds = Data.setUp();
 
         for (let i = 0; i < list.length; i++) {
             const
@@ -100,7 +101,10 @@ export default class AssetManager {
 
             if (this.has(id)) {
                 counts[id] += 1;
+            } else if (adds.hasOwnProperty(id)) {
+                adds[id] += 1;
             } else {
+                adds[id] = 1;
                 needsLoading.push(item);
             }
         }
@@ -111,7 +115,7 @@ export default class AssetManager {
             let progress = 0;
 
             queue.onLoad.add((loader, response) => {
-                this.set(response.name, response.data);
+                this.set(response.name, response.data, adds[response.name]);
                 progress += 1;
                 if (one) {
                     one(progress / total);
