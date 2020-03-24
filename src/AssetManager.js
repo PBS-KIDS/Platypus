@@ -4,7 +4,7 @@
  * @class AssetManager
  * @constructor
 **/
-/* global platypus */
+/* global platypus, setTimeout */
 import Data from './Data.js';
 import DataMap from './DataMap.js';
 import {Loader} from 'pixi.js';
@@ -132,7 +132,9 @@ export default class AssetManager {
 
             queue.load();
         } else if (all) {
-            all();
+            setTimeout(() => { // To run in same async sequence as above.
+                all();
+            }, 1);
         }
 
         arrayCache.recycle(needsLoading);

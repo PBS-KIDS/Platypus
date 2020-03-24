@@ -5,7 +5,7 @@
  * @class VOPlayer
  */
 /* global platypus */
-import {arrayCache, greenSplice} from './utils/array.js';
+import {arrayCache, greenSlice, greenSplice} from './utils/array.js';
 import Data from './Data.js';
 import Messenger from './Messenger.js';
 import Sound from 'pixi-sound';
@@ -29,19 +29,11 @@ export default class VOPlayer extends Messenger {
         this._syncCaptionToSound = this._syncCaptionToSound.bind(this);
 
         /**
-         * An Array used when play() is called to avoid creating lots of Array objects.
-         * @property {Array} _listHelper
+         * Preloading next sound.
+         * @property {String} preloadingNextSound
          * @private
          */
-        this._listHelper = [];
-
-        /**
-         * If the VOPlayer should keep a list of all audio it plays for unloading
-         * later. Default is false.
-         * @property {Boolean} trackSound
-         * @public
-         */
-        this.trackSound = false;
+        this.preloadingNextSound = '';
 
         /**
          * If the sound is currently paused. Setting this has no effect - use pause()
@@ -94,13 +86,6 @@ export default class VOPlayer extends Messenger {
          * @private
          */
         this._cancelledCallback = null;
-
-        /**
-         * A list of audio file played by this, so that they can be unloaded later.
-         * @property {Array} _trackedSounds
-         * @private
-         */
-        this._trackedSounds = [];
 
         /**
          * A timer for silence entries in the list, in milliseconds.
@@ -307,27 +292,33 @@ export default class VOPlayer extends Messenger {
      * <code>true</code> then callback will be used instead.
      */
     play (idOrList, callback, cancelledCallback) {
-        if (this.currentlyLoadingAudio) {
-            this.playQueue.push(Data.setUp(
-                'idOrList', idOrList,
-                'callback', callback,
-                'cancelledCallback', cancelledCallback
-            ));
-            return;
-        }
-        this.stop();
+        if (!this.startingNewTrack) {
+            if (this.currentlyLoadingAudio) {
+                this.playQueue.push(Data.setUp(
+                    'idOrList', idOrList,
+                    'callback', callback,
+                    'cancelledCallback', cancelledCallback
+                ));
+                return;
+            }
+            this.startingNewTrack = true;
+            this.stop();
+            this.startingNewTrack = false;
 
-        this._listCounter = -1;
-        if (typeof idOrList === "string") {
-            this._listHelper.length = 0;
-            this._listHelper[0] = idOrList;
-            this.voList = this._listHelper;
+            this._listCounter = -1;
+            if (typeof idOrList === "string") {
+                this.voList = arrayCache.setUp(0, idOrList);
+            } else {
+                this.voList = greenSlice(idOrList);
+                this.voList.unshift(0);
+            }
+            this._callback = callback;
+            this._cancelledCallback = cancelledCallback === true ? callback : cancelledCallback;
+            this._onSoundFinished();
+
         } else {
-            this.voList = idOrList;
+            platypus.debug.warn('VOPlayer: Tried playing a new track while a new track was starting up.');
         }
-        this._callback = callback;
-        this._cancelledCallback = cancelledCallback === true ? callback : cancelledCallback;
-        this._onSoundFinished();
     }
 
     /**
@@ -336,8 +327,26 @@ export default class VOPlayer extends Messenger {
      * @private
      */
     _onSoundFinished () {
-        if (this._listCounter >= 0)
-            this.trigger("end", this._currentVO);
+        if (this._listCounter >= 0) {
+            const currentVO = this._currentVO;
+
+            this.trigger("end", currentVO);
+            if (typeof currentVO === "string") {
+                this.voList[0] += Sound.duration(currentVO) * 1000;
+                this.unloadSound(currentVO);
+                greenSplice(this.voList, 1);
+                this._listCounter -= 1;
+            } else if (typeof this._currentVO === "function") {
+                greenSplice(this.voList, 1);
+                this._listCounter -= 1;
+            } else {
+                this.voList[0] += this.voList[1];
+                greenSplice(this.voList, 1);
+                this._listCounter -= 1;
+            }
+        } else {
+            this._listCounter = 0; // bump past elapsed storage index.
+        }
         //remove any update callback
         this.game.off("tick", this._syncCaptionToSound);
         this.game.off("tick", this._updateSilence);
@@ -360,8 +369,9 @@ export default class VOPlayer extends Messenger {
             }
             this._currentVO = null;
             this._cancelledCallback = null;
-
             this._callback = null;
+            arrayCache.recycle(this.voList);
+            this.voList = null;
             if (c) {
                 c();
             }
@@ -437,44 +447,51 @@ export default class VOPlayer extends Messenger {
                     for (let i = this._listCounter + 1; i < this.voList.length; ++i) {
                         const next = this.voList[i];
                         if (typeof next === "string") {
-                            if (!this.assetCache.has(next)) {
-                                const arr = arrayCache.setUp(next + '.{ogg,mp3}');
-            
-                                this.assetCache.load(arr);
-                    
-                                arrayCache.recycle(arr);
+                            const
+                                arr = arrayCache.setUp({
+                                    id: this._currentVO,
+                                    src: this._currentVO + '.{ogg,mp3}'
+                                });
+        
+                            this.assetCache.load(arr);
+                
+                            arrayCache.recycle(arr);
+
+                            if (this.preloadingNextSound) {
+                                this.unloadSound(this.preloadingNextSound);
                             }
+                            this.preloadingNextSound = next;
                             break;
                         }
                     }
                 }
-            };
+            },
+            arr = arrayCache.setUp({
+                id: this._currentVO,
+                src: this._currentVO + '.{ogg,mp3}'
+            }),
+            currentVO = this._currentVO;
 
-        // Only add a sound once
-        if (this.trackSound && this._trackedSounds.indexOf(this._currentVO) === -1) {
-            this._trackedSounds.push(this._currentVO);
-        }
+        this.currentlyLoadingAudio = true;
 
-        if (this.assetCache.has(this._currentVO)) {
-            play();
-        } else {
-            const
-                arr = arrayCache.setUp({
-                    id: this._currentVO,
-                    src: this._currentVO + '.{ogg,mp3}'
-                }),
-                currentVO = this._currentVO;
-
-            this.currentlyLoadingAudio = true;
-            this.assetCache.load(arr, null, () => {
-                this.currentlyLoadingAudio = false;
-                if (currentVO === this._currentVO) {
+        this.assetCache.load(arr, null, () => {
+            this.currentlyLoadingAudio = false;
+            if (this.stoppedWhileLoading) {
+                this.stoppedWhileLoading = false;
+                if (this.playQueue.length) { // Already more queued up, so we'll roll the stop into it here
                     play();
+                } else {
+                    play();
+                    this.stop();
                 }
-            });
+            } else if (currentVO === this._currentVO) {
+                play();
+            } else {
+                platypus.debug.warn('VOPlayer: Asset loading out of order.');
+            }
+        });
 
-            arrayCache.recycle(arr);
-        }
+        arrayCache.recycle(arr);
     }
 
     /**
@@ -483,11 +500,16 @@ export default class VOPlayer extends Messenger {
      * @public
      */
     stop () {
+        if (this.currentlyLoadingAudio) {
+            this.stoppedWhileLoading = true;
+            return;
+        }
         const c = this._cancelledCallback;
 
         this.paused = false;
         if (this._soundInstance) {
             this._soundInstance.stop();
+            this.unloadSound(this._currentVO);
             this._soundInstance = null;
         }
         this._currentVO = null;
@@ -496,7 +518,14 @@ export default class VOPlayer extends Messenger {
         }
         this.game.off("tick", this._syncCaptionToSound);
         this.game.off("tick", this._updateSilence);
-        this.voList = null;
+        if (this.voList) {
+            for (let i = this._listCounter + 1; i < this.voList.length; i++) {
+                if (typeof this.voList[i] === 'function') {
+                    this.voList[i](); // Make sure all events are triggered.
+                }
+            }
+            this.voList = null;
+        }
         this._timer = 0;
         this._callback = null;
 
@@ -521,34 +550,17 @@ export default class VOPlayer extends Messenger {
     }
 
     /**
-     * Unloads all audio this VOPlayer has played. If trackSound is false, this won't do anything.
+     * Unloads an audio track this VOPlayer has played.
      * @method unloadSound
+     * @param sound {string} Sound to unload.
      * @public
      */
     unloadSound (sound) {
         const
-            assetCache = this.assetCache,
-            _trackedSounds = this._trackedSounds,
-            index = sound ? _trackedSounds.indexOf(sound) : -1;
+            assetCache = this.assetCache;
 
-        if (index >= 0) {
-            const trackedSound = greenSplice(_trackedSounds, index);
-            
-            if (assetCache.delete(trackedSound)) {
-                Sound.remove(trackedSound);
-            }
-        } else if (!sound) {
-            for (let i = 0; i < _trackedSounds.length; i++) {
-                const trackedSound = _trackedSounds[i];
-    
-                // We only remove if this is the only remaining requested instance of this audio.
-                if (assetCache.delete(trackedSound)) {
-                    Sound.remove(trackedSound);
-                }
-            }
-            _trackedSounds.length = 0;
-        } else {
-            platypus.debug.warn('VOPlayer: "' + sound + '" not found to unload.');
+        if (assetCache.delete(sound)) {
+            Sound.remove(sound);
         }
     }
 
@@ -560,12 +572,10 @@ export default class VOPlayer extends Messenger {
     destroy () {
         this.stop();
         this.voList = null;
-        this._listHelper = null;
         this._currentVO = null;
         this._soundInstance = null;
         this._callback = null;
         this._cancelledCallback = null;
-        this._trackedSounds = null;
         this._captions = null;
     }
 };
