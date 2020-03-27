@@ -4,6 +4,7 @@
  * @namespace platypus
  * @class SFXPlayer
  */
+/* global platypus */
 import {arrayCache, greenSplice} from './utils/array.js';
 import Sound from 'pixi-sound';
 
@@ -20,17 +21,29 @@ export default class SFXPlayer {
             audio = this.player.play(sound, data);
 
         audio.initialVolume = audio.volume;
-        this.player.volume(sound, audio.initialVolume * this.volume);
+        audio.set('volume', audio.initialVolume * this.volume);
         this.playingAudio.push(audio);
         this.sounds.push(sound);
         audio.on('end', () => {
             const index = this.playingAudio.indexOf(audio);
-            
+
             greenSplice(this.playingAudio, index);
             greenSplice(this.sounds, index);
         });
 
         return audio;
+    }
+
+    stop (audio) {
+        const index = this.playingAudio.indexOf(audio);
+
+        audio.stop();
+        if (index >= 0) {
+            greenSplice(this.playingAudio, index);
+            greenSplice(this.sounds, index);
+        } else {
+            platypus.debug.warn('SFXPlayer: Did not find "' + audio.soundId + '"');
+        }
     }
 
     setVolume (volume) {
@@ -40,10 +53,9 @@ export default class SFXPlayer {
         this.volume = volume;
         for (let i = 0; i < playingAudio.length; i++) {
             const
-                audio = playingAudio[i],
-                sound = this.sounds[i];
+                audio = playingAudio[i];
 
-            this.player.volume(sound, audio.initialVolume * this.volume);
+            audio.set('volume', audio.initialVolume * this.volume);
         }
     }
 

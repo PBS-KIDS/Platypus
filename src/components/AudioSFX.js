@@ -99,27 +99,27 @@ export default (function () {
                 if (data.speed) {
                     data.audio.speed = data.speed;
                 }
-                if (data.playthrough) {
+                if (data.playthrough && (data.loop !== -1)) {
                     data.audio.playthrough = true;
+                } else {
+                    data.audio.playthrough = false;
                 }
                 data.audio.on('end', completed.bind(this, data));
                 
-                if (data.audio) {
-                    data.audio.soundId = sound;
-                    this.activeAudioClips.push(data.audio);
+                data.audio.soundId = sound;
+                this.activeAudioClips.push(data.audio);
 
-                    if (data.audio.playState === 'playFailed') {
-                        // Let's try again - maybe it was a loading issue.
-                        const
-                            wait = function (event) {
-                                if (event.id === sound) {
-                                    data.audio.play(data);
-                                    Sound.off('fileload', wait);
-                                }
-                            };
+                if (data.audio.playState === 'playFailed') {
+                    // Let's try again - maybe it was a loading issue.
+                    const
+                        wait = function (event) {
+                            if (event.id === sound) {
+                                data.audio.play(data);
+                                Sound.off('fileload', wait);
+                            }
+                        };
 
-                        Sound.on('fileload', wait);
-                    }
+                    Sound.on('fileload', wait);
                 }
             };
         },
@@ -543,47 +543,29 @@ export default (function () {
                 return clips;
             },
             
-            stopAudio: (function () {
-                var
-                    loopFunc = function (instance) {
-                        this.stopAudioInstance(instance.currentTarget);
-                    };
-                
-                return function (audioId, playthrough) {
-                    var clips = this.activeAudioClips,
-                        func = loopFunc.bind(this),
-                        i = clips.length;
-                    
-                    if (audioId) {
-                        while (i--) {
-                            if (clips[i].soundId === audioId) {
-                                if (clips[i].playthrough || playthrough) {
-                                } else {
-                                    clips[i].stop();
-                                    greenSplice(clips, i);
-                                }
-                            }
-                        }
-                    } else {
-                        while (i--) {
-                            if (playthrough || clips[i].playthrough) {
-                            } else {
-                                clips[i].stop();
-                            }
-                        }
-                        clips.length = 0;
-                    }
-                };
-            }()),
-            
-            stopAudioInstance: function (instance) {
+            stopAudio: function (audioId, playthrough) {
                 var clips = this.activeAudioClips,
-                    i     = clips ? clips.indexOf(instance) : -1;
+                    i = clips.length;
                 
-                if (i >= 0) {
-                    greenSplice(clips, i);
+                if (audioId) {
+                    while (i--) {
+                        if (clips[i].soundId === audioId) {
+                            if (clips[i].playthrough || playthrough) {
+                            } else {
+                                this.player.stop(clips[i]);
+                                greenSplice(clips, i);
+                            }
+                        }
+                    }
+                } else {
+                    while (i--) {
+                        if (playthrough || clips[i].playthrough) {
+                        } else {
+                            this.player.stop(clips[i]);
+                        }
+                    }
+                    clips.length = 0;
                 }
-                instance.stop();
             },
             
             removeClip: function (audioClip) {
