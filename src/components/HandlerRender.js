@@ -33,7 +33,6 @@ export default (function () {
              * @property interactive
              * @type Boolean|Object
              * @default false
-             * @since 0.9.1
              */
             interactive: false
         },
@@ -45,7 +44,6 @@ export default (function () {
              * @property worldContainer
              * @type PIXI.Container
              * @default null
-             * @since 0.11.0
              */
             worldContainer: null,
         },
@@ -139,7 +137,6 @@ export default (function () {
                      * Notifies children entities that rendering updates have been paused.
                      *
                      * @event 'render-paused'
-                     * @since 0.8.4
                      */
                     this.owner.triggerEventOnChildren('render-paused');
                 }
@@ -157,7 +154,6 @@ export default (function () {
                      * Notifies children entities that rendering updates have been unpaused.
                      *
                      * @event 'render-unpaused'
-                     * @since 0.8.4
                      */
                     this.owner.triggerEventOnChildren('render-unpaused');
                 }

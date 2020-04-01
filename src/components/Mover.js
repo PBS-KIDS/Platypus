@@ -354,7 +354,6 @@ export default (function () {
              * @method 'handle-movement'
              * @param tick {Object}
              * @param tick.delta {number} The amount of time in milliseconds since the last tick.
-             * @since 0.6.8
              */
             "handle-movement": function (tick) {
                 var delta    = tick.delta,
@@ -505,7 +504,6 @@ export default (function () {
              * @param mover {Object}
              * @param [mover.maxMagnitude] {Number|Object} New maximums for magnitude.
              * @param [mover.magnitude] {Number} Delta for the change in maximums.
-             * @since 0.6.8
              */
             "set-mover": function (mover) {
                 if (typeof mover.maxMagnitudeDelta === 'number') {
@@ -521,7 +519,6 @@ export default (function () {
              * Stops all movement on the Entity.
              *
              * @method 'pause-movment'
-             * @since 0.6.8
              */
             "pause-movement": function () {
                 this.paused = true;
@@ -531,7 +528,6 @@ export default (function () {
              * Unpauses all movement on the Entity.
              *
              * @method 'unpause-movment'
-             * @since 0.6.8
              */
             "unpause-movement": function () {
                 this.paused = false;
@@ -542,7 +538,6 @@ export default (function () {
              *
              * @method 'orientation-updated'
              * @param matrix {Array} A 3x3 matrix describing the orientation change.
-             * @since 0.7.3
              */
             "orientation-updated": function (matrix) {
                 if (!this.reorientVelocities) {

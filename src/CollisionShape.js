@@ -86,7 +86,6 @@ export default (function () {
              * @method collides
              * @param shape {platypus.CollisionShape} The shape to check against for collision.
              * @return {Boolean} Whether the shapes collide.
-             * @since 0.7.4
              */
             if (type === 'circle') {
                 width = height = radius * 2;
@@ -188,7 +187,6 @@ export default (function () {
      * @method moveXY
      * @param x {number} The x position to which the shape should be moved.
      * @param y {number} The y position to which the shape should be moved.
-     * @since 0.11.2
      */
     proto.moveXY = function (x, y) {
         this.x = x;
@@ -258,7 +256,6 @@ export default (function () {
      * @param x {number} The x-axis value.
      * @param y {number} The y-axis value.
      * @return {boolean} Returns `true` if this shape contains the point.
-     * @since 0.11.0
      */
     proto.containsPoint = function (x, y) {
         var pow = Math.pow;
@@ -274,7 +271,6 @@ export default (function () {
     *
     * @method toJSON
     * @return {Object} Returns a JSON definition that can be used to recreate the collision shape.
-    * @since 0.11.0
     **/
     proto.toJSON = function () {
         var json = {},
@@ -309,20 +305,17 @@ export default (function () {
      *
      * @method CollisionShape.setUp
      * @return {platypus.CollisionShape} The instantiated CollisionShape.
-     * @since 0.7.4
      */
     /**
      * Returns a CollisionShape back to the cache.
      *
      * @method CollisionShape.recycle
      * @param {platypus.CollisionShape} The CollisionShape to be recycled.
-     * @since 0.7.4
      */
     /**
      * Relinquishes properties of the CollisionShape and recycles it.
      *
      * @method recycle
-     * @since 0.7.4
      */
     recycle.add(CollisionShape, 'CollisionShape', CollisionShape, null, true, config.dev);
     

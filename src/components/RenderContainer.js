@@ -4,7 +4,6 @@
  * @namespace platypus.components
  * @class RenderContainer
  * @uses platypus.Component
- * @since 0.11.0
  */
 /* global platypus */
 import {Container, Graphics, Matrix, filters} from 'pixi.js';
@@ -109,7 +108,6 @@ export default (function () {
              * @property interactive
              * @type Boolean|Object
              * @default false
-             * @since 0.9.0
              */
             interactive: false,
 
@@ -184,7 +182,6 @@ export default (function () {
              * @property dragMode
              * @type Boolean
              * @default false
-             * @since 0.8.3
              */
             dragMode: false,
 
@@ -194,7 +191,6 @@ export default (function () {
              * @property renderParent
              * @type String|Object
              * @default null
-             * @since 2.0.0
              */
             renderParent: null,
 

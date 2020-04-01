@@ -211,7 +211,6 @@ export default (function () {
              * @property tileCache
              * @type boolean
              * @default true
-             * @since 0.6.4
              */
             tileCache: true,
 
@@ -239,7 +238,6 @@ export default (function () {
              * @property top
              * @type Number
              * @default 0
-             * @since 0.7.5
              */
             top: 0,
             
@@ -249,7 +247,6 @@ export default (function () {
              * @property left
              * @type Number
              * @default 0
-             * @since 0.7.5
              */
             left: 0
         },

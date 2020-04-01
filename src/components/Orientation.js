@@ -326,7 +326,6 @@ export default (function () {
              * On receiving this message, any currently running orientation tweens are immediately completed to give the entity a new stable position.
              *
              * @method 'complete-tweens'
-             * @since 0.7.1
              */
             "complete-tweens": function () {
                 var i = 0;

@@ -4,7 +4,6 @@
  * @namespace platypus.components
  * @class AudioSFX
  * @uses platypus.Component
- * @since 0.6.0
  */
 /* global platypus */
 import {arrayCache, greenSplice} from '../utils/array.js';
@@ -196,7 +195,6 @@ export default (function () {
              * @property eventBased
              * @type Boolean
              * @default true
-             * @since 0.7.5
              */
             eventBased: true,
 
@@ -206,7 +204,6 @@ export default (function () {
              * @property stateBased
              * @type Boolean
              * @default false
-             * @since 0.7.5 - Defaults to `true` prior to version 0.9.0
              */
             stateBased: false
         },
@@ -396,7 +393,6 @@ export default (function () {
              * @method 'set-pan'
              * @param pan {Number} A number from -1 to 1 that sets the pan.
              * @param [soundId] {String} If an soundId is provided, that particular sound instance's pan is set.
-             * @since 0.11.3
              */
             "set-pan": function (pan, soundId) {
                 var id = soundId || '',

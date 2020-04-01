@@ -8,7 +8,6 @@
  * @param states {Object} A list of key/value pairs describing what states should be `true` or `false` on the Entity for this action to be triggered.
  * @param trigger {Function} The function to be called if one or more inputs are active and the current state of the Entity is valid.
  * @return {ActionState} Returns the new ActionState object.
- * @since 0.6.8
  */
 import Data from './Data.js';
 import StateMap from './StateMap.js';
@@ -154,20 +153,17 @@ export default  (function () {
      *
      * @method ActionState.setUp
      * @return {platypus.ActionState} The instantiated ActionState.
-     * @since 0.7.1
      */
     /**
      * Returns an ActionState back to the cache. Prefer the ActionState's recycle method since it recycles property objects as well.
      *
      * @method ActionState.recycle
      * @param {platypus.ActionState} The ActionState to be recycled.
-     * @since 0.7.1
      */
     /**
      * Relinquishes properties of the ActionState and recycles it.
      *
      * @method recycle
-     * @since 0.7.1
      */
     recycle.add(ActionState, 'ActionState', ActionState, function () {
         this.states.recycle();

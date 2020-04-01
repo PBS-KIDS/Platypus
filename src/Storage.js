@@ -5,7 +5,6 @@
  * @class Data
  * @constructor
  * @return {Data} Returns the new Data object.
- * @since 0.7.1
  */
 /* global platypus, window */
 import DataMap from './DataMap.js';

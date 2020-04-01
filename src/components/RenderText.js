@@ -4,7 +4,6 @@
  * @namespace platypus.components
  * @class RenderText
  * @uses platypus.Component
- * @since v0.11.9
  */
 import RenderContainer from './RenderContainer.js';
 import {Text} from 'pixi.js';

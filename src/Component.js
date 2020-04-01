@@ -47,7 +47,6 @@ export default (function () {
      *
      * @method toJSON
      * @return {Object} Returns a JSON definition that can be used to recreate the component.
-     * @since 0.11.0
      **/
     proto.toJSON = null; // defined in factory.js
 

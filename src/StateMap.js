@@ -6,7 +6,6 @@
  * @constructor
  * @return stateMap {platypus.StateMap} Returns the new StateMap object.
  * @extends platypus.DataMap
- * @since 0.8.0
  */
 import DataMap from './DataMap.js';
 import {arrayCache} from './utils/array.js';

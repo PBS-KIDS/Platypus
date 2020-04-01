@@ -140,7 +140,6 @@ export default (function () {
              * @property interactive
              * @type Boolean|Object
              * @default false
-             * @since 0.9.0
              */
             interactive: false,
 
@@ -150,7 +149,6 @@ export default (function () {
              * @property offsetX
              * @type Number
              * @default 0
-             * @since 0.11.0
              */
             offsetX: 0,
 
@@ -160,7 +158,6 @@ export default (function () {
              * @property offsetY
              * @type Number
              * @default 0
-             * @since 0.11.0
              */
             offsetY: 0,
 
@@ -179,7 +176,6 @@ export default (function () {
              * @property restart
              * @type Boolean
              * @default true
-             * @since 0.9.2
              */
             restart: true,
 
@@ -448,7 +444,6 @@ export default (function () {
              *
              * @method 'stop-animation'
              * @param [animation] {String} The animation to show and pause. If not specified, this method simply pauses the current animation.
-             * @since 0.9.0
              */
             "stop-animation": function (animation) {
                 this.stopAnimation(animation);
@@ -461,7 +456,6 @@ export default (function () {
              * @param [animation] {String} The animation to play. If not specified, this method simply unpauses the current animation.
              * @param [loop = true] {Boolean} Whether this animation should loop.
              * @param [restart = true] {Boolean} Whether to restart the animation if it's currently playing.
-             * @since 0.9.0
              */
             "play-animation": function (animation, loop, restart) {
                 this.playAnimation(animation, loop, restart);

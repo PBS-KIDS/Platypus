@@ -194,7 +194,6 @@ export default (function () {
          * This method relinguishes Messenger properties
          *
          * @method destroy
-         * @since 0.7.1
          */
         destroy () {
             arrayCache.recycle(this.loopCheck);

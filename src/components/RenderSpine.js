@@ -193,7 +193,6 @@ export default (function () {
              * @property offsetX
              * @type Number
              * @default 0
-             * @since 0.11.4
              */
             offsetX: 0,
 
@@ -203,7 +202,6 @@ export default (function () {
              * @property offsetY
              * @type Number
              * @default 0
-             * @since 0.11.4
              */
             offsetY: 0,
 
@@ -621,7 +619,6 @@ export default (function () {
              *
              * @method 'stop-animation'
              * @param [animation] {String} The animation to show and pause. If not specified, this method simply pauses the current animation.
-             * @since 0.9.0
              */
             "stop-animation": function (animation) {
                 this.stopAnimation(animation);
@@ -633,7 +630,6 @@ export default (function () {
              * @method 'play-animation'
              * @param [animation] {String} The animation to play. If not specified, this method simply unpauses the current animation.
              * @param [loop] {String} Whether the played animation should be looped. Loops by default.
-             * @since 0.9.0
              */
             "play-animation": function (animation, loop) {
                 this.playAnimation(animation, loop);

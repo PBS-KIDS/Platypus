@@ -155,7 +155,6 @@ export default (function () {
                  * On receiving this message, this component checks to see if any entities being added are ready. If so, they are added to the world. This is so ready entities don't have to wait until the end of a complete tick, but can be inserted between logic ticks.
                  *
                  * @method 'handle-logic'
-                 * @since v2.0.0
                  */
                 "handle-logic": function () {
                     var adding = null,

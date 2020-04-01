@@ -3,7 +3,6 @@
  *
  * @class RenderAnimator
  * @uses platypus.Component
- * @since 1.0.0
  */
 import StateMap from '../StateMap.js';
 import {arrayCache} from '../utils/array.js';

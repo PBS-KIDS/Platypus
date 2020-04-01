@@ -3,7 +3,6 @@
  *
  * @class RelativePosition
  * @uses platypus.Component
- * @since 1.0.0
  */
 import AABB from '../AABB.js';
 import createComponentClass from '../factory.js';
@@ -129,7 +128,6 @@ export default (function () {
              * @method 'camera-update'
              * @param camera {platypus.Data} Camera update information
              * @param camera.viewport {platypus.AABB} The bounding box describing the camera viewport location in the world.
-             * @since 0.9.0
              */
             "camera-update": function (camera) {
                 this.aabb.set(camera.viewport);

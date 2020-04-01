@@ -76,7 +76,6 @@ export default (function () {
              * @property aabbColor
              * @type Number|String
              * @default 0xff88ff
-             * @since 0.11.3
              */
             aabbColor: 0xff88ff,
 
@@ -86,7 +85,6 @@ export default (function () {
              * @property collisionColor
              * @type Number|String
              * @default 0
-             * @since 0.11.3
              */
             collisionColor: 0,
 
@@ -96,7 +94,6 @@ export default (function () {
              * @property groupColor
              * @type Number|String
              * @default 0x00ff00
-             * @since 0.11.3
              */
             groupColor: 0x00ff00,
 
@@ -106,7 +103,6 @@ export default (function () {
              * @property renderColor
              * @type Number|String
              * @default 0x0000ff
-             * @since 0.11.3
              */
             renderColor: 0x0000ff,
 
@@ -116,7 +112,6 @@ export default (function () {
              * @property height
              * @type Number
              * @default 100
-             * @since 0.11.3
              */
             width: 100,
 
@@ -126,7 +121,6 @@ export default (function () {
              * @property width
              * @type Number
              * @default 100
-             * @since 0.11.3
              */
             height: 100,
 
@@ -136,7 +130,6 @@ export default (function () {
              * @property offsetZ
              * @type Number
              * @default 10000
-             * @since 0.11.3
              */
             offsetZ: 10000
         },
@@ -162,7 +155,6 @@ export default (function () {
              * Removes this component if not in a debug build.
              *
              * @method 'load'
-             * @since 0.11.3
              */
             "load": function () {
                 if (!config.dev) {

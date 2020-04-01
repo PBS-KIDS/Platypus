@@ -171,7 +171,6 @@ export default (function () {
         * @method toJSON
         * @param includeComponents {Boolean} Whether the returned JSON should list components. Defaults to `false` to condense output since components are generally defined in `platypus.game.settings.entities`, but may be needed for custom-constructed entities not so defined.
         * @return {Object} Returns a JSON definition that can be used to recreate the entity.
-        * @since 0.11.0
         **/
         toJSON (includeComponents) {
             var components = this.components,

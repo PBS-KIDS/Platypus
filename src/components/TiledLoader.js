@@ -522,7 +522,6 @@ export default (function () {
              * @property offsetMap
              * @type Boolean
              * @default false
-             * @since 0.7.5
              */
             offsetMap: false,
             
@@ -568,7 +567,6 @@ export default (function () {
              * @property spriteSheet
              * @type String | Object
              * @default null
-             * @since 0.6.6
              */
             spriteSheet: null,
 
@@ -1353,7 +1351,6 @@ export default (function () {
                  * @param message.count {Number} The number of loaded entities.
                  * @param message.progress {Number} A fraction of count / total.
                  * @param message.total {Number} The total number of entities being loaded by this component.
-                 * @since 0.8.3
                  */
                 this.owner.triggerEvent('level-loading-progress', progress);
 

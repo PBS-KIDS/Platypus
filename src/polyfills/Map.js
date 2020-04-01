@@ -5,7 +5,6 @@
  * This class defines a limited polyfill for Map. If the browser supports Map, this class is not used.
  *
  * @class Map
- * @since 0.8.0
  */
 /* global window */
 export default (function (Object) {

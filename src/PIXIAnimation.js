@@ -222,7 +222,6 @@ export default (function () {
              * @property currentAnimation
              * @default ""
              * @type String
-             * @since 0.9.2
              */
             this.currentAnimation = null;
         
@@ -356,7 +355,6 @@ export default (function () {
     *
     * @method has
     * @param animation {string} The animation to check.
-    * @since 0.9.0
     */
     prototype.has = function (animation) {
         return !!this._animations[animation];
@@ -443,7 +441,6 @@ export default (function () {
      * @method formatSpriteSheet
      * @param spriteSheet {String|Array|Object} The value to cast to a valid Sprite Sheet.
      * @return {Object}
-     * @since 0.8.4
      */
     PIXIAnimation.formatSpriteSheet = (function () {
         var imageParts = /([\w-]+)\.(\w+)$/,

@@ -7,7 +7,6 @@
  * @param functions {Array} An array of functions where each function accepts a `callback` parameter and runs `callback()` on completion to notify the completion of the call.
  * @param callback {Function} The function to run once the list of functions has finished.
  * @return {platypus.Async} Returns the new Async object.
- * @since 0.10.0
  */
 /*global clearTimeout, setTimeout */
 import config from 'config';
@@ -46,6 +45,12 @@ export default (function () {
             }
         };
 
+    /**
+     * Attempts to resolve the async call immediately if possible.
+     *
+     * @method attemptResolution
+     * @return {Boolean} Returns `true` if async is done, `false` if not.
+     */
     Async.prototype.attemptResolution = function () {
         if (this.resolve) {
             clearTimeout(this.timeout);

@@ -32,7 +32,6 @@ export default createComponentClass({
          * @property stickyClick
          * @type Boolean
          * @default false
-         * @since 0.8.3
          */
         stickyClick: false
     },

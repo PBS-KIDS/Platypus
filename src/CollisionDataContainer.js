@@ -76,7 +76,6 @@ export default (function () {
      *
      * @param delta {Number} The delta value of the X-axis.
      * @method resetX
-     * @since 0.8.7
      */
     proto.resetX = function (delta) {
         var xData = this.xData,
@@ -94,7 +93,6 @@ export default (function () {
      *
      * @param delta {Number} The delta value of the Y-axis.
      * @method resetY
-     * @since 0.8.7
      */
     proto.resetY = function (delta) {
         var yData = this.yData,
@@ -112,20 +110,17 @@ export default (function () {
      *
      * @method CollisionDataContainer.setUp
      * @return {platypus.CollisionDataContainer} The instantiated CollisionDataContainer.
-     * @since 0.8.7
      */
     /**
      * Returns a CollisionDataContainer back to the cache.
      *
      * @method CollisionDataContainer.recycle
      * @param CollisionDataContainer {platypus.CollisionDataContainer} The CollisionDataContainer to be recycled.
-     * @since 0.8.7
      */
     /**
      * Relinquishes properties of the CollisionDataContainer and recycles it.
      *
      * @method recycle
-     * @since 0.8.7
      */
     recycle.add(CollisionDataContainer, 'CollisionDataContainer', CollisionDataContainer, null, true, config.dev);
 

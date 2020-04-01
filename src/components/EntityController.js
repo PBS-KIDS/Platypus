@@ -97,7 +97,6 @@ export default (function () {
              * @property stateMaps
              * @type Object
              * @default {}
-             * @since 0.6.7
              */
             stateMaps: {}
         },

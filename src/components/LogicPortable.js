@@ -91,7 +91,6 @@ export default (function () {
              * On receiving this message, this component immediately triggers 'release-me' on its owner's carrier.
              *
              * @method 'force-release'
-             * @since 0.11.2
              */
             "force-release": function () {
                 if (this.carrier) {

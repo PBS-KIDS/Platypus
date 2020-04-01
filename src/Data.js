@@ -5,7 +5,6 @@
  * @class Data
  * @constructor
  * @return {Data} Returns the new Data object.
- * @since 0.7.1
  */
 import config from 'config';
 import recycle from 'recycle';
@@ -41,20 +40,17 @@ export default (function () {
      *
      * @method Data.setUp
      * @return {platypus.Data} The instantiated Data.
-     * @since 0.7.1
      */
     /**
      * Returns Data back to the cache. Prefer the Data's recycle method since it recycles property objects as well.
      *
      * @method Data.recycle
      * @param {platypus.Data} The Data to be recycled.
-     * @since 0.7.1
      */
     /**
      * Relinquishes Data properties and recycles it.
      *
      * @method recycle
-     * @since 0.7.1
      */
     recycle.add(Data, 'Data', Data, function () {
         var key = '';

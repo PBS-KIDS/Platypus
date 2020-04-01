@@ -85,7 +85,6 @@ export default (function () {
              * @property acceleration
              * @type platypus.Vector|Array|number
              * @default Vector(0, 0, 0)
-             * @since 0.6.8
              */
             acceleration: 0,
             
@@ -131,7 +130,6 @@ export default (function () {
              * @property instant
              * @type Boolean
              * @default false
-             * @since 0.6.7
              */
             instant: false,
             
@@ -168,7 +166,6 @@ export default (function () {
              * @property velocity
              * @type platypus.Vector|Array|number
              * @default Vector(0, 0, 0)
-             * @since 0.6.8
              */
             velocity: 0,
             
@@ -214,7 +211,6 @@ export default (function () {
              *
              * @method 'control-velocity'
              * @param control {Object|boolean} If `true`, this motion becomes active. If `false` or `{pressed: false}`, the motion becomes inactive.
-             * @since 0.6.8
              */
             "control-velocity": function (control) {
                 this.activeVelocity = (control && (control.pressed !== false));
@@ -224,7 +220,6 @@ export default (function () {
              * This event sets the velocity to inactive.
              *
              * @method 'stop-velocity'
-             * @since 0.6.8
              */
             "stop-velocity": function () {
                 this.activeVelocity = false;
@@ -234,7 +229,6 @@ export default (function () {
              * This event sets the velocity to active.
              *
              * @method 'start-velocity'
-             * @since 0.6.8
              */
             "start-velocity": function () {
                 this.activeVelocity = true;
@@ -245,7 +239,6 @@ export default (function () {
              *
              * @method 'control-acceleration'
              * @param control {Object|boolean} If `true`, this motion becomes active. If `false` or `{pressed: false}`, the motion becomes inactive.
-             * @since 0.6.8
              */
             "control-acceleration": function (control) {
                 this.activeAcceleration = (control && (control.pressed !== false));
@@ -255,7 +248,6 @@ export default (function () {
              * This event sets the acceleration to inactive.
              *
              * @method 'stop-acceleration'
-             * @since 0.6.8
              */
             "stop-acceleration": function () {
                 this.activeAcceleration = false;
@@ -265,7 +257,6 @@ export default (function () {
              * This event sets the acceleration to active.
              *
              * @method 'start-acceleration'
-             * @since 0.6.8
              */
             "start-acceleration": function () {
                 this.activeAcceleration = true;
@@ -276,7 +267,6 @@ export default (function () {
             *
             * @method 'instant-motion'
             * @param control {Object|boolean} If `true`, this motion becomes active. If `false` or `{triggered: false}`, the motion becomes inactive.
-            * @since 0.6.7
             */
             "instant-motion": function (control) {
                 this.enact = (control && (control.triggered !== false));
@@ -286,7 +276,6 @@ export default (function () {
             * This event triggers the beginning of an instant motion.
             *
             * @method 'instant-begin'
-            * @since 0.6.7
             */
             "instant-begin": function () {
                 this.enact = true;
@@ -296,7 +285,6 @@ export default (function () {
             * This event triggers the end of an instant motion.
             *
             * @method 'instant-end'
-            * @since 0.6.7
             */
             "instant-end": function () {
                 this.enact = false;
@@ -308,7 +296,6 @@ export default (function () {
             * @method 'set-motion'
             * @param motion {Object} A list of key/value pairs corresponding to motion values.
             * @param [motion.maxMagnitude] {Number} A value describing the maximum velocity or acceleration the motion vector can exert on the Entity.
-            * @since 0.6.8
             */
             "set-motion": function (motion) {
                 if (motion.acceleration) {

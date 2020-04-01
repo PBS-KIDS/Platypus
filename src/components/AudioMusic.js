@@ -4,7 +4,6 @@
  * @namespace platypus.components
  * @class AudioMusic
  * @uses platypus.Component
- * @since 6.0.0
  */
 import {arrayCache, greenSplice} from '../utils/array.js';
 import Sound from 'pixi-sound';

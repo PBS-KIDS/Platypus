@@ -113,7 +113,6 @@ export default (function () {
      * @param [y] {number} The y coordinate.
      * @param [z] {number} The z coordinate.
      * @chainable
-     * @since 0.7.4
      */
     proto.setXYZ = function (x, y, z) {
         var matrix = this.matrix;
@@ -132,7 +131,6 @@ export default (function () {
      * @param vector {Vector} The Vector to copy.
      * @param [dimensions] {number} The number of elements to copy from the Vector.
      * @chainable
-     * @since 0.7.4
      */
     proto.setVector = function (vector, dimensions) {
         return this.setArray(vector.matrix, dimensions);
@@ -145,7 +143,6 @@ export default (function () {
      * @param arr {Array} The array to copy.
      * @param [dimensions] {number} The number of elements to copy from the Array.
      * @chainable
-     * @since 0.7.4
      */
     proto.setArray = function (arr, dimensions) {
         var q = dimensions || arr.length,
@@ -166,7 +163,6 @@ export default (function () {
      * @param [y] {number} The y coordinate, or if x is an array/Vector this is the number of dimensions to check from the array/Vector.
      * @param [z] {number} The z coordinate.
      * @return {Boolean} Whether the vectors are equal.
-     * @since 0.7.3
      */
     proto.equals = function (x, y, z) {
         var m = null,
@@ -690,20 +686,17 @@ export default (function () {
      *
      * @method Vector.setUp
      * @return {platypus.Vector} The instantiated Vector.
-     * @since 0.7.1
      */
     /**
      * Returns a Vector back to the cache. Prefer the Vector's recycle method since it recycles property objects as well.
      *
      * @method Vector.recycle
      * @param {platypus.Vector} The Vector to be recycled.
-     * @since 0.7.1
      */
     /**
      * Relinquishes properties of the vector and recycles it.
      *
      * @method recycle
-     * @since 0.7.1
      */
     recycle.add(Vector, 'Vector', Vector, function () {
         this.matrix.length = 0;

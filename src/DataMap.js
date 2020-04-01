@@ -6,7 +6,6 @@
  * @constructor
  * @return dataMap {platypus.DataMap} Returns the new DataMap object.
  * @uses Map
- * @since 0.8.0
  */
 /* global window */
 import './polyfills/Map.js';
@@ -146,7 +145,6 @@ export default (function () {
                  *
                  * @method toJSON
                  * @return {Object} Returns a JSON definition that can be used to recreate the component.
-                 * @since 0.11.0
                  **/
                 mm.toJSON.value = mapToJSON.bind(map, keys);
                 

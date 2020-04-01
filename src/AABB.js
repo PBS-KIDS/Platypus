@@ -318,7 +318,6 @@ export default (function () {
      * @method equals
      * @param aabb {platypus.AABB} The AABB to check against.
      * @return {Boolean} Returns `true` if the AABB's match.
-     * @since 0.7.5
      */
     proto.equals = function (aabb) {
         return !this.empty && !aabb.empty && (this.left === aabb.left) && (this.top === aabb.top) && (this.right === aabb.right) && (this.bottom === aabb.bottom);
@@ -353,7 +352,6 @@ export default (function () {
      * @param x {number} The x-axis value.
      * @param y {number} The y-axis value.
      * @return {boolean} Returns `true` if this AABB contains the point.
-     * @since 0.7.5
      */
     proto.containsPoint = function (x, y) {
         return (y >= this.top) && (y <= this.bottom) && (x >= this.left) && (x <= this.right);
@@ -365,7 +363,6 @@ export default (function () {
      * @method collides
      * @param aabb {platypus.AABB} The AABB to check against
      * @return {boolean} Returns `true` if this AABB collides with the other AABB.
-     * @since 0.7.4
      */
     proto.collides = function (aabb) {
         return (aabb.bottom > this.top) && (aabb.top < this.bottom) && (aabb.right > this.left) && (aabb.left < this.right);
@@ -378,7 +375,6 @@ export default (function () {
      * @param x {number} The x-axis value.
      * @param y {number} The y-axis value.
      * @return {boolean} Returns `true` if this AABB collides with the point.
-     * @since 0.11.0
      */
     proto.collidesPoint = function (x, y) {
         return (y > this.top) && (y < this.bottom) && (x > this.left) && (x < this.right);
@@ -418,20 +414,17 @@ export default (function () {
      *
      * @method AABB.setUp
      * @return {platypus.AABB} The instantiated AABB.
-     * @since 0.7.3
      */
     /**
      * Returns a AABB back to the cache.
      *
      * @method AABB.recycle
      * @param aabb {platypus.AABB} The AABB to be recycled.
-     * @since 0.7.3
      */
     /**
      * Relinquishes properties of the AABB and recycles it.
      *
      * @method recycle
-     * @since 0.7.3
      */
     recycle.add(AABB, 'AABB', AABB, null, true, config.dev);
     

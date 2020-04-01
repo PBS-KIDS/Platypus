@@ -4,7 +4,6 @@
  * @namespace platypus.components
  * @class AudioVO
  * @uses platypus.Component
- * @since 0.6.0
  */
 /*global platypus */
 import Data from '../Data.js';

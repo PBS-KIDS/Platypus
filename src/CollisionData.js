@@ -45,7 +45,6 @@ export default (function () {
      * @param thatShape {platypus.Shape} The stationary shape being collided with.
      * @param vector {platypus.Vector} The vector describing the contact point.
      * @param stuck {Number} The amount of unwarranted overlap if shapes start in a collided position before moving.
-     * @since 0.8.7
      */
     proto.set = function (occurred, direction, position, deltaMovement, aABB, thisShape, thatShape, vector, stuck) {
         this.occurred = occurred || false;
@@ -82,20 +81,17 @@ export default (function () {
      *
      * @method CollisionData.setUp
      * @return {platypus.CollisionData} The instantiated CollisionData.
-     * @since 0.8.7
      */
     /**
      * Returns a collisionData back to the cache.
      *
      * @method CollisionData.recycle
      * @param collisionData {platypus.CollisionData} The collisionData to be recycled.
-     * @since 0.8.7
      */
     /**
      * Relinquishes properties of the collisionData and recycles it.
      *
      * @method recycle
-     * @since 0.8.7
      */
     recycle.add(CollisionData, 'CollisionData', CollisionData, null, true, config.dev);
     

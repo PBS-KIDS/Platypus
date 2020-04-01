@@ -3,7 +3,6 @@
  *
  * @class Tutorial
  * @uses platypus.Component
- * @since 0.8.7
  */
 /* global platypus */
 import createComponentClass from '../factory.js';

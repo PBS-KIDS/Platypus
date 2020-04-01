@@ -238,7 +238,6 @@ export default (function () {
              * @property collisionTypeMap
              * @type Object
              * @default null
-             * @since 0.8.3
              */
             collisionTypeMap: null,
             
@@ -248,7 +247,6 @@ export default (function () {
              * @property collisionType
              * @type String
              * @default "tiles"
-             * @since 0.8.3
              */
             collisionType: 'tiles',
             
@@ -258,7 +256,6 @@ export default (function () {
              * @property top
              * @type Number
              * @default 0
-             * @since 0.7.5
              */
             top: 0,
             
@@ -268,7 +265,6 @@ export default (function () {
              * @property left
              * @type Number
              * @default 0
-             * @since 0.7.5
              */
             left: 0
         },

@@ -48,7 +48,6 @@ export default (function () {
              * @property hoverAudio
              * @type String or an Array of Strings and Message Objects
              * @default ""
-             * @since 0.9.0
              */
             "onHover": "",
 
@@ -76,7 +75,6 @@ export default (function () {
              * @property toggle
              * @type Boolean
              * @default false
-             * @since 0.9.1
              */
             "toggle": false,
 
@@ -86,7 +84,6 @@ export default (function () {
              * @property pressed
              * @type Boolean
              * @default false
-             * @since 0.9.1
              */
             "pressed": false
         },
@@ -98,7 +95,6 @@ export default (function () {
              * @property bottom
              * @type Number
              * @default null
-             * @since 0.9.0
              */
             "bottom": null,
 
@@ -108,7 +104,6 @@ export default (function () {
              * @property left
              * @type Number
              * @default null
-             * @since 0.9.0
              */
             "left": null,
 
@@ -118,7 +113,6 @@ export default (function () {
              * @property right
              * @type Number
              * @default null
-             * @since 0.9.0
              */
             "right": null,
 
@@ -128,7 +122,6 @@ export default (function () {
              * @property top
              * @type Number
              * @default null
-             * @since 0.9.0
              */
             "top": null
         },
@@ -158,7 +151,6 @@ export default (function () {
              * This component uses location updates to reposition the entity if its bottom, left, right, or top properties have been set.
              *
              * @method 'handle-logic'
-             * @since 0.11.5
              */
             "handle-logic": function () {
                 var bottom = this.bottom,
@@ -181,7 +173,6 @@ export default (function () {
              * @method 'camera-update'
              * @param camera {platypus.Data} Camera update information
              * @param camera.viewport {platypus.AABB} The bounding box describing the camera viewport location in the world.
-             * @since 0.9.0
              */
             "camera-update": function (camera) {
                 this.aabb.set(camera.viewport);
@@ -211,7 +202,6 @@ export default (function () {
                          * @param buttonState.released {Boolean} This is `false` for the 'pressed' event.
                          * @param buttonState.triggered {Boolean} This is `true` for the 'pressed' event.
                          * @param buttonState.entity {platypus.Entity} The entity for which the original event occurred.
-                         * @since 0.9.1
                          */
                         this.updateStateAndTrigger('pressed');
                         if (eventData && eventData.pixiEvent && eventData.pixiEvent.stopPropagation) { // ensure a properly formed event has been sent
@@ -249,7 +239,6 @@ export default (function () {
                          * @param buttonState.released {Boolean} This is `true` for the 'cancelled' event.
                          * @param buttonState.triggered {Boolean} This is `false` for the 'cancelled' event.
                          * @param buttonState.entity {platypus.Entity} The entity for which the original event occurred.
-                         * @since 0.9.1
                          */
                         this.updateStateAndTrigger('cancelled');
                     } else if (this.toggle) {
@@ -274,7 +263,6 @@ export default (function () {
                          * @param buttonState.released {Boolean} This is `true` for the 'released' event.
                          * @param buttonState.triggered {Boolean} This is `false` for the 'released' event.
                          * @param buttonState.entity {platypus.Entity} The entity for which the original event occurred.
-                         * @since 0.9.1
                          */
                         this.updateStateAndTrigger('released');
                     }
@@ -355,7 +343,6 @@ export default (function () {
              * Sets the entity's highlighted state to `true`.
              *
              * @method 'highlight'
-             * @since 0.8.6
              */
             "highlight": function () {
                 this.state.set('highlighted', true);
@@ -365,7 +352,6 @@ export default (function () {
              * Sets the entity's highlighted state to `false`.
              *
              * @method 'unhighlight'
-             * @since 0.8.6
              */
             "unhighlight": function () {
                 this.state.set('highlighted', false);
@@ -375,7 +361,6 @@ export default (function () {
              * Toggles the entity's highlighted state.
              *
              * @method 'toggle-highlight'
-             * @since 0.8.6
              */
             "toggle-highlight": function () {
                 var state = this.state;

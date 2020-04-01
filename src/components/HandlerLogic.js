@@ -46,7 +46,6 @@ export default (function () {
              * @property alwaysOn
              * @type Boolean
              * @default false
-             * @since 0.7.1
              */
             alwaysOn: false
         },
@@ -84,7 +83,6 @@ export default (function () {
              * @property timeMultiplier
              * @type number
              * @default 1
-             * @since 0.7.1
              */
             timeMultiplier: 1
         },
@@ -119,7 +117,6 @@ export default (function () {
              *
              * @method 'child-entity-updated'
              * @param entity {platypus.Entity} The entity that is being considered.
-             * @since v0.12.0
              */
             "child-entity-updated": function (entity) {
                 var j = this.entities.indexOf(entity),
@@ -192,7 +189,6 @@ export default (function () {
                      * Notifies children entities that logic has been paused.
                      *
                      * @event 'logic-paused'
-                     * @since 0.8.4
                      */
                     this.owner.triggerEventOnChildren('logic-paused');
                 }
@@ -210,7 +206,6 @@ export default (function () {
                      * Notifies children entities that logic has been unpaused.
                      *
                      * @event 'logic-unpaused'
-                     * @since 0.8.4
                      */
                     this.owner.triggerEventOnChildren('logic-unpaused');
                 }
@@ -296,7 +291,6 @@ export default (function () {
                          * @param tick.delta {Number} The time that has passed since the last tick.
                          * @param tick.camera {null|platypus.AABB} The range of the logic camera area. This is typically larger than the visible camera. This value is `null` if `alwaysOn` is set to `true` on this component.
                          * @param tick.entities {Array} This is a list of all the logically active entities.
-                         * @since 0.8.1
                          */
                         this.owner.triggerEvent('handle-logic', msg);
                     
@@ -316,7 +310,6 @@ export default (function () {
                              * @param tick.delta {Number} The time that has passed since the last tick.
                              * @param tick.camera {null|platypus.AABB} The range of the logic camera area. This is typically larger than the visible camera. This value is `null` if `alwaysOn` is set to `true` on this component.
                              * @param tick.entities {Array} This is a list of all the logically active entities.
-                             * @since 0.6.8
                              */
                             entity.triggerEvent('prepare-logic', msg);
 
@@ -339,7 +332,6 @@ export default (function () {
                              * @param tick.delta {Number} The time that has passed since the last tick.
                              * @param tick.camera {null|platypus.AABB} The range of the logic camera area. This is typically larger than the visible camera. This value is `null` if `alwaysOn` is set to `true` on this component.
                              * @param tick.entities {Array} This is a list of all the logically active entities.
-                             * @since 0.6.8
                              */
                             entity.triggerEvent('handle-movement', msg);
                         }

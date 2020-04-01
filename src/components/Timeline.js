@@ -3,7 +3,6 @@
  *
  * @class Timeline
  * @uses platypus.Component
- * @since 0.8.7
  */
 /* global platypus */
 import {arrayCache, greenSplice} from '../utils/array.js';
@@ -100,7 +99,6 @@ export default (function () {
              * Stops all timelines.
              *
              * @method 'stop-active-timelines'
-             * @since v0.12.0
              */
             "stop-active-timelines": function () {
                 var instances = this.timelineInstances,

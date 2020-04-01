@@ -3,7 +3,6 @@
  *
  * @class Interactive
  * @uses platypus.Component
- * @since 0.9.0
  */
 import {Circle, Polygon, Rectangle} from 'pixi.js';
 import AABB from '../AABB.js';
@@ -81,7 +80,6 @@ export default createComponentClass({
          * @property relativeToSelf
          * @type String
          * @default false
-         * @since 0.9.3
          */
         "relativeToSelf": false
     },
@@ -256,7 +254,6 @@ export default createComponentClass({
                      * @param x {Number} The x coordinate in world units.
                      * @param y {Number} The y coordinate in world units.
                      * @param entity {platypus.Entity} The entity receiving this event.
-                     * @since v0.10.6
                      */
                     trigger.call(this, 'pointerdown', event);
                     event.currentTarget.mouseTarget = true;
@@ -271,7 +268,6 @@ export default createComponentClass({
                      * @param x {Number} The x coordinate in world units.
                      * @param y {Number} The y coordinate in world units.
                      * @param entity {platypus.Entity} The entity receiving this event.
-                     * @since v0.10.6
                      */
                     trigger.call(this, 'pointermove', event);
                     event.currentTarget.mouseTarget = true;
@@ -286,7 +282,6 @@ export default createComponentClass({
                      * @param x {Number} The x coordinate in world units.
                      * @param y {Number} The y coordinate in world units.
                      * @param entity {platypus.Entity} The entity receiving this event.
-                     * @since v0.10.6
                      */
                     trigger.call(this, 'pointertap', event);
                 },
@@ -301,7 +296,6 @@ export default createComponentClass({
                      * @param x {Number} The x coordinate in world units.
                      * @param y {Number} The y coordinate in world units.
                      * @param entity {platypus.Entity} The entity receiving this event.
-                     * @since v0.10.6
                      */
                     trigger.call(this, 'pointerout', event);
                 },
@@ -315,7 +309,6 @@ export default createComponentClass({
                      * @param x {Number} The x coordinate in world units.
                      * @param y {Number} The y coordinate in world units.
                      * @param entity {platypus.Entity} The entity receiving this event.
-                     * @since v0.10.6
                      */
                     trigger.call(this, 'pointerover', event);
                 },
@@ -333,7 +326,6 @@ export default createComponentClass({
                          * @param x {Number} The x coordinate in world units.
                          * @param y {Number} The y coordinate in world units.
                          * @param entity {platypus.Entity} The entity receiving this event.
-                         * @since v0.10.6
                          */
                         trigger.call(this, 'pointerup', event);
                         event.currentTarget.mouseTarget = false;
@@ -357,7 +349,6 @@ export default createComponentClass({
                          * @param x {Number} The x coordinate in world units.
                          * @param y {Number} The y coordinate in world units.
                          * @param entity {platypus.Entity} The entity receiving this event.
-                         * @since v0.10.6
                          */
                         trigger.call(this, 'pointerupoutside', event);
                         event.currentTarget.mouseTarget = false;
@@ -381,7 +372,6 @@ export default createComponentClass({
                          * @param x {Number} The x coordinate in world units.
                          * @param y {Number} The y coordinate in world units.
                          * @param entity {platypus.Entity} The entity receiving this event.
-                         * @since v0.11.10
                          */
                         trigger.call(this, 'pointercancel', event);
                         event.currentTarget.mouseTarget = false;

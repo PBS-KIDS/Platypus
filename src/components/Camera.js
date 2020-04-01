@@ -87,7 +87,6 @@ export default (function () {
              * @property mode
              * @type String
              * @default 'static'
-             * @since 0.9.0
              **/
             "mode": "static",
             
@@ -328,7 +327,6 @@ export default (function () {
              *
              * @method 'child-entity-updated'
              * @param entity {platypus.Entity} Expects an entity as the message object to determine whether to trigger `camera-update` on it.
-             * @since 0.6.8
              **/
             "child-entity-updated": function (entity) {
                 this.viewportUpdate = true;
@@ -368,7 +366,6 @@ export default (function () {
              *
              * @method 'pointerdown'
              * @param event {Object} The pointer event.
-             * @since 0.9.0
              **/
             "pointerdown": function (event) {
                 var worldVP = this.worldCamera.viewport;
@@ -392,7 +389,6 @@ export default (function () {
              *
              * @method 'pressmove'
              * @param event {Object} The pointer event.
-             * @since 0.9.0
              **/
             "pressmove": function (event) {
                 if (this.mouse) {
@@ -409,7 +405,6 @@ export default (function () {
              *
              * @method 'pressup'
              * @param event {Object} The pointer event.
-             * @since 0.9.0
              **/
             "pressup": function (event) {
                 if (this.mouse) {
@@ -1028,7 +1023,6 @@ export default (function () {
              * @param bounds.x {Number} The left edge of the display object.
              * @param bounds.y {Number} The top edge of the display object.
              * @return {Boolean} Whether the display object intersects the camera's bounds.
-             * @since 0.10.0
              */
             isOnCanvas: function (bounds) {
                 var canvas = this.canvas;
