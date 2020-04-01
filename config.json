@@ -19,6 +19,7 @@
 		"src/Vector.js",
 		"src/AABB.js",
 		"src/ActionState.js",
+		"src/AssetManager.js",
 		"src/CollisionData.js",
 		"src/CollisionDataContainer.js",
 		"src/CollisionShape.js",
