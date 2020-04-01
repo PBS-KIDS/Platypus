@@ -1,8 +1,13 @@
 /**
- * This component plays audio using the SpringRoll VOPlayer instance. Audio is played by triggering specific messages defined in the audio component definition.
+ * This class is used to create `platypus.game.voPlayer` and manages playback by only playing one at a time, playing a list, and even handling captions at the same time.
+ *
+ * This class borrows heavily from SpringRoll v1 to match the original capabilities exposed for Platypus v1.
  *
  * @namespace platypus
  * @class VOPlayer
+ * @constructor
+ * @param {Game} game The game instance for which to play audio.
+ * @param {assetManager} assetCache The Platypus assetManager used to load and unload VO clips.
  */
 /* global platypus */
 import {arrayCache, greenSlice, greenSplice} from './utils/array.js';
@@ -10,12 +15,6 @@ import Data from './Data.js';
 import Messenger from './Messenger.js';
 import Sound from 'pixi-sound';
 
-    /**
-     * A class for managing audio by only playing one at a time, playing a list,
-     * and even managing captions (Captions library) at the same time.
-     *
-     * This class borrows heavily from SpringRoll v1 to match the original capabilities exposed for Platypus v1.
-     */
 export default class VOPlayer extends Messenger {
     constructor (game, assetCache) {
         super();
@@ -110,15 +109,13 @@ export default class VOPlayer extends Messenger {
     /**
      * Fired when a new VO, caption, or silence timer begins
      * @event start
-     * @param {String} currentVO The alias of the VO or caption that has begun, or null if it is
-     *                           a silence timer.
+     * @param {String} currentVO The alias of the VO or caption that has begun, or null if it is a silence timer.
      */
 
     /**
      * Fired when a new VO, caption, or silence timer completes
      * @event end
-     * @param {String} currentVO The alias of the VO or caption that has begun, or null if it is
-     *                           a silence timer.
+     * @param {String} currentVO The alias of the VO or caption that has begun, or null if it is a silence timer.
      */
 
     /**
@@ -143,9 +140,7 @@ export default class VOPlayer extends Messenger {
     }
 
     /**
-     * The springroll.Captions object used for captions. The developer is responsible
-     * for initializing this with a captions dictionary config file and a reference
-     * to a text field.
+     * The springroll.Captions object used for captions. The developer is responsible for initializing this with a captions dictionary config file and a reference to a text field.
      * @property {Captions} captions
      * @public
      */
@@ -179,22 +174,22 @@ export default class VOPlayer extends Messenger {
     }
 
     /**
-     * The duration of the currently playing item of audio/silence in milliseconds. If this is
-     * waiting on an audio file to load for the first time, it will be 0, as there is no duration
-     * data to give.
+     * The duration of the currently playing item of audio/silence in milliseconds. If this is waiting on an audio file to load for the first time, it will be 0, as there is no duration data to give.
      * @property {int} currentDuration
      */
     get currentDuration () {
-        if (!this.playing) return 0;
+        if (!this.playing) {
+            return 0;
+        }
+
         //active audio
-        if (this._soundInstance)
+        if (this._soundInstance) {
             return Sound.duration(this._soundInstance.alias);
-        //captions only
-        else if (this._currentVO && this._captions)
+        } else if (this._currentVO && this._captions) { //captions only
             return this._captions.currentDuration;
-        //silence timer
-        else
+        } else { //silence timer
             return this.voList[this._listCounter];
+        }
     }
 
     /**
@@ -535,6 +530,12 @@ export default class VOPlayer extends Messenger {
         }
     }
 
+    /**
+     * Sets the volume of VO playback.
+     *
+     * @method setVolume
+     * @param {Number} volume
+     */
     setVolume (volume) {
         this.volume = volume;
         if (this._soundInstance) {
@@ -542,6 +543,12 @@ export default class VOPlayer extends Messenger {
         }
     }
 
+    /**
+     * Whether to mute captions.
+     *
+     * @method setCaptionMute
+     * @param {Boolean} muted
+     */
     setCaptionMute (muted) {
         this.captionMute = muted;
         if (this._captions) {
