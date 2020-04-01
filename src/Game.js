@@ -349,13 +349,8 @@ export default (function () {
                     }
                 }.bind(this));
                 
-                state.soundVolume.subscribe(function (current) {
-                    /* SR seems to trigger this too aggressively, in that it already calls mute/unmute on the comprising sfx/music/vo channels. We rely on the others instead.
-                    if (current) {
-                        Sound.muteAll();
-                    } else {
-                        Sound.unmuteAll();
-                    } */
+                state.soundVolume.subscribe(function () {
+                    /* SR seems to trigger this too aggressively, in that it already calls mute/unmute on the comprising sfx/music/vo channels. We rely on the others instead. */
                 });
                 
                 state.musicVolume.subscribe((current) => {

@@ -23,7 +23,6 @@
 		"src/CollisionDataContainer.js",
 		"src/CollisionShape.js",
 		"src/factory.js",
-		"src/PlatypusPlugin.js",
 		"src/components/Interactive.js",
 		"src/components/AIChaser.js",
 		"src/components/AIPacer.js",
