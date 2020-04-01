@@ -1,11 +1,43 @@
 /**
  * This class is used to create the `platypus.game` object and loads the Platypus game as described by the game configuration files.
  *
+ * Configuration definition typically takes something like the following structures, but is highly dependent on the particular components used in a given game:
+ *
+ *     {
+ *         "atlases": {}, // Keyed list of Spine atlases.
+ *         "captions": {}, // Keyed list of captions for closed captioning.
+ *         "entities": {}, // Keyed list of entity definitions.
+ *         "levels": {}, // Keyed list of Tiled levels.
+ *         "mouthCues": {}, // Keyed list of Rhubarb mouth cues for lip synch.
+ *         "scenes": {}, // Keyed list of scene definitions.
+ *         "skeletons": {}, // Keyed list of Spine skeletons.
+ *         "spriteSheets": {} // Keyed list of sprite sheet definitions.
+ *     }
+ *
+ * Options may include any of these:
+ *
+ *     {
+ *         audio: '', // Relative path to audio assets (like "assets/audio/").
+ *         canvasId: '', // HTML element ID for the canvas to draw to. If specified but unfound, will create a canvas with this ID.
+ *         display: {}, // Display options are passed directly to PixiJS for setting up the renderer.
+ *         features: { // Features supported for the Springroll application. Defaults are listed below.
+ *             sfx: true,
+ *             vo: true,
+ *             music: true,
+ *             sound: true,
+ *             captions: true
+ *         },
+ *         images: '', // Relative path to graphical assets (like "assets/images/").
+ *         name: '', // Name of game. Used for local storage keys and displayed in the console on run.
+ *         storageKeys: [] // Array of keys to create in local storage on first run so game code may assume they exist.
+ *         version: '' // Version of the game. This is displayed in the console on run.
+ *     }
+ *
  * @namespace platypus
  * @class Game
  * @constructor
  * @param definition {Object} Collection of configuration settings, typically from config.json.
- * @param applicationInstance {springroll.Application} The Spring Roll application that the Platypus game is in.
+ * @param options {Object} Options describing the display options, Springroll features, etc.
  * @param [onFinishedLoading] {Function} An optional function to run once the game has begun.
  * @return {platypus.Game} Returns the instantiated game.
  */
@@ -391,13 +423,13 @@ export default (function () {
         }
         
         /**
-        * This method causes the game to tick once. It's called by the SpringRoll Application.
-        *
-        * @method tick
-        * @param tickMessage {Object} Event tracking tick data.
-        * @param ticker {PIXI.Ticker} The ticker being used to set the game tick.
-        * @param deltaTime {number} The time elapsed since the last tick.
-        **/
+         * This method causes the game to tick once.
+         *
+         * @method tick
+         * @param ticker {PIXI.Ticker} The ticker being used to set the game tick.
+         * @param tickMessage {Object} Event tracking tick data.
+         * @param deltaTime {number} The time elapsed since the last tick.
+         **/
         tick (ticker, tickMessage, deltaTime) {
             const loading = this.loading;
 
@@ -414,6 +446,15 @@ export default (function () {
             }
 
             TweenJS.update();
+
+            /**
+             * This event is triggered on the game as well as each layer currently loaded.
+             *
+             * @method tick
+             * @param tickMessage {Object} Event tracking tick data. This object is re-used for subsequent ticks.
+             * @param tickMessage.delta {Number} Time in MS passed since last tick.
+             * @param tickMessage.elapsed {Number} Time in MS passed since game load.
+             **/
             this.triggerEvent('tick', tickMessage);
             this.triggerOnChildren('tick', tickMessage);
             this.renderer.render(this.stage);
