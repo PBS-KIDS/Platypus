@@ -202,6 +202,12 @@ export default (function () {
             this._listeners = null;
         }
 
+        /**
+         * Adds Messenger functionality to a Class.
+         *
+         * @method Messenger.mixin
+         * @param {Class|Function} ClassObject The class to add Messenger behavior to.
+         */
         static mixin (ClassObject) {
             var key = '',
                 fromProto = Messenger.prototype,
@@ -221,6 +227,12 @@ export default (function () {
             }
         }
 
+        /**
+         * Call this method in an Object's instantiation if `Messenger.mixin` has been called on its Class.
+         *
+         * @method Messenger.mixin
+         * @param {Object} object The object for which Messenger should be instantiated.
+         */
         static initialize (object) {
             object._listeners = {};
             object._destroyed = false;
