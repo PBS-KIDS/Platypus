@@ -20,8 +20,7 @@ export default (function () {
             loop: 0,
             volume: 1,
             pan: 0,
-            mute: false,
-            paused: false,
+            muted: false,
             speed: 1,
             playthrough: false
         },
@@ -57,8 +56,7 @@ export default (function () {
                     pan: soundDefinition.pan,
                     startTime: soundDefinition.startTime,
                     duration: soundDefinition.duration,
-                    mute: soundDefinition.mute,
-                    paused: soundDefinition.paused,
+                    muted: soundDefinition.muted,
                     speed: soundDefinition.speed,
                     playthrough: soundDefinition.playthrough
                 };
@@ -73,12 +71,10 @@ export default (function () {
                     "interrupt", value.interrupt || attributes.interrupt || defaultSettings.interrupt,
                     "delay",     value.delay     || attributes.delay  || defaultSettings.delay,
                     "loop",      value.loop      || attributes.loop   || defaultSettings.loop,
-                    "loops",     value.loop      || attributes.loop   || defaultSettings.loop, // SoundJS 2.0 listens for this
                     "offset",    value.offset    || attributes.offset || defaultSettings.offset,
                     "volume",    (typeof value.volume !== 'undefined') ? value.volume : ((typeof attributes.volume !== 'undefined') ? attributes.volume : defaultSettings.volume),
                     "pan",       value.pan       || attributes.pan    || defaultSettings.pan,
-                    "mute",      value.mute      || attributes.mute   || defaultSettings.mute,
-                    "paused",    value.paused    || attributes.paused || defaultSettings.paused,
+                    "muted",      value.muted      || attributes.muted   || defaultSettings.muted,
                     "speed",    (typeof value.speed !== 'undefined') ? value.speed : ((typeof attributes.speed !== 'undefined') ? attributes.speed : defaultSettings.speed),
                     "playthrough", value.playthrough || attributes.playthrough || defaultSettings.playthrough
                 );
@@ -163,14 +159,20 @@ export default (function () {
              *               "loop": 4,
              *               // Optional. Determines how many more times to play the audio clip once it finishes. Set to -1 for an infinite loop. Default is 0.
              *
+             *               "muted": false,
+             *               // Whether clip should start muted.
+             *
              *               "volume": 0.75,
              *               // Optional. Used to specify how loud to play audio on a range from 0 (mute) to 1 (full volume). Default is 1.
              *
              *               "speed": 0.75,
              *               // Optional. Used to specify how fast to play audio. Default is 1 (100% speed).
              *
-             *               "pan": -0.25
+             *               "pan": -0.25,
              *               // Optional. Used to specify the pan of audio on a range of -1 (left) to 1 (right). Default is 0.
+             *
+             *               "playthrough": false
+             *               // Whether SFX should force completion of sound even when stopped prematurely.
              *           }
              *       }
              *
@@ -238,13 +240,14 @@ export default (function () {
                          * @method '*'
                          * @param message.interrupt (string) - Optional. Can be "any", "early", "late", or "none". Determines how to handle the audio when it's already playing but a new play request is received. Default is "any".
                          * @param message.delay (integer) - Optional. Time in milliseconds to wait before playing audio once the message is received. Default is 0.
-                         * @param message.offset (integer) - Optional. Time in milliseconds determining where in the audio clip to begin playback. Default is 0.
                          * @param message.length (integer) - Optional. Time in milliseconds to play audio before stopping it. If 0 or not specified, play continues to the end of the audio clip.
                          * @param message.loop (integer) - Optional. Determines how many more times to play the audio clip once it finishes. Set to -1 for an infinite loop. Default is 0.
-                         * @param message.volume (float) - Optional. Used to specify how loud to play audio on a range from 0 (mute) to 1 (full volume). Default is 1.
-                         * @param message.speed (float) - Optional. Used to specify how fast to play audio. Default is 1.
+                         * @param message.muted {Boolean} Whether clip should start muted.
+                         * @param message.offset (integer) - Optional. Time in milliseconds determining where in the audio clip to begin playback. Default is 0.
                          * @param message.pan (float) - Optional. Used to specify the pan of audio on a range of -1 (left) to 1 (right). Default is 0.
-                         * @param message.next (string) - Optional. Used to specify the next audio clip to play once this one is complete.
+                         * @param message.playthrough {Boolean} Whether SFX should force completion of sound even when stopped prematurely.
+                         * @param message.speed (float) - Optional. Used to specify how fast to play audio. Default is 1.
+                         * @param message.volume (float) - Optional. Used to specify how loud to play audio on a range from 0 (mute) to 1 (full volume). Default is 1.
                          */
                         if (this.eventBased) {
                             this.addEventListener(key, playClip);
