@@ -26,7 +26,7 @@ export default (function () {
             speed: 1,
             playthrough: false
         },
-        playSound = function (soundDefinition, channel) {
+        playSound = function (soundDefinition) {
             var sound      = '',
                 attributes = null,
                 completed  = function (data/*, cancelled*/) {
@@ -46,9 +46,7 @@ export default (function () {
             
             if (typeof soundDefinition === 'string') {
                 sound      = soundDefinition;
-                attributes = {
-                    channel: channel
-                };
+                attributes = {};
             } else {
                 sound      = soundDefinition.sound;
                 attributes = {
@@ -62,7 +60,6 @@ export default (function () {
                     duration: soundDefinition.duration,
                     mute: soundDefinition.mute,
                     paused: soundDefinition.paused,
-                    channel: channel,
                     speed: soundDefinition.speed,
                     playthrough: soundDefinition.playthrough
                 };
@@ -83,7 +80,6 @@ export default (function () {
                     "pan",       value.pan       || attributes.pan    || defaultSettings.pan,
                     "mute",      value.mute      || attributes.mute   || defaultSettings.mute,
                     "paused",    value.paused    || attributes.paused || defaultSettings.paused,
-                    "channel",    value.channel    || attributes.channel || defaultSettings.channel,
                     "speed",    (typeof value.speed !== 'undefined') ? value.speed : ((typeof attributes.speed !== 'undefined') ? attributes.speed : defaultSettings.speed),
                     "playthrough", value.playthrough || attributes.playthrough || defaultSettings.playthrough
                 );
@@ -185,8 +181,6 @@ export default (function () {
              */
             audioMap: null,
 
-            channel: '',
-            
             /**
              * Determines whether a sound that's started should play through completely regardless of entity state changes.
              *
@@ -217,47 +211,10 @@ export default (function () {
             stateBased: false
         },
             
-        initialize: function (definition) {
+        initialize: function () {
             var key      = '',
                 playClip = null,
                 sound    = null;
-            
-            if (this.channel) {/*
-                if (!platypus.game.audioChannels) { // Monkey-patch to add per-channel volume
-                    const wasi = createjs.WebAudioSoundInstance;
-
-                    platypus.game.audioChannels = {};
-
-                    wasi.prototype._beginPlaying = function (playProps) {
-                        if (playProps.channel) {
-                            if (!platypus.game.audioChannels[playProps.channel]) {
-                                const gain = platypus.game.audioChannels[playProps.channel] = wasi.context.createGain();
-                                gain.connect(wasi.destinationNode);
-                            }
-                            this.destinationNode = platypus.game.audioChannels[playProps.channel];
-                        } else {
-                            this.destinationNode = wasi.destinationNode;
-                        }
-                        createjs.AbstractSoundInstance.prototype._beginPlaying.call(this, playProps);
-                    };
-                    
-                    wasi.prototype._handleSoundReady = function () {
-                        var dur = this._duration * 0.001,
-                            pos = Math.min(Math.max(0, this._position) * 0.001, dur);
-
-                        this.gainNode.connect(this.destinationNode);  // this line can cause a memory leak.  Nodes need to be disconnected from the audioDestination or any sequence that leads to it.
-
-                        this.sourceNode = this._createAndPlayAudioNode((wasi.context.currentTime - dur), pos);
-                        this._playbackStartTime = this.sourceNode.startTime - pos;
-
-                        this._soundCompleteTimeout = setTimeout(this._endedHandler, (dur - pos) * 1000);
-
-                        if (this._loop !== 0) {
-                            this._sourceNodeNext = this._createAndPlayAudioNode(this._playbackStartTime, 0);
-                        }
-                    };
-                }*/ //TODO: Need to implement channels.
-            }
             
             this.activeAudioClips = arrayCache.setUp();
     
@@ -273,7 +230,7 @@ export default (function () {
                 for (key in this.audioMap) {
                     if (this.audioMap.hasOwnProperty(key)) {
                         sound = this.audioMap[key];
-                        playClip = playSound(sound, this.channel);
+                        playClip = playSound(sound);
                         if (sound.sound) {
                             sound = sound.sound;
                         }
