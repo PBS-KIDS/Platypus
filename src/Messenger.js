@@ -25,10 +25,6 @@ export default (function () {
             this.loopCheck = arrayCache.setUp();
         }
 
-        get destroyed () {
-            return this._destroyed;
-        }
-
         /**
          * Add an event listener. The parameters for the listener functions depend on the event.
          *

@@ -1,8 +1,7 @@
 /**
- * This class plays animation sequences of frames and mimics the syntax required for creating CreateJS Sprites, allowing CreateJS Sprite Sheet definitions to be used with pixiJS.
+ * This class plays animation sequences of frames and mimics the syntax required for creating CreateJS Sprites, allowing CreateJS Sprite Sheet definitions to be used with PixiJS.
  *
  * @class PIXIAnimation
- * @extends PIXI.Sprite
  */
 /*global platypus */
 import {AnimatedSprite, BaseTexture, Container, Point, Rectangle, Sprite, Texture} from 'pixi.js';
@@ -168,8 +167,6 @@ export default (function () {
                 cache = (cacheId ? animationCache[cacheId] : null),
                 speed = (spriteSheet.framerate || FR) / FR;
 
-            let animationCount = 0;
-            
             if (!cacheId) {
                 cache = getAnimations(spriteSheet);
             } else if (!cache) {
@@ -203,7 +200,6 @@ export default (function () {
                     }.bind(this, key, cache.animations[key]);
                     anim.updateAnchor = true;
                 }
-                animationCount += 1;
             }
             
             this._animation = null;
@@ -287,6 +283,7 @@ export default (function () {
     /**
     * Stops the PIXIAnimation
     *
+    * @method stop
     */
     prototype.stop = function () {
         this.paused = true;
@@ -295,6 +292,7 @@ export default (function () {
     /**
     * Plays the PIXIAnimation
     *
+    * @method play
     */
     prototype.play = function () {
         this.paused = false;
@@ -303,7 +301,8 @@ export default (function () {
     /**
     * Stops the PIXIAnimation and goes to a specific frame
     *
-    * @param frameNumber {number} frame index to stop at
+    * @method gotoAndStop
+    * @param animation {number} frame index to stop at
     */
     prototype.gotoAndStop = function (animation) {
         this.stop();
@@ -387,25 +386,6 @@ export default (function () {
         }
     };
     
-    /**
-     * This method makes sure that all the base textures are in the gpu to prevent framerate lurches later due to loading base textures as their textures appear.
-     *
-     * @method PIXIAnimation.preloadBaseTextures
-     * @param renderer {PIXI.WebGLRenderer}
-     */
-    PIXIAnimation.preloadBaseTextures = function (renderer) {
-        var btCache = baseTextureCache,
-            key = '';
-        
-        if (renderer.updateTexture) {
-            for (key in btCache) {
-                if (btCache.hasOwnProperty(key)) {
-                    renderer.updateTexture(btCache[key]);
-                }
-            }
-        }
-    };
-    
     PIXIAnimation.EmptySpriteSheet = {
         framerate: 60,
         frames: [],
@@ -419,7 +399,7 @@ export default (function () {
     /**
      * This method formats a provided value into a valid PIXIAnimation Sprite Sheet. This includes accepting the EaselJS spec, strings mapping to Platypus sprite sheets, or arrays of either.
      *
-     * @method formatSpriteSheet
+     * @method PIXIAnimation.formatSpriteSheet
      * @param spriteSheet {String|Array|Object} The value to cast to a valid Sprite Sheet.
      * @return {Object}
      */
