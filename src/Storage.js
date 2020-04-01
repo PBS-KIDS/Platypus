@@ -1,10 +1,10 @@
 /**
- * This class defines a generic data object to use for messaging. It includes recycle methods to encourage reuse.
+ * This class is used to create the Platypus storage system accessible at `platypus.storage`. It uses Springroll UserData if available, with a fallback to local storage if not.
  *
  * @namespace platypus
- * @class Data
+ * @class Storage
  * @constructor
- * @return {Data} Returns the new Data object.
+ * @return {Data} Returns the new Storage object.
  */
 /* global platypus, window */
 import DataMap from './DataMap.js';
@@ -34,7 +34,23 @@ export default class Storage {
             };
 
         this.map = DataMap.setUp();
+
+        /**
+         * The storage key being used to store data.
+         *
+         * @property storageKey
+         * @type String
+         * @default options.name+'-data'
+         */
         this.storageKey = storageKey;
+
+        /**
+         * Whether Springroll is connected to a hosting page.
+         *
+         * @property connected
+         * @type Boolean
+         * @default false
+         */
         this.connected = false;
 
         if (keys) {
@@ -57,6 +73,13 @@ export default class Storage {
         });
     }
 
+    /**
+     * Adds a storage key to the game's storage.
+     *
+     * @method addKey
+     * @param {String} key The key to add.
+     * @param {*} value The data to store at this defined key.
+     */
     addKey (key, value) {
         this.map.set(key, value);
         Object.defineProperty(this, key, {
@@ -72,6 +95,13 @@ export default class Storage {
         });
     }
 
+    /**
+     * Gets a value from storage for the provided storage key.
+     *
+     * @method get
+     * @param {String} key The key for the data to return
+     * @return {*}
+     */
     get (key) {
         if (!this.map.has(key)) {
             this.addKey(key, null);
@@ -80,6 +110,11 @@ export default class Storage {
         return this[key];
     }
 
+    /**
+     * Takes the current game storage and saves it to local storage or Springroll UserData
+     *
+     * @method save
+     */
     save () {
         const save = this.map.toJSON();
         
@@ -92,6 +127,13 @@ export default class Storage {
         }
     }
 
+    /**
+     * Updates a storage key's data. Creates the key if it does not exist.
+     *
+     * @method set
+     * @param {String} key The key to update.
+     * @param {*} value The data to store at this key.
+     */
     set (key, value) {
         if (!this.map.has(key)) {
             this.addKey(key, value);
