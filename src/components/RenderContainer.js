@@ -389,11 +389,9 @@ export default (function () {
              * A setup message used to add the sprite to the stage. On receiving this message, the component sets its parent container to the stage contained in the message if it doesn't already have one.
              *
              * @method 'handle-render-load'
-             * @param handlerData {Object} Data from the render handler
-             * @param handlerData.container {PIXI.Container} The parent container.
              * @param data.renderGroups {Array of PIXI.Container} Containers to categorize display of groups of entities.
              */
-            "handle-render-load": function (handlerData) {
+            "handle-render-load": function () {
                 /**
                  * This event is triggered once the RenderSprite is ready to handle interactivity.
                  *
@@ -407,10 +405,8 @@ export default (function () {
              * The render update message updates the sprite. If a sprite doesn't have a container, it's removed.
              *
              * @method 'handle-render'
-             * @param renderData {Object} Data from the render handler
-             * @param renderData.container {PIXI.Container} The parent container.
              */
-            "handle-render": function (renderData) {
+            "handle-render": function () {
                 if (!this.container) { // If this component's removal is pending
                     return;
                 }

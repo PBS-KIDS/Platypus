@@ -5,7 +5,7 @@
  * @extends PIXI.Sprite
  */
 /*global platypus */
-import {AnimatedSprite, BaseTexture, Container, Point, Rectangle, Sprite, Texture, utils} from 'pixi.js';
+import {AnimatedSprite, BaseTexture, Container, Point, Rectangle, Sprite, Texture} from 'pixi.js';
 import {arrayCache, greenSlice} from './utils/array.js';
 import Data from './Data.js';
 
@@ -404,25 +404,6 @@ export default (function () {
                 }
             }
         }
-    };
-    
-    /**
-     * This method cleans out all PIXIAnimation baseTextures at the end of a scene.
-     *
-     * @method PIXIAnimation.unloadBaseTextures
-     */
-    PIXIAnimation.unloadBaseTextures = function (renderer) {
-        var btCache = baseTextureCache,
-            key = '';
-        
-        for (key in btCache) {
-            if (btCache.hasOwnProperty(key) && btCache[key]) {
-                btCache[key].destroy();
-                btCache[key] = null;
-            }
-        }
-
-        utils.clearTextureCache();
     };
     
     PIXIAnimation.EmptySpriteSheet = {

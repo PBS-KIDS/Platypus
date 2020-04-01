@@ -117,13 +117,13 @@ export default (function () {
             skinMap: null,
 
             /**
-            * The scaling factor for this sprite relative to the scale of the container.
-            *
-            * @property localScaleX
-            * @type Number|Array|Object
-            * @default 1
-            */
-           localScaleX: 1,
+             * The scaling factor for this sprite relative to the scale of the container.
+             *
+             * @property localScaleX
+             * @type Number|Array|Object
+             * @default 1
+             */
+            localScaleX: 1,
 
            /**
             * The scaling factor for this sprite relative to the scale of the container.

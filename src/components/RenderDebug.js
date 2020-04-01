@@ -5,9 +5,7 @@
  * @class RenderDebug
  * @uses platypus.Component
  */
-/* global platypus */
 import {Container, Graphics} from 'pixi.js';
-import RenderContainer from './RenderContainer.js';
 import {arrayCache} from '../utils/array.js';
 import config from 'config';
 import createComponentClass from '../factory.js';

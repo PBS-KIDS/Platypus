@@ -1054,8 +1054,7 @@ export default (function () {
                     m   = 0,
                     otherEntities  = null,
                     otherCollisionType = null,
-                    otherShapes = null,
-                    collisionFound = false;
+                    otherShapes = null;
 
                 message.x = 0;
                 message.y = 0;
@@ -1070,7 +1069,6 @@ export default (function () {
                         while (k--) {
                             otherEntity = otherEntities[k];
                             if ((shape.getAABB().collides(otherEntity.getAABB(otherCollisionType)))) {
-                                collisionFound = false;
                                 otherShapes = otherEntity.getShapes(otherCollisionType);
                                 m = otherShapes.length;
                                 while (m--) {

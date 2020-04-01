@@ -22,7 +22,7 @@ export default (function () {
                 down: true //default is false, 'true' means as soon as carrier is connected downward
             }
         },
-        initialize: function (definition) {
+        initialize: function () {
             this.carrier = this.lastCarrier = null;
             this.message = {
                 entity: this.owner
