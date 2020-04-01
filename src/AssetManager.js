@@ -1,4 +1,5 @@
 /**
+ * This class is instantiated by Platypus at `platypus.assetCache` to track assets: loading assets needed for particular layers and unloading assets once they're no longer needed.
  *
  * @namespace platypus
  * @class AssetManager
@@ -41,6 +42,8 @@ export default class AssetManager {
     }
 
     /**
+     * This method removes an asset from memory if it's the last needed instance of the asset.
+     *
      * @method delete
      * @param {*} id
      * @return {Boolean} Returns `true` if asset was removed from asset cache.
@@ -67,14 +70,36 @@ export default class AssetManager {
         }
     }
 
+    /**
+     * Returns a loaded instance of a given asset.
+     *
+     * @method get
+     * @param {*} id
+     * @return {Object} Returns the asset if defined.
+     */
     get (id) {
         return this.assets.get(id);
     }
 
+    /**
+     * Returns whether a given asset is currently loaded by the AssetManager.
+     *
+     * @method has
+     * @param {*} id
+     * @return {Object} Returns `true` if the asset is loaded and `false` if not.
+     */
     has (id) {
         return this.assets.has(id);
     }
 
+    /**
+     * Sets a mapping between an id and a loaded asset. If the mapping already exists, simply increment the count for a given id.
+     *
+     * @method set
+     * @param {*} id
+     * @param {*} value The loaded asset.
+     * @param {Number} count The number of assets needed.
+     */
     set (id, value, count = 1) {
         const
             assets = this.assets,
@@ -88,6 +113,14 @@ export default class AssetManager {
         }
     }
 
+    /**
+     * Loads a list of assets.
+     *
+     * @method load
+     * @param {Array} list A list of assets to load.
+     * @param {Function} one This function is called as each asset is loaded.
+     * @param {Function} all This function is called once all assets in the list are loaded.
+     */
     load (list, one, all) {
         const
             counts = this.counts,
@@ -144,6 +177,12 @@ export default class AssetManager {
         arrayCache.recycle(needsLoading);
     }
 
+    /**
+     * Unloads a list of assets. This is identical to passing each item in the list to `.delete()`.
+     *
+     * @method unload
+     * @param {Array} list A list of assets to unload.
+     */
     unload (list) {
         var i = list.length;
 
