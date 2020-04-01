@@ -1,5 +1,5 @@
 /**
- * This component plays sfx audio and manages SR volume changes
+ * This component plays sfx audio and manages Springroll volume changes.
  *
  * @namespace platypus
  * @class SFXPlayer
@@ -16,6 +16,14 @@ export default class SFXPlayer {
         this.sounds = arrayCache.setUp();
     }
 
+    /**
+     * Plays a sound.
+     *
+     * @param {String} sound Sound Id to play.
+     * @param {Object} data PixiSound data to inform sound playback.
+     * @return {pixiSound.MediaInstance} The media instance of the playing sound.
+     * @public
+     */
     play (sound, data) {
         const
             audio = this.player.play(sound, data);
@@ -34,6 +42,12 @@ export default class SFXPlayer {
         return audio;
     }
 
+    /**
+     * Plays a sound.
+     *
+     * @param {pixiSound.MediaInstance} audio Audio to stop.
+     * @public
+     */
     stop (audio) {
         const index = this.playingAudio.indexOf(audio);
 
@@ -46,6 +60,12 @@ export default class SFXPlayer {
         }
     }
 
+    /**
+     * Sets volume on all playing sound effects.
+     *
+     * @param {Number} volume A value between 0-1 to set volume on all playing sound effects.
+     * @public
+     */
     setVolume (volume) {
         const
             playingAudio = this.playingAudio;
