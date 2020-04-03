@@ -13,7 +13,8 @@ const
     getId = function (event) {
         return 'point' + (event.data.identifier || 0);
     },
-    pointerInstances = {};
+    pointerInstances = {},
+    orphanPointers = [];
 
 export default createComponentClass({
     id: 'Interactive',
@@ -292,7 +293,12 @@ export default createComponentClass({
                     msg.recycle();
                 },
                 triggerPointerDown = function (event) {
-                    pointerInstances[getId(event)] = this;
+                    const id = getId(event);
+
+                    if (pointerInstances[id]) { // Hmm, this is a shared identifer. We'll save for later to make sure it gets its "pointerup" event.
+                        orphanPointers.push(pointerInstances[id]);
+                    }
+                    pointerInstances[id] = this;
 
                     /**
                      * This event is triggered on pointer down.
@@ -366,22 +372,27 @@ export default createComponentClass({
 
                     if (pointerInstances[id] === this) {
                         pointerInstances[id] = null;
-                        /**
-                         * This event is triggered on pointer up.
-                         *
-                         * @event 'pointerup'
-                         * @param event {DOMEvent} The original DOM pointer event.
-                         * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
-                         * @param x {Number} The x coordinate in world units.
-                         * @param y {Number} The y coordinate in world units.
-                         * @param entity {platypus.Entity} The entity receiving this event.
-                         */
-                        trigger.call(this, 'pointerup', event);
-                        event.currentTarget.mouseTarget = false;
-                        
-                        if (event.currentTarget.removeDisplayObject) {
-                            event.currentTarget.removeDisplayObject();
-                        }
+                    } else if (orphanPointers.length) {
+                        orphanPointers.length -= 1;
+                    } else {
+                        return;
+                    }
+
+                    /**
+                     * This event is triggered on pointer up.
+                     *
+                     * @event 'pointerup'
+                     * @param event {DOMEvent} The original DOM pointer event.
+                     * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
+                     * @param x {Number} The x coordinate in world units.
+                     * @param y {Number} The y coordinate in world units.
+                     * @param entity {platypus.Entity} The entity receiving this event.
+                     */
+                    trigger.call(this, 'pointerup', event);
+                    event.currentTarget.mouseTarget = false;
+                    
+                    if (event.currentTarget.removeDisplayObject) {
+                        event.currentTarget.removeDisplayObject();
                     }
                 },
                 triggerPointerUpOutside = function (event) {
@@ -389,22 +400,27 @@ export default createComponentClass({
 
                     if (pointerInstances[id] === this) {
                         pointerInstances[id] = null;
-                        /**
-                         * This event is triggered on pointer up outside.
-                         *
-                         * @event 'pointerupoutside'
-                         * @param event {DOMEvent} The original DOM pointer event.
-                         * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
-                         * @param x {Number} The x coordinate in world units.
-                         * @param y {Number} The y coordinate in world units.
-                         * @param entity {platypus.Entity} The entity receiving this event.
-                         */
-                        trigger.call(this, 'pointerupoutside', event);
-                        event.currentTarget.mouseTarget = false;
-                        
-                        if (event.currentTarget.removeDisplayObject) {
-                            event.currentTarget.removeDisplayObject();
-                        }
+                    } else if (orphanPointers.length) {
+                        orphanPointers.length -= 1;
+                    } else {
+                        return;
+                    }
+
+                    /**
+                     * This event is triggered on pointer up outside.
+                     *
+                     * @event 'pointerupoutside'
+                     * @param event {DOMEvent} The original DOM pointer event.
+                     * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
+                     * @param x {Number} The x coordinate in world units.
+                     * @param y {Number} The y coordinate in world units.
+                     * @param entity {platypus.Entity} The entity receiving this event.
+                     */
+                    trigger.call(this, 'pointerupoutside', event);
+                    event.currentTarget.mouseTarget = false;
+                    
+                    if (event.currentTarget.removeDisplayObject) {
+                        event.currentTarget.removeDisplayObject();
                     }
                 },
                 triggerPointerCancel = function (event) {
@@ -412,22 +428,27 @@ export default createComponentClass({
 
                     if (pointerInstances[id] === this) {
                         pointerInstances[id] = null;
-                        /**
-                         * This event is triggered on pointer cancel.
-                         *
-                         * @event 'pointercancel'
-                         * @param event {DOMEvent} The original DOM pointer event.
-                         * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
-                         * @param x {Number} The x coordinate in world units.
-                         * @param y {Number} The y coordinate in world units.
-                         * @param entity {platypus.Entity} The entity receiving this event.
-                         */
-                        trigger.call(this, 'pointercancel', event);
-                        event.currentTarget.mouseTarget = false;
-                        
-                        if (event.currentTarget.removeDisplayObject) {
-                            event.currentTarget.removeDisplayObject();
-                        }
+                    } else if (orphanPointers.length) {
+                        orphanPointers.length -= 1;
+                    } else {
+                        return;
+                    }
+
+                    /**
+                     * This event is triggered on pointer cancel.
+                     *
+                     * @event 'pointercancel'
+                     * @param event {DOMEvent} The original DOM pointer event.
+                     * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
+                     * @param x {Number} The x coordinate in world units.
+                     * @param y {Number} The y coordinate in world units.
+                     * @param entity {platypus.Entity} The entity receiving this event.
+                     */
+                    trigger.call(this, 'pointercancel', event);
+                    event.currentTarget.mouseTarget = false;
+                    
+                    if (event.currentTarget.removeDisplayObject) {
+                        event.currentTarget.removeDisplayObject();
                     }
                 },
                 removeInputListeners = function (sprite, pointerdown, pointerup, pointerupoutside, pointercancel, pointermove, pointertap, pointerover, pointerout) {
