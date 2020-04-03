@@ -1,5 +1,5 @@
 /**
- * This component works in tandem with 'TiledLoader by taking several Tiled maps and combining them before `TiledLoader` processes them. Tiled maps must use the same tilesets for this to function correctly.
+ * This component works in tandem with `TiledLoader` by taking several Tiled maps and combining them before `TiledLoader` processes them. Tiled maps must use the same tilesets for this to function correctly.
  *
  * Note: Set "manuallyLoad" to `true` in the `TiledLoader` component JSON definition so that it will wait for this component's "load-level" call.
  *
@@ -324,6 +324,7 @@ export default (function () {
              * @default true
              */
             useUniques: true,
+
             /**
              * A 1D or 2D array of level piece ids. The template defines how the pieces will be arranged and which pieces can be used where. The template must be rectangular in dimensions.
              *
@@ -334,13 +335,15 @@ export default (function () {
              * @default null
              */
             levelTemplate: null,
+
             /**
              * This is an object of key/value pairs listing the pieces that map to an id in the level template. The value can be specified as a string or array. A piece will be randomly chosen from an array when that idea is used. If levelPieces is not defined, ids in the template map directly to level names.
              *
              *      "levelPieces": {
              *          "start"  : "start-map",
              *          "end"      : "end-map",
-             *          "forest" : ["forest-1", "forest-2", "forest-3"]
+             *          "forest" : ["forest-1", "forest-2", "forest-3"],
+             *          "river": ["river-1", "river-1:mirror"] // adding ":mirror" takes the referenced map and flips it horizontally to add variety.
              *      }
              *
              * @property levelPieces
@@ -487,6 +490,12 @@ export default (function () {
         },
         
         publicMethods: {
+            /**
+             * Accepts a list of levels to be merged and returns a level definition with the references combined.
+             *
+             * @param {Array} levels
+             * @return {Object}
+             */
             mergeLevels: function (levels) {
                 return mergeLevels(levels);
             }
