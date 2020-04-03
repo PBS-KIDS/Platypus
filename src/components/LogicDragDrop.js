@@ -68,7 +68,6 @@ export default createComponentClass({
             this.checkCamera();
         },
 
-
         /**
          * This component listens for added components to determine whether it should check for collision.
          *
@@ -82,6 +81,11 @@ export default createComponentClass({
             }
         },
         
+        /**
+         * Listens for this event to check bounds.
+         *
+         * @method 'prepare-logic'
+         */
         "prepare-logic": function () {
             this.checkCamera(); // may end dragging
         },
