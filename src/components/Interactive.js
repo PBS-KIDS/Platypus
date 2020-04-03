@@ -11,14 +11,7 @@ import createComponentClass from '../factory.js';
 
 const
     getId = function (event) {
-        var data = event.data,
-            originalEvent = data.originalEvent;
-
-        if (typeof originalEvent.pointerId !== 'undefined') {
-            return 'point' + originalEvent.pointerId; // Handles pointer events
-        } else {
-            return originalEvent.type.substr(0, 5) + (data.identifier || 0); // Handles mouse / touch events
-        }
+        return 'point' + (event.data.identifier || 0);
     },
     pointerInstances = {};
 
