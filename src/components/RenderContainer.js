@@ -591,7 +591,12 @@ export default (function () {
             }
         },
     
-        publicMethods: {// These are methods that are available on the entity.
+        publicMethods: {
+            /**
+             * Remove this entity's container from the containing rendering container.
+             *
+             * @method removeFromParentContainer
+             */
             removeFromParentContainer: function () {
                 if (this.parentContainer) {
                     if (this.mask) {
@@ -602,6 +607,12 @@ export default (function () {
                 }
             },
             
+            /**
+             * Add this entity's container to a rendering container.
+             *
+             * @method addToParentContainer
+             * @param {Container} container Container to add this to.
+             */
             addToParentContainer: function (container) {
                 this.parentContainer = container;
                 this.parentContainer.addChild(this.container);
@@ -610,9 +621,7 @@ export default (function () {
                 if (this.mask) {
                     this.setMask(this.mask);
                 }
-
             }
-            
         }
     });
 }());
