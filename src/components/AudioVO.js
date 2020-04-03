@@ -100,7 +100,8 @@ export default (function () {
              *
              *               "events": [{
              *                   "event": "walk-to-the-left",
-             *                   "time": 1500
+             *                   "time": 1500,
+             *                   "interruptable": true // If `false`, event will trigger immediately when VO is interrupted or otherwise ended before event's time is reached. If `true`, event is not triggered if VO stops before time is reached. Defaults to `false`.
              *               }]
              *               // Optional. Used to specify a list of events to play once the VO begins.
              *           }
@@ -151,6 +152,11 @@ export default (function () {
                 }
             },
 
+            /**
+             * Plays voice-over directly without using a predefined mapping from `audioMap`. This event accepts the same syntax as individual items in the `audioMap`.
+             *
+             * @param {String|Array|Object} vo Voice-over track or tracks to play.
+             */
             "play-voice-over": function (vo) {
                 this.playSound(vo);
             },
