@@ -125,10 +125,6 @@ export default (function () {
             "tutorialDefs": []
         },
          
-        publicProperties: {
-            
-        },
-        
         initialize: function () {
             var x = 0,
                 entityType = null,

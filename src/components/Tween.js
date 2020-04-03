@@ -112,15 +112,32 @@ export default createComponentClass({
     },
 
     events: {
+        /**
+         * Trigger this event to play a tween using the same spec used for a tween on this component's `events` property.
+         *
+         * @method 'tween'
+         * @param {Object|Array} tween
+         */
         'tween': function (tween) {
             this.runTween(tween);
         },
 
+        /**
+         * This component listens for this event to manage tween playback.
+         *
+         * @method 'handle-logic'
+         * @param {Number} tick.delta
+         */
         'handle-logic': function (tick) {
             this.time += tick.delta;
             this.group.update(this.time);
         },
 
+        /**
+         * This event stops all running tweens on this component.
+         *
+         * @method 'stop-tween'
+         */
         'stop-tween': function () {
             this.group.removeAll();
         }
