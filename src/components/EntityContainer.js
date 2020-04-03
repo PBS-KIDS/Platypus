@@ -312,6 +312,13 @@ export default (function () {
             },
             
             publicMethods: {
+                /**
+                 * Gets an entity in this layer by its Id. Returns `null` if not found.
+                 *
+                 * @method getEntityById
+                 * @param {String} id
+                 * @return {Entity}
+                 */
                 getEntityById: function (id) {
                     var i         = 0,
                         selection = null;
@@ -330,6 +337,13 @@ export default (function () {
                     return null;
                 },
 
+                /**
+                 * Returns a list of entities of the requested type.
+                 *
+                 * @method getEntitiesByType
+                 * @param {String} type
+                 * @return {Array}
+                 */
                 getEntitiesByType: function (type) {
                     var i         = 0,
                         selection = null,
@@ -408,6 +422,13 @@ export default (function () {
                     };
                 }()),
                 
+                /**
+                 * Removes the provided entity from the layer and destroys it. Returns `false` if the entity is not found in the layer.
+                 *
+                 * @method removeEntity
+                 * @param {Entity} entity
+                 * @return {Entity}
+                 */
                 removeEntity: function (entity) {
                     var i = this.entities.indexOf(entity);
 
@@ -423,6 +444,14 @@ export default (function () {
                     return false;
                 },
                 
+                /**
+                 * Triggers a single event on the child entities in the layer.
+                 *
+                 * @method triggerEventOnChildren
+                 * @param {*} event
+                 * @param {*} message
+                 * @param {*} debug
+                 */
                 triggerEventOnChildren: function (event, message, debug) {
                     if (this.destroyed) {
                         return 0;
@@ -434,6 +463,14 @@ export default (function () {
                     return this.triggerEvent(event, message, debug);
                 },
 
+                /**
+                 * Triggers one or more events on the child entities in the layer. This is unique from `triggerEventOnChildren` in that it also accepts an `Array` to send multiple events.
+                 *
+                 * @method triggerOnChildren
+                 * @param {*} event
+                 * @param {*} message
+                 * @param {*} debug
+                 */
                 triggerOnChildren: function (event) {
                     if (this.destroyed) {
                         return 0;
