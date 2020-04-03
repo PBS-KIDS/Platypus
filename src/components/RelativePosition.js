@@ -41,7 +41,7 @@ export default (function () {
              * @type Number
              * @default null
              */
-            "bottom": null,
+            bottom: null,
 
             /**
              * This sets the distance in world units from the left of the camera's world viewport. If set, it will override the entity's x coordinate. This property is accessible on the entity as `entity.left`.
@@ -50,7 +50,7 @@ export default (function () {
              * @type Number
              * @default null
              */
-            "left": null,
+            left: null,
 
             /**
              * This sets the distance in world units from the right of the camera's world viewport. If set, it will override the entity's x coordinate. This property is accessible on the entity as `entity.right`.
@@ -59,7 +59,7 @@ export default (function () {
              * @type Number
              * @default null
              */
-            "right": null,
+            right: null,
 
             /**
              * This sets the distance in world units from the top of the camera's world viewport. If set, it will override the entity's y coordinate. This property is accessible on the entity as `entity.top`.
@@ -68,9 +68,24 @@ export default (function () {
              * @type Number
              * @default null
              */
-            "top": null,
+            top: null,
 
+            /**
+             * This sets the scale in X of the entity.
+             *
+             * @property scaleX
+             * @type Number
+             * @default 1
+             */
             scaleX: 1,
+
+            /**
+             * This sets the scale in Y of the entity.
+             *
+             * @property scaleY
+             * @type Number
+             * @default 1
+             */
             scaleY: 1,
 
             /**
@@ -80,7 +95,7 @@ export default (function () {
              * @type Number
              * @default 0
              */
-            "x": 0,
+            x: 0,
 
             /**
              * This sets the `y` coordinate for the entity. It is overridden by `top` and `bottom` properties if supplied.
@@ -89,7 +104,7 @@ export default (function () {
              * @type Number
              * @default 0
              */
-            "y": 0
+            y: 0
         },
         
         initialize: function (/*definition, callback*/) {
