@@ -157,10 +157,21 @@ export default createComponentClass({
             }
         },
 
+        /**
+         * This component listens for its own "pointerdown" event to track pressed state to trigger "pressmove" and "pressup" events.
+         *
+         * @method 'pointerdown'
+         */
         "pointerdown": function () {
             this.pressed = true;
         },
 
+        /**
+         * This component listens for its own "pointermove" event to trigger "pressmove" events.
+         *
+         * @method 'pointermove'
+         * @param {Object} event
+         */
         "pointermove": function (event) {
             if (this.pressed && ((pointerInstances[getId(event.pixiEvent)] === this))) {
                 /**
@@ -177,6 +188,12 @@ export default createComponentClass({
             }
         },
 
+        /**
+         * This component listens for its own "pointerup" event to track pressed state and trigger "pressup" events.
+         *
+         * @method 'pointerup'
+         * @param {Object} event
+         */
         "pointerup": function (event) {
             if (this.pressed) {
                 /**
@@ -194,6 +211,12 @@ export default createComponentClass({
             }
         },
 
+        /**
+         * This component listens for its own "pointerupoutside" event to track pressed state and trigger "pressup" events.
+         *
+         * @method 'pointerupoutside'
+         * @param {Object} event
+         */
         "pointerupoutside": function (event) {
             if (this.pressed) {
                 this.owner.triggerEvent('pressup', event);
@@ -201,6 +224,12 @@ export default createComponentClass({
             }
         },
 
+        /**
+         * This component listens for its own "pointercancel" event to track pressed state and trigger "pressup" events.
+         *
+         * @method 'pointercancel'
+         * @param {Object} event
+         */
         "pointercancel": function (event) {
             if (this.pressed) {
                 this.owner.triggerEvent('pressup', event);
@@ -208,6 +237,33 @@ export default createComponentClass({
             }
         },
 
+        /**
+         * Sets the hit area for interactive responses by describing the dimensions of a clickable rectangle:
+         *
+         *     "hitArea": {
+         *         "x": 10,
+         *         "y": 10,
+         *         "width": 40,
+         *         "height": 40
+         *     }
+         *
+         * Or a circle:
+         *
+         *     "hitArea": {
+         *         "x": 10,
+         *         "y": 10,
+         *         "radius": 40
+         *     }
+         *
+         * Or use an array of numbers to define a polygon: [x1, y1, x2, y2, ...]
+         *
+         *     "hitArea": [-10, -10, 30, -10, 30, 30, -5, 30]
+         *
+         * Defaults to the container if set to `null`.
+         *
+         * @method 'set-hit-area'
+         * @param {Object} shape
+         */
         "set-hit-area": function (shape) {
             this.setHitArea(shape);
         }
@@ -497,9 +553,5 @@ export default createComponentClass({
                 }
             };
         }())
-    },
-    
-    publicMethods: {
-        
     }
 });
