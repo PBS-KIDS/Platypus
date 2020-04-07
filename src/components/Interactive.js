@@ -11,7 +11,11 @@ import createComponentClass from '../factory.js';
 
 const
     getId = function (event) {
-        return 'point' + (event.data.identifier || 0);
+        const
+            data = event.data,
+            originalEvent = data.originalEvent;
+
+        return originalEvent.type.substr(0, 5) + (data.identifier || originalEvent.identifier || originalEvent.pointerId || 0);
     },
     pointerInstances = {},
     orphanPointers = [];

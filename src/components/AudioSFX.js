@@ -28,7 +28,7 @@ export default (function () {
             var sound      = '',
                 attributes = null,
                 completed  = function (data/*, cancelled*/) {
-                    if (data.audio && !this.owner.destroyed) {
+                    if (data.audio && !this.owner.destroyed && this.activeAudioClips) {
                         //clean up active clips
                         this.removeClip(data.audio);
                         
