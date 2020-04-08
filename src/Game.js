@@ -196,6 +196,7 @@ export default (function () {
                     }
 
                     this.stage = new Container();
+                    this.stage.sortableChildren = true;
                     this.renderer = new Renderer({
                         width: this.canvas.width,
                         height: this.canvas.height,

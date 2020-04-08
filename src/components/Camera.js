@@ -179,7 +179,16 @@ export default (function () {
              * @type number
              * @default: 600
              **/
-            "transitionAngle": 600
+            "transitionAngle": 600,
+
+            /**
+             * Sets the z-order of this layer relative to other loaded layers.
+             *
+             * @property z
+             * @type Number
+             * @default 0
+             */
+            "z": 0
         },
         initialize: function (definition) {
             var worldVP = AABB.setUp(this.x, this.y, this.width, this.height),
@@ -275,6 +284,7 @@ export default (function () {
                 platypus.debug.warn('Camera: There appears to be no Container on this entity for the camera to display.');
             }
             this.container = new Container();
+            this.container.zIndex = this.z;
             this.container.visible = false;
             this.parentContainer.addChild(this.container);
             this.movedCamera = false;
@@ -506,6 +516,10 @@ export default (function () {
                     if (this.lastFollow.begin < Date.now()) {
                         this.follow(this.lastFollow);
                     }
+                }
+
+                if (this.container.zIndex !== this.z) {
+                    this.container.zIndex = this.z;
                 }
             },
             
