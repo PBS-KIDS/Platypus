@@ -199,6 +199,17 @@ export default (function () {
         }
 
         /**
+         * This read-only property shows whether this Messenger is destroyed.
+         *
+         * @property destroyed
+         * @type Boolean
+         * @default false
+         */
+        get destroyed () {
+            return this._destroyed;
+        }
+
+        /**
          * Adds Messenger functionality to a Class.
          *
          * @method Messenger.mixin
