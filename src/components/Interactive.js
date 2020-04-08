@@ -15,7 +15,7 @@ const
             data = event.data,
             originalEvent = data.originalEvent;
 
-        return originalEvent.type.substr(0, 5) + (data.identifier || originalEvent.identifier || originalEvent.pointerId || 0);
+        return originalEvent.type.substr(0, 5) + (data.identifier || (originalEvent.changedTouches && originalEvent.changedTouches[0] && originalEvent.changedTouches[0].identifier) || 0);
     },
     pointerInstances = {},
     orphanPointers = [];
@@ -299,7 +299,7 @@ export default createComponentClass({
                 triggerPointerDown = function (event) {
                     const id = getId(event);
 
-                    if (pointerInstances[id]) { // Hmm, this is a shared identifer. We'll save for later to make sure it gets its "pointerup" event.
+                    if (pointerInstances[id]) { // Hmm, this is a shared identifer - not supposed to happen. We'll save for later to make sure it gets its "pointerup" event.
                         orphanPointers.push(pointerInstances[id]);
                     }
                     pointerInstances[id] = this;
@@ -372,12 +372,19 @@ export default createComponentClass({
                     trigger.call(this, 'pointerover', event);
                 },
                 triggerPointerUp = function (event) {
-                    var id = getId(event);
+                    const
+                        id = getId(event);
+                    let target = null;
 
                     if (pointerInstances[id] === this) {
+                        // eslint-disable-next-line consistent-this
+                        target = this;
                         pointerInstances[id] = null;
                     } else if (orphanPointers.length) {
+                        target = orphanPointers[orphanPointers.length - 1];
                         orphanPointers.length -= 1;
+                    } else if (pointerInstances[id]) {
+                        target = pointerInstances[id];
                     } else {
                         return;
                     }
@@ -392,7 +399,7 @@ export default createComponentClass({
                      * @param y {Number} The y coordinate in world units.
                      * @param entity {platypus.Entity} The entity receiving this event.
                      */
-                    trigger.call(this, 'pointerup', event);
+                    trigger.call(target, 'pointerup', event);
                     event.currentTarget.mouseTarget = false;
                     
                     if (event.currentTarget.removeDisplayObject) {
@@ -400,12 +407,19 @@ export default createComponentClass({
                     }
                 },
                 triggerPointerUpOutside = function (event) {
-                    var id = getId(event);
+                    const
+                        id = getId(event);
+                    let target = null;
 
                     if (pointerInstances[id] === this) {
+                        // eslint-disable-next-line consistent-this
+                        target = this;
                         pointerInstances[id] = null;
                     } else if (orphanPointers.length) {
+                        target = orphanPointers[orphanPointers.length - 1];
                         orphanPointers.length -= 1;
+                    } else if (pointerInstances[id]) {
+                        target = pointerInstances[id];
                     } else {
                         return;
                     }
@@ -420,7 +434,7 @@ export default createComponentClass({
                      * @param y {Number} The y coordinate in world units.
                      * @param entity {platypus.Entity} The entity receiving this event.
                      */
-                    trigger.call(this, 'pointerupoutside', event);
+                    trigger.call(target, 'pointerupoutside', event);
                     event.currentTarget.mouseTarget = false;
                     
                     if (event.currentTarget.removeDisplayObject) {
@@ -428,12 +442,19 @@ export default createComponentClass({
                     }
                 },
                 triggerPointerCancel = function (event) {
-                    var id = getId(event);
+                    const
+                        id = getId(event);
+                    let target = null;
 
                     if (pointerInstances[id] === this) {
+                        // eslint-disable-next-line consistent-this
+                        target = this;
                         pointerInstances[id] = null;
                     } else if (orphanPointers.length) {
+                        target = orphanPointers[orphanPointers.length - 1];
                         orphanPointers.length -= 1;
+                    } else if (pointerInstances[id]) {
+                        target = pointerInstances[id];
                     } else {
                         return;
                     }
@@ -448,7 +469,7 @@ export default createComponentClass({
                      * @param y {Number} The y coordinate in world units.
                      * @param entity {platypus.Entity} The entity receiving this event.
                      */
-                    trigger.call(this, 'pointercancel', event);
+                    trigger.call(target, 'pointercancel', event);
                     event.currentTarget.mouseTarget = false;
                     
                     if (event.currentTarget.removeDisplayObject) {
