@@ -641,7 +641,6 @@ export default (function () {
                 var container = this.owner.container;
 
                 container.addChild(this.spine);
-                container.reorder = true;
             },
             
             playAnimation: function (animation, loop = true) {

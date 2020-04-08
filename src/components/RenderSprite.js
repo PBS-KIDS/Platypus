@@ -467,7 +467,6 @@ export default (function () {
                 const container = this.owner.container;
 
                 container.addChild(this.sprite);
-                container.reorder = true;
             },
             
             playAnimation: function (animation, loop, restart) {

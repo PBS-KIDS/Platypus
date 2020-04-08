@@ -137,7 +137,6 @@ export default (function () {
                 var container = this.owner.container;
 
                 container.addChild(this.sprite);
-                container.reorder = true;
             },
             
             destroy: function () {

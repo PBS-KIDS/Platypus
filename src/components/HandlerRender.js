@@ -52,6 +52,7 @@ export default (function () {
             let definition = null;
             
             this.worldContainer = this.worldContainer || new Container();
+            this.worldContainer.sortableChildren = true;
             this.worldContainer.name = '';
 
             if (this.interactive) {
@@ -192,11 +193,6 @@ export default (function () {
                     if (this.owner.triggerEventOnChildren) {
                         this.owner.triggerEventOnChildren('handle-render', message);
                     }
-                }
-
-                if (worldContainer.reorder) {
-                    worldContainer.reorder = false;
-                    worldContainer.children.sort((a, b) => a.z - b.z);
                 }
             },
             /**

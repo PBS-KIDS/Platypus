@@ -282,7 +282,6 @@ export default (function () {
             this.mapContainer = new Container();
             this.mapContainer.addChild(this.tileContainer);
             
-            this.reorderedStage = false;
             this.updateCache = false;
 
             // Prepare map tiles
@@ -421,8 +420,6 @@ export default (function () {
                     mapContainer = this.mapContainer,
                     sprite = null,
                     z = this.owner.z;
-
-                container.reorder = true;
 
                 this.ready = true;
 

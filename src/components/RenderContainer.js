@@ -283,6 +283,8 @@ export default (function () {
                 definition = null,
                 initialTint = this.tint;
 
+            container.sortableChildren = true;
+
             if (this.rotate === true) {
                 this.rotate = 'rotation';
                 platypus.debug.warn('RenderContainer: Boolean values for the "rotate" property has been deprecated. Use "rotation", "orientationMatrix", or "" to specify the source of rotation for the render container. This property defaults to "rotation".');
@@ -463,21 +465,12 @@ export default (function () {
                     if (this.rotate === 'rotation') {
                         rotation = this.rotation;
                     }
-                    if (this.container.z !== this.owner.z) {
-                        if (this.parentContainer) {
-                            this.parentContainer.reorder = true;
-                        }
-                        this.container.z = this.owner.z;
+                    if (this.container.zIndex !== this.owner.z) {
+                        this.container.zIndex = this.owner.z;
                     }
 
                     if (!this.ignoreOpacity && (this.owner.opacity || (this.owner.opacity === 0))) {
                         this.container.alpha = this.owner.opacity;
-                    }
-                    
-                    if (this.container.reorder) {
-                        this.container.reorder = false;
-                        this.container.children.sort(sort);
-                        this.needsCameraCheck = true; // reorder is set when adding children, so force another camera check.
                     }
                     
                     if (this.mirror || this.flip) {
@@ -616,7 +609,6 @@ export default (function () {
             addToParentContainer: function (container) {
                 this.parentContainer = container;
                 this.parentContainer.addChild(this.container);
-                this.parentContainer.reorder = true;
 
                 if (this.mask) {
                     this.setMask(this.mask);

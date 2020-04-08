@@ -136,7 +136,6 @@ export default (function () {
             this.container = new Container();
             this.parentContainer = this.owner.parent.worldContainer;
             this.parentContainer.addChild(this.container);
-            this.parentContainer.reorder = true;
             this.needsCameraCheck = true;
 
             this.shapes = arrayCache.setUp();
@@ -237,9 +236,8 @@ export default (function () {
                 x = this.owner.x;
                 y = this.owner.y;
 
-                if (this.container.z !== this.owner.z + 0.000001) {
-                    this.parentContainer.reorder = true;
-                    this.container.z = this.owner.z + 0.000001;
+                if (this.container.zIndex !== this.owner.z + 0.000001) {
+                    this.container.zIndex = this.owner.z + 0.000001;
                 }
 
                 this.container.setTransform(x, y, 1, 1, 0, 0, 0);
