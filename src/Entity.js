@@ -45,7 +45,24 @@ import Data from './Data.js';
 import Messenger from './Messenger.js';
 import StateMap from './StateMap.js';
 import createComponentClass from './factory.js';
-        
+
+const
+    getComponentClass = function (componentDefinition) {
+        if (componentDefinition.type) {
+            if (typeof componentDefinition.type === 'function') {
+                return componentDefinition.type;
+            } else if (platypus.components[componentDefinition.type]) {
+                return platypus.components[componentDefinition.type];
+            }
+        } else if (componentDefinition.id) { // "type" not specified, so we create the component directly.
+            return createComponentClass(componentDefinition);
+        } else if (typeof componentDefinition === 'function') {
+            return componentDefinition;
+        } else {
+            return null;
+        }
+    };
+
 export default (function () {
     var componentInit = function (Component, componentDefinition, callback) {
             this.addComponent(new Component(this, componentDefinition, callback));
@@ -110,8 +127,11 @@ export default (function () {
                     componentDefinition = componentDefinitions[i];
                     if (componentDefinition) {
                         if (componentDefinition.type) {
-                            if (platypus.components[componentDefinition.type]) {
-                                componentInits.push(componentInit.bind(this, platypus.components[componentDefinition.type], componentDefinition));
+                            const
+                                componentClass = getComponentClass(componentDefinition);
+
+                            if (componentClass) {
+                                componentInits.push(componentInit.bind(this, componentClass, componentDefinition));
                             } else {
                                 platypus.debug.warn('Entity "' + this.type + '": Component "' + componentDefinition.type + '" is not defined.', componentDefinition);
                             }
@@ -333,7 +353,7 @@ export default (function () {
             assets = union(arrayCache.setUp(), def.preload);
 
             for (i = 0; i < def.components.length; i++) {
-                component = def.components[i] && def.components[i].type && platypus.components[def.components[i].type];
+                component = getComponentClass(def.components[i]);
                 if (component) {
                     arr = component.getAssetList(def.components[i], def.properties, props, data);
                     union(assets, arr);
