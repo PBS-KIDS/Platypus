@@ -676,8 +676,9 @@ export default (function () {
          * @method loadScene
          * @param layersOrId {Array|Object|String} The list of layers, an object with a `layers` Array property, or scene id to load.
          * @param data {Object} A list of key/value pairs describing options or settings for the loading scene.
+         * @param progressIdOrFunction {String|Function} Whether to report progress. A string sets the id of progress events whereas a function is called directly with progress.
          **/
-        loadScene (layersOrId, data) {
+        loadScene (layersOrId, data, progressIdOrFunction = 'scene') {
             const sceneLayers = this.sceneLayers;
             let layers = layersOrId;
             
@@ -698,7 +699,7 @@ export default (function () {
                 this.unload(sceneLayers[0]);
             }
 
-            this.load(layers, data, true, 'scene');
+            this.load(layers, data, true, progressIdOrFunction);
         }
         
         /**
