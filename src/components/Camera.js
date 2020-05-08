@@ -558,12 +558,17 @@ export default (function () {
                     };
 
                 return function (location) {
-                    var v = null,
-                        worldVP = this.worldCamera.viewport;
-
                     if (location.time) {
-                        v = Vector.setUp(worldVP.x, worldVP.y);
-                        new TweenJS.Tween(v).to({x: location.x, y: location.y}, location.time).easing(location.ease).onUpdate(move.bind(this, v)).onStop(stop.bind(v)).start();
+                        const
+                            worldVP = this.worldCamera.viewport,
+                            v = Vector.setUp(worldVP.x, worldVP.y),
+                            tween = new TweenJS.Tween(v);
+                        
+                        tween.to({x: location.x, y: location.y}, location.time);
+                        if (location.ease) {
+                            tween.easing(location.ease);
+                        }
+                        tween.onUpdate(move.bind(this, v)).onStop(stop.bind(v)).start();
                     } else if (this.move(location.x, location.y)) {
                         this.viewportUpdate = true;
                     }
