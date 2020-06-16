@@ -50,9 +50,8 @@
 
             return x;
         },
-        transformCheck = function (value, tile) {
-            var v = +(value.substring(4)),
-                x = 0;
+        transformCheck = function (v, tile) {
+            var x = 0;
 
             if (0x80000000 & v) {
                 tile.scale.x = -1;
@@ -66,20 +65,43 @@
                 tile.scale.y = -x;
                 tile.rotation = Math.PI / 2;
             }
-
-            return 0x0fffffff & v;
         },
-        Template = function (tile, id) {
+        Template = function (tileSpriteSheet, id, uninitializedTiles) {
             this.id = id;
-            this.instances = Array.setUp(tile);
+            this.instances = Array.setUp();
             this.index = 0;
-            tile.template = this; // backwards reference for clearing index later.
+
+            // jit sprite
+            this.tileSpriteSheet = tileSpriteSheet;
+            this.getNext = this.initializeAndGetNext;
+            this.uninitializedTiles = uninitializedTiles;
+            uninitializedTiles.push(this);
         },
         nullTemplate = {
             getNext: doNothing,
             destroy: doNothing
         },
         prototype = Template.prototype;
+
+    prototype.initializeAndGetNext = function () {
+        this.initialize();
+
+        this.index += 1;
+        return this.instances[0];
+    };
+
+    prototype.initialize = function () {
+        var index = +(this.id.substring(4)),
+            anim = 'tile' + (0x0fffffff & index),
+            tile = new Sprite((this.tileSpriteSheet._animations[anim] || this.tileSpriteSheet._animations.default).texture);
+            
+        transformCheck(index, tile);
+        tile.template = this; // backwards reference for clearing index later.
+        this.instances.push(tile);
+        this.uninitializedTiles.greenSplice(this.uninitializedTiles.indexOf(this));
+
+        delete this.getNext;
+    };
 
     prototype.getNext = function () {
         var instance = this.instances[this.index],
@@ -267,8 +289,11 @@
             this.cache = AABB.setUp();
             this.cachePixels = AABB.setUp();
 
+            this.uninitializedTiles = Array.setUp();
+
             // Set up containers
             this.spriteSheet = PIXIAnimation.formatSpriteSheet(this.spriteSheet);
+            this.tileSpriteSheet = new PIXIAnimation(this.spriteSheet);
             this.tileContainer = ((this.spriteSheet.images.length > 1) || (this.renderer instanceof CanvasRenderer)) ? new Container() : new ParticleContainer(15000, {position: true, rotation: true, scale: true});
             this.mapContainer = new Container();
             this.mapContainer.addChild(this.tileContainer);
@@ -399,6 +424,8 @@
                     } else {
                         this.update(this.cacheTexture, this.cache);
                     }
+                } else if (this.uninitializedTiles.length) { // Pre-render any tiles left to be prerendered to reduce lag on camera movement
+                    this.uninitializedTiles[0].initialize();
                 }
             }
         },
@@ -552,19 +579,12 @@
             },
 
             createTile: function (imageName) {
-                var tile = null,
-                    anim = '';
-
                 // "tile-1" is empty, so it remains a null reference.
                 if (imageName === 'tile-1') {
                     return nullTemplate;
                 }
 
-                tile = new PIXIAnimation(this.spriteSheet);
-                anim = 'tile' + transformCheck(imageName, tile);
-                tile.gotoAndStop(anim);
-
-                return Template.setUp(tile, imageName);
+                return Template.setUp(this.tileSpriteSheet, imageName, this.uninitializedTiles);
             },
 
             createMap: function (mapDefinition) {
@@ -1032,6 +1052,7 @@
                 this.laxCam.recycle();
                 this.cache.recycle();
                 this.cachePixels.recycle();
+                this.uninitializedTiles.recycle();
             }
         },
         
