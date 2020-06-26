@@ -167,11 +167,6 @@ export default (function () {
              * @param tick {Object} An object containing tick data.
              */
             "tick": function (tick) {
-                const message = this.renderMessage,
-                    worldContainer = this.worldContainer;
-
-                message.delta = tick.delta;
-
                 if (this.paused > 0) {
                     this.paused -= tick.delta;
                     if (this.paused <= 0) {
@@ -180,21 +175,20 @@ export default (function () {
                 }
 
                 if (!this.paused) {
-                    /**
-                     * Triggered every tick on owner and its children entities.
-                     *
-                     * @event 'handle-render'
-                     * @param data {Object}
-                     * @param data.delta {Number} The delta time for this tick.
-                     * @param data.container {PIXI.Container} The display Container the entities display objects should be added to.
-                     */
-                    this.owner.triggerEvent('handle-render', message);
-
-                    if (this.owner.triggerEventOnChildren) {
-                        this.owner.triggerEventOnChildren('handle-render', message);
-                    }
+                    this.renderUpdate(tick);
                 }
             },
+
+            /**
+             * Sends a 'handle-render' message to all the children in the Container. This bypasses a render pause value and is useful for resizes happening outside the game loop.
+             *
+             * @method 'render-update'
+             * @param tick {Object} An object containing tick data.
+             */
+            "render-update": function (tick) {
+                this.renderUpdate(tick);
+            },
+
             /**
              * Sets the parent render container of an entity to that of the given entity or entity with the given id.
              *
@@ -208,6 +202,26 @@ export default (function () {
 
         },
         methods: {
+            renderUpdate: function (tick) {
+                const message = this.renderMessage;
+
+                message.delta = (tick && tick.delta) || 0;
+
+                /**
+                 * Triggered every tick on owner and its children entities.
+                 *
+                 * @event 'handle-render'
+                 * @param data {Object}
+                 * @param data.delta {Number} The delta time for this tick.
+                 * @param data.container {PIXI.Container} The display Container the entities display objects should be added to.
+                 */
+                this.owner.triggerEvent('handle-render', message);
+
+                if (this.owner.triggerEventOnChildren) {
+                    this.owner.triggerEventOnChildren('handle-render', message);
+                }
+            },
+
             setParentRenderContainer: function (entity, entityOrId) {
                 let container = null;
 

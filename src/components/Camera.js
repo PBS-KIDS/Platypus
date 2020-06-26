@@ -501,6 +501,7 @@ export default (function () {
                 this.resize();
                 if (forceUpdate) {
                     this.updateViewport();
+                    this.owner.triggerEvent('render-update');
                 }
             },
             
