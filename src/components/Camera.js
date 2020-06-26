@@ -434,10 +434,6 @@ export default (function () {
              * @param message.delta {Number} If necessary, the current camera update function may require the length of the tick to adjust movement rate.
              **/
             "tick": function (resp) {
-                var msg       = this.message,
-                    viewport  = msg.viewport,
-                    worldCamera = this.worldCamera;
-                
                 if ((this.state === 'following') && this.followingFunction(this.following, resp.delta)) {
                     this.viewportUpdate = true;
                 }
@@ -454,63 +450,24 @@ export default (function () {
                     this.lastWidth = this.owner.width;
                     this.lastHeight = this.owner.height;
                 }
-                
-                if (this.viewportUpdate) {
-                    this.viewportUpdate = false;
-                    this.stationary = false;
-                    msg.stationary = false;
+
+                if (this.shakeIncrementor < this.shakeTime) {
+                    const viewport = this.worldCamera.viewport;
+
+                    this.viewportUpdate = true;
+                    this.shakeIncrementor += resp.delta;
+                    this.shakeIncrementor = Math.min(this.shakeIncrementor, this.shakeTime);
                     
-                    viewport.set(worldCamera.viewport);
-
-                    if (this.shakeIncrementor < this.shakeTime) {
-                        this.viewportUpdate = true;
-                        this.shakeIncrementor += resp.delta;
-                        this.shakeIncrementor = Math.min(this.shakeIncrementor, this.shakeTime);
-                        
-                        if (this.shakeIncrementor < this.xShakeTime) {
-                            viewport.moveX(viewport.x + Math.sin((this.shakeIncrementor / this.xWaveLength) * (Math.PI * 2)) * this.xMagnitude);
-                        }
-                        
-                        if (this.shakeIncrementor < this.yShakeTime) {
-                            viewport.moveY(viewport.y + Math.sin((this.shakeIncrementor / this.yWaveLength) * (Math.PI * 2)) * this.yMagnitude);
-                        }
+                    if (this.shakeIncrementor < this.xShakeTime) {
+                        viewport.moveX(viewport.x + Math.sin((this.shakeIncrementor / this.xWaveLength) * (Math.PI * 2)) * this.xMagnitude);
                     }
-
-                    // Set up the rest of the camera message:
-                    msg.scaleX         = this.windowPerWorldUnitWidth;
-                    msg.scaleY         = this.windowPerWorldUnitHeight;
-                    msg.orientation    = worldCamera.orientation;
                     
-                    // Transform the world to appear within camera
-                    this.world.setTransform(-viewport.x, -viewport.y, 1, 1, 0);
-                    this.container.setTransform(viewport.halfWidth * msg.scaleX, viewport.halfHeight * msg.scaleY, msg.scaleX, msg.scaleY, msg.orientation);
-                    this.container.visible = true;
-
-                    /**
-                     * This component fires "camera-update" when the position of the camera in the world has changed. This event is triggered on both the entity (typically a layer) as well as children of the entity.
-                     *
-                     * @event 'camera-update'
-                     * @param message {Object}
-                     * @param message.world {platypus.AABB} The dimensions of the world map.
-                     * @param message.orientation {Number} Number describing the orientation of the camera.
-                     * @param message.scaleX {Number} Number of window pixels that comprise a single world coordinate on the x-axis.
-                     * @param message.scaleY {Number} Number of window pixels that comprise a single world coordinate on the y-axis.
-                     * @param message.viewport {platypus.AABB} An AABB describing the world viewport area.
-                     * @param message.stationary {Boolean} Whether the camera is moving.
-                     **/
-                    this.owner.triggerEvent('camera-update', msg);
-                    if (this.owner.triggerEventOnChildren) {
-                        this.owner.triggerEventOnChildren('camera-update', msg);
-                    }
-                } else if (!this.stationary) {
-                    this.stationary = true;
-                    msg.stationary = true;
-
-                    this.owner.triggerEvent('camera-update', msg);
-                    if (this.owner.triggerEventOnChildren) {
-                        this.owner.triggerEventOnChildren('camera-update', msg);
+                    if (this.shakeIncrementor < this.yShakeTime) {
+                        viewport.moveY(viewport.y + Math.sin((this.shakeIncrementor / this.yWaveLength) * (Math.PI * 2)) * this.yMagnitude);
                     }
                 }
+
+                this.updateViewport();
                 
                 if (this.lastFollow.begin) {
                     if (this.lastFollow.begin < Date.now()) {
@@ -530,8 +487,9 @@ export default (function () {
             * @param [dimensions] {Object} List of key/value pairs describing new viewport size
             * @param dimensions.width {number} Width of the camera viewport
             * @param dimensions.height {number} Height of the camera viewport
+            * @param [forceUpdate] {Boolean} Whether to update graphics.
             **/
-            "resize-camera": function (dimensions) {
+            "resize-camera": function (dimensions = null, forceUpdate = false) {
                 if (dimensions) {
                     this.width = dimensions.width;
                     this.height = dimensions.height;
@@ -541,6 +499,9 @@ export default (function () {
                     this.owner.height = this.canvas.height;
                 }
                 this.resize();
+                if (forceUpdate) {
+                    this.updateViewport();
+                }
             },
             
             /**
@@ -1013,6 +974,56 @@ export default (function () {
                     this.threshold = threshold;
                 };
             }()),
+
+            updateViewport: function () {
+                const
+                    msg       = this.message,
+                    viewport  = msg.viewport,
+                    worldCamera = this.worldCamera;
+                
+                if (this.viewportUpdate) {
+                    this.viewportUpdate = false;
+                    this.stationary = false;
+                    msg.stationary = false;
+                    
+                    viewport.set(worldCamera.viewport);
+
+                    // Set up the rest of the camera message:
+                    msg.scaleX         = this.windowPerWorldUnitWidth;
+                    msg.scaleY         = this.windowPerWorldUnitHeight;
+                    msg.orientation    = worldCamera.orientation;
+                    
+                    // Transform the world to appear within camera
+                    this.world.setTransform(-viewport.x, -viewport.y, 1, 1, 0);
+                    this.container.setTransform(viewport.halfWidth * msg.scaleX, viewport.halfHeight * msg.scaleY, msg.scaleX, msg.scaleY, msg.orientation);
+                    this.container.visible = true;
+
+                    /**
+                     * This component fires "camera-update" when the position of the camera in the world has changed. This event is triggered on both the entity (typically a layer) as well as children of the entity.
+                     *
+                     * @event 'camera-update'
+                     * @param message {Object}
+                     * @param message.world {platypus.AABB} The dimensions of the world map.
+                     * @param message.orientation {Number} Number describing the orientation of the camera.
+                     * @param message.scaleX {Number} Number of window pixels that comprise a single world coordinate on the x-axis.
+                     * @param message.scaleY {Number} Number of window pixels that comprise a single world coordinate on the y-axis.
+                     * @param message.viewport {platypus.AABB} An AABB describing the world viewport area.
+                     * @param message.stationary {Boolean} Whether the camera is moving.
+                     **/
+                    this.owner.triggerEvent('camera-update', msg);
+                    if (this.owner.triggerEventOnChildren) {
+                        this.owner.triggerEventOnChildren('camera-update', msg);
+                    }
+                } else if (!this.stationary) {
+                    this.stationary = true;
+                    msg.stationary = true;
+
+                    this.owner.triggerEvent('camera-update', msg);
+                    if (this.owner.triggerEventOnChildren) {
+                        this.owner.triggerEventOnChildren('camera-update', msg);
+                    }
+                }
+            },
             
             destroy: function () {
                 this.parentContainer.removeChild(this.container);
