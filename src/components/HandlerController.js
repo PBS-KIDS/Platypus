@@ -10,6 +10,23 @@ import createComponentClass from '../factory.js';
 
 export default (function () {
     const
+        /**
+         * Sends a 'handle-controller' message to all the entities the component is handling. If an entity does not handle the message, it's removed it from the entity list.
+         *
+         * @method 'broadcastHandleController'
+         * @param tick {Object} An object containing tick data.
+         */
+        broadcastHandleController = function (tick) {
+            /**
+             * Sent to entities on each tick to handle whatever they need to regarding controls.
+             *
+             * @event 'handle-controller'
+             * @param tick {Object} An object containing tick data.
+             */
+            if (this.owner.triggerEventOnChildren) {
+                this.owner.triggerEventOnChildren('handle-controller', tick);
+            }
+        },
         keyMap = { //Note: if this list is changed, be sure to update https://github.com/PBS-KIDS/Platypus/wiki/Handler-controller-key-list
             kc0: 'unknown',
             kc8: 'backspace',
@@ -114,6 +131,16 @@ export default (function () {
     return createComponentClass({
         
         id: 'HandlerController',
+        properties: {
+            /**
+             * Whether 'handle-controller' event should fire based on the 'handle-logic' event instead of the 'tick' event.
+             *
+             * @property alwaysOn
+             * @type Boolean
+             * @default false
+             */
+            useHandleLogic: false
+        },
         
         initialize: function () {
             this.callbackKeyUp   = null;
@@ -139,26 +166,16 @@ export default (function () {
             
             window.addEventListener('keydown', this.callbackKeyDown, true);
             window.addEventListener('keyup',   this.callbackKeyUp,   true);
+
+            if (this.useHandleLogic) {
+                this.addEventListener('handle-logic', broadcastHandleController);
+            } else {
+                this.addEventListener('tick', broadcastHandleController);
+            }
+            
         },
         events: {
-            /**
-             * Sends a 'handle-controller' message to all the entities the component is handling. If an entity does not handle the message, it's removed it from the entity list.
-             *
-             * @method 'tick'
-             * @param tick {Object} An object containing tick data.
-             */
-            "tick": function (tick) {
-
-                /**
-                 * Sent to entities on each tick to handle whatever they need to regarding controls.
-                 *
-                 * @event 'handle-controller'
-                 * @param tick {Object} An object containing tick data.
-                 */
-                if (this.owner.triggerEventOnChildren) {
-                    this.owner.triggerEventOnChildren('handle-controller', tick);
-                }
-            }
+            
         },
         methods: {
             keyDown: function (event) {
