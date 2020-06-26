@@ -527,13 +527,19 @@ export default (function () {
             * The camera listens for this event to change its world viewport size.
             *
             * @method 'resize-camera'
-            * @param dimensions {Object} List of key/value pairs describing new viewport size
+            * @param [dimensions] {Object} List of key/value pairs describing new viewport size
             * @param dimensions.width {number} Width of the camera viewport
             * @param dimensions.height {number} Height of the camera viewport
             **/
             "resize-camera": function (dimensions) {
-                this.width = dimensions.width;
-                this.height = dimensions.height;
+                if (dimensions) {
+                    this.width = dimensions.width;
+                    this.height = dimensions.height;
+                }
+                if (this.canvas) {
+                    this.owner.width  = this.canvas.width;
+                    this.owner.height = this.canvas.height;
+                }
                 this.resize();
             },
             
