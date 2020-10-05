@@ -260,7 +260,8 @@ export default (function () {
                         });
                     }
                     this.scaleManager.onResize({ // Run once to resize content div.
-                        target: window
+                        width: window.innerWidth,
+                        height: window.innerHeight
                     });
 
                     if (onFinishedLoading) {
