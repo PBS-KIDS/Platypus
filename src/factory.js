@@ -3,10 +3,10 @@
  *
  * To create an extended component class, use the following syntax:
  *
- *      platypus.createComponentClass(componentDefinition, prototype);
+ *      platypus.createComponentClass(componentDefinition);
  *
  *  * `componentDefinition` is list of key/value pairs that describe the component's behavior.
- *  * `prototype` is an optional prototype that this component extends.
+ *
  * See ComponentExample.js for an example componentDefinition that can be sent into this component class factory.
  *
  */

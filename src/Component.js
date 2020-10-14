@@ -118,7 +118,7 @@ export default (function () {
      * @private
      */
     proto.addEventListener = function (event, callback, priority) {
-        var handler = callback.bind(this);
+        var handler = callback.bind(this); // <-- I think we need to stop doing this
         
         this.listener.events.push(event);
         this.listener.messages.push(handler);
