@@ -43,8 +43,8 @@ const
         b1: 'BButton',
         b2: 'XButton',
         b3: 'YButton',
-        b4: 'LeftButton',
-        b5: 'RightButton',
+        b4: 'LeftBumper',
+        b5: 'RightBumper',
         b6: 'LeftTrigger',
         b7: 'RightTrigger',
         b8: 'BackButton',
@@ -100,7 +100,7 @@ proto.update = function (gamepad, onDown, onUp, onChange) {
                     'gamepad', this,
                     'id', this.id
                 );
-                
+
             oldVector.set(newVector);
             onChange(event);
             event.recycle();
