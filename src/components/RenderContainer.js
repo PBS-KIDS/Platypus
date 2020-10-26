@@ -554,6 +554,8 @@ export default (function () {
                         processGraphics(gfx, shape);
                     } else if (shape.radius) {
                         gfx.drawCircle(shape.x || 0, shape.y || 0, shape.radius);
+                    } else if (shape instanceof AABB) {
+                        gfx.drawRect(shape.left, shape.top, shape.width, shape.height);
                     } else if (shape.width && shape.height) {
                         gfx.drawRect(shape.x || 0, shape.y || 0, shape.width, shape.height);
                     }
