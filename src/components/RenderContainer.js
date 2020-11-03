@@ -349,6 +349,10 @@ export default (function () {
                 this.updateSprite(false);
                 this.owner.cacheRender = this.container;
             }
+
+            if (this.mask && this.localMask) {
+                this.setMask(this.mask);
+            }
         },
         
         events: {
@@ -594,7 +598,7 @@ export default (function () {
              */
             removeFromParentContainer: function () {
                 if (this.parentContainer) {
-                    if (this.mask) {
+                    if (this.mask && !this.localMask) {
                         this.setMask();
                     }
 
@@ -612,7 +616,7 @@ export default (function () {
                 this.parentContainer = container;
                 this.parentContainer.addChild(this.container);
 
-                if (this.mask) {
+                if (this.mask && !this.localMask) {
                     this.setMask(this.mask);
                 }
             }
