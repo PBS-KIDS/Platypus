@@ -277,9 +277,7 @@ export default (function () {
                     properties: properties,
                     type: ''
                 },
-                props = null,
-                tileset = null,
-                entityTilesetIndex = 0;
+                props = null;
             
             if (gid !== -1) {
                 data.transform = entityTransformCheck(gid);
@@ -287,6 +285,8 @@ export default (function () {
             }
             
             if (tilesets) {
+                let tileset = null;
+
                 for (x = 0; x < tilesets.length; x++) {
                     if (tilesets[x].firstgid > gid) {
                         break;
@@ -295,13 +295,18 @@ export default (function () {
                     }
                 }
                 
-                if (tileset) {
-                    entityTilesetIndex = gid - tileset.firstgid;
-                    if (tileset.tileproperties && tileset.tileproperties[entityTilesetIndex]) {
-                        props = tileset.tileproperties[entityTilesetIndex];
-                    }
-                    if (tileset.tiles && tileset.tiles[entityTilesetIndex]) {
-                        data.type = tileset.tiles[entityTilesetIndex].type || '';
+                if (tileset && tileset.tiles) {
+                    const
+                        tiles = tileset.tiles,
+                        entityTilesetIndex = gid - tileset.firstgid;
+
+                    for (let i = 0; i < tiles.length; i++) {
+                        const tile = tiles[i];
+                        if (tile.id === entityTilesetIndex) {
+                            props = tile.properties || null;
+                            data.type = tile.type || '';
+                            break;
+                        }
                     }
                 }
             }
