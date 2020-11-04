@@ -263,7 +263,7 @@ export default createComponentClass({
          * @param {Object} shape
          */
         "set-hit-area": function (shape) {
-            this.setHitArea(shape);
+            this.container.hitArea = this.setHitArea(shape);
         }
     },
     
