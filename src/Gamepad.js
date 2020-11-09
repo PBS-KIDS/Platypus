@@ -17,7 +17,7 @@ import config from 'config';
 import recycle from 'recycle';
 
 const
-    Gamepad = function (gamepad, id = '', deadzone = 0.1) {
+    Gamepad = function (gamepad, onDown, onUp, onChange, id = '', deadzone = 0.1) {
         this.source = gamepad;
         this.deadzone = deadzone;
         this.axes = this.axes || arrayCache.setUp();
@@ -29,6 +29,10 @@ const
             this.buttons.push(gamepad.buttons[i].value);
         }
         this.id = id || `${gamepad.id} - ${gamepad.index}`; // Adding index to make it unique.
+
+        this.onDown = onDown;
+        this.onUp = onUp;
+        this.onChange = onChange;
     },
     playEffectOptions = {
         duration: 500,
@@ -83,10 +87,13 @@ proto.dualRumble = function (duration = 500, delay = 0, strong = 1.0, weak = 1.0
     this.source.vibrationActuator.playEffect('dual-rumble', playEffectOptions);
 };
 
-proto.update = function (gamepad, onDown, onUp, onChange) {
+proto.update = function (gamepad) {
     const
         axes = this.axes,
-        buttons = this.buttons;
+        buttons = this.buttons,
+        onDown = this.onDown,
+        onUp = this.onUp,
+        onChange = this.onChange;
 
     for (let i = 0; i < axes.length; i++) {
         const
@@ -160,6 +167,9 @@ recycle.add(Gamepad, 'Gamepad', Gamepad, function () {
     }
     this.axes.length = 0;
     this.buttons.length = 0;
+    this.onDown = null;
+    this.onUp = null;
+    this.onChange = null;
 }, true, config.dev);
 
 export default Gamepad;

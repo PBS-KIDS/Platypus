@@ -6,8 +6,8 @@
  * @uses platypus.Component
  */
 /* global platypus, window */
+import {arrayCache, greenSplice} from '../utils/array.js';
 import Gamepad from '../Gamepad.js';
-import {arrayCache} from '../utils/array.js';
 import createComponentClass from '../factory.js';
 
 const
@@ -30,9 +30,9 @@ const
                     const standard = standards[gamepad.index];
 
                     if (!standard) { // set up initial values so events can be triggered later
-                        standards[gamepad.index] = Gamepad.setUp(gamepad);
+                        standards[gamepad.index] = Gamepad.setUp(gamepad, onDown.bind(this, 'gamepad'), onUp.bind(this, 'gamepad'), onChange.bind(this, 'gamepad'));
                     } else {
-                        standard.update(gamepad, onDown.bind(this), onUp.bind(this), onChange.bind(this));
+                        standard.update(gamepad);
                     }
                 }
             }
@@ -47,7 +47,7 @@ const
             this.owner.triggerEventOnChildren('handle-controller', tick);
         }
     },
-    onDown = function (event) {
+    onDown = function (type, event) {
         /**
          *  Message sent to an entity when a key goes from up to down.
          *
@@ -57,8 +57,10 @@ const
         if (this.owner.triggerEventOnChildren) {
             this.owner.triggerEventOnChildren(event.code + ':down', event);
         }
+
+        updatePrecedence(type);
     },
-    onUp = function (event) {
+    onUp = function (type, event) {
         /**
          * Message sent to child entities when a key goes from down to up.
          *
@@ -69,7 +71,7 @@ const
             this.owner.triggerEventOnChildren(event.code + ':up', event);
         }
     },
-    onChange = function (event) {
+    onChange = function (type, event) {
         /**
          * Message sent to child entities when an axis changes.
          *
@@ -79,12 +81,34 @@ const
         if (this.owner.triggerEventOnChildren) {
             this.owner.triggerEventOnChildren(event.code + ':change', event);
         }
-    };
+    },
+    updatePrecedence = (type) => {
+        if (type !== inputs[0]) {
+            const was = inputs.indexOf(type);
+
+            if (was >= 0) {
+                greenSplice(inputs, was);
+            }
+
+            inputs.unshift(type);
+        }
+    },
+    inputs = [];
 let hasGamepads = false;
 
-window.addEventListener("gamepadconnected", (event) => {
+window.addEventListener("gamepadconnected", () => {
     hasGamepads = true;
+    updatePrecedence('gamepad');
 });
+
+window.addEventListener('touchstart', () => {
+    updatePrecedence('touch');
+});
+
+window.addEventListener('mousedown', () => {
+    updatePrecedence('mouse');
+});
+
   
 //window.addEventListener("gamepaddisconnected", (event) => {});
 
@@ -101,18 +125,22 @@ export default createComponentClass({
          */
         useHandleLogic: false
     },
+
+    publicProperties: {
+        inputPrecedence: inputs
+    },
     
     initialize: function () {
         if (platypus.game.settings.debug) { // If this is a test build, leave in the browser key combinations so debug tools can be opened as expected.
-            this.callbackKeyDown = onDown.bind(this);
-            this.callbackKeyUp = onUp.bind(this);
+            this.callbackKeyDown = onDown.bind(this, 'keyboard');
+            this.callbackKeyUp = onUp.bind(this, 'keyboard');
         } else { // Otherwise remove default browser behavior for key inputs so that they do not interfere with game-play.
             this.callbackKeyDown = (event) => {
-                onDown.call(this, event);
+                onDown.call(this, 'keyboard', event);
                 event.preventDefault(); // this may be too aggressive - if problems arise, we may need to limit this to certain key combos that get in the way of game-play. Example: (event.metaKey && event.keyCode == 37) causes an accidental cmd key press to send the browser back a page while playing and hitting the left arrow button.
             };
             this.callbackKeyUp = (event) => {
-                onUp.call(this, event);
+                onUp.call(this, 'keyboard', event);
                 event.preventDefault(); // this may be too aggressive - if problems arise, we may need to limit this to certain key combos that get in the way of game-play. Example: (event.metaKey && event.keyCode == 37) causes an accidental cmd key press to send the browser back a page while playing and hitting the left arrow button.
             };
         }
