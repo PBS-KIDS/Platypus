@@ -22,7 +22,7 @@ const
         this.deadzone = deadzone;
         this.axes = this.axes || arrayCache.setUp();
         for (let i = 0; i < (gamepad.axes.length >> 1); i++) {
-            this.axes.push(clampVector(Vector.setUp(gamepad.axes[i * 2], gamepad.axes[i * 2 + 1])));
+            this.axes.push(clampVector(Vector.setUp(gamepad.axes[i * 2], gamepad.axes[i * 2 + 1]), deadzone));
         }
         this.buttons = this.buttons || arrayCache.setUp();
         for (let i = 0; i < gamepad.buttons.length; i++) {
