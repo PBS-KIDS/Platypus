@@ -86,14 +86,19 @@ const
         if (type !== inputs[0]) {
             const was = inputs.indexOf(type);
 
-            if (was >= 0) {
+            if (was > 0) {
                 greenSplice(inputs, was);
             }
 
             inputs.unshift(type);
+
+            for (let i = 0; i < notifies.length; i++) {
+                notifies[i](inputs);
+            }
         }
     },
-    inputs = [];
+    inputs = [],
+    notifies = [];
 let hasGamepads = false;
 
 window.addEventListener("gamepadconnected", () => {
@@ -155,6 +160,12 @@ export default createComponentClass({
         }
 
         this.gamepads = arrayCache.setUp();
+
+        this.notifier = (inputs) => {
+            this.owner.triggerEvent('input-precedence-updated', inputs);
+            this.owner.triggerEventOnChildren('input-precedence-updated', inputs);
+        };
+        notifies.push(this.notifier);
     },
     methods: {
         destroy: function () {
@@ -166,6 +177,7 @@ export default createComponentClass({
                 }
             }
             arrayCache.recycle(this.gamepads);
+            greenSplice(notifies, notifies.indexOf(this.notifier));
         }
     }
 });
