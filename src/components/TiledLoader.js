@@ -415,7 +415,17 @@ export default (function () {
                         if (layer.type === 'objectgroup') {
                             addObjectGroupAssets(assets, layer, level.tilesets);
                         } else if (layer.type === 'imagelayer') {
-                            union(assets, [layer.image]);
+                            // Check for custom layer entity
+                            entity = getProperty(layer.properties, 'entity');
+                            if (entity) {
+                                data = Data.setUp('type', entity, 'properties', mergeAndFormatProperties(layer.properties, {}));
+                                arr = Entity.getAssetList(data);
+                                union(assets, arr);
+                                arrayCache.recycle(arr);
+                                data.recycle();
+                            } else {
+                                union(assets, [layer.image]);
+                            }
                         } else {
                             const
                                 tiles = arrayCache.setUp();
@@ -691,8 +701,6 @@ export default (function () {
                     },
                     renderTiles = false,
                     index = 0,
-                    x = 0,
-                    y = 0,
                     data = null,
                     createFrames = function (frames, index, tileset, modifier) {
                         var margin = tileset.margin || 0,
@@ -706,9 +714,7 @@ export default (function () {
                             margin2 = margin * 2,
                             marginSpace = margin2 - spacing,
                             cols = tileset.columns || (((tileset.imagewidth / tileWidthSpace) + marginSpace) >> 0),
-                            rows = /* Tiled tileset def doesn't seem to have rows */ (((tileset.imageheight / tileHeightSpace) + marginSpace) >> 0),
-                            x = 0,
-                            y = 0;
+                            rows = /* Tiled tileset def doesn't seem to have rows */ (((tileset.imageheight / tileHeightSpace) + marginSpace) >> 0);
                         
                         // deprecated unit/image resizing
                         tileWidth = tileWidth * modifier;
@@ -718,8 +724,8 @@ export default (function () {
                         tileWidthSpace = tileWidthSpace * modifier;
                         tileHeightSpace = tileHeightSpace * modifier;
 
-                        for (y = 0; y < rows; y++) {
-                            for (x = 0; x < cols; x++) {
+                        for (let y = 0; y < rows; y++) {
+                            for (let x = 0; x < cols; x++) {
                                 frames.push([
                                     margin + x * tileWidthSpace,
                                     margin + y * tileHeightSpace,
@@ -757,8 +763,8 @@ export default (function () {
                         newWidth  = newWidth  || width;
                         newHeight = newHeight || height;
                         data      = [];
-                        for (x = 0; x < newWidth; x++) {
-                            for (y = 0; y < newHeight; y++) {
+                        for (let x = 0; x < newWidth; x++) {
+                            for (let y = 0; y < newHeight; y++) {
                                 if ((x < width) && (y < height)) {
                                     data[x + y * newWidth] = layer.data[x + y * width];
                                 } else {
@@ -787,20 +793,20 @@ export default (function () {
                 tileDefinition.properties.z = tileDefinition.properties.z || this.layerZ;
 
                 if (tilesets.length) {
-                    for (x = 0; x < tilesets.length; x++) {
+                    for (let x = 0; x < tilesets.length; x++) {
                         createFrames(importFrames, x, tilesets[x], 1);
                     }
 
                     lastSet = tilesets[tilesets.length - 1];
                     tileTypes = lastSet.firstgid + lastSet.tilecount;
-                    for (x = -1; x < tileTypes; x++) {
+                    for (let x = -1; x < tileTypes; x++) {
                         importAnimation['tile' + x] = x;
                     }
                 }
-                for (x = 0; x < width; x++) {
+                for (let x = 0; x < width; x++) {
                     importCollision[x] = [];
                     importRender[x] = [];
-                    for (y = 0; y < height; y++) {
+                    for (let y = 0; y < height; y++) {
                         index = +data[x + y * width] - 1; // -1 from original src to make it zero-based.
                         importRender[x][y] = 'tile' + index;
                         index += 1; // So collision map matches original src indexes. Render (above) should probably be changed at some point as well. DDD 3/30/2016
@@ -819,7 +825,7 @@ export default (function () {
                         }
                     }
                 }
-                for (x = 0; x < tileDefinition.components.length; x++) {
+                for (let x = 0; x < tileDefinition.components.length; x++) {
                     if (tileDefinition.components[x].type === 'RenderTiles') {
                         renderTiles = tileDefinition.components[x];
                     }
@@ -1016,7 +1022,7 @@ export default (function () {
                     switch (layerDefinition.type) {
                     case 'imagelayer':
                         layer = this.convertImageLayer(layerDefinition);
-                        layer = this.createLayer('image-layer', layer, x, y, layer.tilewidth, layer.tileheight, [layer.tileset], null, images, layer, progress);
+                        layer = this.createLayer(getProperty(layer.properties, 'entity') || 'image-layer', layer, x, y, layer.tilewidth, layer.tileheight, [layer.tileset], null, images, layer, progress);
                         break;
                     case 'objectgroup':
                         this.setUpEntities(layerDefinition, x, y, tileWidth, tileHeight, tilesets, null, progress);

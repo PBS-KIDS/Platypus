@@ -70,6 +70,8 @@ const
         if (this.owner.triggerEventOnChildren) {
             this.owner.triggerEventOnChildren(event.code + ':up', event);
         }
+
+        updatePrecedence(type);
     },
     onChange = function (type, event) {
         /**
@@ -81,6 +83,8 @@ const
         if (this.owner.triggerEventOnChildren) {
             this.owner.triggerEventOnChildren(event.code + ':change', event);
         }
+
+        updatePrecedence(type);
     },
     updatePrecedence = (type) => {
         if (type !== inputs[0]) {
