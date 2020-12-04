@@ -38,51 +38,43 @@ const
             }
         }
         /**
-         * Sent to entities on each tick to handle whatever they need to regarding controls.
+         * Triggered on owner and child entities on each tick to handle whatever they need to regarding controls.
          *
          * @event 'handle-controller'
          * @param tick {Object} An object containing tick data.
          */
-        if (this.owner.triggerEventOnChildren) {
-            this.owner.triggerEventOnChildren('handle-controller', tick);
-        }
+        this.triggerOnAll('handle-controller', tick);
     },
     onDown = function (type, event) {
         /**
-         *  Message sent to an entity when a key goes from up to down.
+         *  Triggered on owner and child entities when a key goes from up to down.
          *
          * @event '[event.code]:down'
          * @param event {DOMEvent} The DOM event that triggered the keydown event.
          */
-        if (this.owner.triggerEventOnChildren) {
-            this.owner.triggerEventOnChildren(event.code + ':down', event);
-        }
+        this.triggerOnAll(event.code + ':down', event);
 
         updatePrecedence(type);
     },
     onUp = function (type, event) {
         /**
-         * Message sent to child entities when a key goes from down to up.
+         * Triggered on owner and child entities when a key goes from down to up.
          *
          * @event '[event.code]:up'
          * @param event {DOMEvent} The DOM event that triggered the keyup event.
          */
-        if (this.owner.triggerEventOnChildren) {
-            this.owner.triggerEventOnChildren(event.code + ':up', event);
-        }
+        this.triggerOnAll(event.code + ':up', event);
 
         updatePrecedence(type);
     },
     onChange = function (type, event) {
         /**
-         * Message sent to child entities when an axis changes.
+         * Triggered on owner and child entities when an axis changes.
          *
          * @event '[event.code]:change'
          * @param event {DOMEvent} The event that triggered the change event.
          */
-        if (this.owner.triggerEventOnChildren) {
-            this.owner.triggerEventOnChildren(event.code + ':change', event);
-        }
+        this.triggerOnAll(event.code + ':change', event);
 
         updatePrecedence(type);
     },
@@ -166,8 +158,13 @@ export default createComponentClass({
         this.gamepads = arrayCache.setUp();
 
         this.notifier = (inputs) => {
-            this.owner.triggerEvent('input-precedence-updated', inputs);
-            this.owner.triggerEventOnChildren('input-precedence-updated', inputs);
+            /**
+             * Triggered on owner and child entities when player uses a new imput method. (For example, going from mouse to keyboard or keyboard to gamepad.)
+             *
+             * @event 'input-precedence-updated'
+             * @param inputs {Array} A list of input methods, ordered by precedence with index 0 being the most recent input method.
+             */
+            this.triggerOnAll('input-precedence-updated', inputs);
         };
         notifies.push(this.notifier);
     },
@@ -182,6 +179,14 @@ export default createComponentClass({
             }
             arrayCache.recycle(this.gamepads);
             greenSplice(notifies, notifies.indexOf(this.notifier));
+        },
+        triggerOnAll: function (...args) {
+            const owner = this.owner;
+
+            owner.triggerEvent(...args);
+            if (owner.triggerEventOnChildren) {
+                owner.triggerEventOnChildren(...args);
+            }
         }
     }
 });
