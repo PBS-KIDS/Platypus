@@ -37,6 +37,7 @@ const
                 }
             }
         }
+
         /**
          * Triggered on owner and child entities on each tick to handle whatever they need to regarding controls.
          *
@@ -52,7 +53,7 @@ const
          * @event '[event.code]:down'
          * @param event {DOMEvent} The DOM event that triggered the keydown event.
          */
-        this.triggerOnAll(event.code + ':down', event);
+        this.triggerControlAction(event.code, 'down', event);
 
         updatePrecedence(type);
     },
@@ -63,7 +64,7 @@ const
          * @event '[event.code]:up'
          * @param event {DOMEvent} The DOM event that triggered the keyup event.
          */
-        this.triggerOnAll(event.code + ':up', event);
+        this.triggerControlAction(event.code, 'up', event);
 
         updatePrecedence(type);
     },
@@ -74,7 +75,7 @@ const
          * @event '[event.code]:change'
          * @param event {DOMEvent} The event that triggered the change event.
          */
-        this.triggerOnAll(event.code + ':change', event);
+        this.triggerControlAction(event.code, 'change', event);
 
         updatePrecedence(type);
     },
@@ -94,8 +95,11 @@ const
         }
     },
     inputs = [],
-    notifies = [];
-let hasGamepads = false;
+    notifies = [],
+    detectInvalids = {},
+    detectProcessing = {};
+let hasGamepads = false,
+    gameWideReady = false;
 
 window.addEventListener("gamepadconnected", () => {
     hasGamepads = true;
@@ -167,6 +171,30 @@ export default createComponentClass({
             this.triggerOnAll('input-precedence-updated', inputs);
         };
         notifies.push(this.notifier);
+
+        if (!gameWideReady) { // Need info at the game level to handle missed control input across layers
+            gameWideReady = true;
+            platypus.game.on('tick', function () {
+                for (const key in detectInvalids) {
+                    if (detectInvalids.hasOwnProperty(key)) {
+                        if (detectInvalids[key] === 0) {
+                            this.triggerOnChildren('invalid-input', key);
+                        } else {
+                            this.triggerOnChildren('valid-input', key);
+                        }
+                        delete detectInvalids[key];
+                    }
+                }
+            }.bind(platypus.game));
+        }
+    },
+    events: {
+        'invalid-input': function (input) {
+            this.owner.triggerEventOnChildren('invalid-input', input);
+        },
+        'valid-input': function (input) {
+            this.owner.triggerEventOnChildren('valid-input', input);
+        }
     },
     methods: {
         destroy: function () {
@@ -180,13 +208,26 @@ export default createComponentClass({
             arrayCache.recycle(this.gamepads);
             greenSplice(notifies, notifies.indexOf(this.notifier));
         },
-        triggerOnAll: function (...args) {
-            const owner = this.owner;
+        triggerControlAction: function (control, action, ...args) {
+            const
+                event = `${control}:${action}`;
 
-            owner.triggerEvent(...args);
-            if (owner.triggerEventOnChildren) {
-                owner.triggerEventOnChildren(...args);
+            detectProcessing[control] = (detectProcessing[control] || 0) + this.triggerOnAll(event, ...args);
+            if (action === 'up') {
+                detectInvalids[control] = (detectInvalids[control] || 0) + detectProcessing[control];
+                detectProcessing[control] = 0;
             }
+        },
+        triggerOnAll: function (event, ...args) {
+            const
+                owner = this.owner;
+            let count = owner.triggerEvent(event, ...args);
+
+            if (owner.triggerEventOnChildren) {
+                count += owner.triggerEventOnChildren(event, ...args);
+            }
+            
+            return count;
         }
     }
 });
