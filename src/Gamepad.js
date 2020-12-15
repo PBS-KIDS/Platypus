@@ -133,11 +133,13 @@ proto.update = function (gamepad) {
 
             if (newValue === 1) {
                 onDown(event);
+                onChange(event);
             } else if (newValue === 0) {
+                onChange(event);
                 onUp(event);
+            } else {
+                onChange(event);
             }
-            
-            onChange(event);
 
             event.recycle();
         }
