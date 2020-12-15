@@ -131,7 +131,7 @@ proto.update = function (gamepad) {
 
             buttons[i] = newValue;
 
-            if (newValue === 1) {
+            if (oldButton === 0) {
                 onDown(event);
                 onChange(event);
             } else if (newValue === 0) {
