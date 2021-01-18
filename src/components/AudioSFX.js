@@ -16,7 +16,7 @@ export default (function () {
     var defaultSettings = {
             interrupt: 0,
             delay: 0,
-            offset: 0,
+            start: 0,
             loop: 0,
             volume: 1,
             pan: 0,
@@ -50,11 +50,10 @@ export default (function () {
                 attributes = {
                     interrupt: soundDefinition.interrupt,
                     delay: soundDefinition.delay,
-                    offset: soundDefinition.offset,
+                    start: soundDefinition.start,
                     loop: soundDefinition.loop,
                     volume: soundDefinition.volume,
                     pan: soundDefinition.pan,
-                    startTime: soundDefinition.startTime,
                     duration: soundDefinition.duration,
                     muted: soundDefinition.muted,
                     speed: soundDefinition.speed,
@@ -71,7 +70,7 @@ export default (function () {
                     "interrupt", value.interrupt || attributes.interrupt || defaultSettings.interrupt,
                     "delay",     value.delay     || attributes.delay  || defaultSettings.delay,
                     "loop",      value.loop      || attributes.loop   || defaultSettings.loop,
-                    "offset",    value.offset    || attributes.offset || defaultSettings.offset,
+                    "start",    value.start    || attributes.start || defaultSettings.start,
                     "volume",    (typeof value.volume !== 'undefined') ? value.volume : ((typeof attributes.volume !== 'undefined') ? attributes.volume : defaultSettings.volume),
                     "pan",       value.pan       || attributes.pan    || defaultSettings.pan,
                     "muted",      value.muted      || attributes.muted   || defaultSettings.muted,
@@ -150,8 +149,8 @@ export default (function () {
              *               "delay": 500,
              *               // Optional. Time in milliseconds to wait before playing audio once the message is received. Default is 0.
              *
-             *               "offset": 1500,
-             *               // Optional. Time in milliseconds determining where in the audio clip to begin playback. Default is 0.
+             *               "start": 1.5,
+             *               // Optional. Time in seconds determining where in the audio clip to begin playback. Default is 0.
              *
              *               "length": 2500,
              *               // Optional. Time in milliseconds to play audio before stopping it. If 0 or not specified, play continues to the end of the audio clip.
@@ -243,7 +242,7 @@ export default (function () {
                          * @param message.length (integer) - Optional. Time in milliseconds to play audio before stopping it. If 0 or not specified, play continues to the end of the audio clip.
                          * @param message.loop (integer) - Optional. Determines how many more times to play the audio clip once it finishes. Set to -1 for an infinite loop. Default is 0.
                          * @param message.muted {Boolean} Whether clip should start muted.
-                         * @param message.offset (integer) - Optional. Time in milliseconds determining where in the audio clip to begin playback. Default is 0.
+                         * @param message.start (integer) - Optional. Time in seconds determining where in the audio clip to begin playback. Default is 0.
                          * @param message.pan (float) - Optional. Used to specify the pan of audio on a range of -1 (left) to 1 (right). Default is 0.
                          * @param message.playthrough {Boolean} Whether SFX should force completion of sound even when stopped prematurely.
                          * @param message.speed (float) - Optional. Used to specify how fast to play audio. Default is 1.
