@@ -20,7 +20,7 @@
              // For example, `x` becomes `entity.x` on the new entity.
          },
 
-         "preload": ['image.png', 'sound.{ogg,mp3}']
+         "preload": ['image.png', 'sound.mp3']
          // assets that need to be loaded before this entity loads
      }
  *

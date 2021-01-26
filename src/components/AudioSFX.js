@@ -574,7 +574,7 @@ export default (function () {
             
             for (key in audioMap) {
                 if (audioMap.hasOwnProperty(key)) {
-                    const item = (audioMap[key].sound || audioMap[key]) + '.{ogg,mp3}';
+                    const item = (audioMap[key].sound || audioMap[key]) + '.mp3';
                     if (preload.indexOf(item) === -1) {
                         preload.push(item);
                     }

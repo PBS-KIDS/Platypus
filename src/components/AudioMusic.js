@@ -143,7 +143,7 @@ export default createComponentClass({
         if (tracks) {
             for (key in tracks) {
                 if (tracks.hasOwnProperty(key)) {
-                    const item = (tracks[key].sound || tracks[key]) + '.{ogg,mp3}';
+                    const item = (tracks[key].sound || tracks[key]) + '.mp3';
                     if (preload.indexOf(item) === -1) {
                         preload.push(item);
                     }
