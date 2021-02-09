@@ -826,9 +826,132 @@ export default (function () {
                             return newAxisPosition;
                         }
                     },
+                    findFrontPoints = function (points, vX, vY) {
+                        const vect = Vector.setUp(vX, vY),
+                            side = Vector.setup(0, 0),
+                            frontPoints = [];
+                        let x = 0,
+                            addedPrevious = false;
+
+                        for (x = 0; x < points.length - 1; x++) {
+                            side.setXYZ(points[1].x - points[0].x, points[1].y - points[0].y);
+
+                            if (side.dot(vect) > 0) {
+                                if (!addedPrevious) {
+                                    frontPoints.push(points[x]);
+                                }
+                                frontPoints.push(points[x + 1]);
+                                addedPrevious = true;
+                            } else {
+                                addedPrevious = false;
+                            }
+                        }
+
+                        side.recycle();
+                        vect.recycle();
+                        return frontPoints;
+                    },
+                    findShortestPentration = function (shapeAPoints, shapeBPoints, movementX, movementY) {
+                        let x = 0,
+                            y = 0,
+                            point = null,
+                            penetration = 0,
+                            shortestPenetration = Infinity;
+
+                        for (x = 0; x < shapeAPoints.length; x++) {
+                            point = shapeAPoints[x];
+
+                            for (y = 0; y < shapeBPoints.length - 1; y++) {
+                                penetration = findPenetration(point.x, point.y, point.x + movementX, point.y + movementY, shapeBPoints[y].x, shapeBPoints[y].y, shapeBPoints[y + 1].x, shapeBPoints[y + 1].y);
+                                
+                                if (penetration < shortestPenetration) {
+                                    shortestPenetration = penetration;
+                                }
+                            }
+                        }
+
+                        for (x = 0; x < shapeBPoints.length; x++) {
+                            point = shapeBPoints[x];
+
+                            for (y = 0; y < shapeBPoints.length - 1; y++) {
+                                penetration = findPenetration(point.x, point.y, point.x + movementX, point.y + movementY, shapeAPoints[y].x, shapeAPoints[y].y, shapeAPoints[y + 1].x, shapeAPoints[y + 1].y);
+                                
+                                if (penetration < shortestPenetration) {
+                                    shortestPenetration = penetration;
+                                }
+                            }
+                        }
+
+                        //Since we're only moving in one dimension, we multiply by that direction.
+                        if (movementX) {
+                            return shortestPenetration * movementX;
+                        } else {
+                            return shortestPenetration * movementY;
+                        }
+                    },
+                    findPenetration = function (aX, aY, bX, bY, cX, cY, dX, dY) {
+                        //Based on an equation here: https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection
+                        //A -> B is one vector, C -> D is another.
+                        const diffABX = aX - bX,
+                            diffCDX = cX - dX,
+                            diffABY = aY - bY,
+                            diffCDY = cY - dY,
+                            diffACX = aX - cX,
+                            diffACY = aY - cY,
+
+                            denominator = (diffABX * diffCDY) - (diffABY * diffCDX),
+                            tNumerator = (diffACX * diffCDY) - (diffACY * diffCDX);
+
+                        let uNumerator = 0;
+
+                        if (tNumerator < 0 && tNumerator > denominator) {
+                            return -1;
+                        }
+
+                        uNumerator = (-diffABX * diffACY) - (-diffABY * diffACX);
+                        if (uNumerator < 0 && uNumerator > denominator) {
+                            return -1;
+                        }
+                        
+                        //This value is how far along the movement vector that the intersection occurs. The value ranges 0 and 1.
+                        //We can multiple this by the movement vector to move the shape to intersection.
+                        return tNumerator / denominator;
+
+                        //Don't need the actual intersection point
+                        //resultX = aX + t * (-diffABX);
+                        //resultY = aY + t * (-diffABY);
+                    },
                     findAxisCollisionPosition = { // Decision tree for quicker access, optimized for mobile devices.
                         x: {
+                            polygon: {
+                                polygon: function (direction, thisShape, thatShape) {
+                                    const ri = returnInfo,
+                                        thisFrontPoints = findFrontPoints(thisShape.points, direction, 0),
+                                        thatFrontPoints = findFrontPoints(thatShape.points, -direction, 0),
+                                        directionMultiplier = 10,
+                                        maxMovement = findShortestPentration (thisFrontPoints, thatFrontPoints, direction * directionMultiplier, 0);
+                                    
+                                    //Direction is a 1 or -1, but the penetration check for polygons works based on a movement vector, so we just multiply the 1/-1 by
+                                    //a scalar that is farther than the actual movement would ever be, to guarantee we find the collision point.
+
+                                    ri.contactVector.setXYZ(direction, 0);
+                                    ri.position = thisShape.x + maxMovement;
+                                    //TODO: Return the normal from the colliding surface. It's easy to find it in findShortestPenetration()
+
+                                    thisFrontPoints = null;
+                                    thatFrontPoints = null;
+                                },
+                                rectangle: function (direction, thisShape, thatShape) {
+                                    
+                                },
+                                circle: function (direction, thisShape, thatShape) {
+
+                                }
+                            },
                             rectangle: {
+                                polygon: function (direction, thisShape, thatShape) {
+
+                                },
                                 rectangle: function (direction, thisShape, thatShape) {
                                     var ri = returnInfo;
 
@@ -840,16 +963,21 @@ export default (function () {
                                 circle: function (direction, thisShape, thatShape) {
                                     var ri = returnInfo;
 
-                                    ri.position = thatShape.x - direction * getOffsetForCircleVsAABBX(thatShape, thisShape, thisShape, direction, ri.contactVector.setXYZ(direction, 0));
+                                    ri.contactVector.setXYZ(direction, 0);
+                                    ri.position = thatShape.x - direction * getOffsetForCircleVsAABBX(thatShape, thisShape, thisShape, direction, ri.contactVector);
 
                                     return ri;
                                 }
                             },
                             circle: {
+                                polygon: function () {
+
+                                },
                                 rectangle: function (direction, thisShape, thatShape) {
                                     var ri = returnInfo;
 
-                                    ri.position = thatShape.x - direction * getOffsetForCircleVsAABBX(thisShape, thatShape, thisShape, direction, ri.contactVector.setXYZ(direction, 0));
+                                    ri.contactVector.setXYZ(direction, 0);
+                                    ri.position = thatShape.x - direction * getOffsetForCircleVsAABBX(thisShape, thatShape, thisShape, direction, ri.contactVector);
 
                                     return ri;
                                 },
@@ -866,6 +994,7 @@ export default (function () {
                             }
                         },
                         y: {
+
                             rectangle: {
                                 rectangle: function (direction, thisShape, thatShape) {
                                     var ri = returnInfo;

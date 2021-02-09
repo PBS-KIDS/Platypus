@@ -8,7 +8,7 @@
  * @param definition {Object} This is an object of key/value pairs describing the shape.
  * @param definition.x {number} The x position of the shape. The x is always located in the center of the object.
  * @param definition.y {number} The y position of the shape. The y is always located in the center of the object.
- * @param [definition.type="rectangle"] {String} The type of shape this is. Currently this can be either "rectangle" or "circle".
+ * @param [definition.type="rectangle"] {String} The type of shape this is. Currently this can be either "rectangle", "circle", or "polygon".
  * @param [definition.width] {number} The width of the shape if it's a rectangle.
  * @param [definition.height] {number} The height of the shape if it's a rectangle.
  * @param [definition.radius] {number} The radius of the shape if it's a circle.
@@ -16,6 +16,7 @@
  * @param [definition.offsetY] {number} The y offset of the collision shape from the owner entity's location.
  * @param [definition.regX] {number} The registration x of the collision shape with the owner entity's location if offsetX is not provided.
  * @param [definition.regY] {number} The registration y of the collision shape with the owner entity's location if offsetX is not provided.
+ * @param [definition.points] {array} A 2D array of vectors describing the points that make up a polygon. Points must be in clockwise order.
  * @param collisionType {String} A string describing the collision type of this shape.
  */
 import AABB from './AABB.js';
@@ -41,6 +42,179 @@ export default (function () {
             */
             return (shapeDistanceX < hw) || (shapeDistanceY < hh) || ((shapeDistanceX < (hw + radius)) && (shapeDistanceY < (hh + radius)) && ((pow((shapeDistanceX - hw), 2) + pow((shapeDistanceY - hh), 2)) < pow(radius, 2)));
         },
+        rectPoints = [Vector.setUp(0, 0), Vector.setUp(0, 0), Vector.setUp(0, 0), Vector.setUp(0, 0)],
+        polyRectCollision = function (polygon, rect) {
+            let normal = null,
+                x = 0,
+                overlap = 0,
+                overlapAxis = null,
+                minOverlap = Infinity;
+
+            rectPoints[0].setXYZ(rect.aABB.left, rect.aABB.top);
+            rectPoints[1].setXYZ(rect.aABB.right, rect.aABB.top);
+            rectPoints[2].setXYZ(rect.aABB.right, rect.aABB.bottom);
+            rectPoints[3].setXYZ(rect.aABB.left, rect.aABB.bottom);
+
+            //Only check the normals on the polygon, the AABB check already covered the normals for the rectangle
+            for (x = 0; x < polygon.normals.length; x++) {
+                normal = polygon.normals[x];
+
+                overlap = checkSeparatingAxis(normal, polygon, rectPoints);
+
+                if (overlap === 0) {
+                    return false;
+                } else if (overlap < minOverlap) {
+                    minOverlap = overlap;
+                    //overlapAxis = normal;
+                }
+            }
+
+            return true;
+        },
+        circlePoint = [Vector.setUp(0, 0)],
+        shortestPointNormal = Vector.setUp(0, 0),
+        polyCircleCollision = function (polygon, circle) {
+            const radiusSquared = Math.pow(circle.radius, 2);
+            let normal = null,
+                x = 0,
+                overlap = 0,
+                overlapAxis = null,
+                minOverlap = Infinity,
+                point = null,
+                distanceSquared = 0,
+                shortestSquared = Infinity,
+                shortestPoint = -1;
+
+            circlePoint[0].setXYZ(circle.x, circle.y);
+
+            for (x = 0; x < polygon.normals.length; x++) {
+                normal = polygon.normals[x];
+
+                overlap = checkSeparatingAxis(normal, polygon.points, circlePoint, circle.radius);
+
+                if (overlap === 0) {
+                    return false;
+                } else if (overlap < minOverlap) {
+                    minOverlap = overlap;
+                    //overlapAxis = normal;
+                }
+            }
+
+            //If we're still here we check the points
+            for (x = 0; x < polygon.points.length; x++) {
+                point = polygon.points[x];
+                distanceSquared = Math.pow(point.x - circle.x, 2) + Math.pow(point.y - circle.y, 2);
+
+                if (distanceSquared < radiusSquared && distanceSquared < shortestSquared) {
+                    shortestSquared = distanceSquared;
+                    shortestPoint = point;
+                }
+            }
+
+            shortestPointNormal.set(shortestPoint.x - circle.x, shortestPoint.y - circle.y);
+            shortestPointNormal.normalize();
+
+            overlap = checkSeparatingAxis(shortestPointNormal, polygon.points, circlePoint, circle.radius);
+
+            if (overlap === 0) {
+                return false;
+            } else if (overlap < minOverlap) {
+                minOverlap = overlap;
+                //overlapAxis = shortestPointNormal;
+            }
+
+            return true;
+        },
+
+        polyPolyCollision = function (polygonA, polygonB) {
+            let normal = null,
+                x = 0,
+                overlap = 0,
+                overlapAxis = null,
+                minOverlap = Infinity;
+
+            for (x = 0; x < polygonA.normals.length; x++) {
+                normal = polygonA.normals[x];
+
+                overlap = checkSeparatingAxis(normal, polygonA.points, polygonB.points);
+
+                if (overlap === 0) {
+                    return false;
+                } else if (overlap < minOverlap) {
+                    minOverlap = overlap;
+                    //overlapAxis = normal;
+                }
+            }
+
+            for (x = 0; x < polygonB.normals.length; x++) {
+                normal = polygonB.normals[x];
+
+                overlap = checkSeparatingAxis(normal, polygonA.points, polygonB.points);
+
+                if (overlap === 0) {
+                    return false;
+                } else if (overlap < minOverlap) {
+                    minOverlap = overlap;
+                    //overlapAxis = normal;
+                }
+            }
+
+            //WHAT TO DO WITH MY EXTRA INFO ABOUT THE MIN OVERLAP!?
+            return true;
+        },
+
+        checkSeparatingAxis = function (axis, pointsA, pointsB, radiusOfB) {
+            const minMaxA = [Infinity, -Infinity], //min in [0], max in [1]
+                minMaxB = [Infinity, -Infinity];
+
+            getMinMax(minMaxA, axis, pointsA);
+
+            if (radiusOfB) { //If we have a radius for B, B is a circle.
+                getMinMax(minMaxB, axis, pointsB, radiusOfB);
+            } else {
+                getMinMax(minMaxB, axis, pointsB);
+            }
+            
+            //If the max of A is greater min of B AND the max of B is greater than the min of A, OVERLAP!
+            if (minMaxA[1] > minMaxB[0] && minMaxB[1] > minMaxA[0]) {
+                //overlap!
+                return Math.min(minMaxA[1] - minMaxB[0], minMaxB[1] - minMaxA[0]);
+            } else {
+                //no overlap!
+                return 0;
+            }
+
+        },
+
+        getMinMax = function (minMax, axis, points, radius) {
+            let x = 0,
+                currentMin = Infinity,
+                currentMax = -Infinity,
+                projection = 0,
+                point = 0;
+
+            for (x = 0; x < points.length; x++) {
+                point = points[x];
+                projection = point.dot(axis);
+
+                if (projection < currentMin) {
+                    currentMin = projection;
+                    minMax[0] = projection;
+                }
+                
+                if (projection > currentMax) {
+                    currentMax = projection;
+                    minMax[1] = projection;
+                }
+            }
+
+            //If we have a radius we expand the projection because we're dealing with a circle.
+            if (radius) {
+                minMax[0] -= radius;
+                minMax[1] += radius;
+            }
+        },
+
         collidesCircle = function (shape) {
             var pow = Math.pow;
             
@@ -49,14 +223,21 @@ export default (function () {
                 ((shape.type === 'circle')    && ((pow((this.x - shape.x), 2) + pow((this.y - shape.y), 2)) <= pow((this.radius + shape.radius), 2)))
             );
         },
-        collidesDefault = function () {
-            return false;
-        },
         collidesRectangle = function (shape) {
             return this.aABB.collides(shape.aABB) && (
                 (shape.type === 'rectangle') ||
                 ((shape.type === 'circle') && circleRectCollision(shape, this))
             );
+        },
+        collidesPolygon = function (shape) {
+            //Figure out how to do this collision!!!
+            return this.aABB.collides(shape.aABB) && 
+                ((shape.type === 'rectangle') && polyRectCollision(this, shape)) ||
+                ((shape.type === 'circle') && polyCircleCollision(this, shape)) ||
+                ((shape.type === 'polygon') && polyPolyCollision(this, shape));
+        },
+        collidesDefault = function () {
+            return false;
         },
         CollisionShape = function (owner, definition, collisionType) {
             var regX = definition.regX,
@@ -64,6 +245,7 @@ export default (function () {
                 width = definition.width || definition.radius * 2 || 0,
                 height = definition.height || definition.radius * 2 || 0,
                 radius = definition.radius || 0,
+                points = definition.points || null,
                 type = definition.type || 'rectangle';
 
             // If this shape is recycled, the vectors will already be in place.
@@ -79,6 +261,8 @@ export default (function () {
             this.collisionType = collisionType;
             this.type = type;
             this.subType = '';
+            this.points = null;
+            this.normals = null;
             
             /**
              * Determines whether shapes collide.
@@ -92,6 +276,38 @@ export default (function () {
                 this.collides = collidesCircle;
             } else if (type === 'rectangle') {
                 this.collides = collidesRectangle;
+            } else if (type === 'polygon') {
+                let p = 0,
+                    minX = Infinity,
+                    maxX = -Infinity,
+                    minY = Infinity,
+                    maxY = -Infinity;
+
+                this.points = [];
+                for (p = 0; p < points.length; p++) {
+                    const x = points[p][0],
+                        y = points[p][1];
+
+                    this.points[p] = Vector.setUp(x, y, 0);
+                    if (x < minX) {
+                        minX = x;
+                    }
+                    if (x > maxX) {
+                        maxX = x;
+                    }
+
+                    if (y < minY) {
+                        minY = y;
+                    }
+                    if (y > maxY) {
+                        maxY = y;
+                    }
+                }
+                width = maxX - minX;
+                height = maxY - minY;
+                this.calculateNormals();
+
+                this.collides = collidesPolygon;
             } else {
                 this.collides = collidesDefault;
             }
@@ -134,15 +350,115 @@ export default (function () {
         this.size.x = shape.size.x;
         this.size.y = shape.size.y;
         this.radius = shape.radius;
-        this.aABB.setAll(this.x, this.y, this.width, this.height);
+        
         if (this.type === 'circle') {
             this.collides = collidesCircle;
         } else if (this.type === 'rectangle') {
             this.collides = collidesRectangle;
+        } else if (this.type === 'polygon') {
+            let p = 0,
+                minX = Infinity,
+                maxX = -Infinity,
+                minY = Infinity,
+                maxY = -Infinity,
+                height = 0,
+                width = 0;
+
+            //recycle the old points
+            for (p = 0; p < this.points.length; p++) {
+                this.points[p].recycle();
+            }
+
+            //make new points
+            this.points = [];
+            for (p = 0; p < shape.points.length; p++) {
+                this.points[p] = Vector.setUp(shape.points[p][0], shape.points[p][1], 0);
+            }
+
+            for (p = 0; p < this.points.length; p++) {
+                const x = this.points[p][0],
+                    y = this.points[p][1];
+
+                this.points[p] = Vector.setUp(x, y, 0);
+                if (x < minX) {
+                    minX = x;
+                }
+                if (x > maxX) {
+                    maxX = x;
+                }
+
+                if (y < minY) {
+                    minY = y;
+                }
+                if (y > maxY) {
+                    maxY = y;
+                }
+            }
+            width = maxX - minX;
+            height = maxY - minY;
+            this.size.setXYZ(width, height);
+
+            //recycle the old normals
+            for (p = 0; p < this.normals.length; p++) {
+                this.normals[p].recycle();
+            }
+            this.normals = null;
+            
+            //make new normals
+            this.calculateNormals();
+
+            this.collides = collidesPolygon;
         } else {
             this.collides = collidesDefault;
         }
+
+        this.aABB.setAll(this.x, this.y, this.width, this.height);
     };
+
+    /**
+     * Updates the normals for the faces of the polygon.
+     *
+     * @method calculateNormals
+     */
+    proto.calculateNormals = function () {
+        let x = 0,
+            y = 0,
+            duplicate = false,
+            normal = null,
+            pA = null,
+            pB = null;
+
+        if (this.type !== 'polygon') {
+            this.normals = null;
+            return;
+        }
+
+        this.normals = [];
+        for (x = 0; x < this.points.length - 1; x++) {
+            pA = this.points[x];
+            pB = this.points[x + 1];
+            //Creating the normal, rotating it by 90 degrees by swapping around the subtraction.
+            normal = Vector.setUp(pA.y - pB.y, pB.x - pA.x);
+            normal.normalize();
+
+            duplicate = false;
+            for (y = 0; y < this.normals.length; y++) {
+                //If normals are the same, just opposite direction, we skip them because they are parallel and would produce the same separating axis.
+                if ((normal.x === this.normals[y].x && normal.y === this.normals[y].y) ||
+                    (-normal.x === this.normals[y].x && -normal.y === this.normals[y].y)) {
+                    duplicate = true;
+                    break;
+                }
+            }
+
+            if (duplicate) {
+                normal.recycle();
+            } else {
+                this.normals.push(normal);
+            }
+        }
+    };
+
 
     /**
      * Updates the location of the shape and AABB. The position you send should be that of the owner, the offset of the shape is added inside the function.
