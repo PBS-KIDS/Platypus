@@ -68,7 +68,8 @@ export default (function () {
 
             this.renderMessage = Data.setUp(
                 'delta', 0,
-                'container', this.worldContainer
+                'container', this.worldContainer,
+                'tick', null
             );
         },
 
@@ -206,6 +207,7 @@ export default (function () {
                 const message = this.renderMessage;
 
                 message.delta = (tick && tick.delta) || 0;
+                message.tick = tick;
 
                 /**
                  * Triggered every tick on owner and its children entities.
@@ -214,6 +216,7 @@ export default (function () {
                  * @param data {Object}
                  * @param data.delta {Number} The delta time for this tick.
                  * @param data.container {PIXI.Container} The display Container the entities display objects should be added to.
+                 * @param data.tick {Object} Tick object from "tick" event.
                  */
                 this.owner.triggerEvent('handle-render', message);
 

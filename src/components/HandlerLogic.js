@@ -291,6 +291,7 @@ export default (function () {
                          * @param tick.delta {Number} The time that has passed since the last tick.
                          * @param tick.camera {null|platypus.AABB} The range of the logic camera area. This is typically larger than the visible camera. This value is `null` if `alwaysOn` is set to `true` on this component.
                          * @param tick.entities {Array} This is a list of all the logically active entities.
+                         * @param tick.tick {Object} Tick object from "tick" event.
                          */
                         this.owner.triggerEvent('handle-logic', msg);
                     
