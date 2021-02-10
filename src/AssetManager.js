@@ -20,13 +20,11 @@ const
         ogg: 'audio',
         mp3: 'audio',
         m4a: 'audio',
-        wav: 'audio',
-        "{ogg,mp3}": 'audio'
+        wav: 'audio'
     },
     formatAsset = function (asset) { //TODO: Make this behavior less opaque.
         const
-            standardPath = asset.src || asset,
-            path = platypus.supports.ie ? standardPath.replace('{ogg,mp3}', 'mp3') : standardPath,
+            path = asset.src || asset,
             match = path.match(fn);
             
         return Data.setUp(

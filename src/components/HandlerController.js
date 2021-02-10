@@ -6,8 +6,8 @@
  * @uses platypus.Component
  */
 /* global platypus, window */
+import {arrayCache, greenSplice} from '../utils/array.js';
 import Gamepad from '../Gamepad.js';
-import {arrayCache} from '../utils/array.js';
 import createComponentClass from '../factory.js';
 
 const
@@ -30,61 +30,90 @@ const
                     const standard = standards[gamepad.index];
 
                     if (!standard) { // set up initial values so events can be triggered later
-                        standards[gamepad.index] = Gamepad.setUp(gamepad);
+                        standards[gamepad.index] = Gamepad.setUp(gamepad, onDown.bind(this, 'gamepad'), onUp.bind(this, 'gamepad'), onChange.bind(this, 'gamepad'));
                     } else {
-                        standard.update(gamepad, onDown.bind(this), onUp.bind(this), onChange.bind(this));
+                        standard.update(gamepad);
                     }
                 }
             }
         }
+
         /**
-         * Sent to entities on each tick to handle whatever they need to regarding controls.
+         * Triggered on owner and child entities on each tick to handle whatever they need to regarding controls.
          *
          * @event 'handle-controller'
          * @param tick {Object} An object containing tick data.
          */
-        if (this.owner.triggerEventOnChildren) {
-            this.owner.triggerEventOnChildren('handle-controller', tick);
-        }
+        this.triggerOnAll('handle-controller', tick);
     },
-    onDown = function (event) {
+    onDown = function (type, event) {
         /**
-         *  Message sent to an entity when a key goes from up to down.
+         *  Triggered on owner and child entities when a key goes from up to down.
          *
          * @event '[event.code]:down'
          * @param event {DOMEvent} The DOM event that triggered the keydown event.
          */
-        if (this.owner.triggerEventOnChildren) {
-            this.owner.triggerEventOnChildren(event.code + ':down', event);
-        }
+        this.triggerControlAction(event.code, 'down', event);
+
+        updatePrecedence(type);
     },
-    onUp = function (event) {
+    onUp = function (type, event) {
         /**
-         * Message sent to child entities when a key goes from down to up.
+         * Triggered on owner and child entities when a key goes from down to up.
          *
          * @event '[event.code]:up'
          * @param event {DOMEvent} The DOM event that triggered the keyup event.
          */
-        if (this.owner.triggerEventOnChildren) {
-            this.owner.triggerEventOnChildren(event.code + ':up', event);
-        }
+        this.triggerControlAction(event.code, 'up', event);
+
+        updatePrecedence(type);
     },
-    onChange = function (event) {
+    onChange = function (type, event) {
         /**
-         * Message sent to child entities when an axis changes.
+         * Triggered on owner and child entities when an axis changes.
          *
          * @event '[event.code]:change'
          * @param event {DOMEvent} The event that triggered the change event.
          */
-        if (this.owner.triggerEventOnChildren) {
-            this.owner.triggerEventOnChildren(event.code + ':change', event);
-        }
-    };
-let hasGamepads = false;
+        this.triggerControlAction(event.code, 'change', event);
 
-window.addEventListener("gamepadconnected", (event) => {
+        updatePrecedence(type);
+    },
+    updatePrecedence = (type) => {
+        if (type !== inputs[0]) {
+            const was = inputs.indexOf(type);
+
+            if (was > 0) {
+                greenSplice(inputs, was);
+            }
+
+            inputs.unshift(type);
+
+            for (let i = 0; i < notifies.length; i++) {
+                notifies[i](inputs);
+            }
+        }
+    },
+    inputs = [],
+    notifies = [],
+    detectInvalids = {},
+    detectProcessing = {};
+let hasGamepads = false,
+    gameWideReady = false;
+
+window.addEventListener("gamepadconnected", () => {
     hasGamepads = true;
+    updatePrecedence('gamepad');
 });
+
+window.addEventListener('touchstart', () => {
+    updatePrecedence('touch');
+});
+
+window.addEventListener('mousedown', () => {
+    updatePrecedence('mouse');
+});
+
   
 //window.addEventListener("gamepaddisconnected", (event) => {});
 
@@ -101,18 +130,22 @@ export default createComponentClass({
          */
         useHandleLogic: false
     },
+
+    publicProperties: {
+        inputPrecedence: inputs
+    },
     
     initialize: function () {
         if (platypus.game.settings.debug) { // If this is a test build, leave in the browser key combinations so debug tools can be opened as expected.
-            this.callbackKeyDown = onDown.bind(this);
-            this.callbackKeyUp = onUp.bind(this);
+            this.callbackKeyDown = onDown.bind(this, 'keyboard');
+            this.callbackKeyUp = onUp.bind(this, 'keyboard');
         } else { // Otherwise remove default browser behavior for key inputs so that they do not interfere with game-play.
             this.callbackKeyDown = (event) => {
-                onDown.call(this, event);
+                onDown.call(this, 'keyboard', event);
                 event.preventDefault(); // this may be too aggressive - if problems arise, we may need to limit this to certain key combos that get in the way of game-play. Example: (event.metaKey && event.keyCode == 37) causes an accidental cmd key press to send the browser back a page while playing and hitting the left arrow button.
             };
             this.callbackKeyUp = (event) => {
-                onUp.call(this, event);
+                onUp.call(this, 'keyboard', event);
                 event.preventDefault(); // this may be too aggressive - if problems arise, we may need to limit this to certain key combos that get in the way of game-play. Example: (event.metaKey && event.keyCode == 37) causes an accidental cmd key press to send the browser back a page while playing and hitting the left arrow button.
             };
         }
@@ -127,6 +160,41 @@ export default createComponentClass({
         }
 
         this.gamepads = arrayCache.setUp();
+
+        this.notifier = (inputs) => {
+            /**
+             * Triggered on owner and child entities when player uses a new imput method. (For example, going from mouse to keyboard or keyboard to gamepad.)
+             *
+             * @event 'input-precedence-updated'
+             * @param inputs {Array} A list of input methods, ordered by precedence with index 0 being the most recent input method.
+             */
+            this.triggerOnAll('input-precedence-updated', inputs);
+        };
+        notifies.push(this.notifier);
+
+        if (!gameWideReady) { // Need info at the game level to handle missed control input across layers
+            gameWideReady = true;
+            platypus.game.on('tick', function () {
+                for (const key in detectInvalids) {
+                    if (detectInvalids.hasOwnProperty(key)) {
+                        if (detectInvalids[key] === 0) {
+                            this.triggerOnChildren('invalid-input', key);
+                        } else {
+                            this.triggerOnChildren('valid-input', key);
+                        }
+                        delete detectInvalids[key];
+                    }
+                }
+            }.bind(platypus.game));
+        }
+    },
+    events: {
+        'invalid-input': function (input) {
+            this.owner.triggerEventOnChildren('invalid-input', input);
+        },
+        'valid-input': function (input) {
+            this.owner.triggerEventOnChildren('valid-input', input);
+        }
     },
     methods: {
         destroy: function () {
@@ -138,6 +206,28 @@ export default createComponentClass({
                 }
             }
             arrayCache.recycle(this.gamepads);
+            greenSplice(notifies, notifies.indexOf(this.notifier));
+        },
+        triggerControlAction: function (control, action, ...args) {
+            const
+                event = `${control}:${action}`;
+
+            detectProcessing[control] = (detectProcessing[control] || 0) + this.triggerOnAll(event, ...args);
+            if (action === 'up') {
+                detectInvalids[control] = (detectInvalids[control] || 0) + detectProcessing[control];
+                detectProcessing[control] = 0;
+            }
+        },
+        triggerOnAll: function (event, ...args) {
+            const
+                owner = this.owner;
+            let count = owner.triggerEvent(event, ...args);
+
+            if (owner.triggerEventOnChildren) {
+                count += owner.triggerEventOnChildren(event, ...args);
+            }
+            
+            return count;
         }
     }
 });

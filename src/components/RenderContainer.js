@@ -13,6 +13,7 @@ import Interactive from './Interactive.js';
 import {arrayCache} from '../utils/array.js';
 import createComponentClass from '../factory.js';
 import {greenSplit} from '../utils/string.js';
+import { update } from 'lodash';
 
 export default (function () {
     var ColorMatrixFilter = filters.ColorMatrixFilter,
@@ -25,6 +26,9 @@ export default (function () {
                 color = '0x' + color.substring(1);
             }
             return +color;
+        },
+        magSqr = function (x, y) {
+            return x * x + y * y;
         },
         processGraphics = (function () {
             var process = function (gfx, value) {
@@ -110,6 +114,15 @@ export default (function () {
              * @default false
              */
             interactive: false,
+
+            /**
+             * Whether to render objects to their new position over time instead of instantaneously if there has been a time adjustment. Time is in milliseconds.
+             *
+             * @property interpolation
+             * @type Number
+             * @default 0
+             */
+            interpolation: 0,
 
             /**
              * Optional. What field this object should use to rotate.
@@ -279,8 +292,9 @@ export default (function () {
         },
         
         initialize: function () {
-            var container = this.container = this.owner.container = new Container(),
-                definition = null,
+            const
+                owner = this.owner,
+                container = this.container = this.owner.container = new Container(),
                 initialTint = this.tint;
 
             container.sortableChildren = true;
@@ -292,15 +306,77 @@ export default (function () {
 
             this.parentContainer = null;
             this.wasVisible = this.visible;
-            this.lastX = this.owner.x;
-            this.lastY = this.owner.y;
+            this.lastX = owner.x;
+            this.lastY = owner.y;
             this.camera = AABB.setUp();
             this.isOnCamera = true;
             this.needsCameraCheck = true;
 
             this._tint = null;
 
-            Object.defineProperty(this.owner, 'tint', {
+            /**
+             * The render update message updates the sprite.
+             *
+             * @method 'handle-render'
+             * @param [tick.tick.timeShift] {Boolean} Whether there has been a shift in time requiring interpolation.
+             */
+            if (this.interpolation) { // handle interpolation if timeline changes.
+                const
+                    updateUsingOwnerXY = () => {
+                        this.updateSprite(true, this.owner.x, this.owner.y);
+                    },
+                    updateUsingInterpolationXY = () => {
+                        const
+                            owner = this.owner,
+                            interpolationDist = magSqr(this.lastX - owner.x, this.lastY - owner.y);
+    
+                        if (!interpolationTime || interpolationDist < 1.5) {
+                            interpolationTime = 0;
+                            update = updateUsingOwnerXY;
+                            update();
+                        } else {
+                            const
+                                ratio = Math.min((interpolationTime / interpolation), (lastInterpolationDistance / interpolationDist)),
+                                alt = 1 - ratio;
+                            
+                            interpolationTime = Math.max(0, interpolationTime - 5);
+                            fromX = this.lastX;
+                            fromY = this.lastY;
+                            lastInterpolationDistance = interpolationDist;
+
+                            this.updateSprite(true, owner.x * alt + fromX * ratio, owner.y * alt + fromY * ratio);
+                        }
+                    },
+                    interpolation = this.interpolation;
+                let interpolationTime = 0,
+                    lastInterpolationDistance = 0,
+                    fromX = 0,
+                    fromY = 0,
+                    update = updateUsingOwnerXY;
+
+                this.addEventListener('handle-render', function (tick) {
+                    if (tick.tick.timeShift) {
+                        fromX = this.lastX;
+                        fromY = this.lastY;
+                        lastInterpolationDistance = magSqr(this.lastX - this.owner.x, this.lastY - this.owner.y);
+                        interpolationTime = lastInterpolationDistance > 1.5 ? interpolation : 0;
+                        update = updateUsingInterpolationXY;
+                    } else {
+                        update();
+                    }
+                });
+            } else {
+                this.addEventListener('handle-render', function () {
+                    this.updateSprite(true, this.owner.x, this.owner.y);
+                });
+            }
+            this.interpolate = Data.setUp(
+                'x', 0,
+                'y', 0
+            );
+            this.interpolationTime = 0;
+
+            Object.defineProperty(owner, 'tint', {
                 get: function () {
                     return this._tint;
                 }.bind(this),
@@ -336,18 +412,23 @@ export default (function () {
             }
 
             if (this.interactive) {
-                definition = Data.setUp(
-                    'container', container,
-                    'hitArea', this.interactive.hitArea,
-                    'hover', this.interactive.hover
-                );
-                this.owner.addComponent(new Interactive(this.owner, definition));
+                const
+                    definition = Data.setUp(
+                        'container', container,
+                        'hitArea', this.interactive.hitArea,
+                        'hover', this.interactive.hover
+                    );
+                owner.addComponent(new Interactive(owner, definition));
                 definition.recycle();
             }
 
             if (this.cache) {
-                this.updateSprite(false);
+                this.updateSprite(false, owner.x, owner.y);
                 this.owner.cacheRender = this.container;
+            }
+
+            if (this.mask && this.localMask) {
+                this.setMask(this.mask);
             }
         },
         
@@ -358,19 +439,21 @@ export default (function () {
              * @method 'cache'
              */
             "cache": function () {
-                this.updateSprite(false);
-                this.owner.cacheRender = this.container;
+                const owner = this.owner;
+
+                this.updateSprite(false, owner.x, owner.y);
+                owner.cacheRender = this.container;
                 this.cache = true;
-                if (this.owner.parent.triggerEventOnChildren) {
+                if (owner.parent.triggerEventOnChildren) {
                     /**
                      * On receiving a "cache" event, this component triggers "cache-sprite" to cache its rendering into the background. This is an optimization for static images to reduce render calls.
                      *
                      * @event 'cache-sprite'
                      * @param entity {platypus.Entity} This component's owner.
                      */
-                    this.owner.parent.triggerEventOnChildren('cache-sprite', this.owner);
+                    owner.parent.triggerEventOnChildren('cache-sprite', owner);
                 } else {
-                    platypus.debug.warn('Unable to cache sprite for ' + this.owner.type);
+                    platypus.debug.warn('Unable to cache sprite for ' + owner.type);
                 }
             },
 
@@ -394,26 +477,15 @@ export default (function () {
              * @param data.renderGroups {Array of PIXI.Container} Containers to categorize display of groups of entities.
              */
             "handle-render-load": function () {
+                const owner = this.owner;
+
                 /**
                  * This event is triggered once the RenderSprite is ready to handle interactivity.
                  *
                  * @event 'input-on'
                  */
-                this.owner.triggerEvent('input-on');
-                this.updateSprite(true);
-            },
-            
-            /**
-             * The render update message updates the sprite. If a sprite doesn't have a container, it's removed.
-             *
-             * @method 'handle-render'
-             */
-            "handle-render": function () {
-                if (!this.container) { // If this component's removal is pending
-                    return;
-                }
-
-                this.updateSprite(true);
+                owner.triggerEvent('input-on');
+                this.updateSprite(true, owner.x, owner.y);
             },
             
             /**
@@ -446,88 +518,75 @@ export default (function () {
         },
         
         methods: {
-            updateSprite: (function () {
-                var sort = function (a, b) {
-                    return a.z - b.z;
-                };
+            updateSprite: function (uncached, x, y) {
+                const
+                    matrix = pixiMatrix,
+                    rotation = (this.rotate === 'rotation') && this.rotation || 0;
+                let mirrored = 1,
+                    flipped  = 1;
                 
-                return function (uncached) {
-                    var x = 0,
-                        y = 0,
-                        rotation = 0,
-                        matrix = pixiMatrix,
-                        mirrored = 1,
-                        flipped  = 1,
-                        angle    = null;
-                    
-                    x = this.owner.x;
-                    y = this.owner.y;
-                    if (this.rotate === 'rotation') {
-                        rotation = this.rotation;
-                    }
-                    if (this.container.zIndex !== this.owner.z) {
-                        this.container.zIndex = this.owner.z;
-                    }
+                if (this.container.zIndex !== this.owner.z) {
+                    this.container.zIndex = this.owner.z;
+                }
 
-                    if (!this.ignoreOpacity && (this.owner.opacity || (this.owner.opacity === 0))) {
-                        this.container.alpha = this.owner.opacity;
+                if (!this.ignoreOpacity && (this.owner.opacity || (this.owner.opacity === 0))) {
+                    this.container.alpha = this.owner.opacity;
+                }
+                
+                if (this.mirror || this.flip) {
+                    const angle = this.rotation % 360;
+                    
+                    if (this.mirror && (angle > 90) && (angle < 270)) {
+                        mirrored = -1;
                     }
                     
-                    if (this.mirror || this.flip) {
-                        angle = this.rotation % 360;
-                        
-                        if (this.mirror && (angle > 90) && (angle < 270)) {
-                            mirrored = -1;
-                        }
-                        
-                        if (this.flip && (angle < 180)) {
-                            flipped = -1;
-                        }
+                    if (this.flip && (angle < 180)) {
+                        flipped = -1;
                     }
-                    
-                    if (this.rotate === 'orientationMatrix') { // This is a 3x3 2D matrix describing an affine transformation.
-                        const o = this.owner.orientationMatrix;
+                }
+                
+                if (this.rotate === 'orientationMatrix') { // This is a 3x3 2D matrix describing an affine transformation.
+                    const o = this.owner.orientationMatrix;
 
-                        matrix.a = o[0][0];
-                        matrix.b = o[1][0];
-                        matrix.tx = x + o[0][2];
-                        matrix.c = o[0][1];
-                        matrix.d = o[1][1];
-                        matrix.ty = y + o[1][2];
-                        this.container.transform.setFromMatrix(matrix);
-                    } else {
-                        this.container.setTransform(x, y, this.scaleX * mirrored, this.scaleY * flipped, (rotation ? (rotation / 180) * Math.PI : 0), this.skewX, this.skewY);
-                    }
-                    
-                    if (this.parentContainer && this.parentContainer.parentUpdated) {
+                    matrix.a = o[0][0];
+                    matrix.b = o[1][0];
+                    matrix.tx = x + o[0][2];
+                    matrix.c = o[0][1];
+                    matrix.d = o[1][1];
+                    matrix.ty = y + o[1][2];
+                    this.container.transform.setFromMatrix(matrix);
+                } else {
+                    this.container.setTransform(x, y, this.scaleX * mirrored, this.scaleY * flipped, (rotation ? (rotation / 180) * Math.PI : 0), this.skewX, this.skewY);
+                }
+                
+                if (this.parentContainer && this.parentContainer.parentUpdated) {
+                    this.needsCameraCheck = true;
+                }
+                if (this.container) {
+                    if (this.container.childUpdated) {
                         this.needsCameraCheck = true;
+                        this.container.childUpdated = false;
                     }
-                    if (this.container) {
-                        if (this.container.childUpdated) {
-                            this.needsCameraCheck = true;
-                            this.container.childUpdated = false;
-                        }
-                        this.container.parentUpdated = false;
+                    this.container.parentUpdated = false;
+                }
+                // Set isCameraOn of sprite if within camera bounds
+                if (!this.needsCameraCheck) {
+                    this.needsCameraCheck = (this.lastX !== this.owner.x) || (this.lastY !== this.owner.y);
+                }
+                if (uncached && this.container && (this.needsCameraCheck || (!this.wasVisible && this.visible))) {
+                    this.isOnCamera = this.owner.parent.isOnCanvas(this.container.getBounds(false));
+                    this.needsCameraCheck = false;
+                    if (this.parentContainer) {
+                        this.parentContainer.childUpdated = true;
                     }
-                    // Set isCameraOn of sprite if within camera bounds
-                    if (!this.needsCameraCheck) {
-                        this.needsCameraCheck = (this.lastX !== this.owner.x) || (this.lastY !== this.owner.y);
-                    }
-                    if (uncached && this.container && (this.needsCameraCheck || (!this.wasVisible && this.visible))) {
-                        this.isOnCamera = this.owner.parent.isOnCanvas(this.container.getBounds(false));
-                        this.needsCameraCheck = false;
-                        if (this.parentContainer) {
-                            this.parentContainer.childUpdated = true;
-                        }
-                        this.container.parentUpdated = true;
-                    }
-                    
-                    this.lastX = this.owner.x;
-                    this.lastY = this.owner.y;
-                    this.wasVisible = this.visible;
-                    this.container.visible = (this.visible && this.isOnCamera) || this.dragMode;
-                };
-            }()),
+                    this.container.parentUpdated = true;
+                }
+                
+                this.lastX = x;
+                this.lastY = y;
+                this.wasVisible = this.visible;
+                this.container.visible = (this.visible && this.isOnCamera) || this.dragMode;
+            },
             
             setMask: function (shape) {
                 var gfx = null;
@@ -554,6 +613,8 @@ export default (function () {
                         processGraphics(gfx, shape);
                     } else if (shape.radius) {
                         gfx.drawCircle(shape.x || 0, shape.y || 0, shape.radius);
+                    } else if (shape instanceof AABB) {
+                        gfx.drawRect(shape.left, shape.top, shape.width, shape.height);
                     } else if (shape.width && shape.height) {
                         gfx.drawRect(shape.x || 0, shape.y || 0, shape.width, shape.height);
                     }
@@ -581,6 +642,9 @@ export default (function () {
                     this.container.destroy();
                 }
                 this.container = null;
+
+                this.interpolate.recycle();
+                this.interpolate = null;
             }
         },
     
@@ -592,7 +656,7 @@ export default (function () {
              */
             removeFromParentContainer: function () {
                 if (this.parentContainer) {
-                    if (this.mask) {
+                    if (this.mask && !this.localMask) {
                         this.setMask();
                     }
 
@@ -610,7 +674,7 @@ export default (function () {
                 this.parentContainer = container;
                 this.parentContainer.addChild(this.container);
 
-                if (this.mask) {
+                if (this.mask && !this.localMask) {
                     this.setMask(this.mask);
                 }
             }

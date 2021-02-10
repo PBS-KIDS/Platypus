@@ -68,7 +68,8 @@ export default (function () {
 
             this.renderMessage = Data.setUp(
                 'delta', 0,
-                'container', this.worldContainer
+                'container', this.worldContainer,
+                'tick', null
             );
         },
 
@@ -194,10 +195,10 @@ export default (function () {
              *
              * @method 'set-parent-render-container'
              * @param entity {Object} The entity to relocate.
-             * @param entityOrId {Object|String} The entity or id of the entity that will act as the parent container.
+             * @param container {Entity|String|PIXI.Container} The entity, id of the entity, or PIXI.Container that will act as the parent container.
              */
-            "set-parent-render-container": function (entity, entityOrId) {
-                this.setParentRenderContainer(entity, entityOrId);
+            "set-parent-render-container": function (entity, container) {
+                this.setParentRenderContainer(entity, container);
             }
 
         },
@@ -206,6 +207,7 @@ export default (function () {
                 const message = this.renderMessage;
 
                 message.delta = (tick && tick.delta) || 0;
+                message.tick = tick;
 
                 /**
                  * Triggered every tick on owner and its children entities.
@@ -214,6 +216,7 @@ export default (function () {
                  * @param data {Object}
                  * @param data.delta {Number} The delta time for this tick.
                  * @param data.container {PIXI.Container} The display Container the entities display objects should be added to.
+                 * @param data.tick {Object} Tick object from "tick" event.
                  */
                 this.owner.triggerEvent('handle-render', message);
 
@@ -222,17 +225,17 @@ export default (function () {
                 }
             },
 
-            setParentRenderContainer: function (entity, entityOrId) {
+            setParentRenderContainer: function (entity, newContainer) {
                 let container = null;
 
                 entity.removeFromParentContainer();
 
-                if (!entityOrId) {
+                if (!newContainer) {
                     container = this.worldContainer;
 
-                } else if (typeof entityOrId === "string") {
+                } else if (typeof newContainer === "string") {
 
-                    const otherEntity = this.owner.getEntityById(entityOrId);
+                    const otherEntity = this.owner.getEntityById(newContainer);
                     if (otherEntity) {
                         container = otherEntity.container;
                     } else {
@@ -240,9 +243,10 @@ export default (function () {
                         platypus.debug.warn("Trying to add to non-existent entity, added to World container instead.");
                         container = this.worldContainer;
                     }
-
+                } else if (newContainer instanceof Container) {
+                    container = newContainer;
                 } else {
-                    container = entityOrId.container;
+                    container = newContainer.container;
                 }
 
                 entity.addToParentContainer(container);

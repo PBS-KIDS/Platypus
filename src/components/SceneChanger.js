@@ -77,9 +77,7 @@ export default (function () {
                 }
 
                 if (loadLayers && loadLayers.length) {
-                    for (let i = 0; i < loadLayers.length; i++) {
-                        platypus.game.load(loadLayers[i], data);
-                    }
+                    platypus.game.load(loadLayers, data);
                 }
 
                 if (scene) {

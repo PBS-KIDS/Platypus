@@ -445,7 +445,7 @@ export default class VOPlayer extends Messenger {
                             const
                                 arr = arrayCache.setUp({
                                     id: this._currentVO,
-                                    src: this._currentVO + '.{ogg,mp3}'
+                                    src: this._currentVO + '.mp3'
                                 });
         
                             this.assetCache.load(arr);
@@ -463,7 +463,7 @@ export default class VOPlayer extends Messenger {
             },
             arr = arrayCache.setUp({
                 id: this._currentVO,
-                src: this._currentVO + '.{ogg,mp3}'
+                src: this._currentVO + '.mp3'
             }),
             currentVO = this._currentVO;
 
