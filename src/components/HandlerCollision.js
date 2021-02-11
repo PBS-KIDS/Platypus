@@ -1016,7 +1016,7 @@ export default (function () {
                                     continue;
                                 }
                             }
-                        } else {
+                        } else { //Edges when travelling in Y
                             for (x = 0; x < polyPoints.length - 1; x++) {
                                 pointA = polyPoints[x];
                                 pointB = polyPoints[x + 1],
@@ -1024,14 +1024,14 @@ export default (function () {
                                 diffY = 0;
 
                                 //If both points in edge are beyond the radius of the circle, we don't need to bother with it.
-                                if ((pointA.y < circle.aABB.top && pointB.y < circle.aABB.top) || (pointA.y > circle.aABB.bottom && pointB.y > circle.aABB.bottom)) {
+                                if ((pointA.x < circle.aABB.left && pointB.x < circle.aABB.left) || (pointA.x > circle.aABB.right && pointB.x > circle.aABB.right)) {
                                     continue;
                                 }
 
                                 //If the edge would collide with one hemisphere of the circle, but our slope is opposite the slope of the circle in that hemisphere,
                                 //the edge wouldn't collide first, a point would. So, we skip it.
-                                if ((pointA.y < circle.y && pointB.y < circle.y && pointA.x < pointB.x) ||
-                                    (pointA.y > circle.y && pointB.y > circle.y && pointA.x > pointB.x)){
+                                if ((pointA.x < circle.x && pointB.x < circle.x && pointA.y > pointB.y) ||
+                                    (pointA.x > circle.x && pointB.x > circle.x && pointA.y < pointB.y)){
                                     continue;
                                 }
 
@@ -1044,15 +1044,15 @@ export default (function () {
                                 radialVector.multiply(circle.radius);
 
                                 //If the slope of the edge would hit at a point on the circle such that it's perpendicular, we know it collides.
-                                if ((circle.y + radialVector.y >= pointA.y && circle.y + radialVector.y <= pointB.y) || (circle.y + radialVector.y >= pointB.y && circle.y + radialVector.y <= pointA.y)) {
+                                if ((circle.x + radialVector.x >= pointA.x && circle.x + radialVector.x <= pointB.x) || (circle.x + radialVector.x >= pointB.x && circle.x + radialVector.x <= pointA.x)) {
                                     let m = diffY / diffX; 
                                         b = pointA.y - (m * pointA.x),
-                                        xPos = 0;
+                                        yPos = 0;
                                     
-                                    //Figure out the x position on the edge.
-                                    xPos = (radialVector.y - b) / m;
+                                    //Figure out the y position on the edge.
+                                    yPos = m * radialVector.x + b;
 
-                                    movement = Math.abs(xPos - radialVector.x);
+                                    movement = Math.abs(yPos - radialVector.y);
                                     if (movement < minMovement) {
                                         minMovement = movement;
                                     }
@@ -1094,9 +1094,9 @@ export default (function () {
                                         maxMovement = 0;
 
                                     rectPoints[0].setXYZ(thatShape.aABB.left, thatShape.aABB.top);
-                                    rectPoints[0].setXYZ(thatShape.aABB.right, thatShape.aABB.top);
-                                    rectPoints[0].setXYZ(thatShape.aABB.right, thatShape.aABB.bottom);
-                                    rectPoints[0].setXYZ(thatShape.aABB.left, thatShape.aABB.bottom);
+                                    rectPoints[1].setXYZ(thatShape.aABB.right, thatShape.aABB.top);
+                                    rectPoints[2].setXYZ(thatShape.aABB.right, thatShape.aABB.bottom);
+                                    rectPoints[3].setXYZ(thatShape.aABB.left, thatShape.aABB.bottom);
 
                                     thatFrontPoints = findFrontPoints(rectPoints, -direction, 0);
                                     maxMovement = findShortestPentration (thisFrontPoints, thatFrontPoints, direction * directionMultiplier, 0);
@@ -1113,13 +1113,36 @@ export default (function () {
                                         thisFrontPoints = findFrontPoints(thisShape.points, direction, 0),
                                         maxMovement = 0;
 
-                                    maxMovement = findCirclePenetration(thisFrontPoint, thatShape, direction, 'x');   
+                                    maxMovement = findCirclePenetration(thisFrontPoints, thatShape, direction, 'x');   
 
+                                    ri.contactVector.setXYZ(direction, 0);
+                                    ri.position = thisShape.x + maxMovement;
+
+                                    thisFrontPoints = null;
                                 }
                             },
                             rectangle: {
                                 polygon: function (direction, thisShape, thatShape) {
+                                    const ri = returnInfo,
+                                        thatFrontPoints = findFrontPoints(thatShape.points, -direction, 0),
+                                        thisFrontPoints = null,
+                                        directionMultiplier = 10,
+                                        maxMovement = 0;
 
+                                    rectPoints[0].setXYZ(thisShape.aABB.left, thisShape.aABB.top);
+                                    rectPoints[1].setXYZ(thisShape.aABB.right, thisShape.aABB.top);
+                                    rectPoints[2].setXYZ(thisShape.aABB.right, thisShape.aABB.bottom);
+                                    rectPoints[3].setXYZ(thisShape.aABB.left, thisShape.aABB.bottom);
+
+                                    thatFrontPoints = findFrontPoints(rectPoints, direction, 0);
+                                    maxMovement = findShortestPentration (thisFrontPoints, thatFrontPoints, direction * directionMultiplier, 0);
+
+                                    ri.contactVector.setXYZ(direction, 0);
+                                    ri.position = thisShape.x + maxMovement;
+                                    //TODO: Return the normal from the colliding surface. It's easy to find it in findShortestPenetration()
+
+                                    thisFrontPoints = null;
+                                    thatFrontPoints = null;
                                 },
                                 rectangle: function (direction, thisShape, thatShape) {
                                     var ri = returnInfo;
@@ -1139,8 +1162,17 @@ export default (function () {
                                 }
                             },
                             circle: {
-                                polygon: function () {
+                                polygon: function (direction, thisShape, thatShape) {
+                                    const ri = returnInfo,
+                                        thatFrontPoints = findFrontPoints(thatShape.points, -direction, 0),
+                                        maxMovement = 0;
 
+                                    maxMovement = findCirclePenetration(thatFrontPoints, thisShape, direction, 'x');  
+
+                                    ri.contactVector.setXYZ(direction, 0);
+                                    ri.position = thisShape.x + maxMovement;
+
+                                    thisFrontPoints = null;
                                 },
                                 rectangle: function (direction, thisShape, thatShape) {
                                     var ri = returnInfo;
@@ -1163,8 +1195,82 @@ export default (function () {
                             }
                         },
                         y: {
+                            polygon: {
+                                polygon: function (direction, thisShape, thatShape) {
+                                    const ri = returnInfo,
+                                        thisFrontPoints = findFrontPoints(thisShape.points, 0, direction),
+                                        thatFrontPoints = findFrontPoints(thatShape.points, 0, -direction),
+                                        directionMultiplier = 10,
+                                        maxMovement = findShortestPentration (thisFrontPoints, thatFrontPoints, 0, direction * directionMultiplier);
+                                    
+                                    //Direction is a 1 or -1, but the penetration check for polygons works based on a movement vector, so we just multiply the 1/-1 by
+                                    //a scalar that is farther than the actual movement would ever be, to guarantee we find the collision point.
 
+                                    ri.contactVector.setXYZ(0, direction);
+                                    ri.position = thisShape.y + maxMovement;
+                                    //TODO: Return the normal from the colliding surface. It's easy to find it in findShortestPenetration()
+
+                                    thisFrontPoints = null;
+                                    thatFrontPoints = null;
+                                },
+                                rectangle: function (direction, thisShape, thatShape) {
+                                    const ri = returnInfo,
+                                        thisFrontPoints = findFrontPoints(thisShape.points, 0, direction),
+                                        thatFrontPoints = null,
+                                        directionMultiplier = 10,
+                                        maxMovement = 0;
+
+                                    rectPoints[0].setXYZ(thatShape.aABB.left, thatShape.aABB.top);
+                                    rectPoints[1].setXYZ(thatShape.aABB.right, thatShape.aABB.top);
+                                    rectPoints[2].setXYZ(thatShape.aABB.right, thatShape.aABB.bottom);
+                                    rectPoints[3].setXYZ(thatShape.aABB.left, thatShape.aABB.bottom);
+
+                                    thatFrontPoints = findFrontPoints(rectPoints, 0, -direction);
+                                    maxMovement = findShortestPentration (thisFrontPoints, thatFrontPoints, 0, direction * directionMultiplier);
+
+                                    ri.contactVector.setXYZ(0, direction);
+                                    ri.position = thisShape.y + maxMovement;
+                                    //TODO: Return the normal from the colliding surface. It's easy to find it in findShortestPenetration()
+
+                                    thisFrontPoints = null;
+                                    thatFrontPoints = null;
+                                },
+                                circle: function (direction, thisShape, thatShape) {
+                                    const ri = returnInfo,
+                                        thisFrontPoints = findFrontPoints(thisShape.points, 0, direction),
+                                        maxMovement = 0;
+
+                                    maxMovement = findCirclePenetration(thisFrontPoints, thatShape, direction, 'y');   
+
+                                    ri.contactVector.setXYZ(0, direction);
+                                    ri.position = thisShape.y + maxMovement;
+
+                                    thisFrontPoints = null;
+                                }
+                            },
                             rectangle: {
+                                polygon: function (direction, thisShape, thatShape) {
+                                    const ri = returnInfo,
+                                        thatFrontPoints = findFrontPoints(thatShape.points, 0, -direction),
+                                        thisFrontPoints = null,
+                                        directionMultiplier = 10,
+                                        maxMovement = 0;
+
+                                    rectPoints[0].setXYZ(thisShape.aABB.left, thisShape.aABB.top);
+                                    rectPoints[1].setXYZ(thisShape.aABB.right, thisShape.aABB.top);
+                                    rectPoints[2].setXYZ(thisShape.aABB.right, thisShape.aABB.bottom);
+                                    rectPoints[3].setXYZ(thisShape.aABB.left, thisShape.aABB.bottom);
+
+                                    thatFrontPoints = findFrontPoints(rectPoints, 0, direction);
+                                    maxMovement = findShortestPentration (thisFrontPoints, thatFrontPoints, 0, direction * directionMultiplier);
+
+                                    ri.contactVector.setXYZ(0, direction);
+                                    ri.position = thisShape.y + maxMovement;
+                                    //TODO: Return the normal from the colliding surface. It's easy to find it in findShortestPenetration()
+
+                                    thisFrontPoints = null;
+                                    thatFrontPoints = null;
+                                },
                                 rectangle: function (direction, thisShape, thatShape) {
                                     var ri = returnInfo;
 
@@ -1182,6 +1288,18 @@ export default (function () {
                                 }
                             },
                             circle: {
+                                polygon: function (direction, thisShape, thatShape) {
+                                    const ri = returnInfo,
+                                        thatFrontPoints = findFrontPoints(thatShape.points, 0, -direction),
+                                        maxMovement = 0;
+
+                                    maxMovement = findCirclePenetration(thatFrontPoints, thisShape, direction, 'y');  
+
+                                    ri.contactVector.setXYZ(0, direction);
+                                    ri.position = thisShape.y + maxMovement;
+
+                                    thisFrontPoints = null;
+                                },
                                 rectangle: function (direction, thisShape, thatShape) {
                                     var ri = returnInfo;
 
