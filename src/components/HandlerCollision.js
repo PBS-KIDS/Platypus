@@ -826,9 +826,11 @@ export default (function () {
                             return newAxisPosition;
                         }
                     },
+                    movement = Vector.setUp(0, 0),
+                    edge = Vector.setUp(0,0),
                     findFrontPoints = function (points, vX, vY) {
-                        const vect = Vector.setUp(vX, vY),
-                            side = Vector.setup(0, 0),
+                        const vect = movement.setXYZ(vX, vY),
+                            side = edge.setXYZ(0, 0),
                             frontPoints = [];
                         let x = 0,
                             addedPrevious = false;
@@ -847,8 +849,6 @@ export default (function () {
                             }
                         }
 
-                        side.recycle();
-                        vect.recycle();
                         return frontPoints;
                     },
                     findShortestPentration = function (shapeAPoints, shapeBPoints, movementX, movementY) {
@@ -864,7 +864,9 @@ export default (function () {
                             for (y = 0; y < shapeBPoints.length - 1; y++) {
                                 penetration = findPenetration(point.x, point.y, point.x + movementX, point.y + movementY, shapeBPoints[y].x, shapeBPoints[y].y, shapeBPoints[y + 1].x, shapeBPoints[y + 1].y);
                                 
-                                if (penetration < shortestPenetration) {
+                                if (penetration === -1) {
+                                    continue;
+                                } else if (penetration < shortestPenetration) {
                                     shortestPenetration = penetration;
                                 }
                             }
@@ -876,7 +878,9 @@ export default (function () {
                             for (y = 0; y < shapeBPoints.length - 1; y++) {
                                 penetration = findPenetration(point.x, point.y, point.x + movementX, point.y + movementY, shapeAPoints[y].x, shapeAPoints[y].y, shapeAPoints[y + 1].x, shapeAPoints[y + 1].y);
                                 
-                                if (penetration < shortestPenetration) {
+                                if (penetration === -1) {
+                                    continue;
+                                } else if (penetration < shortestPenetration) {
                                     shortestPenetration = penetration;
                                 }
                             }
@@ -892,6 +896,7 @@ export default (function () {
                     findPenetration = function (aX, aY, bX, bY, cX, cY, dX, dY) {
                         //Based on an equation here: https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection
                         //A -> B is one vector, C -> D is another.
+                        //Returns where 0 to 1 on A -> B that the intersection occurs. If no intersection occurs, returns -1.
                         const diffABX = aX - bX,
                             diffCDX = cX - dX,
                             diffABY = aY - bY,
@@ -921,6 +926,146 @@ export default (function () {
                         //resultX = aX + t * (-diffABX);
                         //resultY = aY + t * (-diffABY);
                     },
+                    radialVector = Vector.setUp(0, 0),
+                    findCirclePenetration = function (polyPoints, circle, direction, movementAxis) {
+                        var x = 0,
+                            fromCenter = 0,
+                            radiusSqrd = Math.pow(circle.radius, 2),
+                            minMovement = Infinity,
+                            movement = 0,
+                            point = null,
+                            pointA = null,
+                            pointB = null;
+
+                        //Point collisions first
+                        if (movementAxis === 'x') {
+                            for (x = 0; x < polyPoints.length; x++) {
+                                point = polyPoints[x];
+
+                                //If above or below the circle, ignore
+                                if (point.y < circle.aABB.top || point.y > circle.aABB.bottom) {
+                                    continue;
+                                }
+
+                                fromCenter = Math.pow(circle.y - point.y, 2);
+                                movement = Math.abs(point.x - circle.x) - Math.sqrt(fromCenter + radiusSqrd);
+                                if (movement < minMovement) {
+                                    minMovement = movement;
+                                }
+                            }
+                        } else {
+                            for (x = 0; x < polyPoints.length; x++) {
+                                point = polyPoints[x];
+
+                                //If to the right or left of the circle, ignore
+                                if (point.x < circle.aABB.left || point.x > circle.aABB.right) {
+                                    continue;
+                                }
+
+                                fromCenter = Math.pow(circle.x - point.x, 2);
+                                movement = Math.abs(point.y - circle.y) - Math.sqrt(fromCenter + radiusSqrd);
+                                if (movement < minMovement) {
+                                    minMovement = movement;
+                                }
+                            }
+                        }
+
+                        //Edge collisions
+                        if (movementAxis === 'x') {
+                            for (x = 0; x < polyPoints.length - 1; x++) {
+                                pointA = polyPoints[x];
+                                pointB = polyPoints[x + 1],
+                                diffX = 0,
+                                diffY = 0;
+
+                                //If both points in edge are beyond the radius of the circle, we don't need to bother with it.
+                                if ((pointA.y < circle.aABB.top && pointB.y < circle.aABB.top) || (pointA.y > circle.aABB.bottom && pointB.y > circle.aABB.bottom)) {
+                                    continue;
+                                }
+
+                                //If the edge would collide with one hemisphere of the circle, but our slope is opposite the slope of the circle in that hemisphere,
+                                //the edge wouldn't collide first, a point would. So, we skip it.
+                                if ((pointA.y < circle.y && pointB.y < circle.y && pointA.x < pointB.x) ||
+                                    (pointA.y > circle.y && pointB.y > circle.y && pointA.x > pointB.x)){
+                                    continue;
+                                }
+
+                                diffX = pointB.x - pointA.x;
+                                diffY = pointB.y - pointA.y;
+
+                                //Get a vector that is the normal of the line, but 
+                                radialVector.setXYZ(-diffY, diffX);
+                                radialVector.normalize();
+                                radialVector.multiply(circle.radius);
+
+                                //If the slope of the edge would hit at a point on the circle such that it's perpendicular, we know it collides.
+                                if ((circle.y + radialVector.y >= pointA.y && circle.y + radialVector.y <= pointB.y) || (circle.y + radialVector.y >= pointB.y && circle.y + radialVector.y <= pointA.y)) {
+                                    let m = diffY / diffX; 
+                                        b = pointA.y - (m * pointA.x),
+                                        xPos = 0;
+                                    
+                                    //Figure out the x position on the edge.
+                                    xPos = (radialVector.y - b) / m;
+
+                                    movement = Math.abs(xPos - radialVector.x);
+                                    if (movement < minMovement) {
+                                        minMovement = movement;
+                                    }
+
+                                } else {
+                                    continue;
+                                }
+                            }
+                        } else {
+                            for (x = 0; x < polyPoints.length - 1; x++) {
+                                pointA = polyPoints[x];
+                                pointB = polyPoints[x + 1],
+                                diffX = 0,
+                                diffY = 0;
+
+                                //If both points in edge are beyond the radius of the circle, we don't need to bother with it.
+                                if ((pointA.y < circle.aABB.top && pointB.y < circle.aABB.top) || (pointA.y > circle.aABB.bottom && pointB.y > circle.aABB.bottom)) {
+                                    continue;
+                                }
+
+                                //If the edge would collide with one hemisphere of the circle, but our slope is opposite the slope of the circle in that hemisphere,
+                                //the edge wouldn't collide first, a point would. So, we skip it.
+                                if ((pointA.y < circle.y && pointB.y < circle.y && pointA.x < pointB.x) ||
+                                    (pointA.y > circle.y && pointB.y > circle.y && pointA.x > pointB.x)){
+                                    continue;
+                                }
+
+                                diffX = pointB.x - pointA.x;
+                                diffY = pointB.y - pointA.y;
+
+                                //Get a vector that is the normal of the line, but 
+                                radialVector.setXYZ(-diffY, diffX);
+                                radialVector.normalize();
+                                radialVector.multiply(circle.radius);
+
+                                //If the slope of the edge would hit at a point on the circle such that it's perpendicular, we know it collides.
+                                if ((circle.y + radialVector.y >= pointA.y && circle.y + radialVector.y <= pointB.y) || (circle.y + radialVector.y >= pointB.y && circle.y + radialVector.y <= pointA.y)) {
+                                    let m = diffY / diffX; 
+                                        b = pointA.y - (m * pointA.x),
+                                        xPos = 0;
+                                    
+                                    //Figure out the x position on the edge.
+                                    xPos = (radialVector.y - b) / m;
+
+                                    movement = Math.abs(xPos - radialVector.x);
+                                    if (movement < minMovement) {
+                                        minMovement = movement;
+                                    }
+
+                                } else {
+                                    continue;
+                                }
+                            }
+                        }
+
+                        return minMovement * direction;
+                    },
+                    rectPoints = [Vector.setUp(0, 0), Vector.setUp(0, 0), Vector.setUp(0, 0), Vector.setUp(0, 0)],
                     findAxisCollisionPosition = { // Decision tree for quicker access, optimized for mobile devices.
                         x: {
                             polygon: {
@@ -942,9 +1087,33 @@ export default (function () {
                                     thatFrontPoints = null;
                                 },
                                 rectangle: function (direction, thisShape, thatShape) {
-                                    
+                                    const ri = returnInfo,
+                                        thisFrontPoints = findFrontPoints(thisShape.points, direction, 0),
+                                        thatFrontPoints = null,
+                                        directionMultiplier = 10,
+                                        maxMovement = 0;
+
+                                    rectPoints[0].setXYZ(thatShape.aABB.left, thatShape.aABB.top);
+                                    rectPoints[0].setXYZ(thatShape.aABB.right, thatShape.aABB.top);
+                                    rectPoints[0].setXYZ(thatShape.aABB.right, thatShape.aABB.bottom);
+                                    rectPoints[0].setXYZ(thatShape.aABB.left, thatShape.aABB.bottom);
+
+                                    thatFrontPoints = findFrontPoints(rectPoints, -direction, 0);
+                                    maxMovement = findShortestPentration (thisFrontPoints, thatFrontPoints, direction * directionMultiplier, 0);
+
+                                    ri.contactVector.setXYZ(direction, 0);
+                                    ri.position = thisShape.x + maxMovement;
+                                    //TODO: Return the normal from the colliding surface. It's easy to find it in findShortestPenetration()
+
+                                    thisFrontPoints = null;
+                                    thatFrontPoints = null;
                                 },
                                 circle: function (direction, thisShape, thatShape) {
+                                    const ri = returnInfo,
+                                        thisFrontPoints = findFrontPoints(thisShape.points, direction, 0),
+                                        maxMovement = 0;
+
+                                    maxMovement = findCirclePenetration(thisFrontPoint, thatShape, direction, 'x');   
 
                                 }
                             },
