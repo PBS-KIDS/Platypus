@@ -391,15 +391,6 @@ export default createComponentClass({
         solidCollisions: null,
         
         /**
-         * This is the margin around the entity's width and height. This is an alternative method for specifying the collision shape in terms of the size of the entity. Can also pass in an object specifying the following parameters if the margins vary per side: top, bottom, left, and right.
-         *
-         * @property margin
-         * @type number|Object
-         * @default 0
-         */
-        margin: 0,
-        
-        /**
          * Defines one or more shapes to create the collision area. Defaults to a single shape with the width, height, regX, and regY properties of the entity if not specified. See [CollisionShape](CollisionShape.html) for the full list of properties.
          *
          * @property shapes
@@ -449,23 +440,7 @@ export default createComponentClass({
             regY         = this.regY,
             width        = this.width,
             height       = this.height,
-            radius       = this.radius,
-            marginLeft   = 0,
-            marginRight  = 0,
-            marginTop    = 0,
-            marginBottom = 0;
-
-        if (typeof this.margin === "number") {
-            marginLeft   = this.margin;
-            marginRight  = this.margin;
-            marginTop    = this.margin;
-            marginBottom = this.margin;
-        } else {
-            marginLeft   = this.margin.left || 0;
-            marginRight  = this.margin.right || 0;
-            marginTop    = this.margin.top || 0;
-            marginBottom = this.margin.bottom || 0;
-        }
+            radius       = this.radius;
         
         if (regX === null) {
             regX = this.regX = width / 2;
@@ -488,20 +463,50 @@ export default createComponentClass({
         } else if (this.shapeType === 'circle') {
             radius = radius || (((width || 0) + (height || 0)) / 4);
             shapes = [{
-                regX: (isNaN(regX) ? radius : regX) - (marginRight - marginLeft) / 2,
-                regY: (isNaN(regY) ? radius : regY) - (marginBottom - marginTop) / 2,
+                regX: isNaN(regX) ? radius : regX,
+                regY: isNaN(regY) ? radius : regY,
                 radius: radius,
+                type: this.shapeType
+            }];
+        } else if (this.shapeType === 'polygon') {
+            let x = 0,
+                xMax = -Infinity,
+                xMin = Infinity,
+                yMax = -Infinity,
+                yMin = Infinity,
+                point = null; 
+
+            for (x = 0; x < this.points.length; x++) {
+                point = this.points[x];
+                if (point[0] > xMax) {
+                    xMax = point[0];
+                }
+                if (point[0] < xMin) {
+                    xMin = point[0];
+                }
+                if (point[1] > yMax) {
+                    yMax = point[1];
+                }
+                if (point[1] < yMin) {
+                    yMin = point[1];
+                }
+            }
+
+            shapes = [{
+                regX: regX || 0,
+                regY: regY || 0,
+                points: this.points,
+                width: xMax - xMin,
+                height: yMax - yMin,
                 type: this.shapeType
             }];
         } else {
             shapes = [{
-                //regX: (isNaN(regX) ? (width  || 0) / 2 : regX) - (marginRight  - marginLeft) / 2,
-                //regY: (isNaN(regY) ? (height || 0) / 2 : regY) - (marginBottom - marginTop)  / 2,
-                regX: (isNaN(regX) ? (width  || 0) / 2 : regX) + marginLeft,
-                regY: (isNaN(regY) ? (height || 0) / 2 : regY) + marginTop,
+                regX: isNaN(regX) ? (width  || 0) / 2 : regX,
+                regY: isNaN(regY) ? (height || 0) / 2 : regY,
                 points: this.points,
-                width: (width  || 0) + marginLeft + marginRight,
-                height: (height || 0) + marginTop  + marginBottom,
+                width: width  || 0,
+                height: height || 0,
                 type: this.shapeType
             }];
         }

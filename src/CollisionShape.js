@@ -277,36 +277,7 @@ export default (function () {
             } else if (type === 'rectangle') {
                 this.collides = collidesRectangle;
             } else if (type === 'polygon') {
-                let p = 0,
-                    minX = Infinity,
-                    maxX = -Infinity,
-                    minY = Infinity,
-                    maxY = -Infinity;
-
-                this.points = [];
-                for (p = 0; p < points.length; p++) {
-                    const x = points[p][0],
-                        y = points[p][1];
-
-                    this.points[p] = Vector.setUp(x, y, 0);
-                    if (x < minX) {
-                        minX = x;
-                    }
-                    if (x > maxX) {
-                        maxX = x;
-                    }
-
-                    if (y < minY) {
-                        minY = y;
-                    }
-                    if (y > maxY) {
-                        maxY = y;
-                    }
-                }
-                width = maxX - minX;
-                height = maxY - minY;
                 this.calculateNormals();
-
                 this.collides = collidesPolygon;
             } else {
                 this.collides = collidesDefault;

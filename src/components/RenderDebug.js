@@ -54,7 +54,7 @@ export default (function () {
                 let x = 0,
                     pointsArray = [];
                 for (x = 0; x < points.length; x++) {
-                    pointsArray.push(points[x][0], points[x][1]);
+                    pointsArray.push(points[x].x, points[x].y);
                 }
                 newShape.drawPolygon(pointsArray);
                 break;
