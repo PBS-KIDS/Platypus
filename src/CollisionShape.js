@@ -16,7 +16,7 @@
  * @param [definition.offsetY] {number} The y offset of the collision shape from the owner entity's location.
  * @param [definition.regX] {number} The registration x of the collision shape with the owner entity's location if offsetX is not provided.
  * @param [definition.regY] {number} The registration y of the collision shape with the owner entity's location if offsetX is not provided.
- * @param [definition.points] {array} A 2D array of vectors describing the points that make up a polygon. Points must be in clockwise order.
+ * @param [definition.points] {array} A 2D array of coordinate pairs [[x0, y0], [x1, y1], ...] describing the points that make up a polygon. Points must be in clockwise order.
  * @param collisionType {String} A string describing the collision type of this shape.
  */
 import AABB from './AABB.js';

@@ -36,7 +36,7 @@ const
     };
 
 export default (function () {
-    var createShape = function (shape, color, left, top, width, height, z, outline) {
+    var createShape = function (shape, color, left, top, width, height, z, outline, points) {
             var newShape = new Graphics().beginFill(color, 0.1);
 
             if (outline) {
@@ -49,6 +49,14 @@ export default (function () {
                 break;
             case 'circle':
                 newShape.drawCircle(0, 0, width);
+                break;
+            case 'polygon':
+                let x = 0,
+                    pointsArray = [];
+                for (x = 0; x < points.length; x++) {
+                    pointsArray.push(points[x][0], points[x][1]);
+                }
+                newShape.drawPolygon(pointsArray);
                 break;
             }
             newShape.z = z;
@@ -296,7 +304,7 @@ export default (function () {
                         for (i = 0; i < shapes.length; i++) {
                             width = shapes[i].width - lineWidth;
                             height = shapes[i].height - lineWidth;
-                            shape = createShape(shapes[i].type, collisionColor, shapes[i].offsetX - width / 2, shapes[i].offsetY - height / 2, (shapes[i].radius ? shapes[i].radius - lineWidth : width), height, z--, lineWidth);
+                            shape = createShape(shapes[i].type, collisionColor, shapes[i].offsetX - width / 2, shapes[i].offsetY - height / 2, (shapes[i].radius ? shapes[i].radius - lineWidth : width), height, z--, lineWidth, shapes[i].points);
                             this.shapes.push(shape);
                             this.container.addChild(shape);
                         }

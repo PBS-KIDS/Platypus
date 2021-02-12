@@ -353,6 +353,15 @@ export default createComponentClass({
         radius: 0,
         
         /**
+         * A 2D array of coordinate pairs [[x0, y0], [x1, y1], ...] describing the points that make up a polygon. Points must be in clockwise order.
+         * 
+         * @property points
+         * @type 2D array
+         * @default null
+        */
+        points: null,
+
+        /**
          * Determines which collision types this entity should consider soft, meaning this entity may pass through them, but triggers collision messages on doing so. Example:
          *
          *     {
@@ -490,7 +499,7 @@ export default createComponentClass({
                 //regY: (isNaN(regY) ? (height || 0) / 2 : regY) - (marginBottom - marginTop)  / 2,
                 regX: (isNaN(regX) ? (width  || 0) / 2 : regX) + marginLeft,
                 regY: (isNaN(regY) ? (height || 0) / 2 : regY) + marginTop,
-                points: definition.points,
+                points: this.points,
                 width: (width  || 0) + marginLeft + marginRight,
                 height: (height || 0) + marginTop  + marginBottom,
                 type: this.shapeType
