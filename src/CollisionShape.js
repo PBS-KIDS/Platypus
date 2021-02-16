@@ -47,7 +47,7 @@ export default (function () {
             let normal = null,
                 x = 0,
                 overlap = 0,
-                overlapAxis = null,
+                //overlapAxis = null,
                 minOverlap = Infinity;
 
             rectPoints[0].setXYZ(rect.aABB.left, rect.aABB.top);
@@ -78,7 +78,7 @@ export default (function () {
             let normal = null,
                 x = 0,
                 overlap = 0,
-                overlapAxis = null,
+                //overlapAxis = null,
                 minOverlap = Infinity,
                 point = null,
                 distanceSquared = 0,
@@ -130,7 +130,7 @@ export default (function () {
             let normal = null,
                 x = 0,
                 overlap = 0,
-                overlapAxis = null,
+                //overlapAxis = null,
                 minOverlap = Infinity;
 
             for (x = 0; x < polygonA.normals.length; x++) {
@@ -231,7 +231,7 @@ export default (function () {
         },
         collidesPolygon = function (shape) {
             //Figure out how to do this collision!!!
-            return this.aABB.collides(shape.aABB) && 
+            return this.aABB.collides(shape.aABB) &&
                 ((shape.type === 'rectangle') && polyRectCollision(this, shape)) ||
                 ((shape.type === 'circle') && polyCircleCollision(this, shape)) ||
                 ((shape.type === 'polygon') && polyPolyCollision(this, shape));
@@ -478,9 +478,9 @@ export default (function () {
             y = ownerY + this.offsetY;
 
         if (this.points) {
-            let c = 0; 
+            let c = 0;
             for (c = 0; c < this.points.length; c++) {
-                this.points[c].setXYZ(this.shapePoints[c].x + x, this.shapePoints[c].y + y)
+                this.points[c].setXYZ(this.shapePoints[c].x + x, this.shapePoints[c].y + y);
             }
         }
         this.position.setXYZ(x, y);

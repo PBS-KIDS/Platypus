@@ -827,22 +827,40 @@ export default (function () {
                         }
                     },
                     movement = Vector.setUp(0, 0),
-                    edge = Vector.setUp(0,0),
+                    edge = Vector.setUp(0, 0),
                     findFrontPoints = function (points, vX, vY) {
-                        const vect = movement.setXYZ(vX, vY),
+                        const vector = movement.setXYZ(-vY, vX), //Rotate the direction vector by 90 so we can dot against it.
                             side = edge.setXYZ(0, 0),
                             frontPoints = [];
                         let x = 0,
-                            addedPrevious = false;
+                            addedPrevious = false,
+                            finalEdge = false,
+                            addedFirst = false;
 
-                        for (x = 0; x < points.length - 1; x++) {
-                            side.setXYZ(points[1].x - points[0].x, points[1].y - points[0].y);
+                        for (x = 0; x < points.length; x++) {
+                            if (x === points.length - 1) {
+                                side.setXYZ(points[0].x - points[x].x, points[0].y - points[x].y);
+                                finalEdge = true;
+                            } else {
+                                side.setXYZ(points[x + 1].x - points[x].x, points[x + 1].y - points[x].y);
+                                finalEdge = false;
+                            }
 
-                            if (side.dot(vect) > 0) {
+                            if (side.dot(vector) > 0) {
                                 if (!addedPrevious) {
                                     frontPoints.push(points[x]);
+                                    if (x === 0) {
+                                        addedFirst = true;
+                                    }
                                 }
-                                frontPoints.push(points[x + 1]);
+                                if (finalEdge) {
+                                    //If we didn't add the first point earlier, we do it here. Otherwise we skip it.
+                                    if (!addedFirst) {
+                                        frontPoints.push(points[0]);
+                                    }
+                                } else {
+                                    frontPoints.push(points[x + 1]);
+                                }
                                 addedPrevious = true;
                             } else {
                                 addedPrevious = false;
@@ -909,12 +927,17 @@ export default (function () {
 
                         let uNumerator = 0;
 
-                        if (tNumerator < 0 && tNumerator > denominator) {
+                        if ((tNumerator > 0 && (denominator < 0 || tNumerator > denominator)) ||
+                            (tNumerator < 0 && (denominator > 0 || tNumerator < denominator))) {
+                            //We know the result would be outside the 0 - 1 range in these cases
                             return -1;
                         }
 
                         uNumerator = (-diffABX * diffACY) - (-diffABY * diffACX);
-                        if (uNumerator < 0 && uNumerator > denominator) {
+
+                        if ((uNumerator > 0 && (denominator < 0 || uNumerator > denominator)) ||
+                            (uNumerator < 0 && (denominator > 0 || uNumerator < denominator))) {
+                            //We know the result would be outside the 0 - 1 range in these cases
                             return -1;
                         }
                         
@@ -935,7 +958,9 @@ export default (function () {
                             movement = 0,
                             point = null,
                             pointA = null,
-                            pointB = null;
+                            pointB = null,
+                            diffX = null,
+                            diffY = null;
 
                         //Point collisions first
                         if (movementAxis === 'x') {
@@ -974,8 +999,8 @@ export default (function () {
                         if (movementAxis === 'x') {
                             for (x = 0; x < polyPoints.length - 1; x++) {
                                 pointA = polyPoints[x];
-                                pointB = polyPoints[x + 1],
-                                diffX = 0,
+                                pointB = polyPoints[x + 1];
+                                diffX = 0;
                                 diffY = 0;
 
                                 //If both points in edge are beyond the radius of the circle, we don't need to bother with it.
@@ -986,23 +1011,23 @@ export default (function () {
                                 //If the edge would collide with one hemisphere of the circle, but our slope is opposite the slope of the circle in that hemisphere,
                                 //the edge wouldn't collide first, a point would. So, we skip it.
                                 if ((pointA.y < circle.y && pointB.y < circle.y && pointA.x < pointB.x) ||
-                                    (pointA.y > circle.y && pointB.y > circle.y && pointA.x > pointB.x)){
+                                    (pointA.y > circle.y && pointB.y > circle.y && pointA.x > pointB.x)) {
                                     continue;
                                 }
 
                                 diffX = pointB.x - pointA.x;
                                 diffY = pointB.y - pointA.y;
 
-                                //Get a vector that is the normal of the line, but 
+                                //Get a vector that is the normal of the line, but
                                 radialVector.setXYZ(-diffY, diffX);
                                 radialVector.normalize();
                                 radialVector.multiply(circle.radius);
 
                                 //If the slope of the edge would hit at a point on the circle such that it's perpendicular, we know it collides.
                                 if ((circle.y + radialVector.y >= pointA.y && circle.y + radialVector.y <= pointB.y) || (circle.y + radialVector.y >= pointB.y && circle.y + radialVector.y <= pointA.y)) {
-                                    let m = diffY / diffX; 
-                                        b = pointA.y - (m * pointA.x),
-                                        xPos = 0;
+                                    const m = diffY / diffX,
+                                        b = pointA.y - (m * pointA.x);
+                                    let xPos = 0;
                                     
                                     //Figure out the x position on the edge.
                                     xPos = (radialVector.y - b) / m;
@@ -1019,8 +1044,8 @@ export default (function () {
                         } else { //Edges when travelling in Y
                             for (x = 0; x < polyPoints.length - 1; x++) {
                                 pointA = polyPoints[x];
-                                pointB = polyPoints[x + 1],
-                                diffX = 0,
+                                pointB = polyPoints[x + 1];
+                                diffX = 0;
                                 diffY = 0;
 
                                 //If both points in edge are beyond the radius of the circle, we don't need to bother with it.
@@ -1031,23 +1056,23 @@ export default (function () {
                                 //If the edge would collide with one hemisphere of the circle, but our slope is opposite the slope of the circle in that hemisphere,
                                 //the edge wouldn't collide first, a point would. So, we skip it.
                                 if ((pointA.x < circle.x && pointB.x < circle.x && pointA.y > pointB.y) ||
-                                    (pointA.x > circle.x && pointB.x > circle.x && pointA.y < pointB.y)){
+                                    (pointA.x > circle.x && pointB.x > circle.x && pointA.y < pointB.y)) {
                                     continue;
                                 }
 
                                 diffX = pointB.x - pointA.x;
                                 diffY = pointB.y - pointA.y;
 
-                                //Get a vector that is the normal of the line, but 
+                                //Get a vector that is the normal of the line, but
                                 radialVector.setXYZ(-diffY, diffX);
                                 radialVector.normalize();
                                 radialVector.multiply(circle.radius);
 
                                 //If the slope of the edge would hit at a point on the circle such that it's perpendicular, we know it collides.
                                 if ((circle.x + radialVector.x >= pointA.x && circle.x + radialVector.x <= pointB.x) || (circle.x + radialVector.x >= pointB.x && circle.x + radialVector.x <= pointA.x)) {
-                                    let m = diffY / diffX; 
-                                        b = pointA.y - (m * pointA.x),
-                                        yPos = 0;
+                                    const m = diffY / diffX,
+                                        b = pointA.y - (m * pointA.x);
+                                    let yPos = 0;
                                     
                                     //Figure out the y position on the edge.
                                     yPos = m * radialVector.x + b;
@@ -1070,9 +1095,9 @@ export default (function () {
                         x: {
                             polygon: {
                                 polygon: function (direction, thisShape, thatShape) {
+                                    let thisFrontPoints = findFrontPoints(thisShape.points, direction, 0),
+                                        thatFrontPoints = findFrontPoints(thatShape.points, -direction, 0);
                                     const ri = returnInfo,
-                                        thisFrontPoints = findFrontPoints(thisShape.points, direction, 0),
-                                        thatFrontPoints = findFrontPoints(thatShape.points, -direction, 0),
                                         directionMultiplier = 10,
                                         maxMovement = findShortestPentration (thisFrontPoints, thatFrontPoints, direction * directionMultiplier, 0);
                                     
@@ -1085,12 +1110,13 @@ export default (function () {
 
                                     thisFrontPoints = null;
                                     thatFrontPoints = null;
+                                    return ri;
                                 },
                                 rectangle: function (direction, thisShape, thatShape) {
                                     const ri = returnInfo,
-                                        thisFrontPoints = findFrontPoints(thisShape.points, direction, 0),
+                                        directionMultiplier = 10;
+                                    let thisFrontPoints = findFrontPoints(thisShape.points, direction, 0),
                                         thatFrontPoints = null,
-                                        directionMultiplier = 10,
                                         maxMovement = 0;
 
                                     rectPoints[0].setXYZ(thatShape.aABB.left, thatShape.aABB.top);
@@ -1107,26 +1133,29 @@ export default (function () {
 
                                     thisFrontPoints = null;
                                     thatFrontPoints = null;
+                                    
+                                    return ri;
                                 },
                                 circle: function (direction, thisShape, thatShape) {
-                                    const ri = returnInfo,
-                                        thisFrontPoints = findFrontPoints(thisShape.points, direction, 0),
+                                    const ri = returnInfo;
+                                    let thisFrontPoints = findFrontPoints(thisShape.points, direction, 0),
                                         maxMovement = 0;
 
-                                    maxMovement = findCirclePenetration(thisFrontPoints, thatShape, direction, 'x');   
+                                    maxMovement = findCirclePenetration(thisFrontPoints, thatShape, direction, 'x');
 
                                     ri.contactVector.setXYZ(direction, 0);
                                     ri.position = thisShape.x + maxMovement;
 
                                     thisFrontPoints = null;
+                                    return ri;
                                 }
                             },
                             rectangle: {
                                 polygon: function (direction, thisShape, thatShape) {
                                     const ri = returnInfo,
-                                        thatFrontPoints = findFrontPoints(thatShape.points, -direction, 0),
+                                        directionMultiplier = 10;
+                                    let thatFrontPoints = findFrontPoints(thatShape.points, -direction, 0),
                                         thisFrontPoints = null,
-                                        directionMultiplier = 10,
                                         maxMovement = 0;
 
                                     rectPoints[0].setXYZ(thisShape.aABB.left, thisShape.aABB.top);
@@ -1143,6 +1172,7 @@ export default (function () {
 
                                     thisFrontPoints = null;
                                     thatFrontPoints = null;
+                                    return ri;
                                 },
                                 rectangle: function (direction, thisShape, thatShape) {
                                     var ri = returnInfo;
@@ -1163,16 +1193,17 @@ export default (function () {
                             },
                             circle: {
                                 polygon: function (direction, thisShape, thatShape) {
-                                    const ri = returnInfo,
-                                        thatFrontPoints = findFrontPoints(thatShape.points, -direction, 0),
-                                        maxMovement = 0;
+                                    const ri = returnInfo;
+                                    let maxMovement = 0,
+                                        thatFrontPoints = findFrontPoints(thatShape.points, -direction, 0);
 
-                                    maxMovement = findCirclePenetration(thatFrontPoints, thisShape, direction, 'x');  
+                                    maxMovement = findCirclePenetration(thatFrontPoints, thisShape, direction, 'x');
 
                                     ri.contactVector.setXYZ(direction, 0);
                                     ri.position = thisShape.x + maxMovement;
 
-                                    thisFrontPoints = null;
+                                    thatFrontPoints = null;
+                                    return ri;
                                 },
                                 rectangle: function (direction, thisShape, thatShape) {
                                     var ri = returnInfo;
@@ -1197,9 +1228,9 @@ export default (function () {
                         y: {
                             polygon: {
                                 polygon: function (direction, thisShape, thatShape) {
+                                    let thisFrontPoints = findFrontPoints(thisShape.points, 0, direction),
+                                        thatFrontPoints = findFrontPoints(thatShape.points, 0, -direction);
                                     const ri = returnInfo,
-                                        thisFrontPoints = findFrontPoints(thisShape.points, 0, direction),
-                                        thatFrontPoints = findFrontPoints(thatShape.points, 0, -direction),
                                         directionMultiplier = 10,
                                         maxMovement = findShortestPentration (thisFrontPoints, thatFrontPoints, 0, direction * directionMultiplier);
                                     
@@ -1212,12 +1243,13 @@ export default (function () {
 
                                     thisFrontPoints = null;
                                     thatFrontPoints = null;
+                                    return ri;
                                 },
                                 rectangle: function (direction, thisShape, thatShape) {
                                     const ri = returnInfo,
-                                        thisFrontPoints = findFrontPoints(thisShape.points, 0, direction),
+                                        directionMultiplier = 10;
+                                    let thisFrontPoints = findFrontPoints(thisShape.points, 0, direction),
                                         thatFrontPoints = null,
-                                        directionMultiplier = 10,
                                         maxMovement = 0;
 
                                     rectPoints[0].setXYZ(thatShape.aABB.left, thatShape.aABB.top);
@@ -1234,26 +1266,28 @@ export default (function () {
 
                                     thisFrontPoints = null;
                                     thatFrontPoints = null;
+                                    return ri;
                                 },
                                 circle: function (direction, thisShape, thatShape) {
-                                    const ri = returnInfo,
-                                        thisFrontPoints = findFrontPoints(thisShape.points, 0, direction),
+                                    const ri = returnInfo;
+                                    let thisFrontPoints = findFrontPoints(thisShape.points, 0, direction),
                                         maxMovement = 0;
 
-                                    maxMovement = findCirclePenetration(thisFrontPoints, thatShape, direction, 'y');   
+                                    maxMovement = findCirclePenetration(thisFrontPoints, thatShape, direction, 'y');
 
                                     ri.contactVector.setXYZ(0, direction);
                                     ri.position = thisShape.y + maxMovement;
 
                                     thisFrontPoints = null;
+                                    return ri;
                                 }
                             },
                             rectangle: {
                                 polygon: function (direction, thisShape, thatShape) {
                                     const ri = returnInfo,
-                                        thatFrontPoints = findFrontPoints(thatShape.points, 0, -direction),
+                                        directionMultiplier = 10;
+                                    let thatFrontPoints = findFrontPoints(thatShape.points, 0, -direction),
                                         thisFrontPoints = null,
-                                        directionMultiplier = 10,
                                         maxMovement = 0;
 
                                     rectPoints[0].setXYZ(thisShape.aABB.left, thisShape.aABB.top);
@@ -1270,6 +1304,7 @@ export default (function () {
 
                                     thisFrontPoints = null;
                                     thatFrontPoints = null;
+                                    return ri;
                                 },
                                 rectangle: function (direction, thisShape, thatShape) {
                                     var ri = returnInfo;
@@ -1289,16 +1324,17 @@ export default (function () {
                             },
                             circle: {
                                 polygon: function (direction, thisShape, thatShape) {
-                                    const ri = returnInfo,
-                                        thatFrontPoints = findFrontPoints(thatShape.points, 0, -direction),
+                                    const ri = returnInfo;
+                                    let thatFrontPoints = findFrontPoints(thatShape.points, 0, -direction),
                                         maxMovement = 0;
 
-                                    maxMovement = findCirclePenetration(thatFrontPoints, thisShape, direction, 'y');  
+                                    maxMovement = findCirclePenetration(thatFrontPoints, thisShape, direction, 'y');
 
                                     ri.contactVector.setXYZ(0, direction);
                                     ri.position = thisShape.y + maxMovement;
 
-                                    thisFrontPoints = null;
+                                    thatFrontPoints = null;
+                                    return ri;
                                 },
                                 rectangle: function (direction, thisShape, thatShape) {
                                     var ri = returnInfo;

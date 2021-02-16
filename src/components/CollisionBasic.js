@@ -354,7 +354,7 @@ export default createComponentClass({
         
         /**
          * A 2D array of coordinate pairs [[x0, y0], [x1, y1], ...] describing the points that make up a polygon. Points must be in clockwise order.
-         * 
+         *
          * @property points
          * @type 2D array
          * @default null
