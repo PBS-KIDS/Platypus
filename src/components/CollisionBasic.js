@@ -469,35 +469,10 @@ export default createComponentClass({
                 type: this.shapeType
             }];
         } else if (this.shapeType === 'polygon') {
-            let x = 0,
-                xMax = -Infinity,
-                xMin = Infinity,
-                yMax = -Infinity,
-                yMin = Infinity,
-                point = null; 
-
-            for (x = 0; x < this.points.length; x++) {
-                point = this.points[x];
-                if (point[0] > xMax) {
-                    xMax = point[0];
-                }
-                if (point[0] < xMin) {
-                    xMin = point[0];
-                }
-                if (point[1] > yMax) {
-                    yMax = point[1];
-                }
-                if (point[1] < yMin) {
-                    yMin = point[1];
-                }
-            }
-
             shapes = [{
-                regX: regX || 0,
-                regY: regY || 0,
+                regX: regX || null,
+                regY: regY || null,
                 points: this.points,
-                width: xMax - xMin,
-                height: yMax - yMin,
                 type: this.shapeType
             }];
         } else {

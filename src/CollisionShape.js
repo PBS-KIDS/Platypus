@@ -59,7 +59,7 @@ export default (function () {
             for (x = 0; x < polygon.normals.length; x++) {
                 normal = polygon.normals[x];
 
-                overlap = checkSeparatingAxis(normal, polygon, rectPoints);
+                overlap = checkSeparatingAxis(normal, polygon.points, rectPoints);
 
                 if (overlap === 0) {
                     return false;
@@ -245,8 +245,15 @@ export default (function () {
                 width = definition.width || definition.radius * 2 || 0,
                 height = definition.height || definition.radius * 2 || 0,
                 radius = definition.radius || 0,
-                points = definition.points || null,
-                type = definition.type || 'rectangle';
+                type = null;
+            
+            this.owner = owner;
+            this.points = null;
+            this.shapePoints = null;
+            this.type = type = definition.type || 'rectangle';
+            this.normals = null;
+            this.collisionType = collisionType;
+            this.subType = '';
 
             // If this shape is recycled, the vectors will already be in place.
             if (!this.initialized) {
@@ -256,13 +263,6 @@ export default (function () {
                 Vector.assign(this, 'size', 'width', 'height');
                 this.aABB = AABB.setUp();
             }
-
-            this.owner = owner;
-            this.collisionType = collisionType;
-            this.type = type;
-            this.subType = '';
-            this.points = null;
-            this.normals = null;
             
             /**
              * Determines whether shapes collide.
@@ -272,11 +272,40 @@ export default (function () {
              * @return {Boolean} Whether the shapes collide.
              */
             if (type === 'circle') {
-                width = height = radius * 2;
                 this.collides = collidesCircle;
             } else if (type === 'rectangle') {
                 this.collides = collidesRectangle;
             } else if (type === 'polygon') {
+                let p = 0,
+                    minX = Infinity,
+                    maxX = -Infinity,
+                    minY = Infinity,
+                    maxY = -Infinity;
+                this.shapePoints = [];
+                this.points = [];
+                for (p = 0; p < definition.points.length; p++) {
+                    const x = definition.points[p][0],
+                        y = definition.points[p][1];
+
+                    this.shapePoints[p] = Vector.setUp(x, y, 0);
+                    this.points[p] = Vector.setUp(x + owner.x, y + owner.y, 0);
+                    if (x < minX) {
+                        minX = x;
+                    }
+                    if (x > maxX) {
+                        maxX = x;
+                    }
+
+                    if (y < minY) {
+                        minY = y;
+                    }
+                    if (y > maxY) {
+                        maxY = y;
+                    }
+                }
+                width = maxX - minX;
+                height = maxY - minY;
+                this.size.setXYZ(width, height);
                 this.calculateNormals();
                 this.collides = collidesPolygon;
             } else {
@@ -338,19 +367,18 @@ export default (function () {
             //recycle the old points
             for (p = 0; p < this.points.length; p++) {
                 this.points[p].recycle();
+                this.shapePoints[p].recycle();
             }
 
-            //make new points
+            //make new points and set width and height
+            this.shapePoints = [];
             this.points = [];
             for (p = 0; p < shape.points.length; p++) {
-                this.points[p] = Vector.setUp(shape.points[p][0], shape.points[p][1], 0);
-            }
+                const x = shape.points[p][0],
+                    y = shape.points[p][1];
 
-            for (p = 0; p < this.points.length; p++) {
-                const x = this.points[p][0],
-                    y = this.points[p][1];
-
-                this.points[p] = Vector.setUp(x, y, 0);
+                this.shapePoints[p] = Vector.setUp(x, y, 0);
+                this.points[p] = Vector.setUp(x + this.position.x, y + this.position.y, 0);
                 if (x < minX) {
                     minX = x;
                 }
@@ -405,16 +433,23 @@ export default (function () {
         }
 
         this.normals = [];
-        for (x = 0; x < this.points.length - 1; x++) {
-            pA = this.points[x];
-            pB = this.points[x + 1];
+        // TML 2/15/21 - We use the shapePoints to calculate the normals. If we start rotating polygons, we can figure that out then.
+        for (x = 0; x < this.shapePoints.length; x++) {
+            pA = this.shapePoints[x];
+            if (x === this.shapePoints.length - 1) {
+                pB = this.shapePoints[0];
+            } else {
+                pB = this.shapePoints[x + 1];
+            }
+            
             //Creating the normal, rotating it by 90 degrees by swapping around the subtraction.
-            normal = Vector.setUp(pA.y - pB.y, pB.x - pA.x);
+            normal = Vector.setUp(pB.y - pA.y, -(pB.x - pA.x));
             normal.normalize();
 
             duplicate = false;
             for (y = 0; y < this.normals.length; y++) {
                 //If normals are the same, just opposite direction, we skip them because they are parallel and would produce the same separating axis.
+                //TML 2/15/21 - Is this sufficient to catch all duplicates? Javascript math is sketchy!
                 if ((normal.x === this.normals[y].x && normal.y === this.normals[y].y) ||
                     (-normal.x === this.normals[y].x && -normal.y === this.normals[y].y)) {
                     duplicate = true;
@@ -442,6 +477,12 @@ export default (function () {
         var x = ownerX + this.offsetX,
             y = ownerY + this.offsetY;
 
+        if (this.points) {
+            let c = 0; 
+            for (c = 0; c < this.points.length; c++) {
+                this.points[c].setXYZ(this.shapePoints[c].x + x, this.shapePoints[c].y + y)
+            }
+        }
         this.position.setXYZ(x, y);
         this.aABB.move(x, y);
     };
@@ -604,7 +645,18 @@ export default (function () {
      *
      * @method recycle
      */
-    recycle.add(CollisionShape, 'CollisionShape', CollisionShape, null, true, config.dev);
+    recycle.add(CollisionShape, 'CollisionShape', CollisionShape, function () {
+        let x = 0;
+        for (x = 0; x < this.points.length; x++) {
+            this.points[x].recycle();
+            this.points[x] = null;
+
+            this.shapePoints[x].recycle();
+            this.shapePoints[x] = null;
+        }
+        this.points = null;
+        this.shapePoints = null;
+    }, true, config.dev);
     
     return CollisionShape;
 }());

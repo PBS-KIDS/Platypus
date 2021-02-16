@@ -304,7 +304,7 @@ export default (function () {
                         for (i = 0; i < shapes.length; i++) {
                             width = shapes[i].width - lineWidth;
                             height = shapes[i].height - lineWidth;
-                            shape = createShape(shapes[i].type, collisionColor, shapes[i].offsetX - width / 2, shapes[i].offsetY - height / 2, (shapes[i].radius ? shapes[i].radius - lineWidth : width), height, z--, lineWidth, shapes[i].points);
+                            shape = createShape(shapes[i].type, collisionColor, shapes[i].offsetX - width / 2, shapes[i].offsetY - height / 2, (shapes[i].radius ? shapes[i].radius - lineWidth : width), height, z--, lineWidth, shapes[i].shapePoints);
                             this.shapes.push(shape);
                             this.container.addChild(shape);
                         }
