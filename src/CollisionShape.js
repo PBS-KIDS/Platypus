@@ -25,7 +25,8 @@ import config from 'config';
 import recycle from 'recycle';
 
 export default (function () {
-    var circleRectCollision = function (circle, rect) {
+    var EPSILON = 0.00001, //An epsilon value for the separating axis overlaps. Less than this and we assume it's a rounding error.
+        circleRectCollision = function (circle, rect) {
             var rectAabb         = rect.aABB,
                 hh = rectAabb.halfHeight,
                 hw = rectAabb.halfWidth,
@@ -61,7 +62,7 @@ export default (function () {
 
                 overlap = checkSeparatingAxis(normal, polygon.points, rectPoints);
 
-                if (overlap === 0) {
+                if (overlap <= EPSILON) {
                     return false;
                 } else if (overlap < minOverlap) {
                     minOverlap = overlap;
@@ -92,7 +93,7 @@ export default (function () {
 
                 overlap = checkSeparatingAxis(normal, polygon.points, circlePoint, circle.radius);
 
-                if (overlap === 0) {
+                if (overlap <= EPSILON) {
                     return false;
                 } else if (overlap < minOverlap) {
                     minOverlap = overlap;
@@ -116,7 +117,7 @@ export default (function () {
 
             overlap = checkSeparatingAxis(shortestPointNormal, polygon.points, circlePoint, circle.radius);
 
-            if (overlap === 0) {
+            if (overlap <= EPSILON) {
                 return false;
             } else if (overlap < minOverlap) {
                 minOverlap = overlap;
@@ -138,7 +139,7 @@ export default (function () {
 
                 overlap = checkSeparatingAxis(normal, polygonA.points, polygonB.points);
 
-                if (overlap === 0) {
+                if (overlap <= EPSILON) {
                     return false;
                 } else if (overlap < minOverlap) {
                     minOverlap = overlap;
@@ -151,7 +152,7 @@ export default (function () {
 
                 overlap = checkSeparatingAxis(normal, polygonA.points, polygonB.points);
 
-                if (overlap === 0) {
+                if (overlap <= EPSILON) {
                     return false;
                 } else if (overlap < minOverlap) {
                     minOverlap = overlap;
@@ -477,16 +478,27 @@ export default (function () {
         var x = ownerX + this.offsetX,
             y = ownerY + this.offsetY;
 
+        this.position.setXYZ(x, y);
+        this.aABB.move(x, y);
+        this.movePoints(x, y);
+    };
+    
+    /**
+     * Updates the location of the points if there are any.
+     *
+     * @method movePoints
+     * @param {*} x {number} The x position of the owner.
+     * @param {*} y {number} The y position of the owner.
+     */
+    proto.movePoints = function (x, y) {
         if (this.points) {
             let c = 0;
             for (c = 0; c < this.points.length; c++) {
                 this.points[c].setXYZ(this.shapePoints[c].x + x, this.shapePoints[c].y + y);
             }
         }
-        this.position.setXYZ(x, y);
-        this.aABB.move(x, y);
     };
-    
+
     /**
      * Move the shape's x position.
      *
@@ -496,6 +508,7 @@ export default (function () {
     proto.moveX = function (x) {
         this.x = x;
         this.aABB.moveX(x);
+        this.movePoints(x, this.y);
     };
     
     /**
@@ -507,6 +520,7 @@ export default (function () {
     proto.moveY = function (y) {
         this.y = y;
         this.aABB.moveY(y);
+        this.movePoints(this.x, y);
     };
 
     /**
@@ -520,6 +534,7 @@ export default (function () {
         this.x = x;
         this.y = y;
         this.aABB.move(x, y);
+        this.movePoints(x, y);
     };
     
     /**
@@ -541,6 +556,7 @@ export default (function () {
     proto.setXWithEntityX = function (entityX) {
         this.x = entityX + this.offsetX;
         this.aABB.moveX(this.x);
+        this.movePoints(this.x, this.y);
     };
     
     /**
@@ -552,6 +568,7 @@ export default (function () {
     proto.setYWithEntityY = function (entityY) {
         this.y = entityY + this.offsetY;
         this.aABB.moveY(this.y);
+        this.movePoints(this.x, this.y);
     };
     
     /**

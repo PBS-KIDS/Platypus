@@ -869,12 +869,12 @@ export default (function () {
 
                         return frontPoints;
                     },
-                    findShortestPentration = function (shapeAPoints, shapeBPoints, movementX, movementY) {
+                    findExtricateDistance = function (shapeAPoints, shapeBPoints, movementX, movementY) {
                         let x = 0,
                             y = 0,
                             point = null,
                             penetration = 0,
-                            shortestPenetration = Infinity;
+                            maxPenetration = -Infinity;
 
                         for (x = 0; x < shapeAPoints.length; x++) {
                             point = shapeAPoints[x];
@@ -884,8 +884,8 @@ export default (function () {
                                 
                                 if (penetration === -1) {
                                     continue;
-                                } else if (penetration < shortestPenetration) {
-                                    shortestPenetration = penetration;
+                                } else if (penetration > maxPenetration) {
+                                    maxPenetration = penetration;
                                 }
                             }
                         }
@@ -893,28 +893,29 @@ export default (function () {
                         for (x = 0; x < shapeBPoints.length; x++) {
                             point = shapeBPoints[x];
 
-                            for (y = 0; y < shapeBPoints.length - 1; y++) {
-                                penetration = findPenetration(point.x, point.y, point.x + movementX, point.y + movementY, shapeAPoints[y].x, shapeAPoints[y].y, shapeAPoints[y + 1].x, shapeAPoints[y + 1].y);
+                            for (y = 0; y < shapeAPoints.length - 1; y++) {
+                                penetration = findPenetration(point.x, point.y, point.x - movementX, point.y - movementY, shapeAPoints[y].x, shapeAPoints[y].y, shapeAPoints[y + 1].x, shapeAPoints[y + 1].y);
                                 
                                 if (penetration === -1) {
                                     continue;
-                                } else if (penetration < shortestPenetration) {
-                                    shortestPenetration = penetration;
+                                } else if (penetration > maxPenetration) {
+                                    maxPenetration = penetration;
                                 }
                             }
                         }
 
                         //Since we're only moving in one dimension, we multiply by that direction.
                         if (movementX) {
-                            return shortestPenetration * movementX;
+                            return maxPenetration * movementX;
                         } else {
-                            return shortestPenetration * movementY;
+                            return maxPenetration * movementY;
                         }
                     },
                     findPenetration = function (aX, aY, bX, bY, cX, cY, dX, dY) {
                         //Based on an equation here: https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection
                         //A -> B is one vector, C -> D is another.
                         //Returns where 0 to 1 on A -> B that the intersection occurs. If no intersection occurs, returns -1.
+
                         const diffABX = aX - bX,
                             diffCDX = cX - dX,
                             diffABY = aY - bY,
@@ -1099,14 +1100,14 @@ export default (function () {
                                         thatFrontPoints = findFrontPoints(thatShape.points, -direction, 0);
                                     const ri = returnInfo,
                                         directionMultiplier = 10,
-                                        maxMovement = findShortestPentration (thisFrontPoints, thatFrontPoints, direction * directionMultiplier, 0);
-                                    
+                                        extricateMovement = findExtricateDistance(thisFrontPoints, thatFrontPoints, -direction * directionMultiplier, 0);
                                     //Direction is a 1 or -1, but the penetration check for polygons works based on a movement vector, so we just multiply the 1/-1 by
                                     //a scalar that is farther than the actual movement would ever be, to guarantee we find the collision point.
+                                    //We flip the direction because the shapes have already overlapped and we are moving backward to find where they overlap.
 
                                     ri.contactVector.setXYZ(direction, 0);
-                                    ri.position = thisShape.x + maxMovement;
-                                    //TODO: Return the normal from the colliding surface. It's easy to find it in findShortestPenetration()
+                                    ri.position = thisShape.x + extricateMovement;
+                                    //TODO: Return the normal from the colliding surface. It's easy to find it in findExtricateDistance()
 
                                     thisFrontPoints = null;
                                     thatFrontPoints = null;
@@ -1117,7 +1118,7 @@ export default (function () {
                                         directionMultiplier = 10;
                                     let thisFrontPoints = findFrontPoints(thisShape.points, direction, 0),
                                         thatFrontPoints = null,
-                                        maxMovement = 0;
+                                        extricateMovement = 0;
 
                                     rectPoints[0].setXYZ(thatShape.aABB.left, thatShape.aABB.top);
                                     rectPoints[1].setXYZ(thatShape.aABB.right, thatShape.aABB.top);
@@ -1125,10 +1126,10 @@ export default (function () {
                                     rectPoints[3].setXYZ(thatShape.aABB.left, thatShape.aABB.bottom);
 
                                     thatFrontPoints = findFrontPoints(rectPoints, -direction, 0);
-                                    maxMovement = findShortestPentration (thisFrontPoints, thatFrontPoints, direction * directionMultiplier, 0);
+                                    extricateMovement = findExtricateDistance(thisFrontPoints, thatFrontPoints, -direction * directionMultiplier, 0);
 
                                     ri.contactVector.setXYZ(direction, 0);
-                                    ri.position = thisShape.x + maxMovement;
+                                    ri.position = thisShape.x + extricateMovement;
                                     //TODO: Return the normal from the colliding surface. It's easy to find it in findShortestPenetration()
 
                                     thisFrontPoints = null;
@@ -1156,7 +1157,7 @@ export default (function () {
                                         directionMultiplier = 10;
                                     let thatFrontPoints = findFrontPoints(thatShape.points, -direction, 0),
                                         thisFrontPoints = null,
-                                        maxMovement = 0;
+                                        extricateMovement = 0;
 
                                     rectPoints[0].setXYZ(thisShape.aABB.left, thisShape.aABB.top);
                                     rectPoints[1].setXYZ(thisShape.aABB.right, thisShape.aABB.top);
@@ -1164,10 +1165,10 @@ export default (function () {
                                     rectPoints[3].setXYZ(thisShape.aABB.left, thisShape.aABB.bottom);
 
                                     thatFrontPoints = findFrontPoints(rectPoints, direction, 0);
-                                    maxMovement = findShortestPentration (thisFrontPoints, thatFrontPoints, direction * directionMultiplier, 0);
+                                    extricateMovement = findExtricateDistance(thisFrontPoints, thatFrontPoints, -direction * directionMultiplier, 0);
 
                                     ri.contactVector.setXYZ(direction, 0);
-                                    ri.position = thisShape.x + maxMovement;
+                                    ri.position = thisShape.x + extricateMovement;
                                     //TODO: Return the normal from the colliding surface. It's easy to find it in findShortestPenetration()
 
                                     thisFrontPoints = null;
@@ -1232,13 +1233,13 @@ export default (function () {
                                         thatFrontPoints = findFrontPoints(thatShape.points, 0, -direction);
                                     const ri = returnInfo,
                                         directionMultiplier = 10,
-                                        maxMovement = findShortestPentration (thisFrontPoints, thatFrontPoints, 0, direction * directionMultiplier);
+                                        extricateMovement = findExtricateDistance(thisFrontPoints, thatFrontPoints, 0, -direction * directionMultiplier);
                                     
                                     //Direction is a 1 or -1, but the penetration check for polygons works based on a movement vector, so we just multiply the 1/-1 by
                                     //a scalar that is farther than the actual movement would ever be, to guarantee we find the collision point.
 
                                     ri.contactVector.setXYZ(0, direction);
-                                    ri.position = thisShape.y + maxMovement;
+                                    ri.position = thisShape.y + extricateMovement;
                                     //TODO: Return the normal from the colliding surface. It's easy to find it in findShortestPenetration()
 
                                     thisFrontPoints = null;
@@ -1250,7 +1251,7 @@ export default (function () {
                                         directionMultiplier = 10;
                                     let thisFrontPoints = findFrontPoints(thisShape.points, 0, direction),
                                         thatFrontPoints = null,
-                                        maxMovement = 0;
+                                        extricateMovement = 0;
 
                                     rectPoints[0].setXYZ(thatShape.aABB.left, thatShape.aABB.top);
                                     rectPoints[1].setXYZ(thatShape.aABB.right, thatShape.aABB.top);
@@ -1258,10 +1259,10 @@ export default (function () {
                                     rectPoints[3].setXYZ(thatShape.aABB.left, thatShape.aABB.bottom);
 
                                     thatFrontPoints = findFrontPoints(rectPoints, 0, -direction);
-                                    maxMovement = findShortestPentration (thisFrontPoints, thatFrontPoints, 0, direction * directionMultiplier);
+                                    extricateMovement = findExtricateDistance(thisFrontPoints, thatFrontPoints, 0, -direction * directionMultiplier);
 
                                     ri.contactVector.setXYZ(0, direction);
-                                    ri.position = thisShape.y + maxMovement;
+                                    ri.position = thisShape.y + extricateMovement;
                                     //TODO: Return the normal from the colliding surface. It's easy to find it in findShortestPenetration()
 
                                     thisFrontPoints = null;
@@ -1288,7 +1289,7 @@ export default (function () {
                                         directionMultiplier = 10;
                                     let thatFrontPoints = findFrontPoints(thatShape.points, 0, -direction),
                                         thisFrontPoints = null,
-                                        maxMovement = 0;
+                                        extricateMovement = 0;
 
                                     rectPoints[0].setXYZ(thisShape.aABB.left, thisShape.aABB.top);
                                     rectPoints[1].setXYZ(thisShape.aABB.right, thisShape.aABB.top);
@@ -1296,10 +1297,10 @@ export default (function () {
                                     rectPoints[3].setXYZ(thisShape.aABB.left, thisShape.aABB.bottom);
 
                                     thatFrontPoints = findFrontPoints(rectPoints, 0, direction);
-                                    maxMovement = findShortestPentration (thisFrontPoints, thatFrontPoints, 0, direction * directionMultiplier);
+                                    extricateMovement = findExtricateDistance(thisFrontPoints, thatFrontPoints, 0, -direction * directionMultiplier);
 
                                     ri.contactVector.setXYZ(0, direction);
-                                    ri.position = thisShape.y + maxMovement;
+                                    ri.position = thisShape.y + extricateMovement;
                                     //TODO: Return the normal from the colliding surface. It's easy to find it in findShortestPenetration()
 
                                     thisFrontPoints = null;
