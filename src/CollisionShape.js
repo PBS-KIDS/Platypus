@@ -664,15 +664,18 @@ export default (function () {
      */
     recycle.add(CollisionShape, 'CollisionShape', CollisionShape, function () {
         let x = 0;
-        for (x = 0; x < this.points.length; x++) {
-            this.points[x].recycle();
-            this.points[x] = null;
+        if (this.points) {
+            for (x = 0; x < this.points.length; x++) {
+                this.points[x].recycle();
+                this.points[x] = null;
 
-            this.shapePoints[x].recycle();
-            this.shapePoints[x] = null;
+                this.shapePoints[x].recycle();
+                this.shapePoints[x] = null;
+            }
+            this.points = null;
+            this.shapePoints = null;
         }
-        this.points = null;
-        this.shapePoints = null;
+        
     }, true, config.dev);
     
     return CollisionShape;
