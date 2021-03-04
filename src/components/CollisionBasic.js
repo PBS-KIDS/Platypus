@@ -312,7 +312,7 @@ export default createComponentClass({
          *
          * @property regX
          * @type number
-         * @default width / 2
+         * @default width / 2 or radius
          */
         regX: null,
         
@@ -321,7 +321,7 @@ export default createComponentClass({
          *
          * @property regY
          * @type number
-         * @default height / 2
+         * @default height / 2 or radius
          */
         regY: null,
         
@@ -443,11 +443,19 @@ export default createComponentClass({
             radius       = this.radius;
         
         if (regX === null) {
-            regX = this.regX = width / 2;
+            if (radius) {
+                regX = this.regX = radius;
+            } else {
+                regX = this.regX = width / 2;
+            }
         }
         
         if (regY === null) {
-            regY = this.regY = height / 2;
+            if (radius) {
+                regY = this.regY = radius;
+            } else {
+                regY = this.regY = height / 2;
+            }
         }
         
         Vector.assign(this.owner, 'position', 'x', 'y', 'z');

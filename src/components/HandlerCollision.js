@@ -951,7 +951,7 @@ export default (function () {
                         //resultY = aY + t * (-diffABY);
                     },
                     radialVector = Vector.setUp(0, 0),
-                    findCircleExtrication = function (polyPoints, circle, direction, movementAxis) {
+                    findCircleExtrication = function (polyPoints, polygon, circle, direction, movementAxis) {
                         var x = 0,
                             fromCenter = 0,
                             radiusSqrd = Math.pow(circle.radius, 2),
@@ -1012,7 +1012,8 @@ export default (function () {
 
                         //Edge collisions
                         if (movementAxis === 'x') {
-                            let yOnCircle = 0;
+                            let yOnCircle = 0,
+                                xOnCircle = 0;
                             for (x = 0; x < polyPoints.length - 1; x++) {
                                 pointA = polyPoints[x];
                                 pointB = polyPoints[x + 1];
@@ -1039,17 +1040,19 @@ export default (function () {
                                 radialVector.normalize();
                                 radialVector.multiply(circle.radius);
 
+                                xOnCircle = circle.x + radialVector.x;
                                 yOnCircle = circle.y + radialVector.y;
                                 //If the slope of the edge would hit at a point on the circle such that it's perpendicular, we know it collides.
                                 if ((yOnCircle >= pointA.y && yOnCircle <= pointB.y) || (yOnCircle >= pointB.y && yOnCircle <= pointA.y)) {
                                     const m = diffY / diffX,
-                                        b = pointA.y - (m * pointA.x);
+                                        b = m * (pointA.x - polygon.x) + pointA.y - polygon.y,
+                                        yPos = yOnCircle - polygon.y;
                                     let xPos = 0;
                                     
-                                    //Figure out the x position on the edge.
-                                    xPos = (radialVector.y - b) / m;
+                                    //Figure out the x position of the polygon if it's edge is on the circle.
+                                    xPos = xOnCircle - ((yPos - b) / m);
 
-                                    movement = Math.abs(xPos - radialVector.x) * direction; //Multiply by direction to make it so points penetrating the circle are always greater than those outside.
+                                    movement = polygon.x - xPos; //Find the difference between the actual and correct position.
                                     if (movement > maxMovement) {
                                         maxMovement = movement;
                                     }
@@ -1059,7 +1062,8 @@ export default (function () {
                                 }
                             }
                         } else { //Edges when travelling in Y
-                            let xOnCircle = 0;
+                            let xOnCircle = 0,
+                                yOnCircle = 0;
                             for (x = 0; x < polyPoints.length - 1; x++) {
                                 pointA = polyPoints[x];
                                 pointB = polyPoints[x + 1];
@@ -1087,16 +1091,18 @@ export default (function () {
                                 radialVector.multiply(circle.radius);
 
                                 xOnCircle = circle.x + radialVector.x;
+                                yOnCircle = circle.y + radialVector.y;
                                 //If the slope of the edge would hit at a point on the circle such that it's perpendicular, we know it collides.
                                 if ((xOnCircle >= pointA.x && xOnCircle <= pointB.x) || (xOnCircle >= pointB.x && xOnCircle <= pointA.x)) {
                                     const m = diffY / diffX,
-                                        b = pointA.y - (m * pointA.x);
+                                        b = m * (pointA.x - polygon.x) + pointA.y - polygon.y,
+                                        xPos = xOnCircle - polygon.x;
                                     let yPos = 0;
                                     
-                                    //Figure out the y position on the edge.
-                                    yPos = m * radialVector.x + b;
+                                    //Figure out the y position of the polygon if it's edge is on the circle.
+                                    yPos = yOnCircle - (m * xPos + b);
 
-                                    movement = Math.abs(yPos - radialVector.y) * direction;
+                                    movement = polygon.y - yPos; //Find the difference between the actual and correct position.
                                     if (movement > maxMovement) {
                                         maxMovement = movement;
                                     }
@@ -1160,7 +1166,7 @@ export default (function () {
                                     let thisFrontPoints = findFrontPoints(thisShape.points, direction, 0),
                                         extricateMovement = 0;
 
-                                    extricateMovement = findCircleExtrication(thisFrontPoints, thatShape, direction, 'x');
+                                    extricateMovement = findCircleExtrication(thisFrontPoints, thisShape, thatShape, direction, 'x');
 
                                     ri.contactVector.setXYZ(direction, 0);
                                     ri.position = thisShape.x + extricateMovement;
@@ -1216,7 +1222,7 @@ export default (function () {
                                     let extricateMovement = 0,
                                         thatFrontPoints = findFrontPoints(thatShape.points, -direction, 0);
 
-                                    extricateMovement = findCircleExtrication(thatFrontPoints, thisShape, direction, 'x');
+                                    extricateMovement = findCircleExtrication(thatFrontPoints, thatShape, thisShape, direction, 'x');
 
                                     ri.contactVector.setXYZ(direction, 0);
                                     ri.position = thisShape.x + extricateMovement;
@@ -1292,7 +1298,7 @@ export default (function () {
                                     let thisFrontPoints = findFrontPoints(thisShape.points, 0, direction),
                                         extricateMovement = 0;
 
-                                    extricateMovement = findCircleExtrication(thisFrontPoints, thatShape, direction, 'y');
+                                    extricateMovement = findCircleExtrication(thisFrontPoints, thisShape, thatShape, direction, 'y');
 
                                     ri.contactVector.setXYZ(0, direction);
                                     ri.position = thisShape.y + extricateMovement;
@@ -1347,7 +1353,7 @@ export default (function () {
                                     let thatFrontPoints = findFrontPoints(thatShape.points, 0, -direction),
                                         extricateMovement = 0;
 
-                                    extricateMovement = findCircleExtrication(thatFrontPoints, thisShape, direction, 'y');
+                                    extricateMovement = findCircleExtrication(thatFrontPoints, thatShape, thisShape, direction, 'y');
 
                                     ri.contactVector.setXYZ(0, direction);
                                     ri.position = thisShape.y + extricateMovement;
