@@ -883,6 +883,8 @@ export default (function () {
                         image: '',
                         height: 1,
                         name: imageLayer.name,
+                        offsetx: imageLayer.offsetx,
+                        offsety: imageLayer.offsety,
                         type: 'tilelayer',
                         width: 1,
                         tileheight: 1,
