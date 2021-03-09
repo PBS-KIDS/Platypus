@@ -13,7 +13,7 @@ this.platypus = this.platypus || {};
         isEdge    = (uagent.search('edge')    > -1),
         isIPod    = (uagent.search('ipod')    > -1),
         isIPhone  = (uagent.search('iphone')  > -1),
-        isIPad    = (uagent.search('ipad')    > -1),
+        isIPad    = (uagent.search('ipad')    > -1 || navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1),
         isAndroid = (uagent.search('android') > -1),
         isSilk    = (uagent.search('silk')    > -1),
         isIOS     = isIPod || isIPhone  || isIPad,
