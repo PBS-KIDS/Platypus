@@ -124,7 +124,7 @@ export default createComponentClass({
         /**
          * Whether 'handle-controller' event should fire based on the 'handle-logic' event instead of the 'tick' event.
          *
-         * @property alwaysOn
+         * @property useHandleLogic
          * @type Boolean
          * @default false
          */

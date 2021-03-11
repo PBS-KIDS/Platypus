@@ -30,6 +30,17 @@ export default (function () {
     return createComponentClass({
         
         id: 'Node',
+
+        properties: {
+            /**
+             * If provided, treats these property names as neighbors, assigning them to the neighbors object. For example, ["east", "west"] creates `entity.east` and `entity.west` entity properties that are pointers to those neighbors.
+             *
+             * @property neighborProperties
+             * @type Array
+             * @default null
+             */
+            neighborProperties: null
+        },
         
         publicProperties: {
             x: 0,
@@ -38,36 +49,60 @@ export default (function () {
         },
         
         initialize: function (definition) {
-            this.nodeId = definition.nodeId || this.owner.nodeId || this.owner.id || String(Math.random());
+            const owner = this.owner;
+
+            this.nodeId = definition.nodeId || owner.nodeId || owner.id || String(Math.random());
             
             if ((typeof this.nodeId !== 'string') && (this.nodeId.length)) {
                 this.nodeId = definition.nodeId.join('|');
             }
             
-            this.owner.nodeId = this.nodeId;
+            owner.nodeId = this.nodeId;
             
-            this.owner.isNode = true;
-            this.map = this.owner.map = this.owner.map || this.owner.parent || null;
-            this.contains = this.owner.contains = arrayCache.setUp();
-            this.edgesContain = this.owner.edgesContain = arrayCache.setUp();
+            owner.isNode = true;
+            this.map = owner.map = owner.map || owner.parent || null;
+            this.contains = owner.contains = arrayCache.setUp();
+            this.edgesContain = owner.edgesContain = arrayCache.setUp();
             
-            Vector.assign(this.owner, 'position', 'x', 'y', 'z');
+            Vector.assign(owner, 'position', 'x', 'y', 'z');
             
-            this.neighbors = this.owner.neighbors = definition.neighbors || this.owner.neighbors || {};
+            this.neighbors = owner.neighbors = definition.neighbors || owner.neighbors || {};
+            
+            if (this.neighborProperties) {
+                const properties = this.neighborProperties;
+
+                for (let i = 0; i < properties.length; i++) {
+                    const
+                        propertyName = properties[i],
+                        value = owner[propertyName];
+
+                    if (value) {
+                        this.neighbors[propertyName] = value;
+                    }
+                    Object.defineProperty(owner, propertyName, {
+                        get: () => this.neighbors[propertyName],
+                        set: (value) => {
+                            if (value !== this.neighbors[propertyName]) {
+                                this.neighbors[propertyName] = value;
+                                for (let i = 0; i < this.contains.length; i++) {
+                                    this.contains[i].triggerEvent('set-directions');
+                                }
+                            }
+                        }
+                    });
+                }
+            }
         },
         
         events: {
             "add-neighbors": function (neighbors) {
-                var i = 0,
-                    direction = null;
-                
-                for (direction in neighbors) {
+                for (const direction in neighbors) {
                     if (neighbors.hasOwnProperty(direction)) {
                         this.neighbors[direction] = neighbors[direction];
                     }
                 }
                 
-                for (i = 0; i < this.contains.length; i++) {
+                for (let i = 0; i < this.contains.length; i++) {
                     this.contains[i].triggerEvent('set-directions');
                 }
             },

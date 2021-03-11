@@ -42,6 +42,7 @@ import AABB from '../AABB.js';
 import Data from '../Data.js';
 import DataMap from '../DataMap.js';
 import Entity from '../Entity.js';
+import EntityLinker from '../EntityLinker';
 import Vector from '../Vector.js';
 import createComponentClass from '../factory.js';
 import {inflate} from 'pako';
@@ -93,13 +94,24 @@ export default (function () {
             return result[5] || result[7];
         },
         finishedLoading = function (level, x, y, width, height, tileWidth, tileHeight, callback) {
-            var message = Data.setUp(
+            const
+                message = Data.setUp(
                     "level", null,
                     "world", AABB.setUp(),
                     "tile", AABB.setUp(),
                     "camera", null,
                     "lazyLoads", this.lazyLoads
-                );
+                ),
+                lazyLoad = (entity) => {
+                    const
+                        aabb = entity.aabb,
+                        entityLinker = entity.entityLinker;
+
+                    aabb.recycle();
+                    entity.aabb = null;
+                    entity.entityLinker = null;
+                    entityLinker.linkEntity(this.owner.addEntity(entity));
+                };
 
             this.lazyLoads.sort((a, b) => b.aabb.left - a.aabb.left); // Maybe a smidge faster since we can cut out once it's too far to the right.
 
@@ -141,9 +153,7 @@ export default (function () {
                             aabb = entity.aabb;
 
                         if (viewport.intersects(aabb)) {
-                            aabb.recycle();
-                            entity.aabb = null;
-                            this.owner.addEntity(entity);
+                            lazyLoad(entity);
                             for (let j = i + 1; j < lazyLoads.length; j++) {
                                 lazyLoads[j - 1] = lazyLoads[j];
                             }
@@ -160,12 +170,7 @@ export default (function () {
                             i = lazyLoads.length;
 
                         if (i) {
-                            const entity = lazyLoads.pop(i - 1),
-                                aabb = entity.aabb;
-
-                            aabb.recycle();
-                            entity.aabb = null;
-                            this.owner.addEntity(entity);
+                            lazyLoad(lazyLoads.pop(i - 1));
                         }
                     });
                 }
@@ -191,26 +196,34 @@ export default (function () {
             y: 1,
             id: -1
         },
-        getProperty = function (obj, key) { // Handle Tiled map versions
-            var i = 0;
+        getProperty = (...args) => {
+            const obj = getPropertyObject(...args);
 
+            return obj && obj.value;
+        },
+        getPropertyObject = (obj, key) => { // Handle Tiled map versions
             if (obj) {
                 if (Array.isArray(obj)) {
-                    i = obj.length;
+                    let i = obj.length;
                     while (i--) {
                         if (obj[i].name === key) {
-                            return obj[i].value;
+                            return obj[i];
                         }
                     }
                     return null;
                 } else {
-                    return obj[key];
+                    platypus.debug.warn('This Tiled map version is deprecated.');
+                    return {
+                        name: key,
+                        type: typeof obj[key],
+                        value: obj[key]
+                    };
                 }
             } else {
                 return null;
             }
         },
-        setProperty = function (obj, key, value) { // Handle Tiled map versions
+        setProperty = (obj, key, value) => { // Handle Tiled map versions
             var i = 0;
 
             if (obj) {
@@ -267,7 +280,7 @@ export default (function () {
                 }
             }
         },
-        getEntityData = function (obj, tilesets) {
+        getEntityData = function (obj, tilesets, entityLinker) {
             var x = 0,
                 gid = obj.gid || -1,
                 properties = {},
@@ -327,19 +340,22 @@ export default (function () {
                 properties.scaleY = 1;
             }
             
-            mergeAndFormatProperties(props, data.properties);
-            mergeAndFormatProperties(obj.properties, data.properties);
+            if (entityLinker) {
+                entityLinker.linkObject(data.properties.tiledId = obj.id);
+            }
+            mergeAndFormatProperties(props, data.properties, entityLinker);
+            mergeAndFormatProperties(obj.properties, data.properties, entityLinker);
             
             return data;
         },
-        mergeAndFormatProperties = function (src, dest) {
+        mergeAndFormatProperties = function (src, dest, entityLinker) {
             var i = 0,
                 key = '';
             
             if (src && dest) {
                 if (Array.isArray(src)) {
                     for (i = 0; i < src.length; i++) {
-                        setProperty(dest, src[i].name, formatProperty(src[i].value));
+                        setProperty(dest, src[i].name, formatPropertyObject(src[i], entityLinker));
                     }
                 } else {
                     for (key in src) {
@@ -375,6 +391,34 @@ export default (function () {
 
             return value;
         },
+        formatPropertyObject = function ({name, value, type}, entityLinker) {
+            switch (type) {
+            case 'color':
+                break;
+            case 'object':
+                if (entityLinker && value !== 0) {
+                    return entityLinker.getEntity(value, name); // if unfound, entityLinker saves this request and will try to fulfill it once the entity is added.
+                } else {
+                    return null;
+                }
+            case 'string':
+                if ((value.length > 1) && (((value[0] === '{') && (value[value.length - 1] === '}')) || ((value[0] === '[') && (value[value.length - 1] === ']')))) {
+                    try {
+                        return JSON.parse(value);
+                    } catch (e) {
+                    }
+                }
+                break;
+            case 'bool':
+            case 'float':
+            case 'file':
+            case 'int':
+            default:
+                break;
+            }
+            
+            return value;
+        },
         checkLevel = function (level, ss) {
             const
                 addObjectGroupAssets = (assets, objectGroup, tilesets) => {
@@ -394,8 +438,7 @@ export default (function () {
                 tilesets = arrayCache.setUp(),
                 arr = null,
                 assets = arrayCache.setUp(),
-                data = null,
-                entity = null;
+                data = null;
 
             if (typeof level === 'string') {
                 level = platypus.game.settings.levels[level];
@@ -416,9 +459,9 @@ export default (function () {
                             addObjectGroupAssets(assets, layer, level.tilesets);
                         } else if (layer.type === 'imagelayer') {
                             // Check for custom layer entity
-                            entity = getProperty(layer.properties, 'entity');
-                            if (entity) {
-                                data = Data.setUp('type', entity, 'properties', mergeAndFormatProperties(layer.properties, {}));
+                            const entityType = getProperty(layer.properties, 'entity');
+                            if (entityType) {
+                                data = Data.setUp('type', entityType, 'properties', mergeAndFormatProperties(layer.properties, {}));
                                 arr = Entity.getAssetList(data);
                                 union(assets, arr);
                                 arrayCache.recycle(arr);
@@ -428,6 +471,7 @@ export default (function () {
                             }
                         } else {
                             const
+                                entityType = getProperty(level.layers[i].properties, 'entity'),
                                 tiles = arrayCache.setUp();
 
                             // must decode first so we can check for tiles' objects
@@ -451,9 +495,8 @@ export default (function () {
                             }
 
                             // Check for custom layer entity
-                            entity = getProperty(level.layers[i].properties, 'entity');
-                            if (entity) {
-                                data = Data.setUp('type', entity);
+                            if (entityType) {
+                                data = Data.setUp('type', entityType);
                                 arr = Entity.getAssetList(data);
                                 union(assets, arr);
                                 arrayCache.recycle(arr);
@@ -677,7 +720,7 @@ export default (function () {
         },
 
         methods: {
-            createLayer: function (entityKind, layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, tilesetObjectGroups, images, combineRenderLayer, progress) {
+            createLayer: function (entityKind, layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, tilesetObjectGroups, images, combineRenderLayer, progress, entityLinker) {
                 var lastSet = null,
                     props = null,
                     width = layer.width,
@@ -776,7 +819,8 @@ export default (function () {
                         height = newHeight;
                     }
                     
-                    mergeAndFormatProperties(layer.properties, tileDefinition.properties);
+                    entityLinker.linkObject(tileDefinition.properties.tiledId = layer.id);
+                    mergeAndFormatProperties(layer.properties, tileDefinition.properties, entityLinker);
                 }
 
                 tileDefinition.properties.width = tWidth * width;
@@ -820,7 +864,7 @@ export default (function () {
                                     offsetX = mapOffsetX + tileWidth * (transform.x > 0 ? x : x + 1),
                                     offsetY = mapOffsetY + tileHeight * (transform.y > 0 ? y : y + 1);
                                     
-                                this.setUpEntities(tilesetObjectGroups.get(transform.id), offsetX, offsetY, tileWidth, tileHeight, tilesets, transform, progress);
+                                this.setUpEntities(tilesetObjectGroups.get(transform.id), offsetX, offsetY, tileWidth, tileHeight, tilesets, transform, progress, entityLinker);
                             }
                         }
                     }
@@ -863,9 +907,9 @@ export default (function () {
                             props.spriteSheet.animations = importAnimation;
                         }
                     }
-                    return this.owner.addEntity(new Entity(tileDefinition, {
+                    return entityLinker.linkEntity(this.owner.addEntity(new Entity(tileDefinition, {
                         properties: props
-                    }, this.updateLoadingProgress.bind(this, progress), this.owner));
+                    }, this.updateLoadingProgress.bind(this, progress), this.owner)));
                 }
             },
             
@@ -946,6 +990,9 @@ export default (function () {
             },
             
             loadLevel: function (levelData, callback) {
+                const
+                    entityLinker = EntityLinker.setUp();
+
                 var asset = null,
                     layers = null,
                     level = null,
@@ -979,7 +1026,9 @@ export default (function () {
                 createTilesetObjectGroupReference(tilesetObjectGroups, tilesets);
 
                 if (level.properties) {
-                    mergeAndFormatProperties(level.properties, this.owner);
+                    entityLinker.linkObject(this.owner.tiledId = 0); // Level
+                    mergeAndFormatProperties(level.properties, this.owner, entityLinker);
+                    entityLinker.linkEntity(this.owner);
                 }
                 
                 if (this.images) {
@@ -1024,15 +1073,15 @@ export default (function () {
                     switch (layerDefinition.type) {
                     case 'imagelayer':
                         layer = this.convertImageLayer(layerDefinition);
-                        layer = this.createLayer(getProperty(layer.properties, 'entity') || 'image-layer', layer, x, y, layer.tilewidth, layer.tileheight, [layer.tileset], null, images, layer, progress);
+                        layer = this.createLayer(getProperty(layer.properties, 'entity') || 'image-layer', layer, x, y, layer.tilewidth, layer.tileheight, [layer.tileset], null, images, layer, progress, entityLinker);
                         break;
                     case 'objectgroup':
-                        this.setUpEntities(layerDefinition, x, y, tileWidth, tileHeight, tilesets, null, progress);
+                        this.setUpEntities(layerDefinition, x, y, tileWidth, tileHeight, tilesets, null, progress, entityLinker);
                         layer = null;
                         this.updateLoadingProgress(progress);
                         break;
                     case 'tilelayer':
-                        layer = this.setupLayer(layerDefinition, layer, x, y, tileWidth, tileHeight, tilesets, tilesetObjectGroups, images, progress);
+                        layer = this.setupLayer(layerDefinition, layer, x, y, tileWidth, tileHeight, tilesets, tilesetObjectGroups, images, progress, entityLinker);
                         break;
                     default:
                         platypus.debug.warn('Component TiledLoader: Platypus does not support Tiled layers of type "' + layerDefinition.type + '". This layer will not be loaded.');
@@ -1099,7 +1148,7 @@ export default (function () {
                         return shape;
                     };
 
-                return function (layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, transform, progress) {
+                return function (layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, transform, progress, entityLinker) {
                     var clamp = 1000,
                         widthOffset = 0,
                         heightOffset = 0,
@@ -1131,7 +1180,7 @@ export default (function () {
                     for (obj = 0; obj < len; obj++) {
                         const
                             entity = layer.objects[obj],
-                            entityData = getEntityData(entity, tilesets);
+                            entityData = getEntityData(entity, tilesets, entityLinker);
                         
                         if (entityData) {
                             const
@@ -1305,11 +1354,14 @@ export default (function () {
     
                             if (properties.lazyLoad || (entityDefProps && entityDefProps.lazyLoad)) {
                                 entityPackage.aabb = AABB.setUp(properties.x + properties.width / 2 - properties.regX, properties.y + properties.height / 2 - properties.regY, properties.width || 1, properties.height || 1);
+                                entityPackage.entityLinker = entityLinker;
                                 this.lazyLoads.push(entityPackage);
                                 this.updateLoadingProgress(progress);
                             } else {
                                 const
                                     createdEntity = this.owner.addEntity(entityPackage, this.updateLoadingProgress.bind(this, progress));
+                                
+                                entityLinker.linkEntity(createdEntity);
 
                                 if (createdEntity && createdEntity.camera) {
                                     this.followEntity = {
@@ -1325,7 +1377,7 @@ export default (function () {
                 };
             }()),
 
-            setupLayer: function (layer, combineRenderLayer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, tilesetObjectGroups, images, progress) {
+            setupLayer: function (layer, combineRenderLayer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, tilesetObjectGroups, images, progress, entityLinker) {
                 var canCombine = false,
                     specified = getProperty(layer.properties, 'entity'),
                     entity = specified || 'render-layer', // default
@@ -1345,9 +1397,9 @@ export default (function () {
                 }
 
                 if (canCombine) {
-                    return this.createLayer(entity, layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, tilesetObjectGroups, images, combineRenderLayer, progress);
+                    return this.createLayer(entity, layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, tilesetObjectGroups, images, combineRenderLayer, progress, entityLinker);
                 } else {
-                    this.createLayer(entity, layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, tilesetObjectGroups, images, combineRenderLayer, progress);
+                    this.createLayer(entity, layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, tilesetObjectGroups, images, combineRenderLayer, progress, entityLinker);
                     return null;
                 }
             },
