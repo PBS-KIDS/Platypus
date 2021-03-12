@@ -172,7 +172,6 @@ export default (function () {
                     if (node.id === entity.nodeId) {
                         greenSplice(this.residentsAwaitingNode, i);
                         entity.node = this.getNode(entity.nodeId);
-                        entity.triggerEvent('on-node', entity.node);
                     }
                 }
             },
@@ -190,8 +189,6 @@ export default (function () {
                     entity.node = this.getNode(entity.nodeId);
                     if (!entity.node) {
                         this.residentsAwaitingNode.push(entity);
-                    } else {
-                        entity.triggerEvent('on-node', entity.node);
                     }
                 }
             }

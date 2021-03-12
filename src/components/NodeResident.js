@@ -11,9 +11,6 @@ This component connects an entity to its parent's [[NodeMap]]. It manages naviga
 ### Listens for:
 - **handle-logic** - On a `tick` logic message, the component updates its location and triggers messages regarding its neighbors.
   - @param message.delta (Number) - This component uses the current time to determine its progress along an edge if moving from node to node on the map.
-- **on-node** - Sets the entity's position to the sent node, updates its coordinates, and triggers messages regarding its neighbors if any.
-  - @param node (Node) - The node that this entity should be located on.
-- **leave-node** - Removes the entity from its current node if it's on one.
 - **goto-node** - Begins moving the entity along edges to get to sent node.
   - @param node (Node) - The node that this entity should move to.
 - **follow** - Causes this entity to follow another entity. The leading entity must also have a `NodeResident` component and exist in the NodeMap.
@@ -147,9 +144,19 @@ export default (function () {
     return createComponentClass({
         
         id: 'NodeResident',
+
+        properties: {
+            /**
+             * This sets the resident's initial node.
+             *
+             * @property node
+             * @type Object
+             * @default null
+             */
+            node: null
+        },
         
         publicProperties: {
-
             /**
              * This describes the rate at which a node resident should progress along an edge to another node. This property is set on the entity itself and can be manipulated in real-time.
              *
@@ -161,7 +168,9 @@ export default (function () {
         },
         
         initialize: function (definition) {
-            var offset = definition.offset || this.owner.nodeOffset || {};
+            const
+                offset = definition.offset || this.owner.nodeOffset || {},
+                startingNode = this.node;
             
             this.nodeId = this.owner.nodeId = definition.nodeId || this.owner.nodeId;
             
@@ -185,6 +194,18 @@ export default (function () {
             this.state.set('moving', false);
             this.state.set('on-node', false);
             this.currentState = '';
+
+            Object.defineProperty(this.owner, 'node', {
+                get: () => this.node,
+                set: (value) => {
+                    if (value) {
+                        this.getOnNode(value);
+                    } else {
+                        this.getOffNode();
+                    }
+                }
+            });
+            this.owner.node = startingNode;
         },
         
         events: {
@@ -200,7 +221,7 @@ export default (function () {
                 
                 if (!this.owner.node) {
                     arr = arrayCache.setUp(this.owner.x, this.owner.y);
-                    this.owner.triggerEvent('on-node', this.owner.parent.getClosestNode(arr));
+                    this.owner.node = this.owner.parent.getClosestNode(arr);
                     arrayCache.recycle(arr);
                     
                     /**
@@ -240,7 +261,7 @@ export default (function () {
                     if (this.node) {
                         this.onEdge(this.destinationNodes[0]);
                     } else if (!this.lastNode) {
-                        this.owner.triggerEvent('on-node', this.destinationNodes[0]);
+                        this.owner.node = this.destinationNodes[0];
                         this.destinationNodes.shift();
                         if (!this.destinationNodes.length) {
                             this.state.set('moving', false);
@@ -250,7 +271,7 @@ export default (function () {
                     
                     if (this.snapToNodes) {
                         for (i = 0; i < this.destinationNodes.length; i++) {
-                            this.owner.triggerEvent('on-node', this.destinationNodes[i]);
+                            this.owner.node = this.destinationNodes[i];
                         }
                         this.destinationNodes.length = 0;
                     } else {
@@ -260,7 +281,7 @@ export default (function () {
                                 momentum -= (this.distance - this.progress);
                                 this.progress = 0;
                                 this.destinationNodes.shift();
-                                this.owner.triggerEvent('on-node', node);
+                                this.owner.node = node;
                                 if (this.destinationNodes.length && momentum) {
                                     this.onEdge(this.destinationNodes[0]);
                                 }
@@ -280,52 +301,6 @@ export default (function () {
                 } else {
                     this.state.set('moving', false);
                 }
-            },
-            "on-node": function (node) {
-                var j = 0,
-                    entities = null;
-                
-                this.owner.node = this.node = node; //TODO: not sure if this needs to be accessible outside this component.
-                this.node.removeFromEdge(this.owner);
-                if (this.lastNode) {
-                    this.lastNode.removeFromEdge(this.owner);
-                }
-                this.node.addToNode(this.owner);
-                
-                this.setState('on-node');
-                
-                this.owner.x = this.node.x + this.offset.x;
-                this.owner.y = this.node.y + this.offset.y;
-                this.owner.z = this.node.z + this.offset.z;
-                if (this.updateOrientation && this.node.rotation) {
-                    this.owner.rotation = this.node.rotation;
-                }
-                
-                //add listeners for directions
-                this.owner.triggerEvent('set-directions');
-                
-                //trigger mapped messages for node types
-                if (this.friendlyNodes && this.friendlyNodes[node.type]) {
-                    this.owner.trigger(this.friendlyNodes[node.type], node);
-                }
-
-                //trigger "with" events
-                entities = node.contains;
-                for (j = 0; j < entities.length; j++) {
-                    if (this.owner !== entities[j]) {
-                        entities[j].triggerEvent("with-" + this.owner.type, this.owner);
-                        this.owner.triggerEvent("with-" + entities[j].type, entities[j]);
-                    }
-                }
-            },
-            "leave-node": function () {
-                if (this.node) {
-                    this.node.removeFromNode(this.owner);
-                    this.owner.triggerEvent('left-node', this.node);
-                    this.owner.triggerEvent('remove-directions');
-                }
-                this.lastNode = this.node;
-                this.node = null;
             },
             "goto-node": function (node) {
                 this.gotoNode(node);
@@ -517,7 +492,57 @@ export default (function () {
                     return moving;
                 };
             }()),
-            
+
+            getOnNode: function (node) {
+                var j = 0,
+                    entities = null;
+                
+                this.node = node;
+                this.node.removeFromEdge(this.owner);
+                if (this.lastNode) {
+                    this.lastNode.removeFromEdge(this.owner);
+                }
+                this.node.addToNode(this.owner);
+                
+                this.setState('on-node');
+                
+                this.owner.x = this.node.x + this.offset.x;
+                this.owner.y = this.node.y + this.offset.y;
+                this.owner.z = this.node.z + this.offset.z;
+                if (this.updateOrientation && this.node.rotation) {
+                    this.owner.rotation = this.node.rotation;
+                }
+                
+                //add listeners for directions
+                this.owner.triggerEvent('set-directions');
+                
+                //trigger mapped messages for node types
+                if (this.friendlyNodes && this.friendlyNodes[node.type]) {
+                    this.owner.trigger(this.friendlyNodes[node.type], node);
+                }
+
+                //trigger "with" events
+                entities = node.contains;
+                for (j = 0; j < entities.length; j++) {
+                    if (this.owner !== entities[j]) {
+                        entities[j].triggerEvent("with-" + this.owner.type, this.owner);
+                        this.owner.triggerEvent("with-" + entities[j].type, entities[j]);
+                    }
+                }
+
+                this.owner.triggerEvent('on-node', node);
+            },
+
+            getOffNode: function () {
+                if (this.node) {
+                    this.node.removeFromNode(this.owner);
+                    this.owner.triggerEvent('left-node', this.node);
+                    this.owner.triggerEvent('remove-directions');
+                }
+                this.lastNode = this.node;
+                this.node = null;
+            },
+
             isPassable: function (node) {
                 return node && (this.node !== node) && (!this.friendlyNodes || (typeof this.friendlyNodes[node.type] !== 'undefined')) && (!node.contains.length || isFriendly(node.contains, this.friendlyEntities));
             },
@@ -620,7 +645,7 @@ export default (function () {
                 }
                 this.node.addToEdge(this.owner);
                 toNode.addToEdge(this.owner);
-                this.owner.triggerEvent('leave-node');
+                this.owner.node = null;
             },
             destroy: function () {
                 arrayCache.recycle(this.destinationNodes);
