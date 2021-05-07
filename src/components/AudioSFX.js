@@ -12,6 +12,15 @@ import Sound from 'pixi-sound';
 import StateMap from '../StateMap.js';
 import createComponentClass from '../factory.js';
 
+const
+    formatPath = (path) => {
+        if (path.indexOf('.mp3') === -1) {
+            return `${path}.mp3`;
+        } else {
+            return path;
+        }
+    };
+
 export default (function () {
     var defaultSettings = {
             interrupt: 0,
@@ -25,9 +34,8 @@ export default (function () {
             playthrough: false
         },
         playSound = function (soundDefinition) {
-            var sound      = '',
-                attributes = null,
-                completed  = function (data/*, cancelled*/) {
+            const
+                completed = function (data/*, cancelled*/) {
                     if (data.audio && !this.owner.destroyed && this.activeAudioClips) {
                         //clean up active clips
                         this.removeClip(data.audio);
@@ -41,6 +49,8 @@ export default (function () {
                     }
                     data.recycle();
                 };
+            let sound = '',
+                attributes = null;
             
             if (typeof soundDefinition === 'string') {
                 sound      = soundDefinition;
@@ -60,6 +70,8 @@ export default (function () {
                     playthrough: soundDefinition.playthrough
                 };
             }
+
+            sound = platypus.assetCache.getFileId(sound);
 
             return function (value) {
                 let data = null;
@@ -573,7 +585,7 @@ export default (function () {
             
             for (key in audioMap) {
                 if (audioMap.hasOwnProperty(key)) {
-                    const item = (audioMap[key].sound || audioMap[key]) + '.mp3';
+                    const item = formatPath(audioMap[key].sound || audioMap[key]);
                     if (preload.indexOf(item) === -1) {
                         preload.push(item);
                     }

@@ -80,6 +80,19 @@ export default class AssetManager {
     }
 
     /**
+     * Returns id for given path.
+     *
+     * @method getFileId
+     * @param {*} path
+     * @return {String} Returns id generated from path.
+     */
+    getFileId (path) {
+        const match = path.match(fn);
+
+        return match ? match[1] : path;
+    }
+
+    /**
      * Returns whether a given asset is currently loaded by the AssetManager.
      *
      * @method has
