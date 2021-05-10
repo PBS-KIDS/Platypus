@@ -78,7 +78,8 @@ export default (function () {
             maxStepsPerTick: 100,
             
             /**
-             * Whether logic should occur at an alternate speed. This is useful for simulations where the game should speed up or slow down.
+             * A multiplier that alters the speed at which the game is running. This is achieved by scaling the delta time in each tick.
+             * Defaults to 1. Values < 1 will slow down the logic, > 1 will speed it up.
              *
              * @property timeMultiplier
              * @type number
@@ -248,7 +249,7 @@ export default (function () {
                     msg = this.message,
                     actives = this.activeEntities,
                     removals = this.removals,
-                    stepLength = this.stepLength;
+                    stepLength = this.stepLength * this.timeMultiplier;
                 
                 this.leftoverTime += (resp.delta * this.timeMultiplier);
                 cycles = Math.floor(this.leftoverTime / stepLength) || 1;
@@ -262,6 +263,7 @@ export default (function () {
         //        this.leftoverTime = Math.max(this.leftoverTime - (cycles * this.stepLength), 0);
         
                 // This makes the frames exact, but varying step numbers between ticks can cause movement to be jerky
+                msg.gameDelta = this.stepLength;
                 msg.delta = stepLength;
                 this.leftoverTime = Math.max(this.leftoverTime - (cycles * stepLength), 0);
         
@@ -288,7 +290,8 @@ export default (function () {
                          * This event is triggered on the top-level layer to signify a "handle-logic" event is about to be triggered on children. This is unique from the layer's "tick" event in that it occurs the same number of times as the "handle-logic" event and will not occur if HandlerLogic is paused.
                          *
                          * @event 'handle-logic'
-                         * @param tick.delta {Number} The time that has passed since the last tick.
+                         * @param tick.delta {Number} The time that has passed since the last tick as manipulated by the timeMultiplier.
+                         * @param tick.gameDelta {Number} The time that has passed since the last tick. Unmanipulated by timeMultiplier. Use for components that need to run on actual time.
                          * @param tick.camera {null|platypus.AABB} The range of the logic camera area. This is typically larger than the visible camera. This value is `null` if `alwaysOn` is set to `true` on this component.
                          * @param tick.entities {Array} This is a list of all the logically active entities.
                          * @param tick.tick {Object} Tick object from "tick" event.

@@ -46,6 +46,15 @@ export default (function () {
              * @default null
              */
             worldContainer: null,
+            /**
+             * A multiplier that alters the speed at which the game is running. This is achieved by scaling the delta time in each tick.
+             * Defaults to 1. Values < 1 will slow down the rendering, > 1 will speed it up.
+             *
+             * @property timeMultiplier
+             * @type number
+             * @default 1
+             */
+             timeMultiplier: 1
         },
 
         initialize: function () {
@@ -206,7 +215,8 @@ export default (function () {
             renderUpdate: function (tick) {
                 const message = this.renderMessage;
 
-                message.delta = (tick && tick.delta) || 0;
+                message.gameDelta = (tick && tick.delta) || 0;
+                message.delta = message.gameDelta * this.timeMultiplier;   
                 message.tick = tick;
 
                 /**
@@ -214,7 +224,8 @@ export default (function () {
                  *
                  * @event 'handle-render'
                  * @param data {Object}
-                 * @param data.delta {Number} The delta time for this tick.
+                 * @param data.delta {Number} The delta time for this tick as manipulated by the timeMultiplier.
+                 * @param data.gameDelta {Number} The delta time for this tick. Unmanipulated by the timeMultiplier. Use for components that should always run according to actual time.
                  * @param data.container {PIXI.Container} The display Container the entities display objects should be added to.
                  * @param data.tick {Object} Tick object from "tick" event.
                  */
