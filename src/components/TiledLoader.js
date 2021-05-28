@@ -789,6 +789,8 @@ export default (function () {
 
                 tileDefinition.properties = tileDefinition.properties || {};
 
+                entityLinker.linkObject(tileDefinition.properties.tiledId = layer.id);
+
                 //This builds in parallaxing support by allowing the addition of width and height properties into Tiled layers so they pan at a separate rate than other layers.
                 if (layer.properties) {
 
@@ -819,7 +821,6 @@ export default (function () {
                         height = newHeight;
                     }
                     
-                    entityLinker.linkObject(tileDefinition.properties.tiledId = layer.id);
                     mergeAndFormatProperties(layer.properties, tileDefinition.properties, entityLinker);
                 }
 
