@@ -90,6 +90,7 @@ export default createComponentClass({
         this.tweens = Data.setUp();
 
         this.time = 0;
+        this.paused = false;
         
         if (events) {
             for (event in events) {
@@ -129,8 +130,10 @@ export default createComponentClass({
          * @param {Number} tick.delta
          */
         'handle-logic': function (tick) {
-            this.time += tick.delta;
-            this.group.update(this.time);
+            if (!this.paused) {
+                this.time += tick.delta;
+                this.group.update(this.time);
+            }
         },
 
         /**
@@ -140,6 +143,24 @@ export default createComponentClass({
          */
         'stop-tween': function () {
             this.group.removeAll();
+        },
+
+        /**
+         * This event pauses all running tweens on this component.
+         *
+         * @method 'pause-tween'
+         */
+        "pause-tween": function () {
+            this.paused = true;
+        },
+
+        /**
+         * This event unpauses all running tweens on this component.
+         *
+         * @method 'unpause-tween'
+         */
+        "unpause-tween": function () {
+            this.paused = false;
         }
     },
 

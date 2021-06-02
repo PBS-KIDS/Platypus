@@ -392,14 +392,14 @@ export default (function () {
                         loadFinished();
                     }
                 },
-                animationEnded = function (index, count) {
+                animationEnded = function (animationData) {
                     /**
                      * This event fires each time an animation completes.
                      *
                      * @event 'animation-ended'
                      * @param animation {String} The id of the animation that ended.
                      */
-                    this.owner.triggerEvent('animation-ended', this.currentAnimations[index], count);
+                    this.owner.triggerEvent('animation-ended', animationData.animation.name);
                 },
                 handleSpineEvent = function (entry, event) {
                     var eventName = event.data.name;
