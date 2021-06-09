@@ -487,24 +487,42 @@ export default (function () {
             * @param [dimensions] {Object} List of key/value pairs describing new viewport size
             * @param dimensions.width {number} Width of the camera viewport
             * @param dimensions.height {number} Height of the camera viewport
+            * @param dimensions.time {number} Time in millseconds over which to tween the scale change.
             * @param [forceUpdate] {Boolean} Whether to update graphics.
             **/
-            "resize-camera": function (dimensions = null, forceUpdate = false) {
-                if (dimensions) {
-                    this.width = dimensions.width;
-                    this.height = dimensions.height;
+            "resize-camera": function (dimensions = {}, forceUpdate = false) {
+                const
+                    {width, height, time, ease} = dimensions,
+                    forcedUpdate = forceUpdate || dimensions.forceUpdate;
+
+                if (time) {
+                    const
+                        tween = new TweenJS.Tween(this);
+                    
+                    tween.to({width, height}, time);
+                    if (ease) {
+                        tween.easing(ease);
+                    }
+                    tween.onUpdate(() => {
+                        this.resize();
+                    }).start();
+                } else {
+                    if (width && height) {
+                        this.width = dimensions.width;
+                        this.height = dimensions.height;
+                    }
+                    if (this.canvas) {
+                        this.owner.width  = this.canvas.width;
+                        this.owner.height = this.canvas.height;
+                    }
+                    this.resize();
                 }
-                if (this.canvas) {
-                    this.owner.width  = this.canvas.width;
-                    this.owner.height = this.canvas.height;
-                }
-                this.resize();
-                if (forceUpdate) {
+                if (forcedUpdate) {
                     this.updateViewport();
                     this.owner.triggerEvent('render-update');
                 }
             },
-            
+
             /**
              * The camera listens for this event to change its position in the world.
              *
