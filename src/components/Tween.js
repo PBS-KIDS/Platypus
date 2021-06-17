@@ -287,6 +287,14 @@ export default createComponentClass({
             var tween = typeof tweenDefinition === 'string' ? this.tweens[tweenDefinition] : this.createTweens(tweenDefinition);
 
             if (tween) {
+                // Clean out old values
+                for (const key in tween._valuesStart) {
+                    if (tween._valuesStart.hasOwnProperty(key)) {
+                        delete tween._valuesStart[key];
+                    }
+                }
+
+                // Run
                 tween.start(this.time);
             } else {
                 platypus.debug.warn('Component Tween: Unable to run requested tween.', tweenDefinition);
