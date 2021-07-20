@@ -353,6 +353,7 @@ export default (function () {
             this.voPlayer.trackSound = platypus.supports.iOS;
 
             this.sfxPlayer = new SFXPlayer();
+            this.musicPlayer = new SFXPlayer();
             
             this.springroll = (function () {
                 const
@@ -366,7 +367,7 @@ export default (function () {
                         }
                     }),
                     state = springroll.state;
-
+                
                 state.pause.subscribe(function (current) {
                     if (current) {
                         if (!this.paused) {
@@ -388,11 +389,7 @@ export default (function () {
                 });
                 
                 state.musicVolume.subscribe((current) => {
-                    if (current) {
-                        this.triggerOnChildren('mute-music');
-                    } else {
-                        this.triggerOnChildren('unmute-music');
-                    }
+                    platypus.game.musicPlayer.setVolume(current);
                 });
                 
                 state.voVolume.subscribe(function (current) {

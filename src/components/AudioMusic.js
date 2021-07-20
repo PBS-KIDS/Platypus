@@ -5,8 +5,8 @@
  * @class AudioMusic
  * @uses platypus.Component
  */
+/* global platypus */
 import {arrayCache, greenSplice} from '../utils/array.js';
-import Sound from 'pixi-sound';
 import TweenJS from '@tweenjs/tween.js';
 import createComponentClass from '../factory.js';
 
@@ -47,6 +47,8 @@ export default createComponentClass({
     initialize: function () {
         const fadeOuts = arrayCache.setUp();
         let fade = 1000;
+
+        this.player = platypus.game.musicPlayer;
         
         for (const key in tracks) {
             if (tracks.hasOwnProperty(key)) {
@@ -66,7 +68,7 @@ export default createComponentClass({
                     if (fadeOut >= 0) {
                         greenSplice(fadeOuts, fadeOut);
                     } else { // gotta load it because it's not there!
-                        sound = tracks[key] = Sound.play(trackProperties.sound || trackProperties, {
+                        sound = tracks[key] = this.player.play(trackProperties.sound || trackProperties, {
                             loop: Infinity,
                             volume: trackProperties.fade ? 0 : (typeof trackProperties.volume === 'number' ? trackProperties.volume : 1)
                         });
@@ -94,7 +96,7 @@ export default createComponentClass({
                 volume: 0
             }, fade);
             tween.onComplete(() => {
-                sound.stop();
+                this.player.stop(sound);
                 //sound.unload();
             });
             delete tracks[value];
@@ -102,39 +104,6 @@ export default createComponentClass({
         });
     },
 
-    events: {
-        /**
-         * On receiving this message all music will mute.
-         *
-         * @method 'mute-music'
-         */
-        "mute-music": function () {
-            for (const key in tracks) {
-                if (tracks.hasOwnProperty(key)) {
-                    tracks[key].muted = true;
-                }
-            }
-        },
-
-        /**
-         * On receiving this message all music will unmute.
-         *
-         * @method 'unmute-music'
-         */
-        "unmute-music": function () {
-            for (const key in tracks) {
-                if (tracks.hasOwnProperty(key)) {
-                    tracks[key].muted = false;
-                }
-            }
-        }
-    },
-    
-    methods: {
-        destroy: function () {
-        }
-    },
-        
     getAssetList: function (component, props, defaultProps) {
         var key = '',
             preload = arrayCache.setUp(),

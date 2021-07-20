@@ -26,7 +26,7 @@ export default class SFXPlayer {
      */
     play (sound, data) {
         const
-            audio = this.player.play(sound, data);
+            audio = sound.play ? sound.play(data) : this.player.play(sound, data);
 
         audio.initialVolume = audio.volume;
         audio.set('volume', audio.initialVolume * this.volume);
