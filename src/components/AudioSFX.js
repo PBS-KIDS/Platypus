@@ -74,6 +74,8 @@ export default (function () {
             sound = platypus.assetCache.getFileId(sound);
 
             return function (value) {
+                const
+                    soundInstance = Sound.exists(sound) ? Sound.find(sound) : Sound.add(sound);
                 let data = null;
 
                 value = value || attributes;
@@ -89,12 +91,16 @@ export default (function () {
                     "speed",    (typeof value.speed !== 'undefined') ? value.speed : ((typeof attributes.speed !== 'undefined') ? attributes.speed : defaultSettings.speed),
                     "playthrough", value.playthrough || attributes.playthrough || defaultSettings.playthrough
                 );
-                data.audio = this.player.play(sound, data);
                 if (data.pan) {
-                    data.audio.filters = [
-                        new Sound.filters.StereoFilter(data.audio.pan)
-                    ];
+                    if (soundInstance.filters?.[0]) {
+                        soundInstance.filters[0].pan = data.pan;
+                    } else {
+                        soundInstance.filters = [
+                            new Sound.filters.StereoFilter(data.pan)
+                        ];
+                    }
                 }
+                data.audio = this.player.play(soundInstance, data);
                 if (data.volume) {
                     data.audio.volume = data.volume;
                 }
