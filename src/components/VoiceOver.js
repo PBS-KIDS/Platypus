@@ -178,15 +178,54 @@ export default (function () {
              *
              * @property voiceOverMap
              * @type Object
-             * @default {}
+             * @default null
              */
-            voiceOverMap: {}
+            voiceOverMap: null,
+
+            /**
+             * This generates voice over maps. Includes basic properties that can add a prefix to the event name, initial delay before the audio, and an onEnd event that fires when the voice over completes.
+             *
+             *      "generatedVoiceOverMap": {
+             *          "eventPrefix": "vo-" //Optional. Defaults to "vo-". Is prefixed to the audio file name to create the event to call to trigger to VO.
+             *          "initialDelay": 0 //Optional. Defaults to 0. An intial audio delay before the VO starts. Useful to prevent audio from triggering as a scene is loading.
+             *          "onEndEvent": "an-event" //Optional. Defaults to "". This event fires when the VO completes.
+             *          "audio": ["audio-0", "audio-1", "audio-2"] //Required. An array of strings that coorespond to the audio files to create a VOMap for.
+             *      }
+             * 
+             *      A generated VO Map is equivalent to this structure:
+             * 
+             *      "prefix-audio-0": [
+             *          500, //initialDelay
+             *          {
+             *              "sound": {
+             *                  "sound": "audio-0", //the audio string
+             *                  "events": [
+             *                      {
+             *                          "event": "on-end-event", //onEndEvent
+             *                          "time": 99999
+             *                      }
+             *                  ]
+             *              }
+             *          }
+             *      ],
+             *
+             * @property generatedVoiceOverMap
+             * @type Object
+             * @default null
+             */
+            generatedVoiceOverMaps: null
+
         },
 
         initialize: function (definition, callback) {
             var i = '',
+                x = 0,
+                audio = null,
+                prefix = null,
+                delay = 0,
+                onEnd = null,
                 componentInits = arrayCache.setUp(),
-                audioDefinition     = {
+                audioDefinition = {
                     audioMap: {},
                     aliases: definition.aliases
                 },
@@ -227,6 +266,38 @@ export default (function () {
                 componentInits.push(componentInit.bind(this, platypus.components[this.renderComponent], animationDefinition));
             } else {
                 componentInits.push(componentInit.bind(this, RenderSprite, animationDefinition));
+            }
+
+            if (!this.voiceOverMap) {
+                this.voiceOverMap = {};
+            }
+
+            if (this.generatedVoiceOverMaps) {
+                prefix = this.generatedVoiceOverMaps.eventPrefix || "vo-";
+                delay = this.generatedVoiceOverMaps.initialDelay || 0;
+                onEnd = this.generatedVoiceOverMaps.onEndEvent || "";
+
+                for (x = 0; x < this.generatedVoiceOverMaps.audio.length; x++) {
+                    audio = this.generatedVoiceOverMaps.audio[x];
+
+                    if (!this.voiceOverMap[prefix + audio]) {
+                        this.voiceOverMap[prefix + audio] = [
+                            delay,
+                            {
+                                "sound": {
+                                    "sound": audio, 
+                                    "events": [
+                                        {
+                                            "event": onEnd,
+                                            "time": 99999
+                                        }
+                                    ]
+                                }
+                            }
+                        ];
+                    }
+                }
+
             }
 
             for (i in this.voiceOverMap) {
