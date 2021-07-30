@@ -183,14 +183,15 @@ export default (function () {
             voiceOverMap: null,
 
             /**
-             * This generates voice over maps. Includes basic properties that can add a prefix to the event name, initial delay before the audio, and an onEnd event that fires when the voice over completes.
+             * This generates voice over maps. An array of specifications for batches of voice maps to generate. Includes basic properties that can add a prefix to the event name, initial delay before the audio, and an onEnd event that fires when the voice over completes.
              *
-             *      "generatedVoiceOverMap": {
+             *      "generatedVoiceOverMap": [{
              *          "eventPrefix": "vo-" //Optional. Defaults to "vo-". Is prefixed to the audio file name to create the event to call to trigger to VO.
              *          "initialDelay": 0 //Optional. Defaults to 0. An intial audio delay before the VO starts. Useful to prevent audio from triggering as a scene is loading.
              *          "onEndEvent": "an-event" //Optional. Defaults to "". This event fires when the VO completes.
+             *          "endEventTime": 500 //Optional. Defaults to 99999. When the onEnd event fires.
              *          "audio": ["audio-0", "audio-1", "audio-2"] //Required. An array of strings that coorespond to the audio files to create a VOMap for.
-             *      }
+             *      }]
              * 
              *      A generated VO Map is equivalent to this structure:
              * 
@@ -210,7 +211,7 @@ export default (function () {
              *      ],
              *
              * @property generatedVoiceOverMap
-             * @type Object
+             * @type Object Array
              * @default null
              */
             generatedVoiceOverMaps: null
@@ -220,10 +221,13 @@ export default (function () {
         initialize: function (definition, callback) {
             var i = '',
                 x = 0,
+                y = 0,
                 audio = null,
                 prefix = null,
                 delay = 0,
                 onEnd = null,
+                endEventTime = 0,
+                voBatch = null,
                 componentInits = arrayCache.setUp(),
                 audioDefinition = {
                     audioMap: {},
@@ -273,28 +277,33 @@ export default (function () {
             }
 
             if (this.generatedVoiceOverMaps) {
-                prefix = this.generatedVoiceOverMaps.eventPrefix || "vo-";
-                delay = this.generatedVoiceOverMaps.initialDelay || 0;
-                onEnd = this.generatedVoiceOverMaps.onEndEvent || "";
+                for (y = 0; y < this.generatedVoiceOverMaps.length; y++) {
+                    voBatch = this.generatedVoiceOverMaps[y];
 
-                for (x = 0; x < this.generatedVoiceOverMaps.audio.length; x++) {
-                    audio = this.generatedVoiceOverMaps.audio[x];
+                    prefix = voBatch.eventPrefix || "vo-";
+                    delay = voBatch.initialDelay || 0;
+                    endEventTime = voBatch.endEventTime || 99999;
+                    onEnd = voBatch.onEndEvent || "";
 
-                    if (!this.voiceOverMap[prefix + audio]) {
-                        this.voiceOverMap[prefix + audio] = [
-                            delay,
-                            {
-                                "sound": {
-                                    "sound": audio, 
-                                    "events": [
-                                        {
-                                            "event": onEnd,
-                                            "time": 99999
-                                        }
-                                    ]
+                    for (x = 0; x < voBatch.audio.length; x++) {
+                        audio = voBatch.audio[x];
+
+                        if (!this.voiceOverMap[prefix + audio]) {
+                            this.voiceOverMap[prefix + audio] = [
+                                delay,
+                                {
+                                    "sound": {
+                                        "sound": audio, 
+                                        "events": [
+                                            {
+                                                "event": onEnd,
+                                                "time": endEventTime
+                                            }
+                                        ]
+                                    }
                                 }
-                            }
-                        ];
+                            ];
+                        }
                     }
                 }
 
