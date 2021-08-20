@@ -483,7 +483,7 @@ export default (function () {
                 }
             },
             
-            getAssetList: function (def, props, defaultProps) {
+            getAssetList: function (def, props, defaultProps, data) {
                 var i = 0,
                     assets = arrayCache.setUp(),
                     entities = arrayCache.setUp(),
@@ -500,7 +500,7 @@ export default (function () {
                 }
 
                 for (i = 0; i < entities.length; i++) {
-                    arr = Entity.getAssetList(entities[i]);
+                    arr = Entity.getAssetList(entities[i], null, data);
                     union(assets, arr);
                     arrayCache.recycle(arr);
                 }

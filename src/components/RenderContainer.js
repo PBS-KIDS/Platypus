@@ -13,7 +13,6 @@ import Interactive from './Interactive.js';
 import {arrayCache} from '../utils/array.js';
 import createComponentClass from '../factory.js';
 import {greenSplit} from '../utils/string.js';
-import { update } from 'lodash';
 
 export default (function () {
     var ColorMatrixFilter = filters.ColorMatrixFilter,
