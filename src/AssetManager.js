@@ -179,9 +179,14 @@ export default class AssetManager {
             }
 
             queue.load();
-        } else if (all) {
+        } else {
             setTimeout(() => { // To run in same async sequence as above.
-                all();
+                if (one) {
+                    one(1);
+                }
+                if (all) {
+                    all();
+                }
             }, 1);
         }
 
