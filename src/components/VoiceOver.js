@@ -190,7 +190,7 @@ export default (function () {
              *          "initialDelay": 0 //Optional. Defaults to 0. An intial audio delay before the VO starts. Useful to prevent audio from triggering as a scene is loading.
              *          "onEndEvent": "an-event" //Optional. Defaults to "". This event fires when the VO completes.
              *          "endEventTime": 500 //Optional. Defaults to 99999. When the onEnd event fires.
-             *          "audio": ["audio-0", "audio-1", "audio-2"] //Required. An array of strings that coorespond to the audio files to create a VOMap for.
+             *          "audio": ["audio-0", "audio-1", "audio-2"] //Required. An array of strings that coorespond to the audio files to create a VOMap for, or a key/value list of id to audio path pairings.
              *      }]
              * 
              *      A generated VO Map is equivalent to this structure:
@@ -222,12 +222,6 @@ export default (function () {
             var i = '',
                 x = 0,
                 y = 0,
-                audio = null,
-                prefix = null,
-                delay = 0,
-                onEnd = null,
-                endEventTime = 0,
-                voBatch = null,
                 componentInits = arrayCache.setUp(),
                 audioDefinition = {
                     audioMap: {},
@@ -253,7 +247,7 @@ export default (function () {
                     spriteSheet: definition.spriteSheet,
                     stateBased: definition.stateBased || false
                 };
-            
+
             if (this.messagePrefix) {
                 this.message = this.messagePrefix + '-';
             } else {
@@ -277,23 +271,19 @@ export default (function () {
             }
 
             if (this.generatedVoiceOverMaps) {
-                for (y = 0; y < this.generatedVoiceOverMaps.length; y++) {
-                    voBatch = this.generatedVoiceOverMaps[y];
+                const
+                    createMapping = (key, path, voBatch) => {
+                        if (!this.voiceOverMap[key]) {
+                            const
+                                delay = voBatch.initialDelay || 0,
+                                endEventTime = voBatch.endEventTime || 99999,
+                                onEnd = voBatch.onEndEvent || "";
 
-                    prefix = voBatch.eventPrefix || "vo-";
-                    delay = voBatch.initialDelay || 0;
-                    endEventTime = voBatch.endEventTime || 99999;
-                    onEnd = voBatch.onEndEvent || "";
-
-                    for (x = 0; x < voBatch.audio.length; x++) {
-                        audio = voBatch.audio[x];
-
-                        if (!this.voiceOverMap[prefix + audio]) {
-                            this.voiceOverMap[prefix + audio] = [
+                            this.voiceOverMap[key] = [
                                 delay,
                                 {
                                     "sound": {
-                                        "sound": audio, 
+                                        "sound": path,
                                         "events": [
                                             {
                                                 "event": onEnd,
@@ -304,9 +294,27 @@ export default (function () {
                                 }
                             ];
                         }
+                    };
+
+                for (y = 0; y < this.generatedVoiceOverMaps.length; y++) {
+                    const
+                        voBatch = this.generatedVoiceOverMaps[y],
+                        prefix = voBatch.eventPrefix || "vo-",
+                        audios = voBatch.audio;
+
+                    if (Array.isArray(audios)) {
+                        for (x = 0; x < audios.length; x++) {
+                            const audio = audios[x];
+                            createMapping(`${prefix}${audio}`, audio, voBatch);
+                        }
+                    } else {
+                        for (const key in audios) {
+                            if (audios.hasOwnProperty(key)) {
+                                createMapping(`${prefix}${key}`, audios[key], voBatch);
+                            }
+                        }
                     }
                 }
-
             }
 
             for (i in this.voiceOverMap) {
