@@ -517,9 +517,9 @@ export default createComponentClass({
          */
         "set-volume": function (volume, soundId) {
             var id = soundId || '',
-                handler = function (vol, clip) {
+                handler = (vol, clip) => {
                     if (clip) {
-                        clip.volume = vol;
+                        clip.volume = vol * this.player.volume;
                     }
                 };
             
