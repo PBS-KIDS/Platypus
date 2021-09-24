@@ -393,13 +393,24 @@ export default (function () {
                     }
                 },
                 animationEnded = function (animationData) {
+                    const
+                        animationName = animationData.animation.name;
+                        
+                    if (this.playSequence) {
+                        this.playIndex += 1;
+                        if (this.playIndex < this.playSequence.length || this.loopSequence) {
+                            this.playIndex = this.playIndex % this.playSequence.length;
+                            this.innerPlayAnimation(this.playSequence[this.playIndex], false);
+                        }
+                    }
+
                     /**
                      * This event fires each time an animation completes.
                      *
                      * @event 'animation-ended'
                      * @param animation {String} The id of the animation that ended.
                      */
-                    this.owner.triggerEvent('animation-ended', animationData.animation.name);
+                    this.owner.triggerEvent('animation-ended', animationName);
                 },
                 handleSpineEvent = function (entry, event) {
                     var eventName = event.data.name;
@@ -469,6 +480,9 @@ export default (function () {
                     if (animation) {
                         this.playAnimation(animation);
                     }
+
+                    this.playSequence = null;
+                    this.playIndex = 0;
     
                     spine.x = this.offsetX;
                     spine.y = this.offsetY;
@@ -496,7 +510,7 @@ export default (function () {
         
                         this.currentSkin = null;
 
-                            //Handle Events:
+                        //Handle Events:
                         if (this.eventBased) {
                             for (const state in map) {
                                 if (map.hasOwnProperty(state)) {
@@ -644,6 +658,23 @@ export default (function () {
             },
             
             playAnimation: function (animation, loop = true) {
+                if (Array.isArray(animation)) {
+                    if (animation !== this.playSequence) {
+                        this.playSequence = animation;
+                        this.playIndex = 0;
+                        this.loopSequence = loop;
+                        return this.innerPlayAnimation(animation[0], false);
+                    } else {
+                        return 0; //not sure if this is used
+                    }
+                } else {
+                    this.playSequence = null;
+                    this.playIndex = 0;
+                    return this.innerPlayAnimation(animation, loop);
+                }
+            },
+
+            innerPlayAnimation: function (animation, loop) {
                 const spine = this.spine;
                 let animated = 0,
                     remaining = animation;
