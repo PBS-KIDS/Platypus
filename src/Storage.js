@@ -18,9 +18,10 @@ export default class Storage {
             unconnectedData = window.localStorage.getItem(storageKey),
             keys = options.storageKeys || null,
             handleData = (resp) => {
-                if (resp && resp.data) {
-                    const data = resp.data;
+                const
+                    data = resp && resp.data ? resp.data : resp;
 
+                if (data) {
                     for (const key in data) {
                         if (data.hasOwnProperty(key)) {
                             if (this.map.has(key)) {
