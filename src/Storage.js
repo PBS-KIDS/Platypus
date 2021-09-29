@@ -61,9 +61,7 @@ export default class Storage {
         }
 
         try { // May throw if data is not parseable. If so, we'll just ignore it.
-            handleData({
-                data: JSON.parse(unconnectedData)
-            });
+            handleData(JSON.parse(unconnectedData));
         } catch (e) {}
 
         springroll.container.on('connected', () => {
