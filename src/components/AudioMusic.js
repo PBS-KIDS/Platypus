@@ -70,14 +70,15 @@ export default createComponentClass({
                     } else { // gotta load it because it's not there!
                         sound = tracks[key] = this.player.play(trackProperties.sound || trackProperties, {
                             loop: Infinity,
-                            volume: trackProperties.fade ? 0 : (typeof trackProperties.volume === 'number' ? trackProperties.volume : 1)
+                            volume: trackProperties.fade ? 0 : (typeof trackProperties.volume === 'number' ? trackProperties.volume : 1),
+                            initialVolume: typeof trackProperties.volume === 'number' ? trackProperties.volume : 1
                         });
                     }
 
                     if (trackProperties.fade) {
                         tween = new Tween(sound);
                         tween.to({
-                            volume: typeof trackProperties.volume === 'number' ? trackProperties.volume : 1
+                            volume: (typeof trackProperties.volume === 'number' ? trackProperties.volume : 1) * this.player.volume
                         }, trackProperties.fade);
                         tween.start();
 
