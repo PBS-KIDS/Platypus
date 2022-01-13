@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v1.0.0 API Documentation : src\platypus.js</title>
+	<title>platypus v1.0.2 API Documentation : src\platypus.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 1.0.0</em>
+            <em>API Documentation for: 1.0.2</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -174,7 +174,7 @@
                                 isEdge    = (uagent.search(&#x27;edge&#x27;)    &gt; -1),
                                 isIPod    = (uagent.search(&#x27;ipod&#x27;)    &gt; -1),
                                 isIPhone  = (uagent.search(&#x27;iphone&#x27;)  &gt; -1),
-                                isIPad    = (uagent.search(&#x27;ipad&#x27;)    &gt; -1),
+                                isIPad    = (uagent.search(&#x27;ipad&#x27;)    &gt; -1 || navigator.platform === &#x27;MacIntel&#x27; &amp;&amp; navigator.maxTouchPoints &gt; 1),
                                 isAndroid = (uagent.search(&#x27;android&#x27;) &gt; -1),
                                 isSilk    = (uagent.search(&#x27;silk&#x27;)    &gt; -1),
                                 isIOS     = isIPod || isIPhone  || isIPad,

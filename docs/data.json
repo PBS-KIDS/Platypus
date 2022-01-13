@@ -1,7 +1,7 @@
 {
     "project": {
         "name": "platypus",
-        "version": "1.0.0",
+        "version": "1.0.2",
         "description": "Platypus Docs",
         "url": "https://github.com/PBS-KIDS/Platypus",
         "logo": "assets/platypus-title.png"
@@ -12331,7 +12331,7 @@
         },
         {
             "file": "src\\components\\RenderTiles.js",
-            "line": 125,
+            "line": 147,
             "description": "The amount of space in pixels around the edge of the camera that we include in the buffered image. If not set, largest buffer allowed by maximumBuffer is used.",
             "itemtype": "property",
             "name": "buffer",
@@ -12342,7 +12342,7 @@
         },
         {
             "file": "src\\components\\RenderTiles.js",
-            "line": 134,
+            "line": 156,
             "description": "Determines whether to cache the entire map across one or more texture caches. By default this is `false`; however, if the entire map fits on one or two texture caches, this is set to `true` since it is more efficient than dynamic buffering.",
             "itemtype": "property",
             "name": "cacheAll",
@@ -12353,7 +12353,7 @@
         },
         {
             "file": "src\\components\\RenderTiles.js",
-            "line": 143,
+            "line": 165,
             "description": "Whether to cache entities on this layer if the entity's render component requests caching.",
             "itemtype": "property",
             "name": "entityCache",
@@ -12364,7 +12364,7 @@
         },
         {
             "file": "src\\components\\RenderTiles.js",
-            "line": 152,
+            "line": 174,
             "description": "This is a two dimensional array of the spritesheet indexes that describe the map that you're rendering.",
             "itemtype": "property",
             "name": "imageMap",
@@ -12375,7 +12375,7 @@
         },
         {
             "file": "src\\components\\RenderTiles.js",
-            "line": 161,
+            "line": 183,
             "description": "The amount of space that is buffered. Defaults to 2048 x 2048 or a smaller area that encloses the tile layer.",
             "itemtype": "property",
             "name": "maximumBuffer",
@@ -12386,7 +12386,7 @@
         },
         {
             "file": "src\\components\\RenderTiles.js",
-            "line": 170,
+            "line": 192,
             "description": "The x-scale the tilemap is being displayed at.",
             "itemtype": "property",
             "name": "scaleX",
@@ -12397,7 +12397,7 @@
         },
         {
             "file": "src\\components\\RenderTiles.js",
-            "line": 179,
+            "line": 201,
             "description": "The y-scale the tilemap is being displayed at.",
             "itemtype": "property",
             "name": "scaleY",
@@ -12408,7 +12408,7 @@
         },
         {
             "file": "src\\components\\RenderTiles.js",
-            "line": 188,
+            "line": 210,
             "description": "A sprite sheet describing all the tile images.\n\nAccepts an array of sprite sheet data since 0.8.4",
             "itemtype": "property",
             "name": "spriteSheet",
@@ -12419,7 +12419,7 @@
         },
         {
             "file": "src\\components\\RenderTiles.js",
-            "line": 199,
+            "line": 221,
             "description": "Whether to cache the tile map to a large texture.",
             "itemtype": "property",
             "name": "tileCache",
@@ -12431,7 +12431,7 @@
         },
         {
             "file": "src\\components\\RenderTiles.js",
-            "line": 209,
+            "line": 231,
             "description": "This is the height in pixels of individual tiles.",
             "itemtype": "property",
             "name": "tileHeight",
@@ -12442,7 +12442,7 @@
         },
         {
             "file": "src\\components\\RenderTiles.js",
-            "line": 218,
+            "line": 240,
             "description": "This is the width in pixels of individual tiles.",
             "itemtype": "property",
             "name": "tileWidth",
@@ -12453,7 +12453,7 @@
         },
         {
             "file": "src\\components\\RenderTiles.js",
-            "line": 227,
+            "line": 249,
             "description": "The map's top offset.",
             "itemtype": "property",
             "name": "top",
@@ -12465,7 +12465,7 @@
         },
         {
             "file": "src\\components\\RenderTiles.js",
-            "line": 237,
+            "line": 259,
             "description": "The map's left offset.",
             "itemtype": "property",
             "name": "left",
@@ -12477,7 +12477,7 @@
         },
         {
             "file": "src\\components\\RenderTiles.js",
-            "line": 306,
+            "line": 331,
             "description": "If this component should cache entities, it checks peers for a \"renderCache\" display object and adds the display object to its list of objects to render on top of the tile set.",
             "itemtype": "method",
             "name": "'cache-sprite'",
@@ -12493,7 +12493,7 @@
         },
         {
             "file": "src\\components\\RenderTiles.js",
-            "line": 316,
+            "line": 341,
             "description": "If this component should cache entities, it checks peers for a \"renderCache\" display object and adds the display object to its list of objects to render on top of the tile set.",
             "itemtype": "method",
             "name": "'peer-entity-added'",
@@ -12509,7 +12509,7 @@
         },
         {
             "file": "src\\components\\RenderTiles.js",
-            "line": 326,
+            "line": 351,
             "description": "This event adds a layer of tiles to render on top of the existing layer of rendered tiles.",
             "itemtype": "method",
             "name": "'add-tiles'",
@@ -12525,7 +12525,7 @@
         },
         {
             "file": "src\\components\\RenderTiles.js",
-            "line": 341,
+            "line": 366,
             "description": "This event edits the tile index of a rendered tile.",
             "itemtype": "method",
             "name": "'change-tile'",
@@ -12557,7 +12557,7 @@
         },
         {
             "file": "src\\components\\RenderTiles.js",
-            "line": 359,
+            "line": 384,
             "description": "Provides the width and height of the world.",
             "itemtype": "method",
             "name": "'camera-loaded'",
@@ -12585,7 +12585,7 @@
         },
         {
             "file": "src\\components\\RenderTiles.js",
-            "line": 376,
+            "line": 401,
             "description": "Triggered when the camera moves, this function updates which tiles need to be rendered and caches the image.",
             "itemtype": "method",
             "name": "'camera-update'",
@@ -12608,7 +12608,7 @@
         },
         {
             "file": "src\\components\\RenderTiles.js",
-            "line": 389,
+            "line": 414,
             "description": "On receiving this message, determines whether to update which tiles need to be rendered and caches the image.",
             "itemtype": "method",
             "name": "'handle-render'",

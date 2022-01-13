@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v1.0.0 API Documentation : src\components\RenderTiles.js</title>
+	<title>platypus v1.0.2 API Documentation : src\components\RenderTiles.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 1.0.0</em>
+            <em>API Documentation for: 1.0.2</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -211,9 +211,8 @@
                         
                                     return x;
                                 },
-                                transformCheck = function (value, tile) {
-                                    var v = +(value.substring(4)),
-                                        x = 0;
+                                transformCheck = function (v, tile) {
+                                    var x = 0;
                         
                                     if (0x80000000 &amp; v) {
                                         tile.scale.x = -1;
@@ -227,20 +226,43 @@
                                         tile.scale.y = -x;
                                         tile.rotation = Math.PI / 2;
                                     }
-                        
-                                    return 0x0fffffff &amp; v;
                                 },
-                                Template = function (tile, id) {
+                                Template = function (tileSpriteSheet, id, uninitializedTiles) {
                                     this.id = id;
-                                    this.instances = Array.setUp(tile);
+                                    this.instances = Array.setUp();
                                     this.index = 0;
-                                    tile.template = this; // backwards reference for clearing index later.
+                        
+                                    // jit sprite
+                                    this.tileSpriteSheet = tileSpriteSheet;
+                                    this.getNext = this.initializeAndGetNext;
+                                    this.uninitializedTiles = uninitializedTiles;
+                                    uninitializedTiles.push(this);
                                 },
                                 nullTemplate = {
                                     getNext: doNothing,
                                     destroy: doNothing
                                 },
                                 prototype = Template.prototype;
+                        
+                            prototype.initializeAndGetNext = function () {
+                                this.initialize();
+                        
+                                this.index += 1;
+                                return this.instances[0];
+                            };
+                        
+                            prototype.initialize = function () {
+                                var index = +(this.id.substring(4)),
+                                    anim = &#x27;tile&#x27; + (0x0fffffff &amp; index),
+                                    tile = new Sprite((this.tileSpriteSheet._animations[anim] || this.tileSpriteSheet._animations.default).texture);
+                                    
+                                transformCheck(index, tile);
+                                tile.template = this; // backwards reference for clearing index later.
+                                this.instances.push(tile);
+                                this.uninitializedTiles.greenSplice(this.uninitializedTiles.indexOf(this));
+                        
+                                delete this.getNext;
+                            };
                         
                             prototype.getNext = function () {
                                 var instance = this.instances[this.index],
@@ -428,8 +450,11 @@
                                     this.cache = AABB.setUp();
                                     this.cachePixels = AABB.setUp();
                         
+                                    this.uninitializedTiles = Array.setUp();
+                        
                                     // Set up containers
                                     this.spriteSheet = PIXIAnimation.formatSpriteSheet(this.spriteSheet);
+                                    this.tileSpriteSheet = new PIXIAnimation(this.spriteSheet);
                                     this.tileContainer = ((this.spriteSheet.images.length &gt; 1) || (this.renderer instanceof CanvasRenderer)) ? new Container() : new ParticleContainer(15000, {position: true, rotation: true, scale: true});
                                     this.mapContainer = new Container();
                                     this.mapContainer.addChild(this.tileContainer);
@@ -560,6 +585,8 @@
                                             } else {
                                                 this.update(this.cacheTexture, this.cache);
                                             }
+                                        } else if (this.uninitializedTiles.length) { // Pre-render any tiles left to be prerendered to reduce lag on camera movement
+                                            this.uninitializedTiles[0].initialize();
                                         }
                                     }
                                 },
@@ -713,19 +740,12 @@
                                     },
                         
                                     createTile: function (imageName) {
-                                        var tile = null,
-                                            anim = &#x27;&#x27;;
-                        
                                         // &quot;tile-1&quot; is empty, so it remains a null reference.
                                         if (imageName === &#x27;tile-1&#x27;) {
                                             return nullTemplate;
                                         }
                         
-                                        tile = new PIXIAnimation(this.spriteSheet);
-                                        anim = &#x27;tile&#x27; + transformCheck(imageName, tile);
-                                        tile.gotoAndStop(anim);
-                        
-                                        return Template.setUp(tile, imageName);
+                                        return Template.setUp(this.tileSpriteSheet, imageName, this.uninitializedTiles);
                                     },
                         
                                     createMap: function (mapDefinition) {
@@ -1193,6 +1213,7 @@
                                         this.laxCam.recycle();
                                         this.cache.recycle();
                                         this.cachePixels.recycle();
+                                        this.uninitializedTiles.recycle();
                                     }
                                 },
                                 
