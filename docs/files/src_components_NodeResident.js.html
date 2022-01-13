@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v1.0.2 API Documentation : src\components\NodeResident.js</title>
+	<title>platypus v2.0.0 API Documentation : src\components\NodeResident.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 1.0.2</em>
+            <em>API Documentation for: 2.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/platypus.AABB.html">platypus.AABB</a></li>
                                 <li><a href="../classes/platypus.ActionState.html">platypus.ActionState</a></li>
+                                <li><a href="../classes/platypus.AssetManager.html">platypus.AssetManager</a></li>
                                 <li><a href="../classes/platypus.Async.html">platypus.Async</a></li>
                                 <li><a href="../classes/platypus.CollisionData.html">platypus.CollisionData</a></li>
                                 <li><a href="../classes/platypus.CollisionDataContainer.html">platypus.CollisionDataContainer</a></li>
@@ -46,6 +47,7 @@
                                 <li><a href="../classes/platypus.Component.html">platypus.Component</a></li>
                                 <li><a href="../classes/platypus.components.AIChaser.html">platypus.components.AIChaser</a></li>
                                 <li><a href="../classes/platypus.components.AIPacer.html">platypus.components.AIPacer</a></li>
+                                <li><a href="../classes/platypus.components.AudioMusic.html">platypus.components.AudioMusic</a></li>
                                 <li><a href="../classes/platypus.components.AudioSFX.html">platypus.components.AudioSFX</a></li>
                                 <li><a href="../classes/platypus.components.AudioVO.html">platypus.components.AudioVO</a></li>
                                 <li><a href="../classes/platypus.components.Camera.html">platypus.components.Camera</a></li>
@@ -58,7 +60,6 @@
                                 <li><a href="../classes/platypus.components.Counter.html">platypus.components.Counter</a></li>
                                 <li><a href="../classes/platypus.components.EntityContainer.html">platypus.components.EntityContainer</a></li>
                                 <li><a href="../classes/platypus.components.EntityController.html">platypus.components.EntityController</a></li>
-                                <li><a href="../classes/platypus.components.EventRender.html">platypus.components.EventRender</a></li>
                                 <li><a href="../classes/platypus.components.HandlerCollision.html">platypus.components.HandlerCollision</a></li>
                                 <li><a href="../classes/platypus.components.HandlerController.html">platypus.components.HandlerController</a></li>
                                 <li><a href="../classes/platypus.components.HandlerLogic.html">platypus.components.HandlerLogic</a></li>
@@ -74,6 +75,7 @@
                                 <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicTimer.html">platypus.components.LogicTimer</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
                                 <li><a href="../classes/platypus.components.Motion.html">platypus.components.Motion</a></li>
                                 <li><a href="../classes/platypus.components.Mover.html">platypus.components.Mover</a></li>
@@ -87,7 +89,7 @@
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
-                                <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
+                                <li><a href="../classes/platypus.components.RenderAnimator.html">platypus.components.RenderAnimator</a></li>
                                 <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
@@ -97,7 +99,6 @@
                                 <li><a href="../classes/platypus.components.RenderText.html">platypus.components.RenderText</a></li>
                                 <li><a href="../classes/platypus.components.RenderTiles.html">platypus.components.RenderTiles</a></li>
                                 <li><a href="../classes/platypus.components.SceneChanger.html">platypus.components.SceneChanger</a></li>
-                                <li><a href="../classes/platypus.components.StateRender.html">platypus.components.StateRender</a></li>
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
@@ -107,16 +108,17 @@
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
                                 <li><a href="../classes/platypus.DataMap.html">platypus.DataMap</a></li>
                                 <li><a href="../classes/platypus.Entity.html">platypus.Entity</a></li>
+                                <li><a href="../classes/platypus.EntityLinker.html">platypus.EntityLinker</a></li>
                                 <li><a href="../classes/platypus.Game.html">platypus.Game</a></li>
+                                <li><a href="../classes/platypus.Gamepad.html">platypus.Gamepad</a></li>
                                 <li><a href="../classes/platypus.Messenger.html">platypus.Messenger</a></li>
                                 <li><a href="../classes/platypus.PIXIAnimation.html">platypus.PIXIAnimation</a></li>
-                                <li><a href="../classes/platypus.PlatypusPlugin.html">platypus.PlatypusPlugin</a></li>
-                                <li><a href="../classes/platypus.Scene.html">platypus.Scene</a></li>
+                                <li><a href="../classes/platypus.SFXPlayer.html">platypus.SFXPlayer</a></li>
                                 <li><a href="../classes/platypus.StateMap.html">platypus.StateMap</a></li>
+                                <li><a href="../classes/platypus.Storage.html">platypus.Storage</a></li>
                                 <li><a href="../classes/platypus.Vector.html">platypus.Vector</a></li>
-                                <li><a href="../classes/window.Array.html">window.Array</a></li>
+                                <li><a href="../classes/platypus.VOPlayer.html">platypus.VOPlayer</a></li>
                                 <li><a href="../classes/window.Map.html">window.Map</a></li>
-                                <li><a href="../classes/window.String.html">window.String</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -172,9 +174,6 @@
                         ### Listens for:
                         - **handle-logic** - On a &#x60;tick&#x60; logic message, the component updates its location and triggers messages regarding its neighbors.
                           - @param message.delta (Number) - This component uses the current time to determine its progress along an edge if moving from node to node on the map.
-                        - **on-node** - Sets the entity&#x27;s position to the sent node, updates its coordinates, and triggers messages regarding its neighbors if any.
-                          - @param node (Node) - The node that this entity should be located on.
-                        - **leave-node** - Removes the entity from its current node if it&#x27;s on one.
                         - **goto-node** - Begins moving the entity along edges to get to sent node.
                           - @param node (Node) - The node that this entity should move to.
                         - **follow** - Causes this entity to follow another entity. The leading entity must also have a &#x60;NodeResident&#x60; component and exist in the NodeMap.
@@ -222,10 +221,10 @@
                          * @class NodeResident
                          * @uses platypus.Component
                          */
-                        /* global platypus */
-                        (function () {
-                            &#x27;use strict&#x27;;
-                            
+                        import {arrayCache, greenSlice} from &#x27;../utils/array.js&#x27;;
+                        import createComponentClass from &#x27;../factory.js&#x27;;
+                        
+                        export default (function () {
                             var createGateway = function (nodeDefinition, map, gateway) {
                                     return function () {
                                         // ensure it&#x27;s a node if one is available at this gateway
@@ -305,12 +304,22 @@
                                     return true;
                                 };
                         
-                            return platypus.createComponentClass({
+                            return createComponentClass({
                                 
                                 id: &#x27;NodeResident&#x27;,
+                        
+                                properties: {
+                                    /**
+                                     * This sets the resident&#x27;s initial node.
+                                     *
+                                     * @property node
+                                     * @type Object
+                                     * @default null
+                                     */
+                                    node: null
+                                },
                                 
                                 publicProperties: {
-                        
                                     /**
                                      * This describes the rate at which a node resident should progress along an edge to another node. This property is set on the entity itself and can be manipulated in real-time.
                                      *
@@ -322,7 +331,9 @@
                                 },
                                 
                                 initialize: function (definition) {
-                                    var offset = definition.offset || this.owner.nodeOffset || {};
+                                    const
+                                        offset = definition.offset || this.owner.nodeOffset || {},
+                                        startingNode = this.node;
                                     
                                     this.nodeId = this.owner.nodeId = definition.nodeId || this.owner.nodeId;
                                     
@@ -339,13 +350,25 @@
                                         y: offset.y || 0,
                                         z: offset.z || 0
                                     };
-                                    this.destinationNodes = Array.setUp();
+                                    this.destinationNodes = arrayCache.setUp();
                                     this.algorithm = definition.algorithm || distance;
                                     
                                     this.state = this.owner.state;
                                     this.state.set(&#x27;moving&#x27;, false);
                                     this.state.set(&#x27;on-node&#x27;, false);
                                     this.currentState = &#x27;&#x27;;
+                        
+                                    Object.defineProperty(this.owner, &#x27;node&#x27;, {
+                                        get: () =&gt; this.node,
+                                        set: (value) =&gt; {
+                                            if (value) {
+                                                this.getOnNode(value);
+                                            } else {
+                                                this.getOffNode();
+                                            }
+                                        }
+                                    });
+                                    this.owner.node = startingNode;
                                 },
                                 
                                 events: {
@@ -360,9 +383,9 @@
                                             arr = null;
                                         
                                         if (!this.owner.node) {
-                                            arr = Array.setUp(this.owner.x, this.owner.y);
-                                            this.owner.triggerEvent(&#x27;on-node&#x27;, this.owner.parent.getClosestNode(arr));
-                                            arr.recycle();
+                                            arr = arrayCache.setUp(this.owner.x, this.owner.y);
+                                            this.owner.node = this.owner.parent.getClosestNode(arr);
+                                            arrayCache.recycle(arr);
                                             
                                             /**
                                              * This event is triggered if the entity is placed on the map but not assigned a node. It is moved to the nearest node and &quot;in-location&quot; is triggered.
@@ -401,8 +424,8 @@
                                             if (this.node) {
                                                 this.onEdge(this.destinationNodes[0]);
                                             } else if (!this.lastNode) {
-                                                this.owner.triggerEvent(&#x27;on-node&#x27;, this.destinationNodes[0]);
-                                                this.destinationNodes.greenSplice(0);
+                                                this.owner.node = this.destinationNodes[0];
+                                                this.destinationNodes.shift();
                                                 if (!this.destinationNodes.length) {
                                                     this.state.set(&#x27;moving&#x27;, false);
                                                     return;
@@ -411,7 +434,7 @@
                                             
                                             if (this.snapToNodes) {
                                                 for (i = 0; i &lt; this.destinationNodes.length; i++) {
-                                                    this.owner.triggerEvent(&#x27;on-node&#x27;, this.destinationNodes[i]);
+                                                    this.owner.node = this.destinationNodes[i];
                                                 }
                                                 this.destinationNodes.length = 0;
                                             } else {
@@ -420,8 +443,8 @@
                                                         node = this.destinationNodes[0];
                                                         momentum -= (this.distance - this.progress);
                                                         this.progress = 0;
-                                                        this.destinationNodes.greenSplice(0);
-                                                        this.owner.triggerEvent(&#x27;on-node&#x27;, node);
+                                                        this.destinationNodes.shift();
+                                                        this.owner.node = node;
                                                         if (this.destinationNodes.length &amp;&amp; momentum) {
                                                             this.onEdge(this.destinationNodes[0]);
                                                         }
@@ -441,52 +464,6 @@
                                         } else {
                                             this.state.set(&#x27;moving&#x27;, false);
                                         }
-                                    },
-                                    &quot;on-node&quot;: function (node) {
-                                        var j = 0,
-                                            entities = null;
-                                        
-                                        this.owner.node = this.node = node; //TODO: not sure if this needs to be accessible outside this component.
-                                        this.node.removeFromEdge(this.owner);
-                                        if (this.lastNode) {
-                                            this.lastNode.removeFromEdge(this.owner);
-                                        }
-                                        this.node.addToNode(this.owner);
-                                        
-                                        this.setState(&#x27;on-node&#x27;);
-                                        
-                                        this.owner.x = this.node.x + this.offset.x;
-                                        this.owner.y = this.node.y + this.offset.y;
-                                        this.owner.z = this.node.z + this.offset.z;
-                                        if (this.updateOrientation &amp;&amp; this.node.rotation) {
-                                            this.owner.rotation = this.node.rotation;
-                                        }
-                                        
-                                        //add listeners for directions
-                                        this.owner.triggerEvent(&#x27;set-directions&#x27;);
-                                        
-                                        //trigger mapped messages for node types
-                                        if (this.friendlyNodes &amp;&amp; this.friendlyNodes[node.type]) {
-                                            this.owner.trigger(this.friendlyNodes[node.type], node);
-                                        }
-                        
-                                        //trigger &quot;with&quot; events
-                                        entities = node.contains;
-                                        for (j = 0; j &lt; entities.length; j++) {
-                                            if (this.owner !== entities[j]) {
-                                                entities[j].triggerEvent(&quot;with-&quot; + this.owner.type, this.owner);
-                                                this.owner.triggerEvent(&quot;with-&quot; + entities[j].type, entities[j]);
-                                            }
-                                        }
-                                    },
-                                    &quot;leave-node&quot;: function () {
-                                        if (this.node) {
-                                            this.node.removeFromNode(this.owner);
-                                            this.owner.triggerEvent(&#x27;left-node&#x27;, this.node);
-                                            this.owner.triggerEvent(&#x27;remove-directions&#x27;);
-                                        }
-                                        this.lastNode = this.node;
-                                        this.node = null;
                                     },
                                     &quot;goto-node&quot;: function (node) {
                                         this.gotoNode(node);
@@ -538,7 +515,7 @@
                                             }
                                             
                                             if (origin &amp;&amp; nodesOrNodeType &amp;&amp; !test(origin, nodesOrNodeType)) {
-                                                nodes = Array.setUp();
+                                                nodes = arrayCache.setUp();
                                                 travResp = this.traverseNode({
                                                     depth: depth,
                                                     origin: origin,
@@ -573,7 +550,7 @@
                                                     this.blocked = true;
                                                 }
                                                 
-                                                nodes.recycle();
+                                                arrayCache.recycle(nodes);
                                             }
                                         };
                                     }()),
@@ -633,7 +610,7 @@
                                             }
                                             
                                             if (origin &amp;&amp; node &amp;&amp; (this.node !== node)) {
-                                                nodes = Array.setUp();
+                                                nodes = arrayCache.setUp();
                                                 
                                                 travResp = this.traverseNode({
                                                     depth: depth,
@@ -672,13 +649,63 @@
                                                     this.blocked = true;
                                                 }
                                                 
-                                                nodes.recycle();
+                                                arrayCache.recycle(nodes);
                                             }
                                             
                                             return moving;
                                         };
                                     }()),
-                                    
+                        
+                                    getOnNode: function (node) {
+                                        var j = 0,
+                                            entities = null;
+                                        
+                                        this.node = node;
+                                        this.node.removeFromEdge(this.owner);
+                                        if (this.lastNode) {
+                                            this.lastNode.removeFromEdge(this.owner);
+                                        }
+                                        this.node.addToNode(this.owner);
+                                        
+                                        this.setState(&#x27;on-node&#x27;);
+                                        
+                                        this.owner.x = this.node.x + this.offset.x;
+                                        this.owner.y = this.node.y + this.offset.y;
+                                        this.owner.z = this.node.z + this.offset.z;
+                                        if (this.updateOrientation &amp;&amp; this.node.rotation) {
+                                            this.owner.rotation = this.node.rotation;
+                                        }
+                                        
+                                        //add listeners for directions
+                                        this.owner.triggerEvent(&#x27;set-directions&#x27;);
+                                        
+                                        //trigger mapped messages for node types
+                                        if (this.friendlyNodes &amp;&amp; this.friendlyNodes[node.type]) {
+                                            this.owner.trigger(this.friendlyNodes[node.type], node);
+                                        }
+                        
+                                        //trigger &quot;with&quot; events
+                                        entities = node.contains;
+                                        for (j = 0; j &lt; entities.length; j++) {
+                                            if (this.owner !== entities[j]) {
+                                                entities[j].triggerEvent(&quot;with-&quot; + this.owner.type, this.owner);
+                                                this.owner.triggerEvent(&quot;with-&quot; + entities[j].type, entities[j]);
+                                            }
+                                        }
+                        
+                                        this.owner.triggerEvent(&#x27;on-node&#x27;, node);
+                                    },
+                        
+                                    getOffNode: function () {
+                                        if (this.node) {
+                                            this.node.removeFromNode(this.owner);
+                                            this.owner.triggerEvent(&#x27;left-node&#x27;, this.node);
+                                            this.owner.triggerEvent(&#x27;remove-directions&#x27;);
+                                        }
+                                        this.lastNode = this.node;
+                                        this.node = null;
+                                    },
+                        
                                     isPassable: function (node) {
                                         return node &amp;&amp; (this.node !== node) &amp;&amp; (!this.friendlyNodes || (typeof this.friendlyNodes[node.type] !== &#x27;undefined&#x27;)) &amp;&amp; (!node.contains.length || isFriendly(node.contains, this.friendlyEntities));
                                     },
@@ -724,7 +751,7 @@
                                                     node = map.getNode(neighbors[j]);
                                                     hasNeighbor = true;
                                                     if (this.isPassable(node)) {
-                                                        nodeList = record.nodes.greenSlice();
+                                                        nodeList = greenSlice(record.nodes);
                                                         nodeList.push(node);
                                                         resp = this.traverseNode({
                                                             depth: record.depth - 1,
@@ -740,7 +767,7 @@
                                                             found: false,
                                                             blocked: false
                                                         });
-                                                        nodeList.recycle();
+                                                        arrayCache.recycle(nodeList);
                                                         if (resp.found &amp;&amp; (savedResp.shortestPath &gt; resp.shortestPath)) {
                                                             savedResp = resp;
                                                         }
@@ -754,10 +781,10 @@
                                     },
                                     setPath: function (resp, steps) {
                                         if (resp.nodes[0] === this.node) {
-                                            resp.nodes.greenSplice(0);
+                                            resp.nodes.shift();
                                         }
-                                        this.destinationNodes.recycle();
-                                        this.destinationNodes = resp.nodes.greenSlice();
+                                        arrayCache.recycle(this.destinationNodes);
+                                        this.destinationNodes = greenSlice(resp.nodes);
                                         if (steps) {
                                             this.destinationNodes.length = Math.min(steps, this.destinationNodes.length);
                                         }
@@ -781,10 +808,11 @@
                                         }
                                         this.node.addToEdge(this.owner);
                                         toNode.addToEdge(this.owner);
-                                        this.owner.triggerEvent(&#x27;leave-node&#x27;);
+                                        this.owner.node = null;
                                     },
                                     destroy: function () {
-                                        this.destinationNodes.recycle();
+                                        arrayCache.recycle(this.destinationNodes);
+                                        this.destinationNodes = null;
                                         this.state = null;
                                     }
                                 }

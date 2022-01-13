@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v1.0.2 API Documentation : src\components\RenderContainer.js</title>
+	<title>platypus v2.0.0 API Documentation : src\components\RenderContainer.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 1.0.2</em>
+            <em>API Documentation for: 2.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/platypus.AABB.html">platypus.AABB</a></li>
                                 <li><a href="../classes/platypus.ActionState.html">platypus.ActionState</a></li>
+                                <li><a href="../classes/platypus.AssetManager.html">platypus.AssetManager</a></li>
                                 <li><a href="../classes/platypus.Async.html">platypus.Async</a></li>
                                 <li><a href="../classes/platypus.CollisionData.html">platypus.CollisionData</a></li>
                                 <li><a href="../classes/platypus.CollisionDataContainer.html">platypus.CollisionDataContainer</a></li>
@@ -46,6 +47,7 @@
                                 <li><a href="../classes/platypus.Component.html">platypus.Component</a></li>
                                 <li><a href="../classes/platypus.components.AIChaser.html">platypus.components.AIChaser</a></li>
                                 <li><a href="../classes/platypus.components.AIPacer.html">platypus.components.AIPacer</a></li>
+                                <li><a href="../classes/platypus.components.AudioMusic.html">platypus.components.AudioMusic</a></li>
                                 <li><a href="../classes/platypus.components.AudioSFX.html">platypus.components.AudioSFX</a></li>
                                 <li><a href="../classes/platypus.components.AudioVO.html">platypus.components.AudioVO</a></li>
                                 <li><a href="../classes/platypus.components.Camera.html">platypus.components.Camera</a></li>
@@ -58,7 +60,6 @@
                                 <li><a href="../classes/platypus.components.Counter.html">platypus.components.Counter</a></li>
                                 <li><a href="../classes/platypus.components.EntityContainer.html">platypus.components.EntityContainer</a></li>
                                 <li><a href="../classes/platypus.components.EntityController.html">platypus.components.EntityController</a></li>
-                                <li><a href="../classes/platypus.components.EventRender.html">platypus.components.EventRender</a></li>
                                 <li><a href="../classes/platypus.components.HandlerCollision.html">platypus.components.HandlerCollision</a></li>
                                 <li><a href="../classes/platypus.components.HandlerController.html">platypus.components.HandlerController</a></li>
                                 <li><a href="../classes/platypus.components.HandlerLogic.html">platypus.components.HandlerLogic</a></li>
@@ -74,6 +75,7 @@
                                 <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicTimer.html">platypus.components.LogicTimer</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
                                 <li><a href="../classes/platypus.components.Motion.html">platypus.components.Motion</a></li>
                                 <li><a href="../classes/platypus.components.Mover.html">platypus.components.Mover</a></li>
@@ -87,7 +89,7 @@
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
-                                <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
+                                <li><a href="../classes/platypus.components.RenderAnimator.html">platypus.components.RenderAnimator</a></li>
                                 <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
@@ -97,7 +99,6 @@
                                 <li><a href="../classes/platypus.components.RenderText.html">platypus.components.RenderText</a></li>
                                 <li><a href="../classes/platypus.components.RenderTiles.html">platypus.components.RenderTiles</a></li>
                                 <li><a href="../classes/platypus.components.SceneChanger.html">platypus.components.SceneChanger</a></li>
-                                <li><a href="../classes/platypus.components.StateRender.html">platypus.components.StateRender</a></li>
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
@@ -107,16 +108,17 @@
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
                                 <li><a href="../classes/platypus.DataMap.html">platypus.DataMap</a></li>
                                 <li><a href="../classes/platypus.Entity.html">platypus.Entity</a></li>
+                                <li><a href="../classes/platypus.EntityLinker.html">platypus.EntityLinker</a></li>
                                 <li><a href="../classes/platypus.Game.html">platypus.Game</a></li>
+                                <li><a href="../classes/platypus.Gamepad.html">platypus.Gamepad</a></li>
                                 <li><a href="../classes/platypus.Messenger.html">platypus.Messenger</a></li>
                                 <li><a href="../classes/platypus.PIXIAnimation.html">platypus.PIXIAnimation</a></li>
-                                <li><a href="../classes/platypus.PlatypusPlugin.html">platypus.PlatypusPlugin</a></li>
-                                <li><a href="../classes/platypus.Scene.html">platypus.Scene</a></li>
+                                <li><a href="../classes/platypus.SFXPlayer.html">platypus.SFXPlayer</a></li>
                                 <li><a href="../classes/platypus.StateMap.html">platypus.StateMap</a></li>
+                                <li><a href="../classes/platypus.Storage.html">platypus.Storage</a></li>
                                 <li><a href="../classes/platypus.Vector.html">platypus.Vector</a></li>
-                                <li><a href="../classes/window.Array.html">window.Array</a></li>
+                                <li><a href="../classes/platypus.VOPlayer.html">platypus.VOPlayer</a></li>
                                 <li><a href="../classes/window.Map.html">window.Map</a></li>
-                                <li><a href="../classes/window.String.html">window.String</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -165,20 +167,18 @@
                          * @namespace platypus.components
                          * @class RenderContainer
                          * @uses platypus.Component
-                         * @since 0.11.0
                          */
-                        /* global include, platypus */
-                        (function () {
-                            &#x27;use strict&#x27;;
-                            
-                            var AABB = include(&#x27;platypus.AABB&#x27;),
-                                CanvasRenderer = include(&#x27;PIXI.CanvasRenderer&#x27;),
-                                ColorMatrixFilter = include(&#x27;PIXI.filters.ColorMatrixFilter&#x27;),
-                                Container = include(&#x27;PIXI.Container&#x27;),
-                                Data = include(&#x27;platypus.Data&#x27;),
-                                Graphics = include(&#x27;PIXI.Graphics&#x27;),
-                                Interactive = include(&#x27;platypus.components.Interactive&#x27;),
-                                Matrix = include(&#x27;PIXI.Matrix&#x27;),
+                        /* global platypus */
+                        import {Container, Graphics, Matrix, filters} from &#x27;pixi.js&#x27;;
+                        import AABB from &#x27;../AABB.js&#x27;;
+                        import Data from &#x27;../Data.js&#x27;;
+                        import Interactive from &#x27;./Interactive.js&#x27;;
+                        import {arrayCache} from &#x27;../utils/array.js&#x27;;
+                        import createComponentClass from &#x27;../factory.js&#x27;;
+                        import {greenSplit} from &#x27;../utils/string.js&#x27;;
+                        
+                        export default (function () {
+                            var ColorMatrixFilter = filters.ColorMatrixFilter,
                                 pixiMatrix = new Matrix(),
                                 castValue = function (color) {
                                     if (color === null) {
@@ -189,21 +189,33 @@
                                     }
                                     return +color;
                                 },
+                                magSqr = function (x, y) {
+                                    return x * x + y * y;
+                                },
                                 processGraphics = (function () {
                                     var process = function (gfx, value) {
                                         var i = 0,
                                             paren  = value.indexOf(&#x27;(&#x27;),
                                             func   = value.substring(0, paren),
-                                            values = value.substring(paren + 1, value.indexOf(&#x27;)&#x27;));
+                                            values = value.substring(paren + 1, value.indexOf(&#x27;)&#x27;)),
+                                            polyRay = false;
                         
                                         if (values.length) {
-                                            values = values.greenSplit(&#x27;,&#x27;);
+                                            if (values[0] === &#x27;[&#x27;) {
+                                                values = values.substring(1, values.length - 1);
+                                                polyRay = true;
+                                            }
+                                            values = greenSplit(values, &#x27;,&#x27;);
                                             i = values.length;
                                             while (i--) {
                                                 values[i] = +values[i];
                                             }
-                                            gfx[func].apply(gfx, values);
-                                            values.recycle();
+                                            if (polyRay) {
+                                                gfx[func](values);
+                                            } else {
+                                                gfx[func].apply(gfx, values);
+                                                arrayCache.recycle(values); // cannot recycle polygon above since it&#x27;s used by the polygon shape.
+                                            }
                                         } else {
                                             gfx[func]();
                                         }
@@ -211,23 +223,23 @@
                         
                                     return function (gfx, value) {
                                         var i = 0,
-                                            arr = value.greenSplit(&#x27;.&#x27;);
+                                            arr = greenSplit(value, &#x27;.&#x27;);
                         
                                         for (i = 0; i &lt; arr.length; i++) {
                                             process(gfx, arr[i]);
                                         }
                                         
-                                        arr.recycle();
+                                        arrayCache.recycle(arr);
                                     };
                                 }());
                             
-                            return platypus.createComponentClass({
+                            return createComponentClass({
                                 
                                 id: &#x27;RenderContainer&#x27;,
                                 
                                 properties: {
                                     /**
-                                     * Optional. A mask definition that determines where the image should clip. A string can also be used to create more complex shapes via the PIXI graphics API like: &quot;mask&quot;: &quot;r(10,20,40,40).dc(30,10,12)&quot;. Defaults to no mask or, if simply set to true, a rectangle using the entity&#x27;s dimensions. Note that the mask is in world coordinates by default. To make the mask local to the entity&#x27;s coordinates, set &#x60;localMask&#x60; to &#x60;true&#x60; in the RenderContainer properties.
+                                     * Optional. A mask definition that determines where the image should clip. A string can also be used to create more complex shapes via the PIXI graphics API like: &quot;mask&quot;: &quot;r(10,20,40,40).drawCircle(30,10,12)&quot;. Defaults to no mask or, if simply set to true, a rectangle using the entity&#x27;s dimensions. Note that the mask is in world coordinates by default. To make the mask local to the entity&#x27;s coordinates, set &#x60;localMask&#x60; to &#x60;true&#x60; in the RenderContainer properties.
                                      *
                                      *  &quot;mask&quot;: {
                                      *      &quot;x&quot;: 10,
@@ -238,7 +250,7 @@
                                      *
                                      *  -OR-
                                      *
-                                     *  &quot;mask&quot;: &quot;r(10,20,40,40).dc(30,10,12)&quot;
+                                     *  &quot;mask&quot;: &quot;r(10,20,40,40).drawCircle(30,10,12)&quot;
                                      *
                                      * @property mask
                                      * @type Object
@@ -262,18 +274,26 @@
                                      * @property interactive
                                      * @type Boolean|Object
                                      * @default false
-                                     * @since 0.9.0
                                      */
                                     interactive: false,
                         
                                     /**
-                                     * Optional. Whether this object can be rotated. It&#x27;s rotational angle is set by setting the this.owner.rotation value on the entity.
+                                     * Whether to render objects to their new position over time instead of instantaneously if there has been a time adjustment. Time is in milliseconds.
+                                     *
+                                     * @property interpolation
+                                     * @type Number
+                                     * @default 0
+                                     */
+                                    interpolation: 0,
+                        
+                                    /**
+                                     * Optional. What field this object should use to rotate.
                                      *
                                      * @property rotate
-                                     * @type Boolean
-                                     * @default false
+                                     * @type String
+                                     * @default &#x27;rotation&#x27;
                                      */
-                                    rotate: false,
+                                    rotate: &#x27;rotation&#x27;,
                         
                                     /**
                                      * Whether this object can be mirrored over X. To mirror it over X set the this.owner.rotation value to be &gt; 90  and &lt; 270.
@@ -337,22 +357,22 @@
                                      * @property dragMode
                                      * @type Boolean
                                      * @default false
-                                     * @since 0.8.3
                                      */
                                     dragMode: false,
                         
                                     /**
-                                     * Determines the container this entity should use for rendering. Defaults to the top-most layer.
+                                     * The entity or id of the entity that will act as the parent container. If not set, the entity will be rendered in the layer&#x27;s container.
                                      *
-                                     * @property renderGroup
-                                     * @type String
-                                     * @default &quot;&quot;
-                                     * @since 0.11.10
+                                     * @property renderParent
+                                     * @type String|Object
+                                     * @default null
                                      */
-                                    renderGroup: &#x27;&#x27;,
+                                    renderParent: null,
                         
                                     /**
-                                     * Optional. The rotation of the sprite in degrees. All sprites on the same entity are rotated the same amount unless they ignore the rotation value by setting &#x27;rotate&#x27; to false.
+                                     * Optional. The rotation of the sprite in degrees. All sprites on the same entity are rotated the same amount unless they ignore the rotation value by setting &#x27;rotate&#x27; to &quot;&quot;.
+                                     *
+                                     * Boolean values for the &quot;rotate&quot; property has been deprecated. Use &quot;rotation&quot; or &quot;orientationMatrix&quot; to specify the source of rotation for the render container.
                                      *
                                      * @property rotation
                                      * @type Number
@@ -434,122 +454,118 @@
                                 },
                                 
                                 initialize: function () {
-                                    var container = this.container = this.owner.container = new Container(),
-                                        definition = null,
+                                    const
+                                        owner = this.owner,
+                                        container = this.container = this.owner.container = new Container(),
                                         initialTint = this.tint;
                         
-                                    this.rootContainer = null;
+                                    container.sortableChildren = true;
+                        
+                                    if (this.rotate === true) {
+                                        this.rotate = &#x27;rotation&#x27;;
+                                        platypus.debug.warn(&#x27;RenderContainer: Boolean values for the &quot;rotate&quot; property has been deprecated. Use &quot;rotation&quot;, &quot;orientationMatrix&quot;, or &quot;&quot; to specify the source of rotation for the render container. This property defaults to &quot;rotation&quot;.&#x27;);
+                                    }
+                        
                                     this.parentContainer = null;
-                                    this.renderGroups = null;
                                     this.wasVisible = this.visible;
-                                    this.lastX = this.owner.x;
-                                    this.lastY = this.owner.y;
+                                    this.lastX = owner.x;
+                                    this.lastY = owner.y;
                                     this.camera = AABB.setUp();
                                     this.isOnCamera = true;
                                     this.needsCameraCheck = true;
                         
                                     this._tint = null;
                         
-                                    // This should be simplified once PIXI supports a &#x60;tint&#x60; property on PIXI.Container: https://github.com/pixijs/pixi.js/issues/2328
-                                    if (platypus.game.app.display.renderer instanceof CanvasRenderer) {
-                                        Object.defineProperty(this.owner, &#x27;tint&#x27;, {
-                                            get: function () {
-                                                return this._tint;
-                                            }.bind(this),
-                                            set: function (value) {
-                                                var children = this.container.children,
-                                                    i = children.length,
-                                                    color = castValue(value);
+                                    /**
+                                     * The render update message updates the sprite.
+                                     *
+                                     * @method &#x27;handle-render&#x27;
+                                     * @param [tick.tick.timeShift] {Boolean} Whether there has been a shift in time requiring interpolation.
+                                     */
+                                    if (this.interpolation) { // handle interpolation if timeline changes.
+                                        const
+                                            updateUsingOwnerXY = () =&gt; {
+                                                this.updateSprite(true, this.owner.x, this.owner.y);
+                                            },
+                                            updateUsingInterpolationXY = () =&gt; {
+                                                const
+                                                    owner = this.owner,
+                                                    interpolationDist = magSqr(this.lastX - owner.x, this.lastY - owner.y);
+                            
+                                                if (!interpolationTime || interpolationDist &lt; 1.5) {
+                                                    interpolationTime = 0;
+                                                    update = updateUsingOwnerXY;
+                                                    update();
+                                                } else {
+                                                    const
+                                                        ratio = Math.min((interpolationTime / interpolation), (lastInterpolationDistance / interpolationDist)),
+                                                        alt = 1 - ratio;
+                                                    
+                                                    interpolationTime = Math.max(0, interpolationTime - 5);
+                                                    fromX = this.lastX;
+                                                    fromY = this.lastY;
+                                                    lastInterpolationDistance = interpolationDist;
                         
-                                                if (color === this._tint) {
-                                                    return;
+                                                    this.updateSprite(true, owner.x * alt + fromX * ratio, owner.y * alt + fromY * ratio);
                                                 }
+                                            },
+                                            interpolation = this.interpolation;
+                                        let interpolationTime = 0,
+                                            lastInterpolationDistance = 0,
+                                            fromX = 0,
+                                            fromY = 0,
+                                            update = updateUsingOwnerXY;
                         
-                                                while (i--) {
-                                                    children[i].tint = color;
-                                                }
-                                                this._tint = color;
-                                            }.bind(this)
+                                        this.addEventListener(&#x27;handle-render&#x27;, function (tick) {
+                                            if (tick.tick.timeShift) {
+                                                fromX = this.lastX;
+                                                fromY = this.lastY;
+                                                lastInterpolationDistance = magSqr(this.lastX - this.owner.x, this.lastY - this.owner.y);
+                                                interpolationTime = lastInterpolationDistance &gt; 1.5 ? interpolation : 0;
+                                                update = updateUsingInterpolationXY;
+                                            } else {
+                                                update();
+                                            }
                                         });
                                     } else {
-                                        Object.defineProperty(this.owner, &#x27;tint&#x27;, {
-                                            get: function () {
-                                                return this._tint;
-                                            }.bind(this),
-                                            set: function (value) {
-                                                var filters = this.container.filters,
-                                                    matrix = null,
-                                                    color = castValue(value);
-                        
-                                                if (color === this._tint) {
-                                                    return;
-                                                }
-                        
-                                                if (color === null) {
-                                                    if (filters) {
-                                                        this.container.filters = null;
-                                                    }
-                                                } else {
-                                                    if (!filters) {
-                                                        filters = this.container.filters = Array.setUp(new ColorMatrixFilter());
-                                                    }
-                                                    matrix = filters[0].matrix;
-                                                    matrix[0] = (color &amp; 0xff0000) / 0xff0000; // Red
-                                                    matrix[6] = (color &amp; 0xff00) / 0xff00; // Green
-                                                    matrix[12] = (color &amp; 0xff) / 0xff; // Blue
-                                                }
-                        
-                                                this._tint = color;
-                                            }.bind(this)
+                                        this.addEventListener(&#x27;handle-render&#x27;, function () {
+                                            this.updateSprite(true, this.owner.x, this.owner.y);
                                         });
                                     }
+                                    this.interpolate = Data.setUp(
+                                        &#x27;x&#x27;, 0,
+                                        &#x27;y&#x27;, 0
+                                    );
+                                    this.interpolationTime = 0;
                         
-                                    this.storedRenderGroup = this.renderGroup;
-                                    this._renderGroup = null;
-                                    Object.defineProperty(this.owner, &#x27;renderGroup&#x27;, {
+                                    Object.defineProperty(owner, &#x27;tint&#x27;, {
                                         get: function () {
-                                            return this._renderGroup;
+                                            return this._tint;
                                         }.bind(this),
                                         set: function (value) {
-                                            var groups = this.renderGroups,
-                                                i = groups.length,
-                                                container = null,
-                                                mask = null;
+                                            var filters = this.container.filters,
+                                                matrix = null,
+                                                color = castValue(value);
                         
-                                            if (value === this._renderGroup) {
+                                            if (color === this._tint) {
                                                 return;
                                             }
                         
-                                            this._renderGroup = value;
-                        
-                                            if (this.mask) {
-                                                mask = this.mask;
-                                                this.setMask();
-                                            }
-                        
-                                            while (i--) {
-                                                if (groups[i].name === value) {
-                                                    this.parentContainer = groups[i];
-                                                    groups[i].addChild(this.container);
-                                                    groups[i].reorder = true;
-                                                    if (mask) {
-                                                        this.setMask(mask);
-                                                    }
-                                                    return;
+                                            if (color === null) {
+                                                if (filters) {
+                                                    this.container.filters = null;
                                                 }
+                                            } else {
+                                                if (!filters) {
+                                                    filters = this.container.filters = arrayCache.setUp(new ColorMatrixFilter());
+                                                }
+                                                matrix = filters[0].matrix;
+                                                matrix[0] = (color &amp; 0xff0000) / 0xff0000; // Red
+                                                matrix[6] = (color &amp; 0xff00) / 0xff00; // Green
+                                                matrix[12] = (color &amp; 0xff) / 0xff; // Blue
                                             }
                         
-                                            container = new Container();
-                                            container.name = value;
-                                            container.z = this.owner.z;
-                                            groups.push(container);
-                                            this.rootContainer.addChild(container);
-                                            this.rootContainer.reorder = true;
-                                            this.parentContainer = container;
-                                            container.addChild(this.container);
-                                            if (mask) {
-                                                this.setMask(mask);
-                                            }
+                                            this._tint = color;
                                         }.bind(this)
                                     });
                                 
@@ -558,18 +574,23 @@
                                     }
                         
                                     if (this.interactive) {
-                                        definition = Data.setUp(
-                                            &#x27;container&#x27;, container,
-                                            &#x27;hitArea&#x27;, this.interactive.hitArea,
-                                            &#x27;hover&#x27;, this.interactive.hover
-                                        );
-                                        this.owner.addComponent(new Interactive(this.owner, definition));
+                                        const
+                                            definition = Data.setUp(
+                                                &#x27;container&#x27;, container,
+                                                &#x27;hitArea&#x27;, this.interactive.hitArea,
+                                                &#x27;hover&#x27;, this.interactive.hover
+                                            );
+                                        owner.addComponent(new Interactive(owner, definition));
                                         definition.recycle();
                                     }
                         
                                     if (this.cache) {
-                                        this.updateSprite(false);
+                                        this.updateSprite(false, owner.x, owner.y);
                                         this.owner.cacheRender = this.container;
+                                    }
+                        
+                                    if (this.mask &amp;&amp; this.localMask) {
+                                        this.setMask(this.mask);
                                     }
                                 },
                                 
@@ -580,19 +601,21 @@
                                      * @method &#x27;cache&#x27;
                                      */
                                     &quot;cache&quot;: function () {
-                                        this.updateSprite(false);
-                                        this.owner.cacheRender = this.container;
+                                        const owner = this.owner;
+                        
+                                        this.updateSprite(false, owner.x, owner.y);
+                                        owner.cacheRender = this.container;
                                         this.cache = true;
-                                        if (this.owner.parent.triggerEventOnChildren) {
+                                        if (owner.parent.triggerEventOnChildren) {
                                             /**
                                              * On receiving a &quot;cache&quot; event, this component triggers &quot;cache-sprite&quot; to cache its rendering into the background. This is an optimization for static images to reduce render calls.
                                              *
                                              * @event &#x27;cache-sprite&#x27;
                                              * @param entity {platypus.Entity} This component&#x27;s owner.
                                              */
-                                            this.owner.parent.triggerEventOnChildren(&#x27;cache-sprite&#x27;, this.owner);
+                                            owner.parent.triggerEventOnChildren(&#x27;cache-sprite&#x27;, owner);
                                         } else {
-                                            platypus.debug.warn(&#x27;Unable to cache sprite for &#x27; + this.owner.type);
+                                            platypus.debug.warn(&#x27;Unable to cache sprite for &#x27; + owner.type);
                                         }
                                     },
                         
@@ -613,31 +636,18 @@
                                      * A setup message used to add the sprite to the stage. On receiving this message, the component sets its parent container to the stage contained in the message if it doesn&#x27;t already have one.
                                      *
                                      * @method &#x27;handle-render-load&#x27;
-                                     * @param handlerData {Object} Data from the render handler
-                                     * @param handlerData.container {PIXI.Container} The parent container.
+                                     * @param data.renderGroups {Array of PIXI.Container} Containers to categorize display of groups of entities.
                                      */
-                                    &quot;handle-render-load&quot;: function (handlerData) {
-                                        if (!this.rootContainer &amp;&amp; handlerData &amp;&amp; handlerData.container) {
-                                            this.addStage(handlerData.container, handlerData.renderGroups);
-                                            this.updateSprite(true); // Initial set up in case position, etc is needed prior to the first &quot;render&quot; event.
-                                        }
-                                    },
-                                    
-                                    /**
-                                     * The render update message updates the sprite. If a sprite doesn&#x27;t have a container, it&#x27;s removed.
-                                     *
-                                     * @method &#x27;handle-render&#x27;
-                                     * @param renderData {Object} Data from the render handler
-                                     * @param renderData.container {PIXI.Container} The parent container.
-                                     */
-                                    &quot;handle-render&quot;: function (renderData) {
-                                        if (!this.container) { // If this component&#x27;s removal is pending
-                                            return;
-                                        } else if (!this.rootContainer &amp;&amp; renderData &amp;&amp; renderData.container) {
-                                            this.addStage(renderData.container, renderData.renderGroups);
-                                        }
+                                    &quot;handle-render-load&quot;: function () {
+                                        const owner = this.owner;
                         
-                                        this.updateSprite(true);
+                                        /**
+                                         * This event is triggered once the RenderSprite is ready to handle interactivity.
+                                         *
+                                         * @event &#x27;input-on&#x27;
+                                         */
+                                        owner.triggerEvent(&#x27;input-on&#x27;);
+                                        this.updateSprite(true, owner.x, owner.y);
                                     },
                                     
                                     /**
@@ -670,105 +680,75 @@
                                 },
                                 
                                 methods: {
-                                    addStage: function (stage, renderGroups) {
-                                        if (stage) {
-                                            this.rootContainer = stage;
-                                            this.renderGroups = renderGroups;
-                                            this.renderGroup = this.storedRenderGroup;
-                        
-                                            //Handle mask
-                                            if (this.mask) {
-                                                this.setMask(this.mask);
-                                            }
-                        
-                                            /**
-                                             * This event is triggered once the RenderSprite is ready to handle interactivity.
-                                             *
-                                             * @event &#x27;input-on&#x27;
-                                             */
-                                            this.owner.triggerEvent(&#x27;input-on&#x27;);
-                                            return stage;
-                                        } else {
-                                            return null;
-                                        }
-                                    },
-                                    
-                                    updateSprite: (function () {
-                                        var sort = function (a, b) {
-                                            return a.z - b.z;
-                                        };
+                                    updateSprite: function (uncached, x, y) {
+                                        const
+                                            matrix = pixiMatrix,
+                                            rotation = (this.rotate === &#x27;rotation&#x27;) &amp;&amp; this.rotation || 0;
+                                        let mirrored = 1,
+                                            flipped  = 1;
                                         
-                                        return function (uncached) {
-                                            var x = 0,
-                                                y = 0,
-                                                o = this.owner.orientationMatrix,
-                                                rotation = 0,
-                                                matrix = pixiMatrix,
-                                                mirrored = 1,
-                                                flipped  = 1,
-                                                angle    = null;
-                                            
-                                            x = this.owner.x;
-                                            y = this.owner.y;
-                                            if (this.rotate) {
-                                                rotation = this.rotation;
-                                            }
-                                            if (this.container.z !== this.owner.z) {
-                                                if (this.parentContainer) {
-                                                    this.parentContainer.reorder = true;
-                                                }
-                                                this.container.z = this.owner.z;
-                                            }
+                                        if (this.container.zIndex !== this.owner.z) {
+                                            this.container.zIndex = this.owner.z;
+                                        }
                         
-                                            if (!this.ignoreOpacity &amp;&amp; (this.owner.opacity || (this.owner.opacity === 0))) {
-                                                this.container.alpha = this.owner.opacity;
+                                        if (!this.ignoreOpacity &amp;&amp; (this.owner.opacity || (this.owner.opacity === 0))) {
+                                            this.container.alpha = this.owner.opacity;
+                                        }
+                                        
+                                        if (this.mirror || this.flip) {
+                                            const angle = this.rotation % 360;
+                                            
+                                            if (this.mirror &amp;&amp; (angle &gt; 90) &amp;&amp; (angle &lt; 270)) {
+                                                mirrored = -1;
                                             }
                                             
-                                            if (this.container.reorder) {
-                                                this.container.reorder = false;
-                                                this.container.children.sort(sort);
-                                                this.needsCameraCheck = true; // reorder is set when adding children, so force another camera check.
+                                            if (this.flip &amp;&amp; (angle &lt; 180)) {
+                                                flipped = -1;
                                             }
-                                            
-                                            if (this.mirror || this.flip) {
-                                                angle = this.rotation % 360;
-                                                
-                                                if (this.mirror &amp;&amp; (angle &gt; 90) &amp;&amp; (angle &lt; 270)) {
-                                                    mirrored = -1;
-                                                }
-                                                
-                                                if (this.flip &amp;&amp; (angle &lt; 180)) {
-                                                    flipped = -1;
-                                                }
+                                        }
+                                        
+                                        if (this.rotate === &#x27;orientationMatrix&#x27;) { // This is a 3x3 2D matrix describing an affine transformation.
+                                            const o = this.owner.orientationMatrix;
+                        
+                                            matrix.a = o[0][0];
+                                            matrix.b = o[1][0];
+                                            matrix.tx = x + o[0][2];
+                                            matrix.c = o[0][1];
+                                            matrix.d = o[1][1];
+                                            matrix.ty = y + o[1][2];
+                                            this.container.transform.setFromMatrix(matrix);
+                                        } else {
+                                            this.container.setTransform(x, y, this.scaleX * mirrored, this.scaleY * flipped, (rotation ? (rotation / 180) * Math.PI : 0), this.skewX, this.skewY);
+                                        }
+                                        
+                                        if (this.parentContainer &amp;&amp; this.parentContainer.parentUpdated) {
+                                            this.needsCameraCheck = true;
+                                        }
+                                        if (this.container) {
+                                            if (this.container.childUpdated) {
+                                                this.needsCameraCheck = true;
+                                                this.container.childUpdated = false;
                                             }
-                                            
-                                            if (o) { // This is a 3x3 2D matrix describing an affine transformation.
-                                                matrix.a = o[0][0];
-                                                matrix.b = o[1][0];
-                                                matrix.tx = x + o[0][2];
-                                                matrix.c = o[0][1];
-                                                matrix.d = o[1][1];
-                                                matrix.ty = y + o[1][2];
-                                                this.container.transform.setFromMatrix(matrix);
-                                            } else {
-                                                this.container.setTransform(x, y, this.scaleX * mirrored, this.scaleY * flipped, (rotation ? (rotation / 180) * Math.PI : 0), this.skewX, this.skewY);
+                                            this.container.parentUpdated = false;
+                                        }
+                                        // Set isCameraOn of sprite if within camera bounds
+                                        if (!this.needsCameraCheck) {
+                                            this.needsCameraCheck = (this.lastX !== this.owner.x) || (this.lastY !== this.owner.y);
+                                        }
+                                        if (uncached &amp;&amp; this.container &amp;&amp; (this.needsCameraCheck || (!this.wasVisible &amp;&amp; this.visible))) {
+                                            this.isOnCamera = this.owner.parent.isOnCanvas(this.container.getBounds(false));
+                                            this.needsCameraCheck = false;
+                                            if (this.parentContainer) {
+                                                this.parentContainer.childUpdated = true;
                                             }
-                                            
-                                            // Set isCameraOn of sprite if within camera bounds
-                                            if (!this.needsCameraCheck) {
-                                                this.needsCameraCheck = (this.lastX !== this.owner.x) || (this.lastY !== this.owner.y);
-                                            }
-                                            if (uncached &amp;&amp; this.container &amp;&amp; (this.needsCameraCheck || (!this.wasVisible &amp;&amp; this.visible))) {
-                                                this.isOnCamera = this.owner.parent.isOnCanvas(this.container.getBounds(false));
-                                                this.needsCameraCheck = false;
-                                            }
-                                            
-                                            this.lastX = this.owner.x;
-                                            this.lastY = this.owner.y;
-                                            this.wasVisible = this.visible;
-                                            this.container.visible = (this.visible &amp;&amp; this.isOnCamera) || this.dragMode;
-                                        };
-                                    }()),
+                                            this.container.parentUpdated = true;
+                                        }
+                                        
+                                        this.lastX = x;
+                                        this.lastY = y;
+                                        this.wasVisible = this.visible;
+                                        this.container.visible = (this.visible &amp;&amp; this.isOnCamera) || this.dragMode;
+                                    },
                                     
                                     setMask: function (shape) {
                                         var gfx = null;
@@ -786,7 +766,7 @@
                                             return;
                                         }
                                         
-                                        if (shape instanceof Graphics) {
+                                        if (shape.isMask || (shape instanceof Graphics)) {
                                             gfx = shape;
                                         } else {
                                             gfx = new Graphics();
@@ -794,9 +774,11 @@
                                             if (typeof shape === &#x27;string&#x27;) {
                                                 processGraphics(gfx, shape);
                                             } else if (shape.radius) {
-                                                gfx.dc(shape.x || 0, shape.y || 0, shape.radius);
+                                                gfx.drawCircle(shape.x || 0, shape.y || 0, shape.radius);
+                                            } else if (shape instanceof AABB) {
+                                                gfx.drawRect(shape.left, shape.top, shape.width, shape.height);
                                             } else if (shape.width &amp;&amp; shape.height) {
-                                                gfx.r(shape.x || 0, shape.y || 0, shape.width, shape.height);
+                                                gfx.drawRect(shape.x || 0, shape.y || 0, shape.width, shape.height);
                                             }
                                             gfx.endFill();
                                         }
@@ -822,6 +804,41 @@
                                             this.container.destroy();
                                         }
                                         this.container = null;
+                        
+                                        this.interpolate.recycle();
+                                        this.interpolate = null;
+                                    }
+                                },
+                            
+                                publicMethods: {
+                                    /**
+                                     * Remove this entity&#x27;s container from the containing rendering container.
+                                     *
+                                     * @method removeFromParentContainer
+                                     */
+                                    removeFromParentContainer: function () {
+                                        if (this.parentContainer) {
+                                            if (this.mask &amp;&amp; !this.localMask) {
+                                                this.setMask();
+                                            }
+                        
+                                            this.parentContainer.removeChild(this.container);
+                                        }
+                                    },
+                                    
+                                    /**
+                                     * Add this entity&#x27;s container to a rendering container.
+                                     *
+                                     * @method addToParentContainer
+                                     * @param {Container} container Container to add this to.
+                                     */
+                                    addToParentContainer: function (container) {
+                                        this.parentContainer = container;
+                                        this.parentContainer.addChild(this.container);
+                        
+                                        if (this.mask &amp;&amp; !this.localMask) {
+                                            this.setMask(this.mask);
+                                        }
                                     }
                                 }
                             });

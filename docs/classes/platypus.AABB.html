@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v1.0.2 API Documentation : platypus.AABB</title>
+	<title>platypus v2.0.0 API Documentation : platypus.AABB</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 1.0.2</em>
+            <em>API Documentation for: 2.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/platypus.AABB.html">platypus.AABB</a></li>
                                 <li><a href="../classes/platypus.ActionState.html">platypus.ActionState</a></li>
+                                <li><a href="../classes/platypus.AssetManager.html">platypus.AssetManager</a></li>
                                 <li><a href="../classes/platypus.Async.html">platypus.Async</a></li>
                                 <li><a href="../classes/platypus.CollisionData.html">platypus.CollisionData</a></li>
                                 <li><a href="../classes/platypus.CollisionDataContainer.html">platypus.CollisionDataContainer</a></li>
@@ -46,6 +47,7 @@
                                 <li><a href="../classes/platypus.Component.html">platypus.Component</a></li>
                                 <li><a href="../classes/platypus.components.AIChaser.html">platypus.components.AIChaser</a></li>
                                 <li><a href="../classes/platypus.components.AIPacer.html">platypus.components.AIPacer</a></li>
+                                <li><a href="../classes/platypus.components.AudioMusic.html">platypus.components.AudioMusic</a></li>
                                 <li><a href="../classes/platypus.components.AudioSFX.html">platypus.components.AudioSFX</a></li>
                                 <li><a href="../classes/platypus.components.AudioVO.html">platypus.components.AudioVO</a></li>
                                 <li><a href="../classes/platypus.components.Camera.html">platypus.components.Camera</a></li>
@@ -58,7 +60,6 @@
                                 <li><a href="../classes/platypus.components.Counter.html">platypus.components.Counter</a></li>
                                 <li><a href="../classes/platypus.components.EntityContainer.html">platypus.components.EntityContainer</a></li>
                                 <li><a href="../classes/platypus.components.EntityController.html">platypus.components.EntityController</a></li>
-                                <li><a href="../classes/platypus.components.EventRender.html">platypus.components.EventRender</a></li>
                                 <li><a href="../classes/platypus.components.HandlerCollision.html">platypus.components.HandlerCollision</a></li>
                                 <li><a href="../classes/platypus.components.HandlerController.html">platypus.components.HandlerController</a></li>
                                 <li><a href="../classes/platypus.components.HandlerLogic.html">platypus.components.HandlerLogic</a></li>
@@ -74,6 +75,7 @@
                                 <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicTimer.html">platypus.components.LogicTimer</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
                                 <li><a href="../classes/platypus.components.Motion.html">platypus.components.Motion</a></li>
                                 <li><a href="../classes/platypus.components.Mover.html">platypus.components.Mover</a></li>
@@ -87,7 +89,7 @@
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
-                                <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
+                                <li><a href="../classes/platypus.components.RenderAnimator.html">platypus.components.RenderAnimator</a></li>
                                 <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
@@ -97,7 +99,6 @@
                                 <li><a href="../classes/platypus.components.RenderText.html">platypus.components.RenderText</a></li>
                                 <li><a href="../classes/platypus.components.RenderTiles.html">platypus.components.RenderTiles</a></li>
                                 <li><a href="../classes/platypus.components.SceneChanger.html">platypus.components.SceneChanger</a></li>
-                                <li><a href="../classes/platypus.components.StateRender.html">platypus.components.StateRender</a></li>
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
@@ -107,16 +108,17 @@
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
                                 <li><a href="../classes/platypus.DataMap.html">platypus.DataMap</a></li>
                                 <li><a href="../classes/platypus.Entity.html">platypus.Entity</a></li>
+                                <li><a href="../classes/platypus.EntityLinker.html">platypus.EntityLinker</a></li>
                                 <li><a href="../classes/platypus.Game.html">platypus.Game</a></li>
+                                <li><a href="../classes/platypus.Gamepad.html">platypus.Gamepad</a></li>
                                 <li><a href="../classes/platypus.Messenger.html">platypus.Messenger</a></li>
                                 <li><a href="../classes/platypus.PIXIAnimation.html">platypus.PIXIAnimation</a></li>
-                                <li><a href="../classes/platypus.PlatypusPlugin.html">platypus.PlatypusPlugin</a></li>
-                                <li><a href="../classes/platypus.Scene.html">platypus.Scene</a></li>
+                                <li><a href="../classes/platypus.SFXPlayer.html">platypus.SFXPlayer</a></li>
                                 <li><a href="../classes/platypus.StateMap.html">platypus.StateMap</a></li>
+                                <li><a href="../classes/platypus.Storage.html">platypus.Storage</a></li>
                                 <li><a href="../classes/platypus.Vector.html">platypus.Vector</a></li>
-                                <li><a href="../classes/window.Array.html">window.Array</a></li>
+                                <li><a href="../classes/platypus.VOPlayer.html">platypus.VOPlayer</a></li>
                                 <li><a href="../classes/window.Map.html">window.Map</a></li>
-                                <li><a href="../classes/window.String.html">window.String</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -333,6 +335,18 @@
                         
                                                     </li>
                                                     <li class="index-item method">
+                                                        <a href="#method_greenSlice">greenSlice</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_greenSplice">greenSplice</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_greenSplit">greenSplit</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
                                                         <a href="#method_include">include</a>
                         
                                                     </li>
@@ -386,6 +400,10 @@
                                                     </li>
                                                     <li class="index-item method">
                                                         <a href="#method_toString">toString</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_union">union</a>
                         
                                                     </li>
                                             </ul>
@@ -469,12 +487,11 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_AABB.js.html#l423"><code>AABB.recycle:423</code></a>
+                                                    <a href="../files/src_AABB.js.html#l418"><code>AABB.recycle:418</code></a>
                                                     </p>
                                             
                                             
                                             
-                                                        <p>Available since 0.7.3</p>
                                                 </div>
                                             
                                                 <div class="description">
@@ -520,12 +537,11 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_AABB.js.html#l416"><code>AABB.setUp:416</code></a>
+                                                    <a href="../files/src_AABB.js.html#l412"><code>AABB.setUp:412</code></a>
                                                     </p>
                                             
                                             
                                             
-                                                        <p>Available since 0.7.3</p>
                                                 </div>
                                             
                                                 <div class="description">
@@ -569,12 +585,11 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_AABB.js.html#l362"><code>collides:362</code></a>
+                                                    <a href="../files/src_AABB.js.html#l360"><code>collides:360</code></a>
                                                     </p>
                                             
                                             
                                             
-                                                        <p>Available since 0.7.4</p>
                                                 </div>
                                             
                                                 <div class="description">
@@ -638,12 +653,11 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_AABB.js.html#l374"><code>collidesPoint:374</code></a>
+                                                    <a href="../files/src_AABB.js.html#l371"><code>collidesPoint:371</code></a>
                                                     </p>
                                             
                                             
                                             
-                                                        <p>Available since 0.11.0</p>
                                                 </div>
                                             
                                                 <div class="description">
@@ -715,7 +729,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_AABB.js.html#l327"><code>contains:327</code></a>
+                                                    <a href="../files/src_AABB.js.html#l326"><code>contains:326</code></a>
                                                     </p>
                                             
                                             
@@ -783,12 +797,11 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_AABB.js.html#l349"><code>containsPoint:349</code></a>
+                                                    <a href="../files/src_AABB.js.html#l348"><code>containsPoint:348</code></a>
                                                     </p>
                                             
                                             
                                             
-                                                        <p>Available since 0.7.5</p>
                                                 </div>
                                             
                                                 <div class="description">
@@ -860,7 +873,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_AABB.js.html#l338"><code>containsVector:338</code></a>
+                                                    <a href="../files/src_AABB.js.html#l337"><code>containsVector:337</code></a>
                                                     </p>
                                             
                                             
@@ -930,7 +943,6 @@
                                             
                                             
                                             
-                                                        <p>Available since 0.7.5</p>
                                                 </div>
                                             
                                                 <div class="description">
@@ -991,7 +1003,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_AABB.js.html#l398"><code>getIntersectionArea:398</code></a>
+                                                    <a href="../files/src_AABB.js.html#l394"><code>getIntersectionArea:394</code></a>
                                                     </p>
                                             
                                             
@@ -1027,6 +1039,226 @@
                                                         <div class="returns-description">
                                                                     <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>:
                                                                 <p>Returns the area of the intersected AABB's.</p>
+                                            
+                                                        </div>
+                                                    </div>
+                                            
+                                            </div>
+                                            <div id="method_greenSlice" class="method item">
+                                                <h3 class="name"><code>greenSlice</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>array</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                                    <span class="returns-inline">
+                                                        <span class="type"></span>
+                                                    </span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_utils_array.js.html#l34"><code>greenSlice:34</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Slices, but uses a recycled array. Note that this slice does not accept parameters and makes a shallow copy of the original array.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">array</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The array to copy.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                                    <div class="returns">
+                                                        <h4>Returns:</h4>
+                                            
+                                                        <div class="returns-description">
+                                                                <p>Array</p>
+                                            
+                                                        </div>
+                                                    </div>
+                                            
+                                            </div>
+                                            <div id="method_greenSplice" class="method item">
+                                                <h3 class="name"><code>greenSplice</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>array</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>index</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                                    <span class="returns-inline">
+                                                        <span class="type">Any</span>
+                                                    </span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_utils_array.js.html#l53"><code>greenSplice:53</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Splices, but only removes a single item and returns the item itself, not an array.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">array</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The array from which an item is to be extracted.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">index</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The index of the item to extract.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                                    <div class="returns">
+                                                        <h4>Returns:</h4>
+                                            
+                                                        <div class="returns-description">
+                                                                    <span class="type">Any</span>:
+                                                        </div>
+                                                    </div>
+                                            
+                                            </div>
+                                            <div id="method_greenSplit" class="method item">
+                                                <h3 class="name"><code>greenSplit</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>str</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code class="optional">[splitter]</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                                    <span class="returns-inline">
+                                                        <span class="type"></span>
+                                                    </span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_utils_string.js.html#l6"><code>greenSplit:6</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Splits a string, but populates an array from the array cache instead of creating a new one.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">str</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>String to split.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name optional">[splitter]</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                                                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>String demarking where to split. If not provided, each character in the split string becomes an array item.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                                    <div class="returns">
+                                                        <h4>Returns:</h4>
+                                            
+                                                        <div class="returns-description">
+                                                                <p>Array</p>
                                             
                                                         </div>
                                                     </div>
@@ -1110,7 +1342,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_AABB.js.html#l387"><code>intersects:387</code></a>
+                                                    <a href="../files/src_AABB.js.html#l383"><code>intersects:383</code></a>
                                                     </p>
                                             
                                             
@@ -1450,12 +1682,11 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_AABB.js.html#l430"><code>recycle:430</code></a>
+                                                    <a href="../files/src_AABB.js.html#l424"><code>recycle:424</code></a>
                                                     </p>
                                             
                                             
                                             
-                                                        <p>Available since 0.7.3</p>
                                                 </div>
                                             
                                                 <div class="description">
@@ -1847,6 +2078,85 @@
                                             
                                                         <div class="returns-description">
                                                                 <p>String</p>
+                                            
+                                                        </div>
+                                                    </div>
+                                            
+                                            </div>
+                                            <div id="method_union" class="method item">
+                                                <h3 class="name"><code>union</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>arrayTo</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>arrayFrom</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                                    <span class="returns-inline">
+                                                        <span class="type"></span>
+                                                    </span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_utils_array.js.html#l9"><code>union:9</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Merges items from one array into the other, making sure to not duplicate identical entries.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">arrayTo</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The array into which items will be inserted.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">arrayFrom</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>
+                                            
+                                                                    <span class="flag multiple" title="This argument may occur one or more times.">multiple</span>
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The array(s) containing items to be merged.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                                    <div class="returns">
+                                                        <h4>Returns:</h4>
+                                            
+                                                        <div class="returns-description">
+                                                                <p>Array</p>
                                             
                                                         </div>
                                                     </div>

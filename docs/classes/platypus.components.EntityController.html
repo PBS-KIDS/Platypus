@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v1.0.2 API Documentation : platypus.components.EntityController</title>
+	<title>platypus v2.0.0 API Documentation : platypus.components.EntityController</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 1.0.2</em>
+            <em>API Documentation for: 2.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/platypus.AABB.html">platypus.AABB</a></li>
                                 <li><a href="../classes/platypus.ActionState.html">platypus.ActionState</a></li>
+                                <li><a href="../classes/platypus.AssetManager.html">platypus.AssetManager</a></li>
                                 <li><a href="../classes/platypus.Async.html">platypus.Async</a></li>
                                 <li><a href="../classes/platypus.CollisionData.html">platypus.CollisionData</a></li>
                                 <li><a href="../classes/platypus.CollisionDataContainer.html">platypus.CollisionDataContainer</a></li>
@@ -46,6 +47,7 @@
                                 <li><a href="../classes/platypus.Component.html">platypus.Component</a></li>
                                 <li><a href="../classes/platypus.components.AIChaser.html">platypus.components.AIChaser</a></li>
                                 <li><a href="../classes/platypus.components.AIPacer.html">platypus.components.AIPacer</a></li>
+                                <li><a href="../classes/platypus.components.AudioMusic.html">platypus.components.AudioMusic</a></li>
                                 <li><a href="../classes/platypus.components.AudioSFX.html">platypus.components.AudioSFX</a></li>
                                 <li><a href="../classes/platypus.components.AudioVO.html">platypus.components.AudioVO</a></li>
                                 <li><a href="../classes/platypus.components.Camera.html">platypus.components.Camera</a></li>
@@ -58,7 +60,6 @@
                                 <li><a href="../classes/platypus.components.Counter.html">platypus.components.Counter</a></li>
                                 <li><a href="../classes/platypus.components.EntityContainer.html">platypus.components.EntityContainer</a></li>
                                 <li><a href="../classes/platypus.components.EntityController.html">platypus.components.EntityController</a></li>
-                                <li><a href="../classes/platypus.components.EventRender.html">platypus.components.EventRender</a></li>
                                 <li><a href="../classes/platypus.components.HandlerCollision.html">platypus.components.HandlerCollision</a></li>
                                 <li><a href="../classes/platypus.components.HandlerController.html">platypus.components.HandlerController</a></li>
                                 <li><a href="../classes/platypus.components.HandlerLogic.html">platypus.components.HandlerLogic</a></li>
@@ -74,6 +75,7 @@
                                 <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicTimer.html">platypus.components.LogicTimer</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
                                 <li><a href="../classes/platypus.components.Motion.html">platypus.components.Motion</a></li>
                                 <li><a href="../classes/platypus.components.Mover.html">platypus.components.Mover</a></li>
@@ -87,7 +89,7 @@
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
-                                <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
+                                <li><a href="../classes/platypus.components.RenderAnimator.html">platypus.components.RenderAnimator</a></li>
                                 <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
@@ -97,7 +99,6 @@
                                 <li><a href="../classes/platypus.components.RenderText.html">platypus.components.RenderText</a></li>
                                 <li><a href="../classes/platypus.components.RenderTiles.html">platypus.components.RenderTiles</a></li>
                                 <li><a href="../classes/platypus.components.SceneChanger.html">platypus.components.SceneChanger</a></li>
-                                <li><a href="../classes/platypus.components.StateRender.html">platypus.components.StateRender</a></li>
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
@@ -107,16 +108,17 @@
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
                                 <li><a href="../classes/platypus.DataMap.html">platypus.DataMap</a></li>
                                 <li><a href="../classes/platypus.Entity.html">platypus.Entity</a></li>
+                                <li><a href="../classes/platypus.EntityLinker.html">platypus.EntityLinker</a></li>
                                 <li><a href="../classes/platypus.Game.html">platypus.Game</a></li>
+                                <li><a href="../classes/platypus.Gamepad.html">platypus.Gamepad</a></li>
                                 <li><a href="../classes/platypus.Messenger.html">platypus.Messenger</a></li>
                                 <li><a href="../classes/platypus.PIXIAnimation.html">platypus.PIXIAnimation</a></li>
-                                <li><a href="../classes/platypus.PlatypusPlugin.html">platypus.PlatypusPlugin</a></li>
-                                <li><a href="../classes/platypus.Scene.html">platypus.Scene</a></li>
+                                <li><a href="../classes/platypus.SFXPlayer.html">platypus.SFXPlayer</a></li>
                                 <li><a href="../classes/platypus.StateMap.html">platypus.StateMap</a></li>
+                                <li><a href="../classes/platypus.Storage.html">platypus.Storage</a></li>
                                 <li><a href="../classes/platypus.Vector.html">platypus.Vector</a></li>
-                                <li><a href="../classes/window.Array.html">window.Array</a></li>
+                                <li><a href="../classes/platypus.VOPlayer.html">platypus.VOPlayer</a></li>
                                 <li><a href="../classes/window.Map.html">window.Map</a></li>
-                                <li><a href="../classes/window.String.html">window.String</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -232,10 +234,6 @@
                                                     </li>
                                                     <li class="index-item method inherited">
                                                         <a href="#method_getAssetList">getAssetList</a>
-                        
-                                                    </li>
-                                                    <li class="index-item method inherited">
-                                                        <a href="#method_getLateAssetList">getLateAssetList</a>
                         
                                                     </li>
                                                     <li class="index-item method private inherited">
@@ -419,7 +417,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_EntityController.js.html#l145"><code>&#x27;handle-controller&#x27;:145</code></a>
+                                                    <a href="../files/src_components_EntityController.js.html#l144"><code>&#x27;handle-controller&#x27;:144</code></a>
                                                     </p>
                                             
                                             
@@ -449,7 +447,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_EntityController.js.html#l274"><code>&#x27;pause-controls&#x27;:274</code></a>
+                                                    <a href="../files/src_components_EntityController.js.html#l273"><code>&#x27;pause-controls&#x27;:273</code></a>
                                                     </p>
                                             
                                             
@@ -485,7 +483,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_EntityController.js.html#l173"><code>&#x27;pointerdown&#x27;:173</code></a>
+                                                    <a href="../files/src_components_EntityController.js.html#l172"><code>&#x27;pointerdown&#x27;:172</code></a>
                                                     </p>
                                             
                                             
@@ -538,7 +536,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_EntityController.js.html#l262"><code>&#x27;pressmove&#x27;:262</code></a>
+                                                    <a href="../files/src_components_EntityController.js.html#l261"><code>&#x27;pressmove&#x27;:261</code></a>
                                                     </p>
                                             
                                             
@@ -591,7 +589,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_EntityController.js.html#l214"><code>&#x27;pressup&#x27;:214</code></a>
+                                                    <a href="../files/src_components_EntityController.js.html#l213"><code>&#x27;pressup&#x27;:213</code></a>
                                                     </p>
                                             
                                             
@@ -638,7 +636,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_EntityController.js.html#l283"><code>&#x27;unpause-controls&#x27;:283</code></a>
+                                                    <a href="../files/src_components_EntityController.js.html#l282"><code>&#x27;unpause-controls&#x27;:282</code></a>
                                                     </p>
                                             
                                             
@@ -681,7 +679,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_addEventListener">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l112"><code>addEventListener:112</code></a>
+                                                    <a href="../files/src_Component.js.html#l111"><code>addEventListener:111</code></a>
                                                     </p>
                                             
                                             
@@ -754,7 +752,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_addMethod">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l131"><code>addMethod:131</code></a>
+                                                    <a href="../files/src_Component.js.html#l130"><code>addMethod:130</code></a>
                                                     </p>
                                             
                                             
@@ -810,7 +808,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_destroy">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l54"><code>destroy:54</code></a>
+                                                    <a href="../files/src_Component.js.html#l53"><code>destroy:53</code></a>
                                                     </p>
                                             
                                             
@@ -854,7 +852,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_getAssetList">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l188"><code>getAssetList:188</code></a>
+                                                    <a href="../files/src_Component.js.html#l187"><code>getAssetList:187</code></a>
                                                     </p>
                                             
                                             
@@ -912,68 +910,6 @@
                                                     </div>
                                             
                                             </div>
-                                            <div id="method_getLateAssetList" class="method item inherited">
-                                                <h3 class="name"><code>getLateAssetList</code></h3>
-                                            
-                                                    <div class="args">
-                                                        <span class="paren">(</span><ul class="args-list inline commas">
-                                                            <li class="arg">
-                                                                    <code>data</code>
-                                                            </li>
-                                                        </ul><span class="paren">)</span>
-                                                    </div>
-                                            
-                                                    <span class="returns-inline">
-                                                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>
-                                                    </span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>Inherited from
-                                                            <a href="../classes/platypus.Component.html#method_getLateAssetList">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l199"><code>getLateAssetList:199</code></a>
-                                                    </p>
-                                            
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    This method can be overwritten to provide the list of assets this component requires. This method is invoked when the list of game scenes is created to determine assets for each scene.
-                                                </div>
-                                            
-                                                    <div class="params">
-                                                        <h4>Parameters:</h4>
-                                            
-                                                        <ul class="params-list">
-                                                            <li class="param">
-                                                                    <code class="param-name">data</code>
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    Scene data that affects the list of assets.
-                                                                </div>
-                                            
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                            
-                                                    <div class="returns">
-                                                        <h4>Returns:</h4>
-                                            
-                                                        <div class="returns-description">
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>:
-                                                                A list of the necessary assets to load.
-                                                        </div>
-                                                    </div>
-                                            
-                                            </div>
                                             <div id="method_removeEventListener" class="method item private inherited">
                                                 <h3 class="name"><code>removeEventListener</code></h3>
                                             
@@ -999,7 +935,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_removeEventListener">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l150"><code>removeEventListener:150</code></a>
+                                                    <a href="../files/src_Component.js.html#l149"><code>removeEventListener:149</code></a>
                                                     </p>
                                             
                                             
@@ -1061,7 +997,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_removeEventListeners">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l85"><code>removeEventListeners:85</code></a>
+                                                    <a href="../files/src_Component.js.html#l84"><code>removeEventListeners:84</code></a>
                                                     </p>
                                             
                                             
@@ -1114,7 +1050,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_removeMethod">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l172"><code>removeMethod:172</code></a>
+                                                    <a href="../files/src_Component.js.html#l171"><code>removeMethod:171</code></a>
                                                     </p>
                                             
                                             
@@ -1167,7 +1103,6 @@
                                             
                                             
                                             
-                                                        <p>Available since 0.11.0</p>
                                                 </div>
                                             
                                                 <div class="description">
@@ -1308,7 +1243,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_EntityController.js.html#l106"><code>paused:106</code></a>
+                                                    <a href="../files/src_components_EntityController.js.html#l105"><code>paused:105</code></a>
                                                     </p>
                                             
                                             
@@ -1338,7 +1273,6 @@
                                                     </p>
                                             
                                             
-                                                        <p>Available since 0.6.7</p>
                                                 </div>
                                             
                                                 <div class="description">
@@ -1367,7 +1301,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_EntityController.js.html#l444"><code>&#x27;*&#x27;:444</code></a>
+                                                    <a href="../files/src_components_EntityController.js.html#l443"><code>&#x27;*&#x27;:443</code></a>
                                                     </p>
                                             
                                             
@@ -1442,7 +1376,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_EntityController.js.html#l344"><code>&#x27;east&#x27;:344</code></a>
+                                                    <a href="../files/src_components_EntityController.js.html#l343"><code>&#x27;east&#x27;:343</code></a>
                                                     </p>
                                             
                                             
@@ -1484,7 +1418,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_EntityController.js.html#l338"><code>&#x27;east-northeast&#x27;:338</code></a>
+                                                    <a href="../files/src_components_EntityController.js.html#l337"><code>&#x27;east-northeast&#x27;:337</code></a>
                                                     </p>
                                             
                                             
@@ -1526,7 +1460,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_EntityController.js.html#l350"><code>&#x27;east-southeast&#x27;:350</code></a>
+                                                    <a href="../files/src_components_EntityController.js.html#l349"><code>&#x27;east-southeast&#x27;:349</code></a>
                                                     </p>
                                             
                                             
@@ -1568,7 +1502,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_EntityController.js.html#l418"><code>&#x27;joystick-orientation&#x27;:418</code></a>
+                                                    <a href="../files/src_components_EntityController.js.html#l417"><code>&#x27;joystick-orientation&#x27;:417</code></a>
                                                     </p>
                                             
                                             
@@ -1610,7 +1544,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_EntityController.js.html#l203"><code>&#x27;joystick:down&#x27;:203</code></a>
+                                                    <a href="../files/src_components_EntityController.js.html#l202"><code>&#x27;joystick:down&#x27;:202</code></a>
                                                     </p>
                                             
                                             
@@ -1652,7 +1586,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_EntityController.js.html#l246"><code>&#x27;joystick:up&#x27;:246</code></a>
+                                                    <a href="../files/src_components_EntityController.js.html#l245"><code>&#x27;joystick:up&#x27;:245</code></a>
                                                     </p>
                                             
                                             
@@ -1694,7 +1628,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_EntityController.js.html#l181"><code>&#x27;mouse:mouse-left:down&#x27;:181</code></a>
+                                                    <a href="../files/src_components_EntityController.js.html#l180"><code>&#x27;mouse:mouse-left:down&#x27;:180</code></a>
                                                     </p>
                                             
                                             
@@ -1736,7 +1670,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_EntityController.js.html#l224"><code>&#x27;mouse:mouse-left:up&#x27;:224</code></a>
+                                                    <a href="../files/src_components_EntityController.js.html#l223"><code>&#x27;mouse:mouse-left:up&#x27;:223</code></a>
                                                     </p>
                                             
                                             
@@ -1778,7 +1712,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_EntityController.js.html#l187"><code>&#x27;mouse:mouse-middle:down&#x27;:187</code></a>
+                                                    <a href="../files/src_components_EntityController.js.html#l186"><code>&#x27;mouse:mouse-middle:down&#x27;:186</code></a>
                                                     </p>
                                             
                                             
@@ -1820,7 +1754,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_EntityController.js.html#l230"><code>&#x27;mouse:mouse-middle:up&#x27;:230</code></a>
+                                                    <a href="../files/src_components_EntityController.js.html#l229"><code>&#x27;mouse:mouse-middle:up&#x27;:229</code></a>
                                                     </p>
                                             
                                             
@@ -1862,7 +1796,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_EntityController.js.html#l193"><code>&#x27;mouse:mouse-right:down&#x27;:193</code></a>
+                                                    <a href="../files/src_components_EntityController.js.html#l192"><code>&#x27;mouse:mouse-right:down&#x27;:192</code></a>
                                                     </p>
                                             
                                             
@@ -1904,7 +1838,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_EntityController.js.html#l236"><code>&#x27;mouse:mouse-right:up&#x27;:236</code></a>
+                                                    <a href="../files/src_components_EntityController.js.html#l235"><code>&#x27;mouse:mouse-right:up&#x27;:235</code></a>
                                                     </p>
                                             
                                             
@@ -1946,7 +1880,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_EntityController.js.html#l320"><code>&#x27;north&#x27;:320</code></a>
+                                                    <a href="../files/src_components_EntityController.js.html#l319"><code>&#x27;north&#x27;:319</code></a>
                                                     </p>
                                             
                                             
@@ -1988,7 +1922,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_EntityController.js.html#l326"><code>&#x27;north-northeast&#x27;:326</code></a>
+                                                    <a href="../files/src_components_EntityController.js.html#l325"><code>&#x27;north-northeast&#x27;:325</code></a>
                                                     </p>
                                             
                                             
@@ -2030,7 +1964,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_EntityController.js.html#l410"><code>&#x27;north-northwest&#x27;:410</code></a>
+                                                    <a href="../files/src_components_EntityController.js.html#l409"><code>&#x27;north-northwest&#x27;:409</code></a>
                                                     </p>
                                             
                                             
@@ -2072,7 +2006,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_EntityController.js.html#l332"><code>&#x27;northeast&#x27;:332</code></a>
+                                                    <a href="../files/src_components_EntityController.js.html#l331"><code>&#x27;northeast&#x27;:331</code></a>
                                                     </p>
                                             
                                             
@@ -2114,7 +2048,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_EntityController.js.html#l404"><code>&#x27;northwest&#x27;:404</code></a>
+                                                    <a href="../files/src_components_EntityController.js.html#l403"><code>&#x27;northwest&#x27;:403</code></a>
                                                     </p>
                                             
                                             
@@ -2156,7 +2090,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_EntityController.js.html#l368"><code>&#x27;south&#x27;:368</code></a>
+                                                    <a href="../files/src_components_EntityController.js.html#l367"><code>&#x27;south&#x27;:367</code></a>
                                                     </p>
                                             
                                             
@@ -2198,7 +2132,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_EntityController.js.html#l362"><code>&#x27;south-southeast&#x27;:362</code></a>
+                                                    <a href="../files/src_components_EntityController.js.html#l361"><code>&#x27;south-southeast&#x27;:361</code></a>
                                                     </p>
                                             
                                             
@@ -2240,7 +2174,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_EntityController.js.html#l374"><code>&#x27;south-southwest&#x27;:374</code></a>
+                                                    <a href="../files/src_components_EntityController.js.html#l373"><code>&#x27;south-southwest&#x27;:373</code></a>
                                                     </p>
                                             
                                             
@@ -2282,7 +2216,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_EntityController.js.html#l356"><code>&#x27;southeast&#x27;:356</code></a>
+                                                    <a href="../files/src_components_EntityController.js.html#l355"><code>&#x27;southeast&#x27;:355</code></a>
                                                     </p>
                                             
                                             
@@ -2324,7 +2258,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_EntityController.js.html#l380"><code>&#x27;southwest&#x27;:380</code></a>
+                                                    <a href="../files/src_components_EntityController.js.html#l379"><code>&#x27;southwest&#x27;:379</code></a>
                                                     </p>
                                             
                                             
@@ -2366,7 +2300,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_EntityController.js.html#l253"><code>&#x27;stop&#x27;:253</code></a>
+                                                    <a href="../files/src_components_EntityController.js.html#l252"><code>&#x27;stop&#x27;:252</code></a>
                                                     </p>
                                             
                                             
@@ -2391,7 +2325,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_EntityController.js.html#l392"><code>&#x27;west&#x27;:392</code></a>
+                                                    <a href="../files/src_components_EntityController.js.html#l391"><code>&#x27;west&#x27;:391</code></a>
                                                     </p>
                                             
                                             
@@ -2433,7 +2367,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_EntityController.js.html#l398"><code>&#x27;west-northwest&#x27;:398</code></a>
+                                                    <a href="../files/src_components_EntityController.js.html#l397"><code>&#x27;west-northwest&#x27;:397</code></a>
                                                     </p>
                                             
                                             
@@ -2475,7 +2409,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_EntityController.js.html#l386"><code>&#x27;west-southwest&#x27;:386</code></a>
+                                                    <a href="../files/src_components_EntityController.js.html#l385"><code>&#x27;west-southwest&#x27;:385</code></a>
                                                     </p>
                                             
                                             

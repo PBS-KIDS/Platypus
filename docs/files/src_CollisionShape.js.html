@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v1.0.2 API Documentation : src\CollisionShape.js</title>
+	<title>platypus v2.0.0 API Documentation : src\CollisionShape.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 1.0.2</em>
+            <em>API Documentation for: 2.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/platypus.AABB.html">platypus.AABB</a></li>
                                 <li><a href="../classes/platypus.ActionState.html">platypus.ActionState</a></li>
+                                <li><a href="../classes/platypus.AssetManager.html">platypus.AssetManager</a></li>
                                 <li><a href="../classes/platypus.Async.html">platypus.Async</a></li>
                                 <li><a href="../classes/platypus.CollisionData.html">platypus.CollisionData</a></li>
                                 <li><a href="../classes/platypus.CollisionDataContainer.html">platypus.CollisionDataContainer</a></li>
@@ -46,6 +47,7 @@
                                 <li><a href="../classes/platypus.Component.html">platypus.Component</a></li>
                                 <li><a href="../classes/platypus.components.AIChaser.html">platypus.components.AIChaser</a></li>
                                 <li><a href="../classes/platypus.components.AIPacer.html">platypus.components.AIPacer</a></li>
+                                <li><a href="../classes/platypus.components.AudioMusic.html">platypus.components.AudioMusic</a></li>
                                 <li><a href="../classes/platypus.components.AudioSFX.html">platypus.components.AudioSFX</a></li>
                                 <li><a href="../classes/platypus.components.AudioVO.html">platypus.components.AudioVO</a></li>
                                 <li><a href="../classes/platypus.components.Camera.html">platypus.components.Camera</a></li>
@@ -58,7 +60,6 @@
                                 <li><a href="../classes/platypus.components.Counter.html">platypus.components.Counter</a></li>
                                 <li><a href="../classes/platypus.components.EntityContainer.html">platypus.components.EntityContainer</a></li>
                                 <li><a href="../classes/platypus.components.EntityController.html">platypus.components.EntityController</a></li>
-                                <li><a href="../classes/platypus.components.EventRender.html">platypus.components.EventRender</a></li>
                                 <li><a href="../classes/platypus.components.HandlerCollision.html">platypus.components.HandlerCollision</a></li>
                                 <li><a href="../classes/platypus.components.HandlerController.html">platypus.components.HandlerController</a></li>
                                 <li><a href="../classes/platypus.components.HandlerLogic.html">platypus.components.HandlerLogic</a></li>
@@ -74,6 +75,7 @@
                                 <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicTimer.html">platypus.components.LogicTimer</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
                                 <li><a href="../classes/platypus.components.Motion.html">platypus.components.Motion</a></li>
                                 <li><a href="../classes/platypus.components.Mover.html">platypus.components.Mover</a></li>
@@ -87,7 +89,7 @@
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
-                                <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
+                                <li><a href="../classes/platypus.components.RenderAnimator.html">platypus.components.RenderAnimator</a></li>
                                 <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
@@ -97,7 +99,6 @@
                                 <li><a href="../classes/platypus.components.RenderText.html">platypus.components.RenderText</a></li>
                                 <li><a href="../classes/platypus.components.RenderTiles.html">platypus.components.RenderTiles</a></li>
                                 <li><a href="../classes/platypus.components.SceneChanger.html">platypus.components.SceneChanger</a></li>
-                                <li><a href="../classes/platypus.components.StateRender.html">platypus.components.StateRender</a></li>
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
@@ -107,16 +108,17 @@
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
                                 <li><a href="../classes/platypus.DataMap.html">platypus.DataMap</a></li>
                                 <li><a href="../classes/platypus.Entity.html">platypus.Entity</a></li>
+                                <li><a href="../classes/platypus.EntityLinker.html">platypus.EntityLinker</a></li>
                                 <li><a href="../classes/platypus.Game.html">platypus.Game</a></li>
+                                <li><a href="../classes/platypus.Gamepad.html">platypus.Gamepad</a></li>
                                 <li><a href="../classes/platypus.Messenger.html">platypus.Messenger</a></li>
                                 <li><a href="../classes/platypus.PIXIAnimation.html">platypus.PIXIAnimation</a></li>
-                                <li><a href="../classes/platypus.PlatypusPlugin.html">platypus.PlatypusPlugin</a></li>
-                                <li><a href="../classes/platypus.Scene.html">platypus.Scene</a></li>
+                                <li><a href="../classes/platypus.SFXPlayer.html">platypus.SFXPlayer</a></li>
                                 <li><a href="../classes/platypus.StateMap.html">platypus.StateMap</a></li>
+                                <li><a href="../classes/platypus.Storage.html">platypus.Storage</a></li>
                                 <li><a href="../classes/platypus.Vector.html">platypus.Vector</a></li>
-                                <li><a href="../classes/window.Array.html">window.Array</a></li>
+                                <li><a href="../classes/platypus.VOPlayer.html">platypus.VOPlayer</a></li>
                                 <li><a href="../classes/window.Map.html">window.Map</a></li>
-                                <li><a href="../classes/window.String.html">window.String</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -179,13 +181,13 @@
                          * @param [definition.regY] {number} The registration y of the collision shape with the owner entity&#x27;s location if offsetX is not provided.
                          * @param collisionType {String} A string describing the collision type of this shape.
                          */
-                        /*global include, platypus, recycle, springroll */
-                        platypus.CollisionShape = (function () {
-                            &#x27;use strict&#x27;;
-                            
-                            var AABB = include(&#x27;platypus.AABB&#x27;),
-                                Vector = include(&#x27;platypus.Vector&#x27;),
-                                circleRectCollision = function (circle, rect) {
+                        import AABB from &#x27;./AABB.js&#x27;;
+                        import Vector from &#x27;./Vector.js&#x27;;
+                        import config from &#x27;config&#x27;;
+                        import recycle from &#x27;recycle&#x27;;
+                        
+                        export default (function () {
+                            var circleRectCollision = function (circle, rect) {
                                     var rectAabb         = rect.aABB,
                                         hh = rectAabb.halfHeight,
                                         hw = rectAabb.halfWidth,
@@ -247,7 +249,6 @@
                                      * @method collides
                                      * @param shape {platypus.CollisionShape} The shape to check against for collision.
                                      * @return {Boolean} Whether the shapes collide.
-                                     * @since 0.7.4
                                      */
                                     if (type === &#x27;circle&#x27;) {
                                         width = height = radius * 2;
@@ -277,6 +278,34 @@
                                     this.aABB.setAll(this.x, this.y, width, height);
                                 },
                                 proto = CollisionShape.prototype;
+                        
+                            /**
+                             * Updates the shape to match another shape.
+                             *
+                             * @method updateAll
+                             * @param updateAll {platypus.CollisionShape} The shape to copy into this one.
+                             */
+                            proto.updateAll = function (shape) {
+                                this.owner = shape.owner;
+                                this.collisionType = shape.collisionType;
+                                this.type = shape.type;
+                                this.subType = shape.subType;
+                                this.offset.x = shape.offset.x;
+                                this.offset.y = shape.offset.y;
+                                this.position.x = shape.position.x;
+                                this.position.y = shape.position.y;
+                                this.size.x = shape.size.x;
+                                this.size.y = shape.size.y;
+                                this.radius = shape.radius;
+                                this.aABB.setAll(this.x, this.y, this.width, this.height);
+                                if (this.type === &#x27;circle&#x27;) {
+                                    this.collides = collidesCircle;
+                                } else if (this.type === &#x27;rectangle&#x27;) {
+                                    this.collides = collidesRectangle;
+                                } else {
+                                    this.collides = collidesDefault;
+                                }
+                            };
                         
                             /**
                              * Updates the location of the shape and AABB. The position you send should be that of the owner, the offset of the shape is added inside the function.
@@ -321,7 +350,6 @@
                              * @method moveXY
                              * @param x {number} The x position to which the shape should be moved.
                              * @param y {number} The y position to which the shape should be moved.
-                             * @since 0.11.2
                              */
                             proto.moveXY = function (x, y) {
                                 this.x = x;
@@ -391,7 +419,6 @@
                              * @param x {number} The x-axis value.
                              * @param y {number} The y-axis value.
                              * @return {boolean} Returns &#x60;true&#x60; if this shape contains the point.
-                             * @since 0.11.0
                              */
                             proto.containsPoint = function (x, y) {
                                 var pow = Math.pow;
@@ -407,7 +434,6 @@
                             *
                             * @method toJSON
                             * @return {Object} Returns a JSON definition that can be used to recreate the collision shape.
-                            * @since 0.11.0
                             **/
                             proto.toJSON = function () {
                                 var json = {},
@@ -442,22 +468,19 @@
                              *
                              * @method CollisionShape.setUp
                              * @return {platypus.CollisionShape} The instantiated CollisionShape.
-                             * @since 0.7.4
                              */
                             /**
                              * Returns a CollisionShape back to the cache.
                              *
                              * @method CollisionShape.recycle
                              * @param {platypus.CollisionShape} The CollisionShape to be recycled.
-                             * @since 0.7.4
                              */
                             /**
                              * Relinquishes properties of the CollisionShape and recycles it.
                              *
                              * @method recycle
-                             * @since 0.7.4
                              */
-                            recycle.add(CollisionShape, !!springroll.Debug, &#x27;CollisionShape&#x27;);
+                            recycle.add(CollisionShape, &#x27;CollisionShape&#x27;, CollisionShape, null, true, config.dev);
                             
                             return CollisionShape;
                         }());

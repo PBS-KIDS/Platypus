@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v1.0.2 API Documentation : platypus.components.Tween</title>
+	<title>platypus v2.0.0 API Documentation : platypus.components.Tween</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 1.0.2</em>
+            <em>API Documentation for: 2.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/platypus.AABB.html">platypus.AABB</a></li>
                                 <li><a href="../classes/platypus.ActionState.html">platypus.ActionState</a></li>
+                                <li><a href="../classes/platypus.AssetManager.html">platypus.AssetManager</a></li>
                                 <li><a href="../classes/platypus.Async.html">platypus.Async</a></li>
                                 <li><a href="../classes/platypus.CollisionData.html">platypus.CollisionData</a></li>
                                 <li><a href="../classes/platypus.CollisionDataContainer.html">platypus.CollisionDataContainer</a></li>
@@ -46,6 +47,7 @@
                                 <li><a href="../classes/platypus.Component.html">platypus.Component</a></li>
                                 <li><a href="../classes/platypus.components.AIChaser.html">platypus.components.AIChaser</a></li>
                                 <li><a href="../classes/platypus.components.AIPacer.html">platypus.components.AIPacer</a></li>
+                                <li><a href="../classes/platypus.components.AudioMusic.html">platypus.components.AudioMusic</a></li>
                                 <li><a href="../classes/platypus.components.AudioSFX.html">platypus.components.AudioSFX</a></li>
                                 <li><a href="../classes/platypus.components.AudioVO.html">platypus.components.AudioVO</a></li>
                                 <li><a href="../classes/platypus.components.Camera.html">platypus.components.Camera</a></li>
@@ -58,7 +60,6 @@
                                 <li><a href="../classes/platypus.components.Counter.html">platypus.components.Counter</a></li>
                                 <li><a href="../classes/platypus.components.EntityContainer.html">platypus.components.EntityContainer</a></li>
                                 <li><a href="../classes/platypus.components.EntityController.html">platypus.components.EntityController</a></li>
-                                <li><a href="../classes/platypus.components.EventRender.html">platypus.components.EventRender</a></li>
                                 <li><a href="../classes/platypus.components.HandlerCollision.html">platypus.components.HandlerCollision</a></li>
                                 <li><a href="../classes/platypus.components.HandlerController.html">platypus.components.HandlerController</a></li>
                                 <li><a href="../classes/platypus.components.HandlerLogic.html">platypus.components.HandlerLogic</a></li>
@@ -74,6 +75,7 @@
                                 <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicTimer.html">platypus.components.LogicTimer</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
                                 <li><a href="../classes/platypus.components.Motion.html">platypus.components.Motion</a></li>
                                 <li><a href="../classes/platypus.components.Mover.html">platypus.components.Mover</a></li>
@@ -87,7 +89,7 @@
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
-                                <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
+                                <li><a href="../classes/platypus.components.RenderAnimator.html">platypus.components.RenderAnimator</a></li>
                                 <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
@@ -97,7 +99,6 @@
                                 <li><a href="../classes/platypus.components.RenderText.html">platypus.components.RenderText</a></li>
                                 <li><a href="../classes/platypus.components.RenderTiles.html">platypus.components.RenderTiles</a></li>
                                 <li><a href="../classes/platypus.components.SceneChanger.html">platypus.components.SceneChanger</a></li>
-                                <li><a href="../classes/platypus.components.StateRender.html">platypus.components.StateRender</a></li>
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
@@ -107,16 +108,17 @@
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
                                 <li><a href="../classes/platypus.DataMap.html">platypus.DataMap</a></li>
                                 <li><a href="../classes/platypus.Entity.html">platypus.Entity</a></li>
+                                <li><a href="../classes/platypus.EntityLinker.html">platypus.EntityLinker</a></li>
                                 <li><a href="../classes/platypus.Game.html">platypus.Game</a></li>
+                                <li><a href="../classes/platypus.Gamepad.html">platypus.Gamepad</a></li>
                                 <li><a href="../classes/platypus.Messenger.html">platypus.Messenger</a></li>
                                 <li><a href="../classes/platypus.PIXIAnimation.html">platypus.PIXIAnimation</a></li>
-                                <li><a href="../classes/platypus.PlatypusPlugin.html">platypus.PlatypusPlugin</a></li>
-                                <li><a href="../classes/platypus.Scene.html">platypus.Scene</a></li>
+                                <li><a href="../classes/platypus.SFXPlayer.html">platypus.SFXPlayer</a></li>
                                 <li><a href="../classes/platypus.StateMap.html">platypus.StateMap</a></li>
+                                <li><a href="../classes/platypus.Storage.html">platypus.Storage</a></li>
                                 <li><a href="../classes/platypus.Vector.html">platypus.Vector</a></li>
-                                <li><a href="../classes/window.Array.html">window.Array</a></li>
+                                <li><a href="../classes/platypus.VOPlayer.html">platypus.VOPlayer</a></li>
                                 <li><a href="../classes/window.Map.html">window.Map</a></li>
-                                <li><a href="../classes/window.String.html">window.String</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -172,8 +174,7 @@
                         
                         
                         <div class="box intro">
-                            <p>This component takes a list of tween definitions and plays them as needed. This component requires CreateJS Tween.</p>
-                        <p>NOTE: This component handles ticking that's synchronized with the game's tick, NOT it's logic tick. As such, reading tweened values during the logic tick will show a changed value on the first logic tick, but all subsequent logic ticks comprising the game's full tick will show no change at all.</p>
+                            <p>This component takes a list of tween definitions and plays them as needed. This component requires TweenJS.</p>
                         
                         </div>
                         
@@ -194,6 +195,26 @@
                                             <h3>Methods</h3>
                         
                                             <ul class="index-list methods">
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;handle-logic&#x27;">&#x27;handle-logic&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;pause-tween&#x27;">&#x27;pause-tween&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;stop-tween&#x27;">&#x27;stop-tween&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;tween&#x27;">&#x27;tween&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;unpause-tween&#x27;">&#x27;unpause-tween&#x27;</a>
+                        
+                                                    </li>
                                                     <li class="index-item method private inherited">
                                                         <a href="#method_addEventListener">addEventListener</a>
                         
@@ -208,10 +229,6 @@
                                                     </li>
                                                     <li class="index-item method inherited">
                                                         <a href="#method_getAssetList">getAssetList</a>
-                        
-                                                    </li>
-                                                    <li class="index-item method inherited">
-                                                        <a href="#method_getLateAssetList">getLateAssetList</a>
                         
                                                     </li>
                                                     <li class="index-item method private inherited">
@@ -242,55 +259,7 @@
                         
                                             <ul class="index-list properties">
                                                     <li class="index-item property">
-                                                        <a href="#property_bounce">bounce</a>
-                        
-                                                    </li>
-                                                    <li class="index-item property">
                                                         <a href="#property_events">events</a>
-                        
-                                                    </li>
-                                                    <li class="index-item property">
-                                                        <a href="#property_ignoreGlobalPause">ignoreGlobalPause</a>
-                        
-                                                    </li>
-                                                    <li class="index-item property">
-                                                        <a href="#property_loop">loop</a>
-                        
-                                                    </li>
-                                                    <li class="index-item property">
-                                                        <a href="#property_onChange">onChange</a>
-                        
-                                                    </li>
-                                                    <li class="index-item property">
-                                                        <a href="#property_onComplete">onComplete</a>
-                        
-                                                    </li>
-                                                    <li class="index-item property">
-                                                        <a href="#property_override">override</a>
-                        
-                                                    </li>
-                                                    <li class="index-item property">
-                                                        <a href="#property_paused">paused</a>
-                        
-                                                    </li>
-                                                    <li class="index-item property">
-                                                        <a href="#property_pluginData">pluginData</a>
-                        
-                                                    </li>
-                                                    <li class="index-item property">
-                                                        <a href="#property_position">position</a>
-                        
-                                                    </li>
-                                                    <li class="index-item property">
-                                                        <a href="#property_reversed">reversed</a>
-                        
-                                                    </li>
-                                                    <li class="index-item property">
-                                                        <a href="#property_timeScale">timeScale</a>
-                        
-                                                    </li>
-                                                    <li class="index-item property">
-                                                        <a href="#property_useTicks">useTicks</a>
                         
                                                     </li>
                                             </ul>
@@ -302,6 +271,200 @@
                                     <div id="methods" class="api-class-tabpanel">
                                         <h2 class="off-left">Methods</h2>
                         
+                                            <div id="method_&#x27;handle-logic&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;handle-logic&#x27;</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>tick.delta</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_Tween.js.html#l126"><code>&#x27;handle-logic&#x27;:126</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This component listens for this event to manage tween playback.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">tick.delta</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                     
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;pause-tween&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;pause-tween&#x27;</code></h3>
+                                            
+                                                    <span class="paren">()</span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_Tween.js.html#l148"><code>&#x27;pause-tween&#x27;:148</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This event pauses all running tweens on this component.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;stop-tween&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;stop-tween&#x27;</code></h3>
+                                            
+                                                    <span class="paren">()</span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_Tween.js.html#l139"><code>&#x27;stop-tween&#x27;:139</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This event stops all running tweens on this component.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;tween&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;tween&#x27;</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>tween</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_Tween.js.html#l116"><code>&#x27;tween&#x27;:116</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Trigger this event to play a tween using the same spec used for a tween on this component's <code>events</code> property.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">tween</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                     
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;unpause-tween&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;unpause-tween&#x27;</code></h3>
+                                            
+                                                    <span class="paren">()</span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_Tween.js.html#l157"><code>&#x27;unpause-tween&#x27;:157</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This event unpauses all running tweens on this component.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
                                             <div id="method_addEventListener" class="method item private inherited">
                                                 <h3 class="name"><code>addEventListener</code></h3>
                                             
@@ -330,7 +493,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_addEventListener">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l112"><code>addEventListener:112</code></a>
+                                                    <a href="../files/src_Component.js.html#l111"><code>addEventListener:111</code></a>
                                                     </p>
                                             
                                             
@@ -403,7 +566,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_addMethod">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l131"><code>addMethod:131</code></a>
+                                                    <a href="../files/src_Component.js.html#l130"><code>addMethod:130</code></a>
                                                     </p>
                                             
                                             
@@ -459,7 +622,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_destroy">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l54"><code>destroy:54</code></a>
+                                                    <a href="../files/src_Component.js.html#l53"><code>destroy:53</code></a>
                                                     </p>
                                             
                                             
@@ -503,7 +666,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_getAssetList">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l188"><code>getAssetList:188</code></a>
+                                                    <a href="../files/src_Component.js.html#l187"><code>getAssetList:187</code></a>
                                                     </p>
                                             
                                             
@@ -561,68 +724,6 @@
                                                     </div>
                                             
                                             </div>
-                                            <div id="method_getLateAssetList" class="method item inherited">
-                                                <h3 class="name"><code>getLateAssetList</code></h3>
-                                            
-                                                    <div class="args">
-                                                        <span class="paren">(</span><ul class="args-list inline commas">
-                                                            <li class="arg">
-                                                                    <code>data</code>
-                                                            </li>
-                                                        </ul><span class="paren">)</span>
-                                                    </div>
-                                            
-                                                    <span class="returns-inline">
-                                                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>
-                                                    </span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>Inherited from
-                                                            <a href="../classes/platypus.Component.html#method_getLateAssetList">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l199"><code>getLateAssetList:199</code></a>
-                                                    </p>
-                                            
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    This method can be overwritten to provide the list of assets this component requires. This method is invoked when the list of game scenes is created to determine assets for each scene.
-                                                </div>
-                                            
-                                                    <div class="params">
-                                                        <h4>Parameters:</h4>
-                                            
-                                                        <ul class="params-list">
-                                                            <li class="param">
-                                                                    <code class="param-name">data</code>
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    Scene data that affects the list of assets.
-                                                                </div>
-                                            
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                            
-                                                    <div class="returns">
-                                                        <h4>Returns:</h4>
-                                            
-                                                        <div class="returns-description">
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>:
-                                                                A list of the necessary assets to load.
-                                                        </div>
-                                                    </div>
-                                            
-                                            </div>
                                             <div id="method_removeEventListener" class="method item private inherited">
                                                 <h3 class="name"><code>removeEventListener</code></h3>
                                             
@@ -648,7 +749,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_removeEventListener">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l150"><code>removeEventListener:150</code></a>
+                                                    <a href="../files/src_Component.js.html#l149"><code>removeEventListener:149</code></a>
                                                     </p>
                                             
                                             
@@ -710,7 +811,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_removeEventListeners">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l85"><code>removeEventListeners:85</code></a>
+                                                    <a href="../files/src_Component.js.html#l84"><code>removeEventListeners:84</code></a>
                                                     </p>
                                             
                                             
@@ -763,7 +864,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_removeMethod">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l172"><code>removeMethod:172</code></a>
+                                                    <a href="../files/src_Component.js.html#l171"><code>removeMethod:171</code></a>
                                                     </p>
                                             
                                             
@@ -816,7 +917,6 @@
                                             
                                             
                                             
-                                                        <p>Available since 0.11.0</p>
                                                 </div>
                                             
                                                 <div class="description">
@@ -879,32 +979,6 @@
                                     <div id="properties" class="api-class-tabpanel">
                                         <h2 class="off-left">Properties</h2>
                         
-                                            <div id="property_bounce" class="property item">
-                                                <h3 class="name"><code>bounce</code></h3>
-                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/src_components_Tween.js.html#l180"><code>bounce:180</code></a>
-                                                    </p>
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>Sets <code>bounce</code> on the tween as defined here: <a href="https://www.createjs.com/docs/tweenjs/classes/Tween.html">https://www.createjs.com/docs/tweenjs/classes/Tween.html</a></p>
-                                            
-                                                </div>
-                                            
-                                                    <p><strong>Default:</strong> false</p>
-                                            
-                                            
-                                            </div>
                                             <div id="property_events" class="property item">
                                                 <h3 class="name"><code>events</code></h3>
                                                 <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
@@ -916,7 +990,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Tween.js.html#l120"><code>events:120</code></a>
+                                                    <a href="../files/src_components_Tween.js.html#l42"><code>events:42</code></a>
                                                     </p>
                                             
                                             
@@ -925,309 +999,39 @@
                                                 <div class="description">
                                                     <p>Required. A key/value list of events and an array or object representing the tween they should trigger.</p>
                                             <pre class="code prettyprint"><code> {
-                                                 "begin-flying": [ // When "begin-flying" is triggered on this entity, the following tween begins. Tween definitions adhere to a similar structure outlined by the TweenJS documentation. Each milestone on the tween is an item in this array.
-                                                     ["to", { // If the definition is an array, the first parameter is the type of milestone, in this case "to", with all following parameters passed directly to the equivalent Tween function.
+                                                 "begin-flying": { // When "begin-flying" is triggered on this entity, the following tween begins. Tween definitions adhere to a similar structure outlined by the [TweenJS documentation](https://github.com/tweenjs/tween.js/blob/master/docs/user_guide.md).
+                                                     "target": "entityId", // This defaults to the entity that this component is on, but can be the id of any entity in this layer.
+                                                     "to": { // Specifies the values to change and what they should tween to.
                                                          "scaleY": 1,
-                                                         "y": 400
-                                                     }, 500],
-                                                     ["call", "fly"], // "call" milestones can take a function or a string. If it's a string, the string will be triggered as an event on the entity. In this case, the component will trigger "fly".
-                                                 ],
+                                                         "y": [400, 450, 425]
+                                                     },
+                                                     "time": 1000, // Time in MS to make transition.
+                                                     "easing": "Quadratic.In", Easing function to use.
+                                                     "onUpdate": "flying", // Event to trigger while transition is running.
+                                                     "onStart": "wave", // Event to trigger when tween begins (after delay).
+                                                     "onStop": "whoa", // Event to trigger when tween is stopped (not completed normally).
+                                                     "onComplete": "done", // Event to trigger when tween is complete.
+                                                     "onRepeat": "going-again", // Event to trigger when tween is beginning again.
+                                                     "chain": "stop-flying", // Specifies a tween to use next.
+                                                     "repeat": 0, // Sets how many times to repeat this tween once it completes.
+                                                     "yoyo": false, // If this tween repeats, yoyo makes it transition back-and-forth.
+                                                     "delay": 500, // Time in MS to delay before starting transition.
+                                                     "repeatDelay": 0, // Time in MS that the transition should wait between repeats if it shouldn't be the <code>delay</code> value.
+                                                     "interpolation": "Linear" // Interpolation method to use for an array of values.
+                                                 },
                                             
-                                                 "stop-flying": { // Alternatively, an object can be used to include properties. It must include a <code>tween</code> property with an array of tween values like above. It may include any properties that the Tween component accepts and overrides the component's properties.
-                                                     "tween": [["to", {"y": 0}, 250]],
-                                                     "loop": 2 // This overrides this component's <code>loop</code> property value.
-                                                 }
+                                                 "stop-flying": [{ // May also chain tweens by specifying an array.
+                                                     "to": {"y": 100},
+                                                     "time": 250
+                                                 }, {
+                                                     "to": {"y": 0},
+                                                     "time": 250
+                                                 }]
                                              }</code></pre>
                                             
                                                 </div>
                                             
                                                     <p><strong>Default:</strong> null</p>
-                                            
-                                            
-                                            </div>
-                                            <div id="property_ignoreGlobalPause" class="property item">
-                                                <h3 class="name"><code>ignoreGlobalPause</code></h3>
-                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/src_components_Tween.js.html#l153"><code>ignoreGlobalPause:153</code></a>
-                                                    </p>
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>Sets <code>ignoreGlobalPause</code> on the tween as defined here: <a href="https://www.createjs.com/docs/tweenjs/classes/Tween.html">https://www.createjs.com/docs/tweenjs/classes/Tween.html</a></p>
-                                            
-                                                </div>
-                                            
-                                                    <p><strong>Default:</strong> false</p>
-                                            
-                                            
-                                            </div>
-                                            <div id="property_loop" class="property item">
-                                                <h3 class="name"><code>loop</code></h3>
-                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/src_components_Tween.js.html#l162"><code>loop:162</code></a>
-                                                    </p>
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>Sets <code>loop</code> on the tween as defined here: <a href="https://www.createjs.com/docs/tweenjs/classes/Tween.html">https://www.createjs.com/docs/tweenjs/classes/Tween.html</a></p>
-                                            
-                                                </div>
-                                            
-                                                    <p><strong>Default:</strong> 0</p>
-                                            
-                                            
-                                            </div>
-                                            <div id="property_onChange" class="property item">
-                                                <h3 class="name"><code>onChange</code></h3>
-                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function" class="crosslink external" target="_blank">Function</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/src_components_Tween.js.html#l225"><code>onChange:225</code></a>
-                                                    </p>
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>Sets <code>onChange</code> on the tween as defined here: <a href="https://www.createjs.com/docs/tweenjs/classes/Tween.html">https://www.createjs.com/docs/tweenjs/classes/Tween.html</a>. If a string is specified, it is triggered as an event on the entity.</p>
-                                            
-                                                </div>
-                                            
-                                                    <p><strong>Default:</strong> &#x27;&#x27;</p>
-                                            
-                                            
-                                            </div>
-                                            <div id="property_onComplete" class="property item">
-                                                <h3 class="name"><code>onComplete</code></h3>
-                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function" class="crosslink external" target="_blank">Function</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/src_components_Tween.js.html#l234"><code>onComplete:234</code></a>
-                                                    </p>
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>Sets <code>onComplete</code> on the tween as defined here: <a href="https://www.createjs.com/docs/tweenjs/classes/Tween.html">https://www.createjs.com/docs/tweenjs/classes/Tween.html</a>. If a string is specified, it is triggered as an event on the entity.</p>
-                                            
-                                                </div>
-                                            
-                                                    <p><strong>Default:</strong> &#x27;&#x27;</p>
-                                            
-                                            
-                                            </div>
-                                            <div id="property_override" class="property item">
-                                                <h3 class="name"><code>override</code></h3>
-                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/src_components_Tween.js.html#l243"><code>override:243</code></a>
-                                                    </p>
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>Sets <code>override</code> on the tween as defined here: <a href="https://www.createjs.com/docs/tweenjs/classes/Tween.html">https://www.createjs.com/docs/tweenjs/classes/Tween.html</a></p>
-                                            
-                                                </div>
-                                            
-                                                    <p><strong>Default:</strong> false</p>
-                                            
-                                            
-                                            </div>
-                                            <div id="property_paused" class="property item">
-                                                <h3 class="name"><code>paused</code></h3>
-                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/src_components_Tween.js.html#l207"><code>paused:207</code></a>
-                                                    </p>
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>Sets <code>paused</code> on the tween as defined here: <a href="https://www.createjs.com/docs/tweenjs/classes/Tween.html">https://www.createjs.com/docs/tweenjs/classes/Tween.html</a></p>
-                                            
-                                                </div>
-                                            
-                                                    <p><strong>Default:</strong> false</p>
-                                            
-                                            
-                                            </div>
-                                            <div id="property_pluginData" class="property item">
-                                                <h3 class="name"><code>pluginData</code></h3>
-                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/src_components_Tween.js.html#l198"><code>pluginData:198</code></a>
-                                                    </p>
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>Sets <code>pluginData</code> on the tween as defined here: <a href="https://www.createjs.com/docs/tweenjs/classes/Tween.html">https://www.createjs.com/docs/tweenjs/classes/Tween.html</a></p>
-                                            
-                                                </div>
-                                            
-                                                    <p><strong>Default:</strong> null</p>
-                                            
-                                            
-                                            </div>
-                                            <div id="property_position" class="property item">
-                                                <h3 class="name"><code>position</code></h3>
-                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/src_components_Tween.js.html#l216"><code>position:216</code></a>
-                                                    </p>
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>Sets <code>position</code> on the tween as defined here: <a href="https://www.createjs.com/docs/tweenjs/classes/Tween.html">https://www.createjs.com/docs/tweenjs/classes/Tween.html</a></p>
-                                            
-                                                </div>
-                                            
-                                                    <p><strong>Default:</strong> false</p>
-                                            
-                                            
-                                            </div>
-                                            <div id="property_reversed" class="property item">
-                                                <h3 class="name"><code>reversed</code></h3>
-                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/src_components_Tween.js.html#l171"><code>reversed:171</code></a>
-                                                    </p>
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>Sets <code>reversed</code> on the tween as defined here: <a href="https://www.createjs.com/docs/tweenjs/classes/Tween.html">https://www.createjs.com/docs/tweenjs/classes/Tween.html</a></p>
-                                            
-                                                </div>
-                                            
-                                                    <p><strong>Default:</strong> false</p>
-                                            
-                                            
-                                            </div>
-                                            <div id="property_timeScale" class="property item">
-                                                <h3 class="name"><code>timeScale</code></h3>
-                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/src_components_Tween.js.html#l189"><code>timeScale:189</code></a>
-                                                    </p>
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>Sets <code>timeScale</code> on the tween as defined here: <a href="https://www.createjs.com/docs/tweenjs/classes/Tween.html">https://www.createjs.com/docs/tweenjs/classes/Tween.html</a></p>
-                                            
-                                                </div>
-                                            
-                                                    <p><strong>Default:</strong> 1</p>
-                                            
-                                            
-                                            </div>
-                                            <div id="property_useTicks" class="property item">
-                                                <h3 class="name"><code>useTicks</code></h3>
-                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/src_components_Tween.js.html#l144"><code>useTicks:144</code></a>
-                                                    </p>
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>Sets <code>useTicks</code> on the tween as defined here: <a href="https://www.createjs.com/docs/tweenjs/classes/Tween.html">https://www.createjs.com/docs/tweenjs/classes/Tween.html</a></p>
-                                            
-                                                </div>
-                                            
-                                                    <p><strong>Default:</strong> false</p>
                                             
                                             
                                             </div>

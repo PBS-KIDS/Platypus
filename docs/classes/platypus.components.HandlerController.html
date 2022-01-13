@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v1.0.2 API Documentation : platypus.components.HandlerController</title>
+	<title>platypus v2.0.0 API Documentation : platypus.components.HandlerController</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 1.0.2</em>
+            <em>API Documentation for: 2.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/platypus.AABB.html">platypus.AABB</a></li>
                                 <li><a href="../classes/platypus.ActionState.html">platypus.ActionState</a></li>
+                                <li><a href="../classes/platypus.AssetManager.html">platypus.AssetManager</a></li>
                                 <li><a href="../classes/platypus.Async.html">platypus.Async</a></li>
                                 <li><a href="../classes/platypus.CollisionData.html">platypus.CollisionData</a></li>
                                 <li><a href="../classes/platypus.CollisionDataContainer.html">platypus.CollisionDataContainer</a></li>
@@ -46,6 +47,7 @@
                                 <li><a href="../classes/platypus.Component.html">platypus.Component</a></li>
                                 <li><a href="../classes/platypus.components.AIChaser.html">platypus.components.AIChaser</a></li>
                                 <li><a href="../classes/platypus.components.AIPacer.html">platypus.components.AIPacer</a></li>
+                                <li><a href="../classes/platypus.components.AudioMusic.html">platypus.components.AudioMusic</a></li>
                                 <li><a href="../classes/platypus.components.AudioSFX.html">platypus.components.AudioSFX</a></li>
                                 <li><a href="../classes/platypus.components.AudioVO.html">platypus.components.AudioVO</a></li>
                                 <li><a href="../classes/platypus.components.Camera.html">platypus.components.Camera</a></li>
@@ -58,7 +60,6 @@
                                 <li><a href="../classes/platypus.components.Counter.html">platypus.components.Counter</a></li>
                                 <li><a href="../classes/platypus.components.EntityContainer.html">platypus.components.EntityContainer</a></li>
                                 <li><a href="../classes/platypus.components.EntityController.html">platypus.components.EntityController</a></li>
-                                <li><a href="../classes/platypus.components.EventRender.html">platypus.components.EventRender</a></li>
                                 <li><a href="../classes/platypus.components.HandlerCollision.html">platypus.components.HandlerCollision</a></li>
                                 <li><a href="../classes/platypus.components.HandlerController.html">platypus.components.HandlerController</a></li>
                                 <li><a href="../classes/platypus.components.HandlerLogic.html">platypus.components.HandlerLogic</a></li>
@@ -74,6 +75,7 @@
                                 <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicTimer.html">platypus.components.LogicTimer</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
                                 <li><a href="../classes/platypus.components.Motion.html">platypus.components.Motion</a></li>
                                 <li><a href="../classes/platypus.components.Mover.html">platypus.components.Mover</a></li>
@@ -87,7 +89,7 @@
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
-                                <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
+                                <li><a href="../classes/platypus.components.RenderAnimator.html">platypus.components.RenderAnimator</a></li>
                                 <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
@@ -97,7 +99,6 @@
                                 <li><a href="../classes/platypus.components.RenderText.html">platypus.components.RenderText</a></li>
                                 <li><a href="../classes/platypus.components.RenderTiles.html">platypus.components.RenderTiles</a></li>
                                 <li><a href="../classes/platypus.components.SceneChanger.html">platypus.components.SceneChanger</a></li>
-                                <li><a href="../classes/platypus.components.StateRender.html">platypus.components.StateRender</a></li>
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
@@ -107,16 +108,17 @@
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
                                 <li><a href="../classes/platypus.DataMap.html">platypus.DataMap</a></li>
                                 <li><a href="../classes/platypus.Entity.html">platypus.Entity</a></li>
+                                <li><a href="../classes/platypus.EntityLinker.html">platypus.EntityLinker</a></li>
                                 <li><a href="../classes/platypus.Game.html">platypus.Game</a></li>
+                                <li><a href="../classes/platypus.Gamepad.html">platypus.Gamepad</a></li>
                                 <li><a href="../classes/platypus.Messenger.html">platypus.Messenger</a></li>
                                 <li><a href="../classes/platypus.PIXIAnimation.html">platypus.PIXIAnimation</a></li>
-                                <li><a href="../classes/platypus.PlatypusPlugin.html">platypus.PlatypusPlugin</a></li>
-                                <li><a href="../classes/platypus.Scene.html">platypus.Scene</a></li>
+                                <li><a href="../classes/platypus.SFXPlayer.html">platypus.SFXPlayer</a></li>
                                 <li><a href="../classes/platypus.StateMap.html">platypus.StateMap</a></li>
+                                <li><a href="../classes/platypus.Storage.html">platypus.Storage</a></li>
                                 <li><a href="../classes/platypus.Vector.html">platypus.Vector</a></li>
-                                <li><a href="../classes/window.Array.html">window.Array</a></li>
+                                <li><a href="../classes/platypus.VOPlayer.html">platypus.VOPlayer</a></li>
                                 <li><a href="../classes/window.Map.html">window.Map</a></li>
-                                <li><a href="../classes/window.String.html">window.String</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -182,6 +184,7 @@
                                 <li class="api-class-tab index"><a href="#index">Index</a></li>
                         
                                     <li class="api-class-tab methods"><a href="#methods">Methods</a></li>
+                                    <li class="api-class-tab properties"><a href="#properties">Properties</a></li>
                                     <li class="api-class-tab events"><a href="#events">Events</a></li>
                             </ul>
                         
@@ -194,7 +197,7 @@
                         
                                             <ul class="index-list methods">
                                                     <li class="index-item method">
-                                                        <a href="#method_&#x27;tick&#x27;">&#x27;tick&#x27;</a>
+                                                        <a href="#method_&#x27;broadcastHandleController&#x27;">&#x27;broadcastHandleController&#x27;</a>
                         
                                                     </li>
                                                     <li class="index-item method private inherited">
@@ -211,10 +214,6 @@
                                                     </li>
                                                     <li class="index-item method inherited">
                                                         <a href="#method_getAssetList">getAssetList</a>
-                        
-                                                    </li>
-                                                    <li class="index-item method inherited">
-                                                        <a href="#method_getLateAssetList">getLateAssetList</a>
                         
                                                     </li>
                                                     <li class="index-item method private inherited">
@@ -240,6 +239,16 @@
                                             </ul>
                                         </div>
                         
+                                        <div class="index-section properties">
+                                            <h3>Properties</h3>
+                        
+                                            <ul class="index-list properties">
+                                                    <li class="index-item property">
+                                                        <a href="#property_useHandleLogic">useHandleLogic</a>
+                        
+                                                    </li>
+                                            </ul>
+                                        </div>
                         
                         
                                         <div class="index-section events">
@@ -247,15 +256,23 @@
                         
                                             <ul class="index-list events">
                                                     <li class="index-item event">
+                                                        <a href="#event_&#x27;[event.code]:change&#x27;">&#x27;[event.code]:change&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;[event.code]:down&#x27;">&#x27;[event.code]:down&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;[event.code]:up&#x27;">&#x27;[event.code]:up&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
                                                         <a href="#event_&#x27;handle-controller&#x27;">&#x27;handle-controller&#x27;</a>
                         
                                                     </li>
                                                     <li class="index-item event">
-                                                        <a href="#event_&#x27;key:[keyId]:down&#x27;">&#x27;key:[keyId]:down&#x27;</a>
-                        
-                                                    </li>
-                                                    <li class="index-item event">
-                                                        <a href="#event_&#x27;key:[keyId]:up&#x27;">&#x27;key:[keyId]:up&#x27;</a>
+                                                        <a href="#event_&#x27;input-precedence-updated&#x27;">&#x27;input-precedence-updated&#x27;</a>
                         
                                                     </li>
                                             </ul>
@@ -265,8 +282,8 @@
                                     <div id="methods" class="api-class-tabpanel">
                                         <h2 class="off-left">Methods</h2>
                         
-                                            <div id="method_&#x27;tick&#x27;" class="method item">
-                                                <h3 class="name"><code>&#x27;tick&#x27;</code></h3>
+                                            <div id="method_&#x27;broadcastHandleController&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;broadcastHandleController&#x27;</code></h3>
                                             
                                                     <div class="args">
                                                         <span class="paren">(</span><ul class="args-list inline commas">
@@ -286,7 +303,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_HandlerController.js.html#l144"><code>&#x27;tick&#x27;:144</code></a>
+                                                    <a href="../files/src_components_HandlerController.js.html#l14"><code>&#x27;broadcastHandleController&#x27;:14</code></a>
                                                     </p>
                                             
                                             
@@ -346,7 +363,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_addEventListener">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l112"><code>addEventListener:112</code></a>
+                                                    <a href="../files/src_Component.js.html#l111"><code>addEventListener:111</code></a>
                                                     </p>
                                             
                                             
@@ -419,7 +436,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_addMethod">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l131"><code>addMethod:131</code></a>
+                                                    <a href="../files/src_Component.js.html#l130"><code>addMethod:130</code></a>
                                                     </p>
                                             
                                             
@@ -475,7 +492,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_destroy">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l54"><code>destroy:54</code></a>
+                                                    <a href="../files/src_Component.js.html#l53"><code>destroy:53</code></a>
                                                     </p>
                                             
                                             
@@ -519,7 +536,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_getAssetList">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l188"><code>getAssetList:188</code></a>
+                                                    <a href="../files/src_Component.js.html#l187"><code>getAssetList:187</code></a>
                                                     </p>
                                             
                                             
@@ -577,68 +594,6 @@
                                                     </div>
                                             
                                             </div>
-                                            <div id="method_getLateAssetList" class="method item inherited">
-                                                <h3 class="name"><code>getLateAssetList</code></h3>
-                                            
-                                                    <div class="args">
-                                                        <span class="paren">(</span><ul class="args-list inline commas">
-                                                            <li class="arg">
-                                                                    <code>data</code>
-                                                            </li>
-                                                        </ul><span class="paren">)</span>
-                                                    </div>
-                                            
-                                                    <span class="returns-inline">
-                                                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>
-                                                    </span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>Inherited from
-                                                            <a href="../classes/platypus.Component.html#method_getLateAssetList">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l199"><code>getLateAssetList:199</code></a>
-                                                    </p>
-                                            
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    This method can be overwritten to provide the list of assets this component requires. This method is invoked when the list of game scenes is created to determine assets for each scene.
-                                                </div>
-                                            
-                                                    <div class="params">
-                                                        <h4>Parameters:</h4>
-                                            
-                                                        <ul class="params-list">
-                                                            <li class="param">
-                                                                    <code class="param-name">data</code>
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    Scene data that affects the list of assets.
-                                                                </div>
-                                            
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                            
-                                                    <div class="returns">
-                                                        <h4>Returns:</h4>
-                                            
-                                                        <div class="returns-description">
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>:
-                                                                A list of the necessary assets to load.
-                                                        </div>
-                                                    </div>
-                                            
-                                            </div>
                                             <div id="method_removeEventListener" class="method item private inherited">
                                                 <h3 class="name"><code>removeEventListener</code></h3>
                                             
@@ -664,7 +619,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_removeEventListener">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l150"><code>removeEventListener:150</code></a>
+                                                    <a href="../files/src_Component.js.html#l149"><code>removeEventListener:149</code></a>
                                                     </p>
                                             
                                             
@@ -726,7 +681,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_removeEventListeners">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l85"><code>removeEventListeners:85</code></a>
+                                                    <a href="../files/src_Component.js.html#l84"><code>removeEventListeners:84</code></a>
                                                     </p>
                                             
                                             
@@ -779,7 +734,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_removeMethod">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l172"><code>removeMethod:172</code></a>
+                                                    <a href="../files/src_Component.js.html#l171"><code>removeMethod:171</code></a>
                                                     </p>
                                             
                                             
@@ -832,7 +787,6 @@
                                             
                                             
                                             
-                                                        <p>Available since 0.11.0</p>
                                                 </div>
                                             
                                                 <div class="description">
@@ -892,13 +846,43 @@
                                             </div>
                                     </div>
                         
+                                    <div id="properties" class="api-class-tabpanel">
+                                        <h2 class="off-left">Properties</h2>
+                        
+                                            <div id="property_useHandleLogic" class="property item">
+                                                <h3 class="name"><code>useHandleLogic</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_HandlerController.js.html#l124"><code>useHandleLogic:124</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Whether 'handle-controller' event should fire based on the 'handle-logic' event instead of the 'tick' event.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> false</p>
+                                            
+                                            
+                                            </div>
+                                    </div>
                         
                         
                                     <div id="events" class="api-class-tabpanel">
                                         <h2 class="off-left">Events</h2>
                         
-                                            <div id="event_&#x27;handle-controller&#x27;" class="events item">
-                                                <h3 class="name"><code>&#x27;handle-controller&#x27;</code></h3>
+                                            <div id="event_&#x27;[event.code]:change&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;[event.code]:change&#x27;</code></h3>
                                                 <span class="type"></span>
                                             
                                             
@@ -908,14 +892,14 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_HandlerController.js.html#l152"><code>&#x27;handle-controller&#x27;:152</code></a>
+                                                    <a href="../files/src_components_HandlerController.js.html#l72"><code>&#x27;[event.code]:change&#x27;:72</code></a>
                                                     </p>
                                             
                                             
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>Sent to entities on each tick to handle whatever they need to regarding controls.</p>
+                                                    <p>Triggered on owner and child entities when an axis changes.</p>
                                             
                                                 </div>
                                             
@@ -924,12 +908,12 @@
                                             
                                                         <ul class="params-list">
                                                             <li class="param">
-                                                                    <code class="param-name">tick</code>
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                                                    <code class="param-name">event</code>
+                                                                    <span class="type">DOMEvent</span>
                                             
                                             
                                                                 <div class="param-description">
-                                                                    <p>An object containing tick data.</p>
+                                                                    <p>The event that triggered the change event.</p>
                                             
                                                                 </div>
                                             
@@ -939,8 +923,8 @@
                                             
                                             
                                             </div>
-                                            <div id="event_&#x27;key:[keyId]:down&#x27;" class="events item">
-                                                <h3 class="name"><code>&#x27;key:[keyId]:down&#x27;</code></h3>
+                                            <div id="event_&#x27;[event.code]:down&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;[event.code]:down&#x27;</code></h3>
                                                 <span class="type"></span>
                                             
                                             
@@ -950,14 +934,14 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_HandlerController.js.html#l166"><code>&#x27;key:[keyId]:down&#x27;:166</code></a>
+                                                    <a href="../files/src_components_HandlerController.js.html#l50"><code>&#x27;[event.code]:down&#x27;:50</code></a>
                                                     </p>
                                             
                                             
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>Message sent to an entity when a key goes from up to down.</p>
+                                                    <p>Triggered on owner and child entities when a key goes from up to down.</p>
                                             
                                                 </div>
                                             
@@ -981,8 +965,8 @@
                                             
                                             
                                             </div>
-                                            <div id="event_&#x27;key:[keyId]:up&#x27;" class="events item">
-                                                <h3 class="name"><code>&#x27;key:[keyId]:up&#x27;</code></h3>
+                                            <div id="event_&#x27;[event.code]:up&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;[event.code]:up&#x27;</code></h3>
                                                 <span class="type"></span>
                                             
                                             
@@ -992,14 +976,14 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_HandlerController.js.html#l178"><code>&#x27;key:[keyId]:up&#x27;:178</code></a>
+                                                    <a href="../files/src_components_HandlerController.js.html#l61"><code>&#x27;[event.code]:up&#x27;:61</code></a>
                                                     </p>
                                             
                                             
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>Message sent to child entities when a key goes from down to up.</p>
+                                                    <p>Triggered on owner and child entities when a key goes from down to up.</p>
                                             
                                                 </div>
                                             
@@ -1014,6 +998,90 @@
                                             
                                                                 <div class="param-description">
                                                                     <p>The DOM event that triggered the keyup event.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;handle-controller&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;handle-controller&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_HandlerController.js.html#l41"><code>&#x27;handle-controller&#x27;:41</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Triggered on owner and child entities on each tick to handle whatever they need to regarding controls.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">tick</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>An object containing tick data.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;input-precedence-updated&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;input-precedence-updated&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_HandlerController.js.html#l165"><code>&#x27;input-precedence-updated&#x27;:165</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Triggered on owner and child entities when player uses a new imput method. (For example, going from mouse to keyboard or keyboard to gamepad.)</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">inputs</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>A list of input methods, ordered by precedence with index 0 being the most recent input method.</p>
                                             
                                                                 </div>
                                             

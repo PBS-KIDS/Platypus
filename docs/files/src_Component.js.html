@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v1.0.2 API Documentation : src\Component.js</title>
+	<title>platypus v2.0.0 API Documentation : src\Component.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 1.0.2</em>
+            <em>API Documentation for: 2.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/platypus.AABB.html">platypus.AABB</a></li>
                                 <li><a href="../classes/platypus.ActionState.html">platypus.ActionState</a></li>
+                                <li><a href="../classes/platypus.AssetManager.html">platypus.AssetManager</a></li>
                                 <li><a href="../classes/platypus.Async.html">platypus.Async</a></li>
                                 <li><a href="../classes/platypus.CollisionData.html">platypus.CollisionData</a></li>
                                 <li><a href="../classes/platypus.CollisionDataContainer.html">platypus.CollisionDataContainer</a></li>
@@ -46,6 +47,7 @@
                                 <li><a href="../classes/platypus.Component.html">platypus.Component</a></li>
                                 <li><a href="../classes/platypus.components.AIChaser.html">platypus.components.AIChaser</a></li>
                                 <li><a href="../classes/platypus.components.AIPacer.html">platypus.components.AIPacer</a></li>
+                                <li><a href="../classes/platypus.components.AudioMusic.html">platypus.components.AudioMusic</a></li>
                                 <li><a href="../classes/platypus.components.AudioSFX.html">platypus.components.AudioSFX</a></li>
                                 <li><a href="../classes/platypus.components.AudioVO.html">platypus.components.AudioVO</a></li>
                                 <li><a href="../classes/platypus.components.Camera.html">platypus.components.Camera</a></li>
@@ -58,7 +60,6 @@
                                 <li><a href="../classes/platypus.components.Counter.html">platypus.components.Counter</a></li>
                                 <li><a href="../classes/platypus.components.EntityContainer.html">platypus.components.EntityContainer</a></li>
                                 <li><a href="../classes/platypus.components.EntityController.html">platypus.components.EntityController</a></li>
-                                <li><a href="../classes/platypus.components.EventRender.html">platypus.components.EventRender</a></li>
                                 <li><a href="../classes/platypus.components.HandlerCollision.html">platypus.components.HandlerCollision</a></li>
                                 <li><a href="../classes/platypus.components.HandlerController.html">platypus.components.HandlerController</a></li>
                                 <li><a href="../classes/platypus.components.HandlerLogic.html">platypus.components.HandlerLogic</a></li>
@@ -74,6 +75,7 @@
                                 <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicTimer.html">platypus.components.LogicTimer</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
                                 <li><a href="../classes/platypus.components.Motion.html">platypus.components.Motion</a></li>
                                 <li><a href="../classes/platypus.components.Mover.html">platypus.components.Mover</a></li>
@@ -87,7 +89,7 @@
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
-                                <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
+                                <li><a href="../classes/platypus.components.RenderAnimator.html">platypus.components.RenderAnimator</a></li>
                                 <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
@@ -97,7 +99,6 @@
                                 <li><a href="../classes/platypus.components.RenderText.html">platypus.components.RenderText</a></li>
                                 <li><a href="../classes/platypus.components.RenderTiles.html">platypus.components.RenderTiles</a></li>
                                 <li><a href="../classes/platypus.components.SceneChanger.html">platypus.components.SceneChanger</a></li>
-                                <li><a href="../classes/platypus.components.StateRender.html">platypus.components.StateRender</a></li>
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
@@ -107,16 +108,17 @@
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
                                 <li><a href="../classes/platypus.DataMap.html">platypus.DataMap</a></li>
                                 <li><a href="../classes/platypus.Entity.html">platypus.Entity</a></li>
+                                <li><a href="../classes/platypus.EntityLinker.html">platypus.EntityLinker</a></li>
                                 <li><a href="../classes/platypus.Game.html">platypus.Game</a></li>
+                                <li><a href="../classes/platypus.Gamepad.html">platypus.Gamepad</a></li>
                                 <li><a href="../classes/platypus.Messenger.html">platypus.Messenger</a></li>
                                 <li><a href="../classes/platypus.PIXIAnimation.html">platypus.PIXIAnimation</a></li>
-                                <li><a href="../classes/platypus.PlatypusPlugin.html">platypus.PlatypusPlugin</a></li>
-                                <li><a href="../classes/platypus.Scene.html">platypus.Scene</a></li>
+                                <li><a href="../classes/platypus.SFXPlayer.html">platypus.SFXPlayer</a></li>
                                 <li><a href="../classes/platypus.StateMap.html">platypus.StateMap</a></li>
+                                <li><a href="../classes/platypus.Storage.html">platypus.Storage</a></li>
                                 <li><a href="../classes/platypus.Vector.html">platypus.Vector</a></li>
-                                <li><a href="../classes/window.Array.html">window.Array</a></li>
+                                <li><a href="../classes/platypus.VOPlayer.html">platypus.VOPlayer</a></li>
                                 <li><a href="../classes/window.Map.html">window.Map</a></li>
-                                <li><a href="../classes/window.String.html">window.String</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -160,11 +162,11 @@
                         <div class="file">
                             <pre class="code prettyprint linenums">
                         /**
-                         * This is the extendable Component class. Typically specific component classes should be created using &#x60;platypus.createComponentClass()&#x60;. This method accepts component definitions and creates component classes that can be used to create components by entities.  It adds properties and methods that are common to all components so that component definitions can focus on unique properties and methods.
+                         * This is the extendable Component class. Typically specific component classes should be created using &#x60;createComponentClass()&#x60;. This method accepts component definitions and creates component classes that can be used to create components by entities.  It adds properties and methods that are common to all components so that component definitions can focus on unique properties and methods.
                          *
                          * To create an extended component class, use the following syntax:
                          *
-                         *      platypus.createComponentClass(componentDefinition, prototype);
+                         *      createComponentClass(componentDefinition, prototype);
                          *
                          *  * &#x60;componentDefinition&#x60; is list of key/value pairs that describe the component&#x27;s behavior.
                          *  * &#x60;prototype&#x60; is an optional prototype that this component extends.
@@ -174,21 +176,21 @@
                          * @class Component
                          * @static
                          */
-                        /*global include, platypus */
-                        platypus.Component = (function () {
-                            &#x27;use strict&#x27;;
-                            
-                            var Data = include(&#x27;platypus.Data&#x27;),
-                                getAssetList = function () {
-                                    return Array.setUp();
+                        /*global platypus */
+                        import {arrayCache, greenSplice} from &#x27;./utils/array.js&#x27;;
+                        import Data from &#x27;./Data.js&#x27;;
+                        
+                        export default (function () {
+                            var getAssetList = function () {
+                                    return arrayCache.setUp();
                                 },
                                 Component = function (type, owner) {
                                     this.type = type;
                                     this.owner = owner;
                                     this.publicMethods = Data.setUp();
                                     this.listener = Data.setUp(
-                                        &quot;events&quot;, Array.setUp(),
-                                        &quot;messages&quot;, Array.setUp()
+                                        &quot;events&quot;, arrayCache.setUp(),
+                                        &quot;messages&quot;, arrayCache.setUp()
                                     );
                                 },
                                 proto = Component.prototype;
@@ -208,7 +210,6 @@
                              *
                              * @method toJSON
                              * @return {Object} Returns a JSON definition that can be used to recreate the component.
-                             * @since 0.11.0
                              **/
                             proto.toJSON = null; // defined in factory.js
                         
@@ -236,8 +237,8 @@
                                     this.publicMethods.recycle();
                                     
                                     this.removeEventListeners();
-                                    this.listener.events.recycle();
-                                    this.listener.messages.recycle();
+                                    arrayCache.recycle(this.listener.events);
+                                    arrayCache.recycle(this.listener.messages);
                                     this.listener.recycle();
                                     this.listener = null;
                                 }
@@ -280,7 +281,7 @@
                              * @private
                              */
                             proto.addEventListener = function (event, callback, priority) {
-                                var handler = callback.bind(this);
+                                var handler = callback.bind(this); // &lt;-- I think we need to stop doing this
                                 
                                 this.listener.events.push(event);
                                 this.listener.messages.push(handler);
@@ -324,8 +325,8 @@
                                 for (i = events.length - 1; i &gt;= 0; i--) {
                                     if ((events[i] === event) &amp;&amp; (!callback || (messages[i] === callback))) {
                                         this.owner.off(event, messages[i]);
-                                        this.listener.events.greenSplice(i);
-                                        this.listener.messages.greenSplice(i);
+                                        greenSplice(this.listener.events, i);
+                                        greenSplice(this.listener.messages, i);
                                     }
                                 }
                             };
@@ -356,15 +357,6 @@
                              * @return {Array} A list of the necessary assets to load.
                              */
                             Component.getAssetList = getAssetList;
-                        
-                            /**
-                             * This method can be overwritten to provide the list of assets this component requires. This method is invoked when the list of game scenes is created to determine assets for each scene.
-                             *
-                             * @method getLateAssetList
-                             * @param data {Object} Scene data that affects the list of assets.
-                             * @return {Array} A list of the necessary assets to load.
-                             */
-                            Component.getLateAssetList = getAssetList;
                             
                             return Component;
                         }());

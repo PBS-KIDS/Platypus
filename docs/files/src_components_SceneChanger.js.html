@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v1.0.2 API Documentation : src\components\SceneChanger.js</title>
+	<title>platypus v2.0.0 API Documentation : src\components\SceneChanger.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 1.0.2</em>
+            <em>API Documentation for: 2.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/platypus.AABB.html">platypus.AABB</a></li>
                                 <li><a href="../classes/platypus.ActionState.html">platypus.ActionState</a></li>
+                                <li><a href="../classes/platypus.AssetManager.html">platypus.AssetManager</a></li>
                                 <li><a href="../classes/platypus.Async.html">platypus.Async</a></li>
                                 <li><a href="../classes/platypus.CollisionData.html">platypus.CollisionData</a></li>
                                 <li><a href="../classes/platypus.CollisionDataContainer.html">platypus.CollisionDataContainer</a></li>
@@ -46,6 +47,7 @@
                                 <li><a href="../classes/platypus.Component.html">platypus.Component</a></li>
                                 <li><a href="../classes/platypus.components.AIChaser.html">platypus.components.AIChaser</a></li>
                                 <li><a href="../classes/platypus.components.AIPacer.html">platypus.components.AIPacer</a></li>
+                                <li><a href="../classes/platypus.components.AudioMusic.html">platypus.components.AudioMusic</a></li>
                                 <li><a href="../classes/platypus.components.AudioSFX.html">platypus.components.AudioSFX</a></li>
                                 <li><a href="../classes/platypus.components.AudioVO.html">platypus.components.AudioVO</a></li>
                                 <li><a href="../classes/platypus.components.Camera.html">platypus.components.Camera</a></li>
@@ -58,7 +60,6 @@
                                 <li><a href="../classes/platypus.components.Counter.html">platypus.components.Counter</a></li>
                                 <li><a href="../classes/platypus.components.EntityContainer.html">platypus.components.EntityContainer</a></li>
                                 <li><a href="../classes/platypus.components.EntityController.html">platypus.components.EntityController</a></li>
-                                <li><a href="../classes/platypus.components.EventRender.html">platypus.components.EventRender</a></li>
                                 <li><a href="../classes/platypus.components.HandlerCollision.html">platypus.components.HandlerCollision</a></li>
                                 <li><a href="../classes/platypus.components.HandlerController.html">platypus.components.HandlerController</a></li>
                                 <li><a href="../classes/platypus.components.HandlerLogic.html">platypus.components.HandlerLogic</a></li>
@@ -74,6 +75,7 @@
                                 <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicTimer.html">platypus.components.LogicTimer</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
                                 <li><a href="../classes/platypus.components.Motion.html">platypus.components.Motion</a></li>
                                 <li><a href="../classes/platypus.components.Mover.html">platypus.components.Mover</a></li>
@@ -87,7 +89,7 @@
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
-                                <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
+                                <li><a href="../classes/platypus.components.RenderAnimator.html">platypus.components.RenderAnimator</a></li>
                                 <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
@@ -97,7 +99,6 @@
                                 <li><a href="../classes/platypus.components.RenderText.html">platypus.components.RenderText</a></li>
                                 <li><a href="../classes/platypus.components.RenderTiles.html">platypus.components.RenderTiles</a></li>
                                 <li><a href="../classes/platypus.components.SceneChanger.html">platypus.components.SceneChanger</a></li>
-                                <li><a href="../classes/platypus.components.StateRender.html">platypus.components.StateRender</a></li>
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
@@ -107,16 +108,17 @@
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
                                 <li><a href="../classes/platypus.DataMap.html">platypus.DataMap</a></li>
                                 <li><a href="../classes/platypus.Entity.html">platypus.Entity</a></li>
+                                <li><a href="../classes/platypus.EntityLinker.html">platypus.EntityLinker</a></li>
                                 <li><a href="../classes/platypus.Game.html">platypus.Game</a></li>
+                                <li><a href="../classes/platypus.Gamepad.html">platypus.Gamepad</a></li>
                                 <li><a href="../classes/platypus.Messenger.html">platypus.Messenger</a></li>
                                 <li><a href="../classes/platypus.PIXIAnimation.html">platypus.PIXIAnimation</a></li>
-                                <li><a href="../classes/platypus.PlatypusPlugin.html">platypus.PlatypusPlugin</a></li>
-                                <li><a href="../classes/platypus.Scene.html">platypus.Scene</a></li>
+                                <li><a href="../classes/platypus.SFXPlayer.html">platypus.SFXPlayer</a></li>
                                 <li><a href="../classes/platypus.StateMap.html">platypus.StateMap</a></li>
+                                <li><a href="../classes/platypus.Storage.html">platypus.Storage</a></li>
                                 <li><a href="../classes/platypus.Vector.html">platypus.Vector</a></li>
-                                <li><a href="../classes/window.Array.html">window.Array</a></li>
+                                <li><a href="../classes/platypus.VOPlayer.html">platypus.VOPlayer</a></li>
                                 <li><a href="../classes/window.Map.html">window.Map</a></li>
-                                <li><a href="../classes/window.String.html">window.String</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -166,18 +168,26 @@
                          * @class SceneChanger
                          * @extends platypus.Component
                          */
-                        /*global include, platypus */
-                        (function () {
-                            &#x27;use strict&#x27;;
-                            
-                            var Data = include(&#x27;platypus.Data&#x27;);
+                        /* global platypus */
+                        import Data from &#x27;../Data.js&#x27;;
+                        import createComponentClass from &#x27;../factory.js&#x27;;
                         
-                            return platypus.createComponentClass({
+                        export default (function () {
+                            return createComponentClass({
                                 id: &#x27;SceneChanger&#x27;,
                                 
                                 properties: {
                                     /**
-                                     * Optional, but must be provided by a &quot;new-scene&quot; parameter if not defined here. This causes a &quot;new-scene&quot; event to load this scene.
+                                     * Optional, but must be provided by a &quot;new-scene&quot; parameter if not defined here. This causes a &quot;new-scene&quot; event to load this set of layers.
+                                     *
+                                     * @property loadLayers
+                                     * @type Array
+                                     * @default null
+                                     */
+                                    loadLayers: null,
+                        
+                                    /**
+                                     * Optional. This causes a &quot;new-scene&quot; event to load this scene.
                                      *
                                      * @property scene
                                      * @type String
@@ -186,7 +196,16 @@
                                     scene: &quot;&quot;,
                         
                                     /**
-                                     * An object containing key/value pairs of information that should be passed into the new scene on the new scene&#x27;s &quot;scene-loaded&quot; and &quot;scene-live&quot; events.
+                                     * Optional, but must be provided by a &quot;new-scene&quot; parameter if not defined here. This causes a &quot;new-scene&quot; event to unload these layers.
+                                     *
+                                     * @property unloadLayers
+                                     * @type Array
+                                     * @default null
+                                     */
+                                    unloadLayers: null,
+                        
+                                    /**
+                                     * An object containing key/value pairs of information that should be passed into the new layers on the new layers&#x27; &quot;layer-loaded&quot; and &quot;layer-live&quot; events.
                                      *
                                      * @property persistentData
                                      * @type platypus.Data|Object
@@ -204,15 +223,29 @@
                                      * On receiving this message, a new scene is loaded according to provided parameters or previously determined component settings.
                                      *
                                      * @method &#x27;new-scene&#x27;
-                                     * @param message.scene {String} This is a label corresponding with a predefined scene.
-                                     * @param message.persistentData {Object} Any values that should be passed to the next scene on the new scene&#x27;s &quot;scene-loaded&quot; and &quot;scene-live&quot; events.
+                                     * @param message.load {String} This is a label corresponding with a predefined layer.
+                                     * @param message.persistentData {Object} Any values that should be passed to the layers&#x27; &quot;layer-loaded&quot; and &quot;layer-live&quot; events.
                                      */
                                     &quot;new-scene&quot;: function (response) {
-                                        var resp       = response || this,
-                                            scene      = resp.scene || this.scene,
-                                            data       = resp.persistentData || this.persistentData;
+                                        const
+                                            loadLayers = (response &amp;&amp; response.loadLayers) || this.loadLayers,
+                                            scene      = (response &amp;&amp; response.scene) || this.scene,
+                                            unloadLayers = (response &amp;&amp; response.unloadLayers) || this.unloadLayers,
+                                            data = (response &amp;&amp; response.persistentData) || this.persistentData;
                                     
-                                        platypus.game.loadScene(scene, data);
+                                        if (unloadLayers &amp;&amp; unloadLayers.length) {
+                                            for (let i = 0; i &lt; unloadLayers.length; i++) {
+                                                platypus.game.unload(unloadLayers[i]);
+                                            }
+                                        }
+                        
+                                        if (loadLayers &amp;&amp; loadLayers.length) {
+                                            platypus.game.load(loadLayers, data);
+                                        }
+                        
+                                        if (scene) {
+                                            platypus.game.loadScene(scene, data);
+                                        }
                                     },
                         
                                     /**
@@ -229,7 +262,7 @@
                                      * On receiving this message, persistent data is stored, waiting for a &#x60;new-scene&#x60; to make the transition.
                                      *
                                      * @method &#x27;set-persistent-scene-data&#x27;
-                                     * @param persistentData {Object} Any values that should be passed to the next scene via the &quot;scene-loaded&quot; and &quot;scene-live&quot; events.
+                                     * @param persistentData {Object} Any values that should be passed to the next scene via the &quot;layer-loaded&quot; and &quot;layer-live&quot; events.
                                      */
                                     &quot;set-persistent-scene-data&quot;: function (data) {
                                         var thisData = this.persistentData,

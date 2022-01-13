@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v1.0.2 API Documentation : src\components\HandlerRender.js</title>
+	<title>platypus v2.0.0 API Documentation : src\components\HandlerRender.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 1.0.2</em>
+            <em>API Documentation for: 2.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/platypus.AABB.html">platypus.AABB</a></li>
                                 <li><a href="../classes/platypus.ActionState.html">platypus.ActionState</a></li>
+                                <li><a href="../classes/platypus.AssetManager.html">platypus.AssetManager</a></li>
                                 <li><a href="../classes/platypus.Async.html">platypus.Async</a></li>
                                 <li><a href="../classes/platypus.CollisionData.html">platypus.CollisionData</a></li>
                                 <li><a href="../classes/platypus.CollisionDataContainer.html">platypus.CollisionDataContainer</a></li>
@@ -46,6 +47,7 @@
                                 <li><a href="../classes/platypus.Component.html">platypus.Component</a></li>
                                 <li><a href="../classes/platypus.components.AIChaser.html">platypus.components.AIChaser</a></li>
                                 <li><a href="../classes/platypus.components.AIPacer.html">platypus.components.AIPacer</a></li>
+                                <li><a href="../classes/platypus.components.AudioMusic.html">platypus.components.AudioMusic</a></li>
                                 <li><a href="../classes/platypus.components.AudioSFX.html">platypus.components.AudioSFX</a></li>
                                 <li><a href="../classes/platypus.components.AudioVO.html">platypus.components.AudioVO</a></li>
                                 <li><a href="../classes/platypus.components.Camera.html">platypus.components.Camera</a></li>
@@ -58,7 +60,6 @@
                                 <li><a href="../classes/platypus.components.Counter.html">platypus.components.Counter</a></li>
                                 <li><a href="../classes/platypus.components.EntityContainer.html">platypus.components.EntityContainer</a></li>
                                 <li><a href="../classes/platypus.components.EntityController.html">platypus.components.EntityController</a></li>
-                                <li><a href="../classes/platypus.components.EventRender.html">platypus.components.EventRender</a></li>
                                 <li><a href="../classes/platypus.components.HandlerCollision.html">platypus.components.HandlerCollision</a></li>
                                 <li><a href="../classes/platypus.components.HandlerController.html">platypus.components.HandlerController</a></li>
                                 <li><a href="../classes/platypus.components.HandlerLogic.html">platypus.components.HandlerLogic</a></li>
@@ -74,6 +75,7 @@
                                 <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicTimer.html">platypus.components.LogicTimer</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
                                 <li><a href="../classes/platypus.components.Motion.html">platypus.components.Motion</a></li>
                                 <li><a href="../classes/platypus.components.Mover.html">platypus.components.Mover</a></li>
@@ -87,7 +89,7 @@
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
-                                <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
+                                <li><a href="../classes/platypus.components.RenderAnimator.html">platypus.components.RenderAnimator</a></li>
                                 <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
@@ -97,7 +99,6 @@
                                 <li><a href="../classes/platypus.components.RenderText.html">platypus.components.RenderText</a></li>
                                 <li><a href="../classes/platypus.components.RenderTiles.html">platypus.components.RenderTiles</a></li>
                                 <li><a href="../classes/platypus.components.SceneChanger.html">platypus.components.SceneChanger</a></li>
-                                <li><a href="../classes/platypus.components.StateRender.html">platypus.components.StateRender</a></li>
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
@@ -107,16 +108,17 @@
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
                                 <li><a href="../classes/platypus.DataMap.html">platypus.DataMap</a></li>
                                 <li><a href="../classes/platypus.Entity.html">platypus.Entity</a></li>
+                                <li><a href="../classes/platypus.EntityLinker.html">platypus.EntityLinker</a></li>
                                 <li><a href="../classes/platypus.Game.html">platypus.Game</a></li>
+                                <li><a href="../classes/platypus.Gamepad.html">platypus.Gamepad</a></li>
                                 <li><a href="../classes/platypus.Messenger.html">platypus.Messenger</a></li>
                                 <li><a href="../classes/platypus.PIXIAnimation.html">platypus.PIXIAnimation</a></li>
-                                <li><a href="../classes/platypus.PlatypusPlugin.html">platypus.PlatypusPlugin</a></li>
-                                <li><a href="../classes/platypus.Scene.html">platypus.Scene</a></li>
+                                <li><a href="../classes/platypus.SFXPlayer.html">platypus.SFXPlayer</a></li>
                                 <li><a href="../classes/platypus.StateMap.html">platypus.StateMap</a></li>
+                                <li><a href="../classes/platypus.Storage.html">platypus.Storage</a></li>
                                 <li><a href="../classes/platypus.Vector.html">platypus.Vector</a></li>
-                                <li><a href="../classes/window.Array.html">window.Array</a></li>
+                                <li><a href="../classes/platypus.VOPlayer.html">platypus.VOPlayer</a></li>
                                 <li><a href="../classes/window.Map.html">window.Map</a></li>
-                                <li><a href="../classes/window.String.html">window.String</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -166,15 +168,14 @@
                          * @class HandlerRender
                          * @uses platypus.Component
                          */
-                        /*global include, platypus */
-                        (function () {
-                            &#x27;use strict&#x27;;
-                            
-                            var Container = include(&#x27;PIXI.Container&#x27;),
-                                Data = include(&#x27;platypus.Data&#x27;),
-                                Interactive = include(&#x27;platypus.components.Interactive&#x27;);
+                        /* global platypus */
+                        import {Container} from &#x27;pixi.js&#x27;;
+                        import Data from &#x27;../Data.js&#x27;;
+                        import Interactive from &#x27;./Interactive.js&#x27;;
+                        import createComponentClass from &#x27;../factory.js&#x27;;
                         
-                            return platypus.createComponentClass({
+                        export default (function () {
+                            return createComponentClass({
                         
                                 id: &quot;HandlerRender&quot;,
                         
@@ -195,7 +196,6 @@
                                      * @property interactive
                                      * @type Boolean|Object
                                      * @default false
-                                     * @since 0.9.1
                                      */
                                     interactive: false
                                 },
@@ -207,27 +207,25 @@
                                      * @property worldContainer
                                      * @type PIXI.Container
                                      * @default null
-                                     * @since 0.11.0
                                      */
                                     worldContainer: null,
-                        
                                     /**
-                                     * This is a read-only list of the world container and subcontainers for entities that should be rendered together.
+                                     * A multiplier that alters the speed at which the game is running. This is achieved by scaling the delta time in each tick.
+                                     * Defaults to 1. Values &lt; 1 will slow down the rendering, &gt; 1 will speed it up.
                                      *
-                                     * @property renderGroups
-                                     * @type Array
-                                     * @default null
-                                     * @since 0.11.10
+                                     * @property timeMultiplier
+                                     * @type number
+                                     * @default 1
                                      */
+                                     timeMultiplier: 1
                                 },
                         
                                 initialize: function () {
-                                    var definition = null,
-                                        renderGroups = this.owner.renderGroups = this.renderGroups = Array.setUp();
-                        
+                                    let definition = null;
+                                    
                                     this.worldContainer = this.worldContainer || new Container();
+                                    this.worldContainer.sortableChildren = true;
                                     this.worldContainer.name = &#x27;&#x27;;
-                                    renderGroups.push(this.worldContainer);
                         
                                     if (this.interactive) {
                                         definition = Data.setUp(
@@ -243,7 +241,7 @@
                                     this.renderMessage = Data.setUp(
                                         &#x27;delta&#x27;, 0,
                                         &#x27;container&#x27;, this.worldContainer,
-                                        &#x27;renderGroups&#x27;, renderGroups
+                                        &#x27;tick&#x27;, null
                                     );
                                 },
                         
@@ -260,11 +258,9 @@
                                          * @event &#x27;render-world&#x27;
                                          * @param data {Object}
                                          * @param data.world {PIXI.Container} Contains entities to be rendered.
-                                         * @param data.renderGroups {Array of PIXI.Container} Containers to categorize display of groups of entities.
                                          */
                                         this.owner.triggerEvent(&#x27;render-world&#x27;, {
-                                            world: this.worldContainer,
-                                            renderGroups: this.renderGroups
+                                            world: this.worldContainer
                                         });
                         
                                         /**
@@ -282,6 +278,10 @@
                                      * @param entity {platypus.Entity} The entity added to the parent.
                                      */
                                     &quot;child-entity-added&quot;: function (entity) {
+                                        if (entity.container) {
+                                            this.setParentRenderContainer(entity, entity.renderParent);
+                                        }
+                                        
                                         /**
                                          * Triggered on an entity added to the parent.
                                          *
@@ -289,7 +289,6 @@
                                          * @param data {Object}
                                          * @param data.delta {Number} The delta time for this tick.
                                          * @param data.container {PIXI.Container} The display Container the entities display objects should be added to.
-                                         * @param data.renderGroups {Array of PIXI.Container} Containers to categorize display of groups of entities.
                                          */
                                         entity.triggerEvent(&#x27;handle-render-load&#x27;, this.renderMessage);
                                     },
@@ -312,7 +311,6 @@
                                              * Notifies children entities that rendering updates have been paused.
                                              *
                                              * @event &#x27;render-paused&#x27;
-                                             * @since 0.8.4
                                              */
                                             this.owner.triggerEventOnChildren(&#x27;render-paused&#x27;);
                                         }
@@ -330,7 +328,6 @@
                                              * Notifies children entities that rendering updates have been unpaused.
                                              *
                                              * @event &#x27;render-unpaused&#x27;
-                                             * @since 0.8.4
                                              */
                                             this.owner.triggerEventOnChildren(&#x27;render-unpaused&#x27;);
                                         }
@@ -342,55 +339,97 @@
                                      * @method &#x27;tick&#x27;
                                      * @param tick {Object} An object containing tick data.
                                      */
-                                    &quot;tick&quot;: (function () {
-                                        var sort = function (a, b) {
-                                            return a.z - b.z;
-                                        };
-                        
-                                        return function (tick) {
-                                            var message = this.renderMessage,
-                                                renderGroup = null,
-                                                renderGroups = this.renderGroups,
-                                                i = renderGroups.length;
-                        
-                                            message.delta = tick.delta;
-                        
-                                            if (this.paused &gt; 0) {
-                                                this.paused -= tick.delta;
-                                                if (this.paused &lt;= 0) {
-                                                    this.paused = 0;
-                                                }
+                                    &quot;tick&quot;: function (tick) {
+                                        if (this.paused &gt; 0) {
+                                            this.paused -= tick.delta;
+                                            if (this.paused &lt;= 0) {
+                                                this.paused = 0;
                                             }
+                                        }
                         
-                                            if (!this.paused &amp;&amp; this.owner.triggerEventOnChildren) {
-                                                /**
-                                                 * Triggered every tick on the children entities.
-                                                 *
-                                                 * @event &#x27;handle-render&#x27;
-                                                 * @param data {Object}
-                                                 * @param data.delta {Number} The delta time for this tick.
-                                                 * @param data.container {PIXI.Container} The display Container the entities display objects should be added to.
-                                                 * @param data.renderGroups {Array of PIXI.Container} Containers to categorize display of groups of entities.
-                                                 */
-                                                this.owner.triggerEventOnChildren(&#x27;handle-render&#x27;, message);
-                                            }
+                                        if (!this.paused) {
+                                            this.renderUpdate(tick);
+                                        }
+                                    },
                         
-                                            while (i--) {
-                                                renderGroup = renderGroups[i];
-                                                if (renderGroup.reorder) {
-                                                    renderGroup.reorder = false;
-                                                    renderGroup.children.sort(sort);
-                                                }
-                                            }
-                                        };
-                                    }())
+                                    /**
+                                     * Sends a &#x27;handle-render&#x27; message to all the children in the Container. This bypasses a render pause value and is useful for resizes happening outside the game loop.
+                                     *
+                                     * @method &#x27;render-update&#x27;
+                                     * @param tick {Object} An object containing tick data.
+                                     */
+                                    &quot;render-update&quot;: function (tick) {
+                                        this.renderUpdate(tick);
+                                    },
+                        
+                                    /**
+                                     * Sets the parent render container of an entity to that of the given entity or entity with the given id.
+                                     *
+                                     * @method &#x27;set-parent-render-container&#x27;
+                                     * @param entity {Object} The entity to relocate.
+                                     * @param container {Entity|String|PIXI.Container} The entity, id of the entity, or PIXI.Container that will act as the parent container.
+                                     */
+                                    &quot;set-parent-render-container&quot;: function (entity, container) {
+                                        this.setParentRenderContainer(entity, container);
+                                    }
+                        
                                 },
                                 methods: {
+                                    renderUpdate: function (tick) {
+                                        const message = this.renderMessage;
+                        
+                                        message.gameDelta = (tick &amp;&amp; tick.delta) || 0;
+                                        message.delta = message.gameDelta * this.timeMultiplier;   
+                                        message.tick = tick;
+                        
+                                        /**
+                                         * Triggered every tick on owner and its children entities.
+                                         *
+                                         * @event &#x27;handle-render&#x27;
+                                         * @param data {Object}
+                                         * @param data.delta {Number} The delta time for this tick as manipulated by the timeMultiplier.
+                                         * @param data.gameDelta {Number} The delta time for this tick. Unmanipulated by the timeMultiplier. Use for components that should always run according to actual time.
+                                         * @param data.container {PIXI.Container} The display Container the entities display objects should be added to.
+                                         * @param data.tick {Object} Tick object from &quot;tick&quot; event.
+                                         */
+                                        this.owner.triggerEvent(&#x27;handle-render&#x27;, message);
+                        
+                                        if (this.owner.triggerEventOnChildren) {
+                                            this.owner.triggerEventOnChildren(&#x27;handle-render&#x27;, message);
+                                        }
+                                    },
+                        
+                                    setParentRenderContainer: function (entity, newContainer) {
+                                        let container = null;
+                        
+                                        entity.removeFromParentContainer();
+                        
+                                        if (!newContainer) {
+                                            container = this.worldContainer;
+                        
+                                        } else if (typeof newContainer === &quot;string&quot;) {
+                        
+                                            const otherEntity = this.owner.getEntityById(newContainer);
+                                            if (otherEntity) {
+                                                container = otherEntity.container;
+                                            } else {
+                                                //Didn&#x27;t find group.
+                                                platypus.debug.warn(&quot;Trying to add to non-existent entity, added to World container instead.&quot;);
+                                                container = this.worldContainer;
+                                            }
+                                        } else if (newContainer instanceof Container) {
+                                            container = newContainer;
+                                        } else {
+                                            container = newContainer.container;
+                                        }
+                        
+                                        entity.addToParentContainer(container);
+                        
+                                    },
                                     destroy: function () {
                                         this.worldContainer = null;
-                                        this.renderGroups.recycle();
-                                        this.renderGroups = null;
                                         this.renderMessage.recycle();
+                                        this.renderMessage = null;
                                     }
                                 }
                             });

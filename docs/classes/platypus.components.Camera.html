@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v1.0.2 API Documentation : platypus.components.Camera</title>
+	<title>platypus v2.0.0 API Documentation : platypus.components.Camera</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 1.0.2</em>
+            <em>API Documentation for: 2.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/platypus.AABB.html">platypus.AABB</a></li>
                                 <li><a href="../classes/platypus.ActionState.html">platypus.ActionState</a></li>
+                                <li><a href="../classes/platypus.AssetManager.html">platypus.AssetManager</a></li>
                                 <li><a href="../classes/platypus.Async.html">platypus.Async</a></li>
                                 <li><a href="../classes/platypus.CollisionData.html">platypus.CollisionData</a></li>
                                 <li><a href="../classes/platypus.CollisionDataContainer.html">platypus.CollisionDataContainer</a></li>
@@ -46,6 +47,7 @@
                                 <li><a href="../classes/platypus.Component.html">platypus.Component</a></li>
                                 <li><a href="../classes/platypus.components.AIChaser.html">platypus.components.AIChaser</a></li>
                                 <li><a href="../classes/platypus.components.AIPacer.html">platypus.components.AIPacer</a></li>
+                                <li><a href="../classes/platypus.components.AudioMusic.html">platypus.components.AudioMusic</a></li>
                                 <li><a href="../classes/platypus.components.AudioSFX.html">platypus.components.AudioSFX</a></li>
                                 <li><a href="../classes/platypus.components.AudioVO.html">platypus.components.AudioVO</a></li>
                                 <li><a href="../classes/platypus.components.Camera.html">platypus.components.Camera</a></li>
@@ -58,7 +60,6 @@
                                 <li><a href="../classes/platypus.components.Counter.html">platypus.components.Counter</a></li>
                                 <li><a href="../classes/platypus.components.EntityContainer.html">platypus.components.EntityContainer</a></li>
                                 <li><a href="../classes/platypus.components.EntityController.html">platypus.components.EntityController</a></li>
-                                <li><a href="../classes/platypus.components.EventRender.html">platypus.components.EventRender</a></li>
                                 <li><a href="../classes/platypus.components.HandlerCollision.html">platypus.components.HandlerCollision</a></li>
                                 <li><a href="../classes/platypus.components.HandlerController.html">platypus.components.HandlerController</a></li>
                                 <li><a href="../classes/platypus.components.HandlerLogic.html">platypus.components.HandlerLogic</a></li>
@@ -74,6 +75,7 @@
                                 <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicTimer.html">platypus.components.LogicTimer</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
                                 <li><a href="../classes/platypus.components.Motion.html">platypus.components.Motion</a></li>
                                 <li><a href="../classes/platypus.components.Mover.html">platypus.components.Mover</a></li>
@@ -87,7 +89,7 @@
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
-                                <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
+                                <li><a href="../classes/platypus.components.RenderAnimator.html">platypus.components.RenderAnimator</a></li>
                                 <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
@@ -97,7 +99,6 @@
                                 <li><a href="../classes/platypus.components.RenderText.html">platypus.components.RenderText</a></li>
                                 <li><a href="../classes/platypus.components.RenderTiles.html">platypus.components.RenderTiles</a></li>
                                 <li><a href="../classes/platypus.components.SceneChanger.html">platypus.components.SceneChanger</a></li>
-                                <li><a href="../classes/platypus.components.StateRender.html">platypus.components.StateRender</a></li>
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
@@ -107,16 +108,17 @@
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
                                 <li><a href="../classes/platypus.DataMap.html">platypus.DataMap</a></li>
                                 <li><a href="../classes/platypus.Entity.html">platypus.Entity</a></li>
+                                <li><a href="../classes/platypus.EntityLinker.html">platypus.EntityLinker</a></li>
                                 <li><a href="../classes/platypus.Game.html">platypus.Game</a></li>
+                                <li><a href="../classes/platypus.Gamepad.html">platypus.Gamepad</a></li>
                                 <li><a href="../classes/platypus.Messenger.html">platypus.Messenger</a></li>
                                 <li><a href="../classes/platypus.PIXIAnimation.html">platypus.PIXIAnimation</a></li>
-                                <li><a href="../classes/platypus.PlatypusPlugin.html">platypus.PlatypusPlugin</a></li>
-                                <li><a href="../classes/platypus.Scene.html">platypus.Scene</a></li>
+                                <li><a href="../classes/platypus.SFXPlayer.html">platypus.SFXPlayer</a></li>
                                 <li><a href="../classes/platypus.StateMap.html">platypus.StateMap</a></li>
+                                <li><a href="../classes/platypus.Storage.html">platypus.Storage</a></li>
                                 <li><a href="../classes/platypus.Vector.html">platypus.Vector</a></li>
-                                <li><a href="../classes/window.Array.html">window.Array</a></li>
+                                <li><a href="../classes/platypus.VOPlayer.html">platypus.VOPlayer</a></li>
                                 <li><a href="../classes/window.Map.html">window.Map</a></li>
-                                <li><a href="../classes/window.String.html">window.String</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -262,10 +264,6 @@
                                                         <a href="#method_getAssetList">getAssetList</a>
                         
                                                     </li>
-                                                    <li class="index-item method inherited">
-                                                        <a href="#method_getLateAssetList">getLateAssetList</a>
-                        
-                                                    </li>
                                                     <li class="index-item method">
                                                         <a href="#method_isOnCanvas">isOnCanvas</a>
                         
@@ -357,6 +355,10 @@
                                                         <a href="#property_y">y</a>
                         
                                                     </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_z">z</a>
+                        
+                                                    </li>
                                             </ul>
                                         </div>
                         
@@ -401,7 +403,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l303"><code>&#x27;child-entity-added&#x27;:303</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l314"><code>&#x27;child-entity-added&#x27;:314</code></a>
                                                     </p>
                                             
                                             
@@ -454,12 +456,11 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l324"><code>&#x27;child-entity-updated&#x27;:324</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l335"><code>&#x27;child-entity-updated&#x27;:335</code></a>
                                                     </p>
                                             
                                             
                                             
-                                                        <p>Available since 0.6.8</p>
                                                 </div>
                                             
                                                 <div class="description">
@@ -508,7 +509,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l562"><code>&#x27;follow&#x27;:562</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l564"><code>&#x27;follow&#x27;:564</code></a>
                                                     </p>
                                             
                                             
@@ -676,7 +677,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l282"><code>&#x27;load&#x27;:282</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l293"><code>&#x27;load&#x27;:293</code></a>
                                                     </p>
                                             
                                             
@@ -712,12 +713,11 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l364"><code>&#x27;pointerdown&#x27;:364</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l374"><code>&#x27;pointerdown&#x27;:374</code></a>
                                                     </p>
                                             
                                             
                                             
-                                                        <p>Available since 0.9.0</p>
                                                 </div>
                                             
                                                 <div class="description">
@@ -766,12 +766,11 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l388"><code>&#x27;pressmove&#x27;:388</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l397"><code>&#x27;pressmove&#x27;:397</code></a>
                                                     </p>
                                             
                                             
                                             
-                                                        <p>Available since 0.9.0</p>
                                                 </div>
                                             
                                                 <div class="description">
@@ -820,12 +819,11 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l405"><code>&#x27;pressup&#x27;:405</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l413"><code>&#x27;pressup&#x27;:413</code></a>
                                                     </p>
                                             
                                             
                                             
-                                                        <p>Available since 0.9.0</p>
                                                 </div>
                                             
                                                 <div class="description">
@@ -874,7 +872,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l529"><code>&#x27;relocate&#x27;:529</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l526"><code>&#x27;relocate&#x27;:526</code></a>
                                                     </p>
                                             
                                             
@@ -971,7 +969,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l291"><code>&#x27;render-world&#x27;:291</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l302"><code>&#x27;render-world&#x27;:302</code></a>
                                                     </p>
                                             
                                             
@@ -1021,7 +1019,10 @@
                                                     <div class="args">
                                                         <span class="paren">(</span><ul class="args-list inline commas">
                                                             <li class="arg">
-                                                                    <code>dimensions</code>
+                                                                    <code class="optional">[dimensions]</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code class="optional">[forceUpdate]</code>
                                                             </li>
                                                         </ul><span class="paren">)</span>
                                                     </div>
@@ -1036,7 +1037,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l515"><code>&#x27;resize-camera&#x27;:515</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l483"><code>&#x27;resize-camera&#x27;:483</code></a>
                                                     </p>
                                             
                                             
@@ -1053,8 +1054,9 @@
                                             
                                                         <ul class="params-list">
                                                             <li class="param">
-                                                                    <code class="param-name">dimensions</code>
+                                                                    <code class="param-name optional">[dimensions]</code>
                                                                     <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                                                    <span class="flag optional" title="This parameter is optional.">optional</span>
                                             
                                             
                                                                 <div class="param-description">
@@ -1083,7 +1085,29 @@
                                                                             </div>
                                             
                                                                         </li>
+                                                                        <li class="param">
+                                                                                <code class="param-name">time</code>
+                                                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                                                            <div class="param-description">
+                                                                                <p>Time in millseconds over which to tween the scale change.</p>
+                                            
+                                                                            </div>
+                                            
+                                                                        </li>
                                                                     </ul>
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name optional">[forceUpdate]</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>Whether to update graphics.</p>
+                                            
+                                                                </div>
+                                            
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -1111,7 +1135,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l583"><code>&#x27;shake&#x27;:583</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l585"><code>&#x27;shake&#x27;:585</code></a>
                                                     </p>
                                             
                                             
@@ -1220,7 +1244,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l422"><code>&#x27;tick&#x27;:422</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l429"><code>&#x27;tick&#x27;:429</code></a>
                                                     </p>
                                             
                                             
@@ -1284,7 +1308,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l339"><code>&#x27;world-loaded&#x27;:339</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l349"><code>&#x27;world-loaded&#x27;:349</code></a>
                                                     </p>
                                             
                                             
@@ -1378,7 +1402,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_addEventListener">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l112"><code>addEventListener:112</code></a>
+                                                    <a href="../files/src_Component.js.html#l111"><code>addEventListener:111</code></a>
                                                     </p>
                                             
                                             
@@ -1451,7 +1475,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_addMethod">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l131"><code>addMethod:131</code></a>
+                                                    <a href="../files/src_Component.js.html#l130"><code>addMethod:130</code></a>
                                                     </p>
                                             
                                             
@@ -1507,7 +1531,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_destroy">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l54"><code>destroy:54</code></a>
+                                                    <a href="../files/src_Component.js.html#l53"><code>destroy:53</code></a>
                                                     </p>
                                             
                                             
@@ -1551,7 +1575,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_getAssetList">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l188"><code>getAssetList:188</code></a>
+                                                    <a href="../files/src_Component.js.html#l187"><code>getAssetList:187</code></a>
                                                     </p>
                                             
                                             
@@ -1609,68 +1633,6 @@
                                                     </div>
                                             
                                             </div>
-                                            <div id="method_getLateAssetList" class="method item inherited">
-                                                <h3 class="name"><code>getLateAssetList</code></h3>
-                                            
-                                                    <div class="args">
-                                                        <span class="paren">(</span><ul class="args-list inline commas">
-                                                            <li class="arg">
-                                                                    <code>data</code>
-                                                            </li>
-                                                        </ul><span class="paren">)</span>
-                                                    </div>
-                                            
-                                                    <span class="returns-inline">
-                                                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>
-                                                    </span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>Inherited from
-                                                            <a href="../classes/platypus.Component.html#method_getLateAssetList">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l199"><code>getLateAssetList:199</code></a>
-                                                    </p>
-                                            
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    This method can be overwritten to provide the list of assets this component requires. This method is invoked when the list of game scenes is created to determine assets for each scene.
-                                                </div>
-                                            
-                                                    <div class="params">
-                                                        <h4>Parameters:</h4>
-                                            
-                                                        <ul class="params-list">
-                                                            <li class="param">
-                                                                    <code class="param-name">data</code>
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    Scene data that affects the list of assets.
-                                                                </div>
-                                            
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                            
-                                                    <div class="returns">
-                                                        <h4>Returns:</h4>
-                                            
-                                                        <div class="returns-description">
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>:
-                                                                A list of the necessary assets to load.
-                                                        </div>
-                                                    </div>
-                                            
-                                            </div>
                                             <div id="method_isOnCanvas" class="method item">
                                                 <h3 class="name"><code>isOnCanvas</code></h3>
                                             
@@ -1695,12 +1657,11 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l1019"><code>isOnCanvas:1019</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l1071"><code>isOnCanvas:1071</code></a>
                                                     </p>
                                             
                                             
                                             
-                                                        <p>Available since 0.10.0</p>
                                                 </div>
                                             
                                                 <div class="description">
@@ -1804,7 +1765,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_removeEventListener">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l150"><code>removeEventListener:150</code></a>
+                                                    <a href="../files/src_Component.js.html#l149"><code>removeEventListener:149</code></a>
                                                     </p>
                                             
                                             
@@ -1866,7 +1827,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_removeEventListeners">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l85"><code>removeEventListeners:85</code></a>
+                                                    <a href="../files/src_Component.js.html#l84"><code>removeEventListeners:84</code></a>
                                                     </p>
                                             
                                             
@@ -1919,7 +1880,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_removeMethod">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l172"><code>removeMethod:172</code></a>
+                                                    <a href="../files/src_Component.js.html#l171"><code>removeMethod:171</code></a>
                                                     </p>
                                             
                                             
@@ -1972,7 +1933,6 @@
                                             
                                             
                                             
-                                                        <p>Available since 0.11.0</p>
                                                 </div>
                                             
                                                 <div class="description">
@@ -2060,7 +2020,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l1037"><code>windowToWorld:1037</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l1088"><code>windowToWorld:1088</code></a>
                                                     </p>
                                             
                                             
@@ -2153,7 +2113,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l1060"><code>worldToWindow:1060</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l1111"><code>worldToWindow:1111</code></a>
                                                     </p>
                                             
                                             
@@ -2232,7 +2192,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l147"><code>canvas:147</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l148"><code>canvas:148</code></a>
                                                     </p>
                                             
                                             
@@ -2258,7 +2218,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l73"><code>height:73</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l75"><code>height:75</code></a>
                                                     </p>
                                             
                                             
@@ -2284,11 +2244,10 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l82"><code>mode:82</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l84"><code>mode:84</code></a>
                                                     </p>
                                             
                                             
-                                                        <p>Available since 0.9.0</p>
                                                 </div>
                                             
                                                 <div class="description">
@@ -2311,7 +2270,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l92"><code>overflow:92</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l93"><code>overflow:93</code></a>
                                                     </p>
                                             
                                             
@@ -2337,7 +2296,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l119"><code>rotate:119</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l120"><code>rotate:120</code></a>
                                                     </p>
                                             
                                             
@@ -2363,7 +2322,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l101"><code>stretch:101</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l102"><code>stretch:102</code></a>
                                                     </p>
                                             
                                             
@@ -2389,7 +2348,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l110"><code>threshold:110</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l111"><code>threshold:111</code></a>
                                                     </p>
                                             
                                             
@@ -2415,7 +2374,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l174"><code>transitionAngle:174</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l175"><code>transitionAngle:175</code></a>
                                                     </p>
                                             
                                             
@@ -2441,7 +2400,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l156"><code>transitionX:156</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l157"><code>transitionX:157</code></a>
                                                     </p>
                                             
                                             
@@ -2467,7 +2426,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l165"><code>transitionY:165</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l166"><code>transitionY:166</code></a>
                                                     </p>
                                             
                                             
@@ -2493,7 +2452,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l64"><code>width:64</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l66"><code>width:66</code></a>
                                                     </p>
                                             
                                             
@@ -2519,7 +2478,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l128"><code>x:128</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l129"><code>x:129</code></a>
                                                     </p>
                                             
                                             
@@ -2545,7 +2504,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l137"><code>y:137</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l138"><code>y:138</code></a>
                                                     </p>
                                             
                                             
@@ -2553,6 +2512,32 @@
                                             
                                                 <div class="description">
                                                     <p>Number specifying the vertical center of viewport in world coordinates.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> 0</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_z" class="property item">
+                                                <h3 class="name"><code>z</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_Camera.js.html#l184"><code>z:184</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Sets the z-order of this layer relative to other loaded layers.</p>
                                             
                                                 </div>
                                             
@@ -2577,7 +2562,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l313"><code>&#x27;camera-loaded&#x27;:313</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l324"><code>&#x27;camera-loaded&#x27;:324</code></a>
                                                     </p>
                                             
                                             
@@ -2630,7 +2615,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_Camera.js.html#l482"><code>&#x27;camera-update&#x27;:482</code></a>
+                                                    <a href="../files/src_components_Camera.js.html#l1020"><code>&#x27;camera-update&#x27;:1020</code></a>
                                                     </p>
                                             
                                             

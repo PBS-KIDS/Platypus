@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v1.0.2 API Documentation : src\factory.js</title>
+	<title>platypus v2.0.0 API Documentation : src\factory.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 1.0.2</em>
+            <em>API Documentation for: 2.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/platypus.AABB.html">platypus.AABB</a></li>
                                 <li><a href="../classes/platypus.ActionState.html">platypus.ActionState</a></li>
+                                <li><a href="../classes/platypus.AssetManager.html">platypus.AssetManager</a></li>
                                 <li><a href="../classes/platypus.Async.html">platypus.Async</a></li>
                                 <li><a href="../classes/platypus.CollisionData.html">platypus.CollisionData</a></li>
                                 <li><a href="../classes/platypus.CollisionDataContainer.html">platypus.CollisionDataContainer</a></li>
@@ -46,6 +47,7 @@
                                 <li><a href="../classes/platypus.Component.html">platypus.Component</a></li>
                                 <li><a href="../classes/platypus.components.AIChaser.html">platypus.components.AIChaser</a></li>
                                 <li><a href="../classes/platypus.components.AIPacer.html">platypus.components.AIPacer</a></li>
+                                <li><a href="../classes/platypus.components.AudioMusic.html">platypus.components.AudioMusic</a></li>
                                 <li><a href="../classes/platypus.components.AudioSFX.html">platypus.components.AudioSFX</a></li>
                                 <li><a href="../classes/platypus.components.AudioVO.html">platypus.components.AudioVO</a></li>
                                 <li><a href="../classes/platypus.components.Camera.html">platypus.components.Camera</a></li>
@@ -58,7 +60,6 @@
                                 <li><a href="../classes/platypus.components.Counter.html">platypus.components.Counter</a></li>
                                 <li><a href="../classes/platypus.components.EntityContainer.html">platypus.components.EntityContainer</a></li>
                                 <li><a href="../classes/platypus.components.EntityController.html">platypus.components.EntityController</a></li>
-                                <li><a href="../classes/platypus.components.EventRender.html">platypus.components.EventRender</a></li>
                                 <li><a href="../classes/platypus.components.HandlerCollision.html">platypus.components.HandlerCollision</a></li>
                                 <li><a href="../classes/platypus.components.HandlerController.html">platypus.components.HandlerController</a></li>
                                 <li><a href="../classes/platypus.components.HandlerLogic.html">platypus.components.HandlerLogic</a></li>
@@ -74,6 +75,7 @@
                                 <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicTimer.html">platypus.components.LogicTimer</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
                                 <li><a href="../classes/platypus.components.Motion.html">platypus.components.Motion</a></li>
                                 <li><a href="../classes/platypus.components.Mover.html">platypus.components.Mover</a></li>
@@ -87,7 +89,7 @@
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
-                                <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
+                                <li><a href="../classes/platypus.components.RenderAnimator.html">platypus.components.RenderAnimator</a></li>
                                 <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
@@ -97,7 +99,6 @@
                                 <li><a href="../classes/platypus.components.RenderText.html">platypus.components.RenderText</a></li>
                                 <li><a href="../classes/platypus.components.RenderTiles.html">platypus.components.RenderTiles</a></li>
                                 <li><a href="../classes/platypus.components.SceneChanger.html">platypus.components.SceneChanger</a></li>
-                                <li><a href="../classes/platypus.components.StateRender.html">platypus.components.StateRender</a></li>
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
@@ -107,16 +108,17 @@
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
                                 <li><a href="../classes/platypus.DataMap.html">platypus.DataMap</a></li>
                                 <li><a href="../classes/platypus.Entity.html">platypus.Entity</a></li>
+                                <li><a href="../classes/platypus.EntityLinker.html">platypus.EntityLinker</a></li>
                                 <li><a href="../classes/platypus.Game.html">platypus.Game</a></li>
+                                <li><a href="../classes/platypus.Gamepad.html">platypus.Gamepad</a></li>
                                 <li><a href="../classes/platypus.Messenger.html">platypus.Messenger</a></li>
                                 <li><a href="../classes/platypus.PIXIAnimation.html">platypus.PIXIAnimation</a></li>
-                                <li><a href="../classes/platypus.PlatypusPlugin.html">platypus.PlatypusPlugin</a></li>
-                                <li><a href="../classes/platypus.Scene.html">platypus.Scene</a></li>
+                                <li><a href="../classes/platypus.SFXPlayer.html">platypus.SFXPlayer</a></li>
                                 <li><a href="../classes/platypus.StateMap.html">platypus.StateMap</a></li>
+                                <li><a href="../classes/platypus.Storage.html">platypus.Storage</a></li>
                                 <li><a href="../classes/platypus.Vector.html">platypus.Vector</a></li>
-                                <li><a href="../classes/window.Array.html">window.Array</a></li>
+                                <li><a href="../classes/platypus.VOPlayer.html">platypus.VOPlayer</a></li>
                                 <li><a href="../classes/window.Map.html">window.Map</a></li>
-                                <li><a href="../classes/window.String.html">window.String</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -164,20 +166,20 @@
                          *
                          * To create an extended component class, use the following syntax:
                          *
-                         *      platypus.createComponentClass(componentDefinition, prototype);
+                         *      platypus.createComponentClass(componentDefinition);
                          *
                          *  * &#x60;componentDefinition&#x60; is list of key/value pairs that describe the component&#x27;s behavior.
-                         *  * &#x60;prototype&#x60; is an optional prototype that this component extends.
+                         *
                          * See ComponentExample.js for an example componentDefinition that can be sent into this component class factory.
                          *
                          */
-                        /* global extend, include, platypus */
-                        (function () {
-                            &#x27;use strict&#x27;;
-                            
-                            var Component = include(&#x27;platypus.Component&#x27;),
-                                debug = include(&#x27;springroll.Debug&#x27;, false),
-                                key = &#x27;&#x27;,
+                        /* global platypus */
+                        import {arrayCache, greenSlice} from &#x27;./utils/array.js&#x27;;
+                        import Component from &#x27;./Component.js&#x27;;
+                        import config from &#x27;config&#x27;;
+                        
+                        export default (function () {
+                            var debug = config.dev,
                                 priority = 0,
                                 doNothing = function () {},
                                 setupProperty = function (property, component, owner) {
@@ -190,29 +192,20 @@
                                         },
                                         enumerable: true
                                     });
-                                },
-                                runBoth = function (f1, f2) {
-                                    return function () {
-                                        f1.apply(this, arguments);
-                                        f2.apply(this, arguments);
-                                    };
                                 };
                                 
-                            platypus.components = {};
-                            
-                            platypus.createComponentClass = function (componentDefinition, Prototype) {
-                                var component = function (owner, definition, callback) {
+                            return function (componentDefinition) {
+                                var func  = null,
+                                    proto = null;
+                                
+                                class NewComponent extends Component {
+                                    constructor (owner, definition, callback) {
                                         var prop  = &#x27;&#x27;,
                                             func  = &#x27;&#x27;,
                                             name  = &#x27;&#x27;,
                                             alias = &#x27;&#x27;;
                                             
-                                        Component.call(this, componentDefinition.id, owner);
-                        
-                                        // if prototype provided, set up its properties here.
-                                        if (Prototype) {
-                                            Prototype.call(this);
-                                        }
+                                        super(componentDefinition.id, owner);
                         
                                         // Set up properties, prioritizing component settings, entity settings, and finally defaults.
                                         if (componentDefinition.properties) {
@@ -280,26 +273,13 @@
                                         if (!this.initialize(definition, callback) &amp;&amp; callback) { // whether the callback will be used; if not, we run immediately.
                                             callback();
                                         }
-                                    },
-                                    func  = null,
-                                    proto = component.prototype;
-                                
-                                if (Prototype) { //absorb template prototype if it exists.
-                                    proto = extend(component, Prototype);
-                                    for (key in Component.prototype) {
-                                        if (proto[key]) {
-                                            proto[key] = runBoth(proto[key], Component.prototype[key]);
-                                        } else {
-                                            proto[key] = Component.prototype[key];
-                                        }
                                     }
-                                } else {
-                                    proto = extend(component, Component);
                                 }
                                 
-                                // Have to copy rather than replace so definition is not corrupted
-                                proto.initialize = componentDefinition.initialize || doNothing;
+                                proto = NewComponent.prototype;
                         
+                                proto.initialize = componentDefinition.initialize || doNothing;
+                                
                                 // This can be overridden by a &quot;toJSON&quot; method in the component definition. This is by design.
                                 proto.toJSON = (function () {
                                     var validating = false,
@@ -320,7 +300,7 @@
                                                 invalid = true;
                                             } else if ((type === &#x27;object&#x27;) &amp;&amp; (value !== null)) {
                                                 if (value.toJSON) { // We know it&#x27;s valid but we run this for the depth check to make sure that there is no recursion.
-                                                    depth = depthArray ? depthArray.greenSlice() : Array.setUp();
+                                                    depth = depthArray ? greenSlice(depthArray) : arrayCache.setUp();
                                                     depth.push(value);
                                                     if (!valid(value.toJSON(), depth)) {
                                                         invalid = true;
@@ -332,7 +312,7 @@
                                                             invalid = true;
                                                             break;
                                                         }
-                                                        depth = depthArray ? depthArray.greenSlice() : Array.setUp();
+                                                        depth = depthArray ? greenSlice(depthArray) : arrayCache.setUp();
                                                         depth.push(value[i]);
                                                         if (!valid(value[i], depth)) {
                                                             invalid = true;
@@ -346,7 +326,7 @@
                                                                 invalid = true;
                                                                 break;
                                                             }
-                                                            depth = depthArray ? depthArray.greenSlice() : Array.setUp();
+                                                            depth = depthArray ? greenSlice(depthArray) : arrayCache.setUp();
                                                             depth.push(value[key]);
                                                             if (!valid(value[key], depth)) {
                                                                 invalid = true;
@@ -358,7 +338,7 @@
                                             }
                         
                                             if (depthArray) {
-                                                depthArray.recycle();
+                                                arrayCache.recycle(depthArray);
                                             }
                         
                                             if (root) {
@@ -443,12 +423,11 @@
                                     }
                                 }
                         
-                                component.getAssetList     = componentDefinition.getAssetList     || Component.getAssetList;
-                                component.getLateAssetList = componentDefinition.getLateAssetList || Component.getLateAssetList;
-                                
-                                platypus.components[componentDefinition.id] = component;
+                                if (componentDefinition.getAssetList) {
+                                    NewComponent.getAssetList = componentDefinition.getAssetList;
+                                }
                         
-                                return component;
+                                return NewComponent;
                             };
                         }());
                         

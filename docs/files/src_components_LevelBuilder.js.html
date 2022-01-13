@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v1.0.2 API Documentation : src\components\LevelBuilder.js</title>
+	<title>platypus v2.0.0 API Documentation : src\components\LevelBuilder.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 1.0.2</em>
+            <em>API Documentation for: 2.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/platypus.AABB.html">platypus.AABB</a></li>
                                 <li><a href="../classes/platypus.ActionState.html">platypus.ActionState</a></li>
+                                <li><a href="../classes/platypus.AssetManager.html">platypus.AssetManager</a></li>
                                 <li><a href="../classes/platypus.Async.html">platypus.Async</a></li>
                                 <li><a href="../classes/platypus.CollisionData.html">platypus.CollisionData</a></li>
                                 <li><a href="../classes/platypus.CollisionDataContainer.html">platypus.CollisionDataContainer</a></li>
@@ -46,6 +47,7 @@
                                 <li><a href="../classes/platypus.Component.html">platypus.Component</a></li>
                                 <li><a href="../classes/platypus.components.AIChaser.html">platypus.components.AIChaser</a></li>
                                 <li><a href="../classes/platypus.components.AIPacer.html">platypus.components.AIPacer</a></li>
+                                <li><a href="../classes/platypus.components.AudioMusic.html">platypus.components.AudioMusic</a></li>
                                 <li><a href="../classes/platypus.components.AudioSFX.html">platypus.components.AudioSFX</a></li>
                                 <li><a href="../classes/platypus.components.AudioVO.html">platypus.components.AudioVO</a></li>
                                 <li><a href="../classes/platypus.components.Camera.html">platypus.components.Camera</a></li>
@@ -58,7 +60,6 @@
                                 <li><a href="../classes/platypus.components.Counter.html">platypus.components.Counter</a></li>
                                 <li><a href="../classes/platypus.components.EntityContainer.html">platypus.components.EntityContainer</a></li>
                                 <li><a href="../classes/platypus.components.EntityController.html">platypus.components.EntityController</a></li>
-                                <li><a href="../classes/platypus.components.EventRender.html">platypus.components.EventRender</a></li>
                                 <li><a href="../classes/platypus.components.HandlerCollision.html">platypus.components.HandlerCollision</a></li>
                                 <li><a href="../classes/platypus.components.HandlerController.html">platypus.components.HandlerController</a></li>
                                 <li><a href="../classes/platypus.components.HandlerLogic.html">platypus.components.HandlerLogic</a></li>
@@ -74,6 +75,7 @@
                                 <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicTimer.html">platypus.components.LogicTimer</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
                                 <li><a href="../classes/platypus.components.Motion.html">platypus.components.Motion</a></li>
                                 <li><a href="../classes/platypus.components.Mover.html">platypus.components.Mover</a></li>
@@ -87,7 +89,7 @@
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
-                                <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
+                                <li><a href="../classes/platypus.components.RenderAnimator.html">platypus.components.RenderAnimator</a></li>
                                 <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
@@ -97,7 +99,6 @@
                                 <li><a href="../classes/platypus.components.RenderText.html">platypus.components.RenderText</a></li>
                                 <li><a href="../classes/platypus.components.RenderTiles.html">platypus.components.RenderTiles</a></li>
                                 <li><a href="../classes/platypus.components.SceneChanger.html">platypus.components.SceneChanger</a></li>
-                                <li><a href="../classes/platypus.components.StateRender.html">platypus.components.StateRender</a></li>
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
@@ -107,16 +108,17 @@
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
                                 <li><a href="../classes/platypus.DataMap.html">platypus.DataMap</a></li>
                                 <li><a href="../classes/platypus.Entity.html">platypus.Entity</a></li>
+                                <li><a href="../classes/platypus.EntityLinker.html">platypus.EntityLinker</a></li>
                                 <li><a href="../classes/platypus.Game.html">platypus.Game</a></li>
+                                <li><a href="../classes/platypus.Gamepad.html">platypus.Gamepad</a></li>
                                 <li><a href="../classes/platypus.Messenger.html">platypus.Messenger</a></li>
                                 <li><a href="../classes/platypus.PIXIAnimation.html">platypus.PIXIAnimation</a></li>
-                                <li><a href="../classes/platypus.PlatypusPlugin.html">platypus.PlatypusPlugin</a></li>
-                                <li><a href="../classes/platypus.Scene.html">platypus.Scene</a></li>
+                                <li><a href="../classes/platypus.SFXPlayer.html">platypus.SFXPlayer</a></li>
                                 <li><a href="../classes/platypus.StateMap.html">platypus.StateMap</a></li>
+                                <li><a href="../classes/platypus.Storage.html">platypus.Storage</a></li>
                                 <li><a href="../classes/platypus.Vector.html">platypus.Vector</a></li>
-                                <li><a href="../classes/window.Array.html">window.Array</a></li>
+                                <li><a href="../classes/platypus.VOPlayer.html">platypus.VOPlayer</a></li>
                                 <li><a href="../classes/window.Map.html">window.Map</a></li>
-                                <li><a href="../classes/window.String.html">window.String</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -160,7 +162,7 @@
                         <div class="file">
                             <pre class="code prettyprint linenums">
                         /**
-                         * This component works in tandem with &#x27;TiledLoader by taking several Tiled maps and combining them before &#x60;TiledLoader&#x60; processes them. Tiled maps must use the same tilesets for this to function correctly.
+                         * This component works in tandem with &#x60;TiledLoader&#x60; by taking several Tiled maps and combining them before &#x60;TiledLoader&#x60; processes them. Tiled maps must use the same tilesets for this to function correctly.
                          *
                          * Note: Set &quot;manuallyLoad&quot; to &#x60;true&#x60; in the &#x60;TiledLoader&#x60; component JSON definition so that it will wait for this component&#x27;s &quot;load-level&quot; call.
                          *
@@ -168,16 +170,55 @@
                          * @class LevelBuilder
                          * @uses platypus.Component
                          */
-                        /*global platypus */
-                        (function () {
-                            &#x27;use strict&#x27;;
+                        /* global atob, platypus */
+                        import {arrayCache, greenSlice, greenSplice, union} from &#x27;../utils/array.js&#x27;;
+                        import createComponentClass from &#x27;../factory.js&#x27;;
+                        import {inflate} from &#x27;pako&#x27;;
                         
-                            var
+                        export default (function () {
+                            const
+                                maskXFlip = 0x80000000,
+                                decodeBase64 = (function () {
+                                    var decodeString = function (str, index) {
+                                            return (((str.charCodeAt(index)) + (str.charCodeAt(index + 1) &lt;&lt; 8) + (str.charCodeAt(index + 2) &lt;&lt; 16) + (str.charCodeAt(index + 3) &lt;&lt; 24 )) &gt;&gt;&gt; 0);
+                                        },
+                                        decodeArray = function (arr, index) {
+                                            return ((arr[index] + (arr[index + 1] &lt;&lt; 8) + (arr[index + 2] &lt;&lt; 16) + (arr[index + 3] &lt;&lt; 24 )) &gt;&gt;&gt; 0);
+                                        };
+                                    
+                                    return function (data, compression) {
+                                        var index = 4,
+                                            arr   = [],
+                                            step1 = atob(data.replace(/\\/g, &#x27;&#x27;));
+                                            
+                                        if (compression === &#x27;zlib&#x27;) {
+                                            step1 = inflate(step1);
+                                            while (index &lt;= step1.length) {
+                                                arr.push(decodeArray(step1, index - 4));
+                                                index += 4;
+                                            }
+                                        } else {
+                                            while (index &lt;= step1.length) {
+                                                arr.push(decodeString(step1, index - 4));
+                                                index += 4;
+                                            }
+                                        }
+                                        
+                                        return arr;
+                                    };
+                                }()),
+                                decodeLayer = function (layer) {
+                                    if (layer.encoding === &#x27;base64&#x27;) {
+                                        layer.data = decodeBase64(layer.data, layer.compression);
+                                        layer.encoding = &#x27;csv&#x27;; // So we won&#x27;t have to decode again.
+                                    }
+                                    return layer;
+                                },
                                 mergeData = function (levelData, levelMergeAxisLength, segmentData, segmentMergeAxisLength, nonMergeAxisLength, mergeAxis) {
                                     var x        = 0,
                                         y        = 0,
                                         z        = 0,
-                                        combined = levelData.greenSlice();
+                                        combined = greenSlice(levelData);
                         
                                     if (mergeAxis === &#x27;horizontal&#x27;) {
                                         for (y = nonMergeAxisLength - 1; y &gt;= 0; y--) {
@@ -195,7 +236,7 @@
                                 mergeObjects  = function (obj1s, obj2s, mergeAxisLength, mergeAxis) {
                                     var i    = 0,
                                         j    = &#x27;&#x27;,
-                                        list = obj1s.greenSlice(),
+                                        list = greenSlice(obj1s),
                                         obj  = null;
                         
                                     for (i = 0; i &lt; obj2s.length; i++) {
@@ -214,7 +255,7 @@
                                     }
                                     return list;
                                 },
-                                mergeSegment  = function (level, segment, mergeAxis, decoder) {
+                                mergeSegment  = function (level, segment, mergeAxis) {
                                     var i = 0,
                                         j = &#x27;&#x27;;
                         
@@ -223,38 +264,49 @@
                                         level.tilewidth  = segment.tilewidth;
                                         level.tileheight = segment.tileheight;
                                     } else if (level.tilewidth !== segment.tilewidth || level.tileheight !== segment.tileheight) {
-                                        platypus.debug.warn(&#x27;Tiled-Loader: Your map has segments with different tile sizes. All tile sizes must match. Segment: &#x27; + segment);
+                                        platypus.debug.warn(&#x27;Component LevelBuilder: Your map has segments with different tile sizes. All tile sizes must match. Segment: &#x27; + segment);
                                     }
                         
                                     if (mergeAxis === &#x27;horizontal&#x27;) {
                                         if (level.height === 0) {
                                             level.height = segment.height;
                                         } else if (level.height !== segment.height) {
-                                            platypus.debug.warn(&#x27;Tiled-Loader: You are trying to merge segments with different heights. All segments need to have the same height. Level: &#x27; + level + &#x27; Segment: &#x27; + segment);
+                                            platypus.debug.warn(&#x27;Component LevelBuilder: You are trying to merge segments with different heights. All segments need to have the same height. Level: &#x27; + level + &#x27; Segment: &#x27; + segment);
                                         }
                                     } else if (mergeAxis === &#x27;vertical&#x27;) {
                                         if (level.width === 0) {
                                             level.width = segment.width;
                                         } else if (level.width !== segment.width) {
-                                            platypus.debug.warn(&#x27;Tiled-Loader: You are trying to merge segments with different widths. All segments need to have the same width. Level: &#x27; + level + &#x27; Segment: &#x27; + segment);
+                                            platypus.debug.warn(&#x27;Component LevelBuilder: You are trying to merge segments with different widths. All segments need to have the same width. Level: &#x27; + level + &#x27; Segment: &#x27; + segment);
                                         }
                                     }
                         
                                     for (i = 0; i &lt; segment.layers.length; i++) {
                                         if (!level.layers[i]) {
+                                            const layer = level.layers[i] = {};
+                        
                                             //if the level doesn&#x27;t have a layer yet, we&#x27;re creating it and then copying it from the segment.
-                                            decoder(segment.layers[i]);
-                                            level.layers[i] = {};
+                                            decodeLayer(segment.layers[i]);
+                                            
                                             for (j in segment.layers[i]) {
                                                 if (segment.layers[i].hasOwnProperty(j)) {
-                                                    level.layers[i][j] = segment.layers[i][j];
+                                                    layer[j] = segment.layers[i][j];
+                                                }
+                                            }
+                        
+                                            // If we&#x27;re adding objects, make sure that they&#x27;re offset correctly.
+                                            if (layer.objects) {
+                                                if (mergeAxis === &#x27;horizontal&#x27;) {
+                                                    layer.objects = mergeObjects([], layer.objects, level.width * level.tilewidth, mergeAxis);
+                                                } else if (mergeAxis === &#x27;vertical&#x27;) {
+                                                    layer.objects = mergeObjects([], layer.objects, level.height * level.tileheight, mergeAxis);
                                                 }
                                             }
                                         } else if (level.layers[i].type === segment.layers[i].type) {
                                             //if the level does have a layer, we&#x27;re appending the new data to it.
                                             if (level.layers[i].data &amp;&amp; segment.layers[i].data) {
                                                 // Make sure we&#x27;re not trying to merge compressed levels.
-                                                decoder(segment.layers[i]);
+                                                decodeLayer(segment.layers[i]);
                                                 
                                                 if (mergeAxis === &#x27;horizontal&#x27;) {
                                                     level.layers[i].data = mergeData(level.layers[i].data, level.width, segment.layers[i].data, segment.width, level.height, mergeAxis);
@@ -271,7 +323,7 @@
                                                 }
                                             }
                                         } else {
-                                            platypus.debug.warn(&#x27;Tiled-Loader: The layers in your level segments do not match. Level: &#x27; + level + &#x27; Segment: &#x27; + segment);
+                                            platypus.debug.warn(&#x27;Component LevelBuilder: The layers in your level segments do not match. Level: &#x27; + level + &#x27; Segment: &#x27; + segment);
                                         }
                                     }
                         
@@ -288,7 +340,7 @@
                                         }
                                     }
                                 },
-                                mergeLevels = function (levelSegments, decoder) {
+                                mergeLevels = function (levelSegments) {
                                     var i = 0,
                                         j = 0,
                                         levelDefinitions = platypus.game.settings.levels,
@@ -301,13 +353,9 @@
                                             height: 0,
                                             width: 0,
                                             layers: []
-                                        },
-                                        segmentsWide = levelSegments[i].length;
+                                        };
                         
                                     for (i = 0; i &lt; levelSegments.length; i++) {
-                                        if (segmentsWide !== levelSegments[i].length) {
-                                            platypus.debug.warn(&#x27;Tiled-Loader: Your map is not square. Maps must have an equal number of segments in every row.&#x27;);
-                                        }
                                         row = {
                                             height: 0,
                                             width: 0,
@@ -316,18 +364,118 @@
                                         for (j = 0; j &lt; levelSegments[i].length; j++) {
                                             //Merge horizontally
                                             if (typeof levelSegments[i][j] === &#x27;string&#x27;) {
-                                                mergeSegment(row, levelDefinitions[levelSegments[i][j]], &#x27;horizontal&#x27;, decoder);
+                                                const
+                                                    levelDefinitionLabel = levelSegments[i][j],
+                                                    transformIndex = levelDefinitionLabel.indexOf(&#x27;:&#x27;);
+                                                let levelDefinition = levelDefinitions[levelDefinitionLabel];
+                                                
+                                                // check for transform
+                                                if (!levelDefinition &amp;&amp; (transformIndex &gt;= 0)) {
+                                                    const transform = levelDefinitionLabel.substring(transformIndex + 1);
+                        
+                                                    levelDefinition = levelDefinitions[levelDefinitionLabel.substring(0, transformIndex)];
+                                                    if (transform === &#x27;mirror&#x27;) {
+                                                        levelDefinition = levelDefinitions[levelDefinitionLabel] = mirrorSegment(levelDefinition);
+                                                    }
+                                                }
+                                                mergeSegment(row, levelDefinition, &#x27;horizontal&#x27;);
                                             } else {
-                                                mergeSegment(row, levelSegments[i][j], &#x27;horizontal&#x27;, decoder);
+                                                mergeSegment(row, levelSegments[i][j], &#x27;horizontal&#x27;);
                                             }
                                         }
                                         //Then merge vertically
-                                        mergeSegment(level, row, &#x27;vertical&#x27;, decoder);
+                                        mergeSegment(level, row, &#x27;vertical&#x27;);
                                     }
                                     return level;
+                                },
+                                mirrorSegment = function (segment) {
+                                    const
+                                        newSegment = {
+                                            layers: []
+                                        },
+                                        width = segment.width * segment.tilewidth;
+                        
+                                    for (let i = 0; i &lt; segment.layers.length; i++) {
+                                        const
+                                            toLayer = newSegment.layers[i] = {},
+                                            fromLayer = segment.layers[i];
+                        
+                                        decodeLayer(fromLayer);
+                                        
+                                        for (const key in fromLayer) {
+                                            if (fromLayer.hasOwnProperty(key)) {
+                                                toLayer[key] = fromLayer[key];
+                                            }
+                                        }
+                        
+                                        if (fromLayer.data) {
+                                            const fromData = fromLayer.data,
+                                                toData = toLayer.data = [],
+                                                segmentWidth = segment.width;
+                        
+                                            for (let j = 0; j &lt; fromData.length; j++) {
+                                                const cell = fromData[segmentWidth * ((j / segmentWidth) &gt;&gt; 0) + segmentWidth - 1 - (j % segmentWidth)];
+                        
+                                                toData[j] = cell ? maskXFlip ^ cell : 0;
+                                            }
+                                        }
+                        
+                                        // If we&#x27;re adding objects, make sure that they&#x27;re mirrored correctly.
+                                        if (fromLayer.objects) {
+                                            const
+                                                fromObjects = fromLayer.objects,
+                                                toObjects = toLayer.objects = [];
+                        
+                                            for (let j = 0; j &lt; fromObjects.length; j++) {
+                                                const
+                                                    fromObject = fromObjects[j],
+                                                    toObject = toObjects[j] = {};
+                        
+                                                for (const key in fromObject) {
+                                                    if (fromObject.hasOwnProperty(key)) {
+                                                        toObject[key] = fromObject[key];
+                                                    }
+                                                }
+                                                toObject.x = width - fromObject.x - (fromObject.width || 0); // subtract object width since its top-left corner is the origin.
+                                                if (fromObject.rotation) {
+                                                    toObject.rotation = -fromObject.rotation;
+                                                }
+                                                if (fromObject.polygon) {
+                                                    toObject.polygon = mirrorPoints(fromObject.polygon);
+                                                }
+                                                if (fromObject.polyline) {
+                                                    toObject.polyline = mirrorPoints(fromObject.polyline);
+                                                }
+                                            }
+                                        }
+                                    }
+                        
+                                    //Go through all the STUFF in segment and copy it to the level if it&#x27;s not already there.
+                                    for (const key in segment) {
+                                        if (segment.hasOwnProperty(key) &amp;&amp; !newSegment[key]) {
+                                            newSegment[key] = segment[key];
+                                        }
+                                    }
+                        
+                                    return newSegment;
+                                },
+                                mirrorPoints = function (points) {
+                                    const
+                                        arr = [];
+                                    let i = points.length;
+                        
+                                    while (i--) {
+                                        arr.push({
+                                            x: -points[i].x,
+                                            y: points[i].y
+                                        });
+                                    }
+                                    arr.unshift(arr.pop()); // so the same point is at the beginning.
+                        
+                                    return arr;
                                 };
                         
-                            return platypus.createComponentClass({
+                            return createComponentClass({
                                 id: &#x27;LevelBuilder&#x27;,
                                 
                                 properties: {
@@ -339,6 +487,7 @@
                                      * @default true
                                      */
                                     useUniques: true,
+                        
                                     /**
                                      * A 1D or 2D array of level piece ids. The template defines how the pieces will be arranged and which pieces can be used where. The template must be rectangular in dimensions.
                                      *
@@ -349,13 +498,15 @@
                                      * @default null
                                      */
                                     levelTemplate: null,
+                        
                                     /**
                                      * This is an object of key/value pairs listing the pieces that map to an id in the level template. The value can be specified as a string or array. A piece will be randomly chosen from an array when that idea is used. If levelPieces is not defined, ids in the template map directly to level names.
                                      *
                                      *      &quot;levelPieces&quot;: {
                                      *          &quot;start&quot;  : &quot;start-map&quot;,
                                      *          &quot;end&quot;      : &quot;end-map&quot;,
-                                     *          &quot;forest&quot; : [&quot;forest-1&quot;, &quot;forest-2&quot;, &quot;forest-3&quot;]
+                                     *          &quot;forest&quot; : [&quot;forest-1&quot;, &quot;forest-2&quot;, &quot;forest-3&quot;],
+                                     *          &quot;river&quot;: [&quot;river-1&quot;, &quot;river-1:mirror&quot;] // adding &quot;:mirror&quot; takes the referenced map and flips it horizontally to add variety.
                                      *      }
                                      *
                                      * @property levelPieces
@@ -375,12 +526,12 @@
                                 events: {// These are messages that this component listens for
                         
                                     /**
-                                     * When the scene has loaded, LevelBuilder compiles the level based on the template and pieces and sends it to the TiledLoader.
+                                     * When the layer has loaded, LevelBuilder compiles the level based on the template and pieces and sends it to the TiledLoader.
                                      *
-                                     * @method &#x27;scene-loaded&#x27;
+                                     * @method &#x27;layer-loaded&#x27;
                                      * @param persistentData {Object} The persistent data from the previous scene.
                                      */
-                                    &quot;scene-loaded&quot;: function (persistentData) {
+                                    &quot;layer-loaded&quot;: function (data) {
                                         var templateRow  = null,
                                             piecesToCopy = null,
                                             x            = &#x27;&#x27;,
@@ -388,11 +539,11 @@
                                             i            = 0,
                                             j            = 0;
                                         
-                                        this.levelMessage.persistentData = persistentData;
+                                        this.levelMessage.persistentData = data;
                         
-                                        this.levelTemplate = persistentData.levelTemplate || this.levelTemplate;
-                                        this.useUniques = persistentData.useUniques || this.useUniques;
-                                        piecesToCopy = persistentData.levelPieces || this.levelPieces;
+                                        this.levelTemplate = (data &amp;&amp; data.levelTemplate) || this.levelTemplate;
+                                        this.useUniques = (data &amp;&amp; data.useUniques) || this.useUniques;
+                                        piecesToCopy = (data &amp;&amp; data.levelPieces) || this.levelPieces;
                                         this.levelPieces = {};
                                         if (piecesToCopy) {
                                             for (x in piecesToCopy) {
@@ -428,14 +579,27 @@
                                                     }
                                                 }
                                             } else {
-                                                throw (&#x27;Level Builder: Template is not defined&#x27;);
+                                                platypus.debug.warn(&#x27;Level Builder: Template is not defined&#x27;);
                                             }
                                         } else {
-                                            throw (&#x27;Level Builder: There is no level template.&#x27;);
+                                            platypus.debug.warn(&#x27;Level Builder: There is no level template.&#x27;);
                                         }
                                         
                                         if (this.levelMessage.level) {
-                                            this.levelMessage.level = mergeLevels(this.levelMessage.level, this.owner.decodeLayer);
+                                            this.levelMessage.level = mergeLevels(this.levelMessage.level);
+                                            /**
+                                             * Dispatched when the scene has loaded and the level has been composited. This occurs before &quot;load-level&quot; to send out level before it&#x27;s loaded in case it needs to be saved or edited before being loaded.
+                                             *
+                                             * @event &#x27;created-level&#x27;
+                                             * @param data {Object}
+                                             * @param data.level {Object} An object describing the level dimensions, tiles, and entities.
+                                             * @param data.persistentData {Object} The persistent data passed from the last scene. We add levelBuilder data to it to pass on.
+                                             * @param data.persistentData.levelTemplate {Object} A 1D or 2D array of level piece ids. The template defines how the pieces will be arranged and which pieces can be used where. The template must be rectangular in dimensions.
+                                             * @param data.persistentData.levelPieces {Object} An object of key/value pairs listing the pieces that map to an id in the level template.
+                                             * @param data.persistentData.useUniques {Boolean} If true, no single map piece is used twice in the creation of the combined map.
+                                             */
+                                            this.owner.triggerEvent(&#x27;created-level&#x27;, this.levelMessage);
+                        
                                             /**
                                              * Dispatched when the scene has loaded and the level has been composited so TileLoader can begin loading the level.
                                              *
@@ -470,7 +634,7 @@
                                             } else if (pieces.length) {
                                                 random = Math.floor(Math.random() * pieces.length);
                                                 if (this.useUniques) {
-                                                    return this.levelPieces[type].greenSplice(random);
+                                                    return greenSplice(this.levelPieces[type], random);
                                                 } else {
                                                     return pieces[random];
                                                 }
@@ -489,15 +653,21 @@
                                 },
                                 
                                 publicMethods: {
+                                    /**
+                                     * Accepts a list of levels to be merged and returns a level definition with the references combined.
+                                     *
+                                     * @param {Array} levels
+                                     * @return {Object}
+                                     */
                                     mergeLevels: function (levels) {
-                                        return mergeLevels(levels, this.owner.decodeLayer);
+                                        return mergeLevels(levels);
                                     }
                                 },
                                 
                                 getAssetList: function (def, props, defaultProps) {
                                     var i = 0,
                                         arr = null,
-                                        assets = Array.setUp(),
+                                        assets = arrayCache.setUp(),
                                         key = &#x27;&#x27;,
                                         levels = null;
                                     
@@ -518,15 +688,15 @@
                                                         arr = platypus.components.TiledLoader.getAssetList({
                                                             level: levels[key][i]
                                                         }, props, defaultProps);
-                                                        assets.union(arr);
-                                                        arr.recycle();
+                                                        union(assets, arr);
+                                                        arrayCache.recycle(arr);
                                                     }
                                                 } else {
                                                     arr = platypus.components.TiledLoader.getAssetList({
                                                         level: levels[key]
                                                     }, props, defaultProps);
-                                                    assets.union(arr);
-                                                    arr.recycle();
+                                                    union(assets, arr);
+                                                    arrayCache.recycle(arr);
                                                 }
                                             }
                                         }

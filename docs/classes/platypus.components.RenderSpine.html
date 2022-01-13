@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v1.0.2 API Documentation : platypus.components.RenderSpine</title>
+	<title>platypus v2.0.0 API Documentation : platypus.components.RenderSpine</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 1.0.2</em>
+            <em>API Documentation for: 2.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/platypus.AABB.html">platypus.AABB</a></li>
                                 <li><a href="../classes/platypus.ActionState.html">platypus.ActionState</a></li>
+                                <li><a href="../classes/platypus.AssetManager.html">platypus.AssetManager</a></li>
                                 <li><a href="../classes/platypus.Async.html">platypus.Async</a></li>
                                 <li><a href="../classes/platypus.CollisionData.html">platypus.CollisionData</a></li>
                                 <li><a href="../classes/platypus.CollisionDataContainer.html">platypus.CollisionDataContainer</a></li>
@@ -46,6 +47,7 @@
                                 <li><a href="../classes/platypus.Component.html">platypus.Component</a></li>
                                 <li><a href="../classes/platypus.components.AIChaser.html">platypus.components.AIChaser</a></li>
                                 <li><a href="../classes/platypus.components.AIPacer.html">platypus.components.AIPacer</a></li>
+                                <li><a href="../classes/platypus.components.AudioMusic.html">platypus.components.AudioMusic</a></li>
                                 <li><a href="../classes/platypus.components.AudioSFX.html">platypus.components.AudioSFX</a></li>
                                 <li><a href="../classes/platypus.components.AudioVO.html">platypus.components.AudioVO</a></li>
                                 <li><a href="../classes/platypus.components.Camera.html">platypus.components.Camera</a></li>
@@ -58,7 +60,6 @@
                                 <li><a href="../classes/platypus.components.Counter.html">platypus.components.Counter</a></li>
                                 <li><a href="../classes/platypus.components.EntityContainer.html">platypus.components.EntityContainer</a></li>
                                 <li><a href="../classes/platypus.components.EntityController.html">platypus.components.EntityController</a></li>
-                                <li><a href="../classes/platypus.components.EventRender.html">platypus.components.EventRender</a></li>
                                 <li><a href="../classes/platypus.components.HandlerCollision.html">platypus.components.HandlerCollision</a></li>
                                 <li><a href="../classes/platypus.components.HandlerController.html">platypus.components.HandlerController</a></li>
                                 <li><a href="../classes/platypus.components.HandlerLogic.html">platypus.components.HandlerLogic</a></li>
@@ -74,6 +75,7 @@
                                 <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicTimer.html">platypus.components.LogicTimer</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
                                 <li><a href="../classes/platypus.components.Motion.html">platypus.components.Motion</a></li>
                                 <li><a href="../classes/platypus.components.Mover.html">platypus.components.Mover</a></li>
@@ -87,7 +89,7 @@
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
-                                <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
+                                <li><a href="../classes/platypus.components.RenderAnimator.html">platypus.components.RenderAnimator</a></li>
                                 <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
@@ -97,7 +99,6 @@
                                 <li><a href="../classes/platypus.components.RenderText.html">platypus.components.RenderText</a></li>
                                 <li><a href="../classes/platypus.components.RenderTiles.html">platypus.components.RenderTiles</a></li>
                                 <li><a href="../classes/platypus.components.SceneChanger.html">platypus.components.SceneChanger</a></li>
-                                <li><a href="../classes/platypus.components.StateRender.html">platypus.components.StateRender</a></li>
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
@@ -107,16 +108,17 @@
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
                                 <li><a href="../classes/platypus.DataMap.html">platypus.DataMap</a></li>
                                 <li><a href="../classes/platypus.Entity.html">platypus.Entity</a></li>
+                                <li><a href="../classes/platypus.EntityLinker.html">platypus.EntityLinker</a></li>
                                 <li><a href="../classes/platypus.Game.html">platypus.Game</a></li>
+                                <li><a href="../classes/platypus.Gamepad.html">platypus.Gamepad</a></li>
                                 <li><a href="../classes/platypus.Messenger.html">platypus.Messenger</a></li>
                                 <li><a href="../classes/platypus.PIXIAnimation.html">platypus.PIXIAnimation</a></li>
-                                <li><a href="../classes/platypus.PlatypusPlugin.html">platypus.PlatypusPlugin</a></li>
-                                <li><a href="../classes/platypus.Scene.html">platypus.Scene</a></li>
+                                <li><a href="../classes/platypus.SFXPlayer.html">platypus.SFXPlayer</a></li>
                                 <li><a href="../classes/platypus.StateMap.html">platypus.StateMap</a></li>
+                                <li><a href="../classes/platypus.Storage.html">platypus.Storage</a></li>
                                 <li><a href="../classes/platypus.Vector.html">platypus.Vector</a></li>
-                                <li><a href="../classes/window.Array.html">window.Array</a></li>
+                                <li><a href="../classes/platypus.VOPlayer.html">platypus.VOPlayer</a></li>
                                 <li><a href="../classes/window.Map.html">window.Map</a></li>
-                                <li><a href="../classes/window.String.html">window.String</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -234,10 +236,6 @@
                                                         <a href="#method_getAssetList">getAssetList</a>
                         
                                                     </li>
-                                                    <li class="index-item method inherited">
-                                                        <a href="#method_getLateAssetList">getLateAssetList</a>
-                        
-                                                    </li>
                                                     <li class="index-item method private inherited">
                                                         <a href="#method_removeEventListener">removeEventListener</a>
                         
@@ -266,7 +264,15 @@
                         
                                             <ul class="index-list properties">
                                                     <li class="index-item property">
+                                                        <a href="#property_animationEvents">animationEvents</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
                                                         <a href="#property_animationMap">animationMap</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_animationStates">animationStates</a>
                         
                                                     </li>
                                                     <li class="index-item property">
@@ -287,6 +293,14 @@
                                                     </li>
                                                     <li class="index-item property">
                                                         <a href="#property_interactive">interactive</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_localScaleX">localScaleX</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_localScaleY">localScaleY</a>
                         
                                                     </li>
                                                     <li class="index-item property">
@@ -314,11 +328,7 @@
                         
                                                     </li>
                                                     <li class="index-item property">
-                                                        <a href="#property_rotate">rotate</a>
-                        
-                                                    </li>
-                                                    <li class="index-item property">
-                                                        <a href="#property_rotation">rotation</a>
+                                                        <a href="#property_preMultipliedAlpha">preMultipliedAlpha</a>
                         
                                                     </li>
                                                     <li class="index-item property">
@@ -339,6 +349,10 @@
                                                     </li>
                                                     <li class="index-item property">
                                                         <a href="#property_skewY">skewY</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_skinMap">skinMap</a>
                         
                                                     </li>
                                                     <li class="index-item property">
@@ -405,7 +419,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l434"><code>&#x27;handle-render&#x27;:434</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l582"><code>&#x27;handle-render&#x27;:582</code></a>
                                                     </p>
                                             
                                             
@@ -464,7 +478,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l465"><code>&#x27;hide&#x27;:465</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l613"><code>&#x27;hide&#x27;:613</code></a>
                                                     </p>
                                             
                                             
@@ -487,6 +501,9 @@
                                                             <li class="arg">
                                                                     <code class="optional">[animation]</code>
                                                             </li>
+                                                            <li class="arg">
+                                                                    <code class="optional">[loop]</code>
+                                                            </li>
                                                         </ul><span class="paren">)</span>
                                                     </div>
                                             
@@ -500,12 +517,11 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l494"><code>&#x27;play-animation&#x27;:494</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l641"><code>&#x27;play-animation&#x27;:641</code></a>
                                                     </p>
                                             
                                             
                                             
-                                                        <p>Available since 0.9.0</p>
                                                 </div>
                                             
                                                 <div class="description">
@@ -525,6 +541,18 @@
                                             
                                                                 <div class="param-description">
                                                                     <p>The animation to play. If not specified, this method simply unpauses the current animation.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name optional">[loop]</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>Whether the played animation should be looped. Loops by default.</p>
                                             
                                                                 </div>
                                             
@@ -555,7 +583,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l455"><code>&#x27;set-mix-times&#x27;:455</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l603"><code>&#x27;set-mix-times&#x27;:603</code></a>
                                                     </p>
                                             
                                             
@@ -602,7 +630,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l474"><code>&#x27;show&#x27;:474</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l622"><code>&#x27;show&#x27;:622</code></a>
                                                     </p>
                                             
                                             
@@ -638,12 +666,11 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l483"><code>&#x27;stop-animation&#x27;:483</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l631"><code>&#x27;stop-animation&#x27;:631</code></a>
                                                     </p>
                                             
                                             
                                             
-                                                        <p>Available since 0.9.0</p>
                                                 </div>
                                             
                                                 <div class="description">
@@ -700,7 +727,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_addEventListener">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l112"><code>addEventListener:112</code></a>
+                                                    <a href="../files/src_Component.js.html#l111"><code>addEventListener:111</code></a>
                                                     </p>
                                             
                                             
@@ -773,7 +800,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_addMethod">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l131"><code>addMethod:131</code></a>
+                                                    <a href="../files/src_Component.js.html#l130"><code>addMethod:130</code></a>
                                                     </p>
                                             
                                             
@@ -829,7 +856,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_destroy">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l54"><code>destroy:54</code></a>
+                                                    <a href="../files/src_Component.js.html#l53"><code>destroy:53</code></a>
                                                     </p>
                                             
                                             
@@ -873,7 +900,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_getAssetList">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l188"><code>getAssetList:188</code></a>
+                                                    <a href="../files/src_Component.js.html#l187"><code>getAssetList:187</code></a>
                                                     </p>
                                             
                                             
@@ -931,68 +958,6 @@
                                                     </div>
                                             
                                             </div>
-                                            <div id="method_getLateAssetList" class="method item inherited">
-                                                <h3 class="name"><code>getLateAssetList</code></h3>
-                                            
-                                                    <div class="args">
-                                                        <span class="paren">(</span><ul class="args-list inline commas">
-                                                            <li class="arg">
-                                                                    <code>data</code>
-                                                            </li>
-                                                        </ul><span class="paren">)</span>
-                                                    </div>
-                                            
-                                                    <span class="returns-inline">
-                                                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>
-                                                    </span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>Inherited from
-                                                            <a href="../classes/platypus.Component.html#method_getLateAssetList">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l199"><code>getLateAssetList:199</code></a>
-                                                    </p>
-                                            
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    This method can be overwritten to provide the list of assets this component requires. This method is invoked when the list of game scenes is created to determine assets for each scene.
-                                                </div>
-                                            
-                                                    <div class="params">
-                                                        <h4>Parameters:</h4>
-                                            
-                                                        <ul class="params-list">
-                                                            <li class="param">
-                                                                    <code class="param-name">data</code>
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    Scene data that affects the list of assets.
-                                                                </div>
-                                            
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                            
-                                                    <div class="returns">
-                                                        <h4>Returns:</h4>
-                                            
-                                                        <div class="returns-description">
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>:
-                                                                A list of the necessary assets to load.
-                                                        </div>
-                                                    </div>
-                                            
-                                            </div>
                                             <div id="method_removeEventListener" class="method item private inherited">
                                                 <h3 class="name"><code>removeEventListener</code></h3>
                                             
@@ -1018,7 +983,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_removeEventListener">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l150"><code>removeEventListener:150</code></a>
+                                                    <a href="../files/src_Component.js.html#l149"><code>removeEventListener:149</code></a>
                                                     </p>
                                             
                                             
@@ -1080,7 +1045,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_removeEventListeners">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l85"><code>removeEventListeners:85</code></a>
+                                                    <a href="../files/src_Component.js.html#l84"><code>removeEventListeners:84</code></a>
                                                     </p>
                                             
                                             
@@ -1133,7 +1098,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_removeMethod">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l172"><code>removeMethod:172</code></a>
+                                                    <a href="../files/src_Component.js.html#l171"><code>removeMethod:171</code></a>
                                                     </p>
                                             
                                             
@@ -1186,7 +1151,6 @@
                                             
                                             
                                             
-                                                        <p>Available since 0.11.0</p>
                                                 </div>
                                             
                                                 <div class="description">
@@ -1249,6 +1213,39 @@
                                     <div id="properties" class="api-class-tabpanel">
                                         <h2 class="off-left">Properties</h2>
                         
+                                            <div id="property_animationEvents" class="property item">
+                                                <h3 class="name"><code>animationEvents</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_RenderSpine.js.html#l71"><code>animationEvents:71</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>An object containg key-value pairs that define a mapping from triggered events to the animation that should play.</p>
+                                            <pre class="code prettyprint"><code>"animationEvents":{
+                                                "move": "walk-animation",
+                                                "jump": "jumping-animation"
+                                            }
+                                            </code></pre>
+                                            <p>The above will create two event listeners on the entity, "move" and "jump", that will play their corresponding animations when the events are triggered.</p>
+                                            <p>If <code>eventBased</code> is <code>true</code> and this property is not set, this component will use the <code>animationMap</code> property value to define event mappings.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> animationMap</p>
+                                            
+                                            
+                                            </div>
                                             <div id="property_animationMap" class="property item">
                                                 <h3 class="name"><code>animationMap</code></h3>
                                                 <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
@@ -1260,14 +1257,14 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l44"><code>animationMap:44</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l89"><code>animationMap:89</code></a>
                                                     </p>
                                             
                                             
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>Optional. An object containg key-value pairs that define a mapping from triggered events or entity states to the animation that should play. The list is processed from top to bottom, so the most important actions should be listed first (for example, a jumping animation might take precedence over an idle animation). If not specified, an 1-to-1 animation map is created from the list of animations in the skeleton definition using the animation names as the keys.</p>
+                                                    <p>Optional. An object containing key-value pairs that define a mapping from triggered events or entity states to the animation that should play. The list is processed from top to bottom, so the most important actions should be listed first (for example, a jumping animation might take precedence over an idle animation). If not specified, an 1-to-1 animation map is created from the list of animations in the skeleton definition using the animation names as the keys.</p>
                                             <p>"animationMap":{
                                             "standing": "default-animation"  // On receiving a "standing" event, or when this.owner.state.standing === true, the "default" animation will begin playing.
                                             "ground,moving": "walking",  // Comma separated values have a special meaning when evaluating "state-changed" messages. The above example will cause the "walking" animation to play ONLY if the entity's state includes both "moving" and "ground" equal to true.
@@ -1278,6 +1275,39 @@
                                                 </div>
                                             
                                                     <p><strong>Default:</strong> null</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_animationStates" class="property item">
+                                                <h3 class="name"><code>animationStates</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_RenderSpine.js.html#l53"><code>animationStates:53</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>An object containg key-value pairs that define a mapping from entity states to the animation that should play. The list is processed from top to bottom, so the most important actions should be listed first (for example, a jumping animation might take precedence over an idle animation). If not specified, an 1-to-1 animation map is created from the list of animations in the sprite sheet definition using the animation names as the keys.</p>
+                                            <p>"animationStates":{
+                                            "standing": "default-animation"  // On receiving a "standing" event, or when this.owner.state.standing === true, the "default" animation will begin playing.
+                                            "ground,moving": "walking",  // Comma separated values have a special meaning when evaluating "state-changed" messages. The above example will cause the "walking" animation to play ONLY if the entity's state includes both "moving" and "ground" equal to true.
+                                            "ground,striking": "swing!", // Putting an exclamation after an animation name causes this animation to complete before going to the next animation. This is useful for animations that would look poorly if interrupted.
+                                            "default": "default-animation" // Optional. "default" is a special property that matches all states. If none of the above states are valid for the entity, it will use the default animation listed here.
+                                            }</p>
+                                            <p>If <code>stateBased</code> is <code>true</code> and this property is not set, this component will use the <code>animationMap</code> property value to define state mappings.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> animationMap</p>
                                             
                                             
                                             </div>
@@ -1292,7 +1322,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l142"><code>atlas:142</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l217"><code>atlas:217</code></a>
                                                     </p>
                                             
                                             
@@ -1318,7 +1348,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l216"><code>dragMode:216</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l291"><code>dragMode:291</code></a>
                                                     </p>
                                             
                                             
@@ -1344,14 +1374,14 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l196"><code>eventBased:196</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l262"><code>eventBased:262</code></a>
                                                     </p>
                                             
                                             
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>Optional. Specifies whether this component should create an EventRender component to listen to events matching the animationMap to animate. Set this to true if the component should animate for on events. Default is <code>false</code>.</p>
+                                                    <p>Optional. Specifies whether this component should create a RenderAnimator component to listen to events matching the animationMap to animate. Set this to true if the component should animate for on events. Default is <code>false</code>.</p>
                                             
                                                 </div>
                                             
@@ -1370,7 +1400,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l178"><code>flip:178</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l244"><code>flip:244</code></a>
                                                     </p>
                                             
                                             
@@ -1396,7 +1426,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l80"><code>interactive:80</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l157"><code>interactive:157</code></a>
                                                     </p>
                                             
                                             
@@ -1420,6 +1450,58 @@
                                             
                                             
                                             </div>
+                                            <div id="property_localScaleX" class="property item">
+                                                <h3 class="name"><code>localScaleX</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_RenderSpine.js.html#l119"><code>localScaleX:119</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The scaling factor for this sprite relative to the scale of the container.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> 1</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_localScaleY" class="property item">
+                                                <h3 class="name"><code>localScaleY</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_RenderSpine.js.html#l128"><code>localScaleY:128</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The scaling factor for this sprite relative to the scale of the container.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> 1</p>
+                                            
+                                            
+                                            </div>
                                             <div id="property_mask" class="property item">
                                                 <h3 class="name"><code>mask</code></h3>
                                                 <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
@@ -1431,14 +1513,14 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l60"><code>mask:60</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l137"><code>mask:137</code></a>
                                                     </p>
                                             
                                             
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>Optional. A mask definition that determines where the image should clip. A string can also be used to create more complex shapes via the PIXI graphics API like: "mask": "r(10,20,40,40).dc(30,10,12)". Defaults to no mask or, if simply set to true, a rectangle using the entity's dimensions.</p>
+                                                    <p>Optional. A mask definition that determines where the image should clip. A string can also be used to create more complex shapes via the PIXI graphics API like: "mask": "r(10,20,40,40).drawCircle(30,10,12)". Defaults to no mask or, if simply set to true, a rectangle using the entity's dimensions.</p>
                                             <p>"mask": {
                                             "x": 10,
                                             "y": 10,
@@ -1446,7 +1528,7 @@
                                             "height": 40
                                             },</p>
                                             <p>-OR-</p>
-                                            <p>"mask": "r(10,20,40,40).dc(30,10,12)"</p>
+                                            <p>"mask": "r(10,20,40,40).drawCircle(30,10,12)"</p>
                                             
                                                 </div>
                                             
@@ -1465,7 +1547,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l169"><code>mirror:169</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l235"><code>mirror:235</code></a>
                                                     </p>
                                             
                                             
@@ -1491,7 +1573,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l99"><code>mixTimes:99</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l176"><code>mixTimes:176</code></a>
                                                     </p>
                                             
                                             
@@ -1521,11 +1603,10 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l113"><code>offsetX:113</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l190"><code>offsetX:190</code></a>
                                                     </p>
                                             
                                             
-                                                        <p>Available since 0.11.4</p>
                                                 </div>
                                             
                                                 <div class="description">
@@ -1548,11 +1629,10 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l123"><code>offsetY:123</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l199"><code>offsetY:199</code></a>
                                                     </p>
                                             
                                             
-                                                        <p>Available since 0.11.4</p>
                                                 </div>
                                             
                                                 <div class="description">
@@ -1575,7 +1655,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l133"><code>offsetZ:133</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l208"><code>offsetZ:208</code></a>
                                                     </p>
                                             
                                             
@@ -1590,8 +1670,8 @@
                                             
                                             
                                             </div>
-                                            <div id="property_rotate" class="property item">
-                                                <h3 class="name"><code>rotate</code></h3>
+                                            <div id="property_preMultipliedAlpha" class="property item">
+                                                <h3 class="name"><code>preMultipliedAlpha</code></h3>
                                                 <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
                                             
                                             
@@ -1601,44 +1681,18 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l160"><code>rotate:160</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l271"><code>preMultipliedAlpha:271</code></a>
                                                     </p>
                                             
                                             
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>Optional. Whether this object can be rotated. It's rotational angle is set by setting the this.owner.rotation value on the entity.</p>
+                                                    <p>Optional. Specifies whether the spine image alpha has been premultiplied. Set this to <code>false</code> if you see bright borders around image parts. Make sure it's <code>true</code> if you see thin black lines around image pieces.</p>
                                             
                                                 </div>
                                             
-                                                    <p><strong>Default:</strong> false</p>
-                                            
-                                            
-                                            </div>
-                                            <div id="property_rotation" class="property item">
-                                                <h3 class="name"><code>rotation</code></h3>
-                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l261"><code>rotation:261</code></a>
-                                                    </p>
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>Optional. The rotation of the spine in degrees. All spines on the same entity are rotated the same amount unless they ignore the rotation value by setting 'rotate' to false.</p>
-                                            
-                                                </div>
-                                            
-                                                    <p><strong>Default:</strong> 1</p>
+                                                    <p><strong>Default:</strong> true</p>
                                             
                                             
                                             </div>
@@ -1653,7 +1707,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l225"><code>scaleX:225</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l300"><code>scaleX:300</code></a>
                                                     </p>
                                             
                                             
@@ -1679,7 +1733,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l234"><code>scaleY:234</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l309"><code>scaleY:309</code></a>
                                                     </p>
                                             
                                             
@@ -1705,7 +1759,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l151"><code>skeleton:151</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l226"><code>skeleton:226</code></a>
                                                     </p>
                                             
                                             
@@ -1731,7 +1785,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l243"><code>skewX:243</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l318"><code>skewX:318</code></a>
                                                     </p>
                                             
                                             
@@ -1757,7 +1811,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l252"><code>skewY:252</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l327"><code>skewY:327</code></a>
                                                     </p>
                                             
                                             
@@ -1772,6 +1826,36 @@
                                             
                                             
                                             </div>
+                                            <div id="property_skinMap" class="property item">
+                                                <h3 class="name"><code>skinMap</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_RenderSpine.js.html#l105"><code>skinMap:105</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Optional. No, this isn't a Stephen R. Lawhead novel. Use this to specify a skin according to the entity's state.</p>
+                                            <p>"skinMap":{
+                                            "cloaked": "cloak"  // On receiving a "cloaked" event, or when <code>this.owner.state.get('cloaked') === true</code>, this skin will be activated.
+                                            "default": "normal_attire" // Optional. "default" is a special property that matches all states. If none of the above states are valid for the entity, it will use the default skin listed here.
+                                            }</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> null</p>
+                                            
+                                            
+                                            </div>
                                             <div id="property_stateBased" class="property item">
                                                 <h3 class="name"><code>stateBased</code></h3>
                                                 <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
@@ -1783,14 +1867,14 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l205"><code>stateBased:205</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l280"><code>stateBased:280</code></a>
                                                     </p>
                                             
                                             
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>Optional. Specifies whether this component should create a StateRender component to handle changes in the entity's state that match the animationMap to animate. Set this to true if the component should animate based on <code>this.owner.state</code>. Default is <code>true</code>.</p>
+                                                    <p>Optional. Specifies whether this component should create a RenderAnimator component to handle changes in the entity's state that match the animationMap to animate. Set this to true if the component should animate based on <code>this.owner.state</code>. Default is <code>true</code>.</p>
                                             
                                                 </div>
                                             
@@ -1809,7 +1893,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l187"><code>visible:187</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l253"><code>visible:253</code></a>
                                                     </p>
                                             
                                             
@@ -1835,7 +1919,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l270"><code>x:270</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l336"><code>x:336</code></a>
                                                     </p>
                                             
                                             
@@ -1861,7 +1945,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l279"><code>y:279</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l345"><code>y:345</code></a>
                                                     </p>
                                             
                                             
@@ -1887,7 +1971,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l288"><code>z:288</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l354"><code>z:354</code></a>
                                                     </p>
                                             
                                             
@@ -1919,7 +2003,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l330"><code>&#x27;animation-ended&#x27;:330</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l407"><code>&#x27;animation-ended&#x27;:407</code></a>
                                                     </p>
                                             
                                             
@@ -1961,7 +2045,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l443"><code>&#x27;update-animation&#x27;:443</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l591"><code>&#x27;update-animation&#x27;:591</code></a>
                                                     </p>
                                             
                                             

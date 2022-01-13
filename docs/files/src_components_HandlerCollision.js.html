@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v1.0.2 API Documentation : src\components\HandlerCollision.js</title>
+	<title>platypus v2.0.0 API Documentation : src\components\HandlerCollision.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 1.0.2</em>
+            <em>API Documentation for: 2.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/platypus.AABB.html">platypus.AABB</a></li>
                                 <li><a href="../classes/platypus.ActionState.html">platypus.ActionState</a></li>
+                                <li><a href="../classes/platypus.AssetManager.html">platypus.AssetManager</a></li>
                                 <li><a href="../classes/platypus.Async.html">platypus.Async</a></li>
                                 <li><a href="../classes/platypus.CollisionData.html">platypus.CollisionData</a></li>
                                 <li><a href="../classes/platypus.CollisionDataContainer.html">platypus.CollisionDataContainer</a></li>
@@ -46,6 +47,7 @@
                                 <li><a href="../classes/platypus.Component.html">platypus.Component</a></li>
                                 <li><a href="../classes/platypus.components.AIChaser.html">platypus.components.AIChaser</a></li>
                                 <li><a href="../classes/platypus.components.AIPacer.html">platypus.components.AIPacer</a></li>
+                                <li><a href="../classes/platypus.components.AudioMusic.html">platypus.components.AudioMusic</a></li>
                                 <li><a href="../classes/platypus.components.AudioSFX.html">platypus.components.AudioSFX</a></li>
                                 <li><a href="../classes/platypus.components.AudioVO.html">platypus.components.AudioVO</a></li>
                                 <li><a href="../classes/platypus.components.Camera.html">platypus.components.Camera</a></li>
@@ -58,7 +60,6 @@
                                 <li><a href="../classes/platypus.components.Counter.html">platypus.components.Counter</a></li>
                                 <li><a href="../classes/platypus.components.EntityContainer.html">platypus.components.EntityContainer</a></li>
                                 <li><a href="../classes/platypus.components.EntityController.html">platypus.components.EntityController</a></li>
-                                <li><a href="../classes/platypus.components.EventRender.html">platypus.components.EventRender</a></li>
                                 <li><a href="../classes/platypus.components.HandlerCollision.html">platypus.components.HandlerCollision</a></li>
                                 <li><a href="../classes/platypus.components.HandlerController.html">platypus.components.HandlerController</a></li>
                                 <li><a href="../classes/platypus.components.HandlerLogic.html">platypus.components.HandlerLogic</a></li>
@@ -74,6 +75,7 @@
                                 <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicTimer.html">platypus.components.LogicTimer</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
                                 <li><a href="../classes/platypus.components.Motion.html">platypus.components.Motion</a></li>
                                 <li><a href="../classes/platypus.components.Mover.html">platypus.components.Mover</a></li>
@@ -87,7 +89,7 @@
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
-                                <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
+                                <li><a href="../classes/platypus.components.RenderAnimator.html">platypus.components.RenderAnimator</a></li>
                                 <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
@@ -97,7 +99,6 @@
                                 <li><a href="../classes/platypus.components.RenderText.html">platypus.components.RenderText</a></li>
                                 <li><a href="../classes/platypus.components.RenderTiles.html">platypus.components.RenderTiles</a></li>
                                 <li><a href="../classes/platypus.components.SceneChanger.html">platypus.components.SceneChanger</a></li>
-                                <li><a href="../classes/platypus.components.StateRender.html">platypus.components.StateRender</a></li>
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
@@ -107,16 +108,17 @@
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
                                 <li><a href="../classes/platypus.DataMap.html">platypus.DataMap</a></li>
                                 <li><a href="../classes/platypus.Entity.html">platypus.Entity</a></li>
+                                <li><a href="../classes/platypus.EntityLinker.html">platypus.EntityLinker</a></li>
                                 <li><a href="../classes/platypus.Game.html">platypus.Game</a></li>
+                                <li><a href="../classes/platypus.Gamepad.html">platypus.Gamepad</a></li>
                                 <li><a href="../classes/platypus.Messenger.html">platypus.Messenger</a></li>
                                 <li><a href="../classes/platypus.PIXIAnimation.html">platypus.PIXIAnimation</a></li>
-                                <li><a href="../classes/platypus.PlatypusPlugin.html">platypus.PlatypusPlugin</a></li>
-                                <li><a href="../classes/platypus.Scene.html">platypus.Scene</a></li>
+                                <li><a href="../classes/platypus.SFXPlayer.html">platypus.SFXPlayer</a></li>
                                 <li><a href="../classes/platypus.StateMap.html">platypus.StateMap</a></li>
+                                <li><a href="../classes/platypus.Storage.html">platypus.Storage</a></li>
                                 <li><a href="../classes/platypus.Vector.html">platypus.Vector</a></li>
-                                <li><a href="../classes/window.Array.html">window.Array</a></li>
+                                <li><a href="../classes/platypus.VOPlayer.html">platypus.VOPlayer</a></li>
                                 <li><a href="../classes/window.Map.html">window.Map</a></li>
-                                <li><a href="../classes/window.String.html">window.String</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -166,12 +168,16 @@
                          * @class HandlerCollision
                          * @uses platypus.Component
                          */
-                        /* global include, platypus */
-                        (function () {
-                            &#x27;use strict&#x27;;
-                            
-                            //set here to make them reusable objects
-                            
+                        import {arrayCache, greenSplice, union} from &#x27;../utils/array.js&#x27;;
+                        import AABB from &#x27;../AABB.js&#x27;;
+                        import CollisionData from &#x27;../CollisionData.js&#x27;;
+                        import CollisionDataContainer from &#x27;../CollisionDataContainer.js&#x27;;
+                        import Data from &#x27;../Data.js&#x27;;
+                        import DataMap from &#x27;../DataMap.js&#x27;;
+                        import Vector from &#x27;../Vector.js&#x27;;
+                        import createComponentClass from &#x27;../factory.js&#x27;;
+                        
+                        export default (function () {
                             /**
                              * When an entity collides with an entity of a listed collision-type, this message is triggered on the entity. * is the other entity&#x27;s collision-type.
                              *
@@ -185,12 +191,6 @@
                              * @param collision.y {number} Returns -1, 0, or 1 indicating on which side of this entity the collision occurred: top, neither, or bottom respectively.
                              */
                             var BIT_16 = 0xffff,
-                                AABB = include(&#x27;platypus.AABB&#x27;),
-                                CollisionData = include(&#x27;platypus.CollisionData&#x27;),
-                                CollisionDataContainer = include(&#x27;platypus.CollisionDataContainer&#x27;),
-                                Data = include(&#x27;platypus.Data&#x27;),
-                                DataMap = include(&#x27;platypus.DataMap&#x27;),
-                                Vector = include(&#x27;platypus.Vector&#x27;),
                                 combine = function (x, y) {
                                     return (x &lt;&lt; 16) | (y &amp; BIT_16);
                                 },
@@ -210,7 +210,7 @@
                                     return a.collisionGroup.getAllEntities() - b.collisionGroup.getAllEntities();
                                 };
                             
-                            return platypus.createComponentClass({
+                            return createComponentClass({
                                 id: &#x27;HandlerCollision&#x27;,
                                 
                                 properties: {
@@ -223,11 +223,11 @@
                                 initialize: function () {
                                     this.againstGrid = Data.setUp();
                                     
-                                    this.solidEntitiesLive = Array.setUp();
-                                    this.softEntitiesLive = Array.setUp();
-                                    this.allEntitiesLive = Array.setUp();
-                                    this.groupsLive = Array.setUp();
-                                    this.nonColliders = Array.setUp();
+                                    this.solidEntitiesLive = arrayCache.setUp();
+                                    this.softEntitiesLive = arrayCache.setUp();
+                                    this.allEntitiesLive = arrayCache.setUp();
+                                    this.groupsLive = arrayCache.setUp();
+                                    this.nonColliders = arrayCache.setUp();
                                     
                                     this.terrain = null;
                                     this.owner.previousX = this.owner.previousX || this.owner.x;
@@ -319,13 +319,9 @@
                                     
                                     getAgainstGrid: function (entity, sweep, types) {
                                         var aabb = this.mapDown(sweep),
-                                            arr = null,
                                             data = Data.setUp(),
-                                            i = 0,
                                             list = null,
                                             thisAgainstGrid = this.againstGrid,
-                                            tList = null,
-                                            type = &#x27;&#x27;,
                                             x = 0,
                                             y = 0;
                                         
@@ -337,19 +333,7 @@
                                             for (y = aabb.top; y &lt;= aabb.bottom; y++) {
                                                 list = thisAgainstGrid[combine(x, y)];
                                                 if (list) {
-                                                    i = types.length;
-                                                    while (i--) {
-                                                        type = types[i];
-                                                        arr = list.get(type);
-                                                        if (arr &amp;&amp; arr.length) {
-                                                            tList = data[type];
-                                                            if (!tList) {
-                                                                data[type] = Array.setUp.apply(null, arr);
-                                                            } else {
-                                                                tList.union(arr);
-                                                            }
-                                                        }
-                                                    }
+                                                    this.mergeAGCell(list, data, types);
                                                 }
                                             }
                                         }
@@ -359,33 +343,35 @@
                                     },
                                     
                                     getEntityAgainstGrid: function (entity, types) {
-                                        var ag = entity.againstGrid,
-                                            arr = null,
-                                            data = Data.setUp(),
-                                            i = ag.length,
-                                            j = 0,
-                                            list = null,
-                                            tList = null,
-                                            type = &#x27;&#x27;;
+                                        const
+                                            ag = entity.againstGrid,
+                                            data = Data.setUp();
+                                        let i = ag.length;
                         
                                         while (i--) {
-                                            list = ag[i];
-                                            j = types.length;
-                                            while (j--) {
-                                                type = types[j];
-                                                arr = list.get(type);
-                                                if (arr &amp;&amp; arr.length) {
-                                                    tList = data[type];
-                                                    if (!tList) {
-                                                        data[type] = Array.setUp.apply(null, arr);
-                                                    } else {
-                                                        tList.union(arr);
-                                                    }
-                                                }
-                                            }
+                                            this.mergeAGCell(ag[i], data, types);
                                         }
                                         
                                         return data;
+                                    },
+                        
+                                    mergeAGCell: function (list, data, types) {
+                                        let i = types.length;
+                        
+                                        while (i--) {
+                                            const
+                                                type = types[i],
+                                                arr = list.get(type);
+                        
+                                            if (arr &amp;&amp; arr.length) {
+                                                const tList = data[type];
+                                                if (!tList) {
+                                                    data[type] = union(arrayCache.setUp(), arr);
+                                                } else {
+                                                    union(tList, arr);
+                                                }
+                                            }
+                                        }
                                     },
                                     
                                     removeAgainst: function (entity) {
@@ -406,7 +392,7 @@
                                                 if (arr) {
                                                     id = arr.indexOf(entity);
                                                     if (id &gt;= 0) {
-                                                        arr.greenSplice(id);
+                                                        greenSplice(arr, id);
                                                     }
                                                 }
                                             }
@@ -443,7 +429,7 @@
                                                         type = types[i];
                                                         arr = list.get(type);
                                                         if (!arr) {
-                                                            arr = list.set(type, Array.setUp());
+                                                            arr = list.set(type, arrayCache.setUp());
                                                         }
                                                         arr.push(entity);
                                                     }
@@ -459,7 +445,7 @@
                                         if (entity.getTileShapes) { // Has a CollisionTiles component
                                             this.terrain = entity;
                                         } else if (entity.collisionTypes &amp;&amp; !entity.againstGrid) {
-                                            entity.againstGrid = Array.setUp();
+                                            entity.againstGrid = arrayCache.setUp();
                                             entity.againstAABB = AABB.setUp();
                                             this.updateAgainst(entity);
                                         }
@@ -468,7 +454,7 @@
                                     removeCollisionEntity: function (entity) {
                                         if (entity.againstGrid) {
                                             this.removeAgainst(entity);
-                                            entity.againstGrid.recycle();
+                                            arrayCache.recycle(entity.againstGrid);
                                             entity.againstGrid = null;
                                             entity.againstAABB.recycle();
                                             entity.againstAABB = null;
@@ -703,7 +689,7 @@
                                         
                                         finalMovementInfo = Vector.setUp(ent.position);
                         
-                                        if (dX || dY) {
+                                        if (dX || dY || ent.collisionDirty) {
                                             
                                             if (ent.bullet) {
                                                 min = Math.min;
@@ -781,7 +767,7 @@
                                                 l = 0,
                                                 isIncluded = includeEntity,
                                                 potentialCollision       = false,
-                                                potentialCollidingShapes = Array.setUp(),
+                                                potentialCollidingShapes = arrayCache.setUp(),
                                                 pcsGroup                 = null,
                                                 previousAABB             = null,
                                                 currentAABB              = null,
@@ -801,7 +787,7 @@
                             
                                             while (i--) {
                                                 //Sweep the full movement of each collision type
-                                                potentialCollidingShapes[i] = pcsGroup = Array.setUp();
+                                                potentialCollidingShapes[i] = pcsGroup = arrayCache.setUp();
                                                 collisionType = collisionTypes[i];
                                                 previousAABB = entityOrGroup.getPreviousAABB(collisionType);
                                                 currentAABB = entityOrGroup.getAABB(collisionType);
@@ -834,7 +820,7 @@
                                                                 potentialCollision = true;
                                                             }
                                                         }
-                                                        otherEntities.recycle();
+                                                        arrayCache.recycle(otherEntities);
                                                     } else if (terrain) {
                                                         //Do our sweep check against the tiles and add potentially colliding shapes to our list.
                                                         otherShapes = terrain.getTileShapes(sweepAABB, previousAABB, otherCollisionType);
@@ -854,7 +840,7 @@
                                             }
                                             
                                             // Array recycling
-                                            potentialCollidingShapes.recycle(2);
+                                            arrayCache.recycle(potentialCollidingShapes, 2);
                                             
                                             return finalMovementInfo;
                                         };
@@ -1214,7 +1200,7 @@
                                                             }
                                                         }
                                                     }
-                                                    otherEntities.recycle();
+                                                    arrayCache.recycle(otherEntities);
                                                 }
                                             }
                                             againstGrid.recycle();
@@ -1231,8 +1217,7 @@
                                             m   = 0,
                                             otherEntities  = null,
                                             otherCollisionType = null,
-                                            otherShapes = null,
-                                            collisionFound = false;
+                                            otherShapes = null;
                         
                                         message.x = 0;
                                         message.y = 0;
@@ -1247,7 +1232,6 @@
                                                 while (k--) {
                                                     otherEntity = otherEntities[k];
                                                     if ((shape.getAABB().collides(otherEntity.getAABB(otherCollisionType)))) {
-                                                        collisionFound = false;
                                                         otherShapes = otherEntity.getShapes(otherCollisionType);
                                                         m = otherShapes.length;
                                                         while (m--) {
@@ -1266,7 +1250,7 @@
                                                         }
                                                     }
                                                 }
-                                                otherEntities.recycle();
+                                                arrayCache.recycle(otherEntities);
                                             }
                                         }
                                         againstGrid.recycle();
@@ -1331,11 +1315,11 @@
                                             keys = null,
                                             i = 0;
                                         
-                                        this.groupsLive.recycle();
-                                        this.nonColliders.recycle();
-                                        this.allEntitiesLive.recycle();
-                                        this.softEntitiesLive.recycle();
-                                        this.solidEntitiesLive.recycle();
+                                        arrayCache.recycle(this.groupsLive);
+                                        arrayCache.recycle(this.nonColliders);
+                                        arrayCache.recycle(this.allEntitiesLive);
+                                        arrayCache.recycle(this.softEntitiesLive);
+                                        arrayCache.recycle(this.solidEntitiesLive);
                                         this.relocationMessage.position.recycle();
                                         this.relocationMessage.recycle();
                                         
@@ -1345,7 +1329,7 @@
                                                 keys = data.keys;
                                                 i = keys.length;
                                                 while (i--) {
-                                                    data.get(keys[i]).recycle();
+                                                    arrayCache.recycle(data.get(keys[i]));
                                                 }
                                                 data.recycle();
                                             }
@@ -1384,7 +1368,7 @@
                                      * @return collisions {Array} This is a list of collision objects describing the soft collisions.
                                      */
                                     getEntityCollisions: function (entity) {
-                                        var collisions = Array.setUp();
+                                        var collisions = arrayCache.setUp();
                                         
                                         this.checkEntityForSoftCollisions(entity, function (collision) {
                                             collisions.push(Data.setUp(collision));
@@ -1400,10 +1384,9 @@
                                      * @param shape {CollisionShape} The shape to check for collisions.
                                      * @param collisionTypes {Array of strings} The collision types to check against.
                                      * @return collisions {Array} This is a list of collision objects describing the soft collisions.
-                                     * @since 0.11.2
                                      */
                                     getShapeCollisions: function (shape, collisionTypes) {
-                                        var collisions = Array.setUp();
+                                        var collisions = arrayCache.setUp();
                                         
                                         this.checkShapeForCollisions(shape, collisionTypes, function (collision) {
                                             collisions.push(Data.setUp(collision));
@@ -1420,10 +1403,9 @@
                                      * @param y {number} The y-axis value.
                                      * @param collisionTypes {Array of strings} The collision types to check against.
                                      * @return collisions {Array} This is a list of collision objects describing the soft collisions.
-                                     * @since 0.11.0
                                      */
                                     getPointCollisions: function (x, y, collisionTypes) {
-                                        var collisions = Array.setUp();
+                                        var collisions = arrayCache.setUp();
                                         
                                         this.checkPointForCollisions(x, y, collisionTypes, function (collision) {
                                             collisions.push(Data.setUp(collision));

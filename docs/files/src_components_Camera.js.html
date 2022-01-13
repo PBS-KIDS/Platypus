@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v1.0.2 API Documentation : src\components\Camera.js</title>
+	<title>platypus v2.0.0 API Documentation : src\components\Camera.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 1.0.2</em>
+            <em>API Documentation for: 2.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/platypus.AABB.html">platypus.AABB</a></li>
                                 <li><a href="../classes/platypus.ActionState.html">platypus.ActionState</a></li>
+                                <li><a href="../classes/platypus.AssetManager.html">platypus.AssetManager</a></li>
                                 <li><a href="../classes/platypus.Async.html">platypus.Async</a></li>
                                 <li><a href="../classes/platypus.CollisionData.html">platypus.CollisionData</a></li>
                                 <li><a href="../classes/platypus.CollisionDataContainer.html">platypus.CollisionDataContainer</a></li>
@@ -46,6 +47,7 @@
                                 <li><a href="../classes/platypus.Component.html">platypus.Component</a></li>
                                 <li><a href="../classes/platypus.components.AIChaser.html">platypus.components.AIChaser</a></li>
                                 <li><a href="../classes/platypus.components.AIPacer.html">platypus.components.AIPacer</a></li>
+                                <li><a href="../classes/platypus.components.AudioMusic.html">platypus.components.AudioMusic</a></li>
                                 <li><a href="../classes/platypus.components.AudioSFX.html">platypus.components.AudioSFX</a></li>
                                 <li><a href="../classes/platypus.components.AudioVO.html">platypus.components.AudioVO</a></li>
                                 <li><a href="../classes/platypus.components.Camera.html">platypus.components.Camera</a></li>
@@ -58,7 +60,6 @@
                                 <li><a href="../classes/platypus.components.Counter.html">platypus.components.Counter</a></li>
                                 <li><a href="../classes/platypus.components.EntityContainer.html">platypus.components.EntityContainer</a></li>
                                 <li><a href="../classes/platypus.components.EntityController.html">platypus.components.EntityController</a></li>
-                                <li><a href="../classes/platypus.components.EventRender.html">platypus.components.EventRender</a></li>
                                 <li><a href="../classes/platypus.components.HandlerCollision.html">platypus.components.HandlerCollision</a></li>
                                 <li><a href="../classes/platypus.components.HandlerController.html">platypus.components.HandlerController</a></li>
                                 <li><a href="../classes/platypus.components.HandlerLogic.html">platypus.components.HandlerLogic</a></li>
@@ -74,6 +75,7 @@
                                 <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicTimer.html">platypus.components.LogicTimer</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
                                 <li><a href="../classes/platypus.components.Motion.html">platypus.components.Motion</a></li>
                                 <li><a href="../classes/platypus.components.Mover.html">platypus.components.Mover</a></li>
@@ -87,7 +89,7 @@
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
-                                <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
+                                <li><a href="../classes/platypus.components.RenderAnimator.html">platypus.components.RenderAnimator</a></li>
                                 <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
@@ -97,7 +99,6 @@
                                 <li><a href="../classes/platypus.components.RenderText.html">platypus.components.RenderText</a></li>
                                 <li><a href="../classes/platypus.components.RenderTiles.html">platypus.components.RenderTiles</a></li>
                                 <li><a href="../classes/platypus.components.SceneChanger.html">platypus.components.SceneChanger</a></li>
-                                <li><a href="../classes/platypus.components.StateRender.html">platypus.components.StateRender</a></li>
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
@@ -107,16 +108,17 @@
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
                                 <li><a href="../classes/platypus.DataMap.html">platypus.DataMap</a></li>
                                 <li><a href="../classes/platypus.Entity.html">platypus.Entity</a></li>
+                                <li><a href="../classes/platypus.EntityLinker.html">platypus.EntityLinker</a></li>
                                 <li><a href="../classes/platypus.Game.html">platypus.Game</a></li>
+                                <li><a href="../classes/platypus.Gamepad.html">platypus.Gamepad</a></li>
                                 <li><a href="../classes/platypus.Messenger.html">platypus.Messenger</a></li>
                                 <li><a href="../classes/platypus.PIXIAnimation.html">platypus.PIXIAnimation</a></li>
-                                <li><a href="../classes/platypus.PlatypusPlugin.html">platypus.PlatypusPlugin</a></li>
-                                <li><a href="../classes/platypus.Scene.html">platypus.Scene</a></li>
+                                <li><a href="../classes/platypus.SFXPlayer.html">platypus.SFXPlayer</a></li>
                                 <li><a href="../classes/platypus.StateMap.html">platypus.StateMap</a></li>
+                                <li><a href="../classes/platypus.Storage.html">platypus.Storage</a></li>
                                 <li><a href="../classes/platypus.Vector.html">platypus.Vector</a></li>
-                                <li><a href="../classes/window.Array.html">window.Array</a></li>
+                                <li><a href="../classes/platypus.VOPlayer.html">platypus.VOPlayer</a></li>
                                 <li><a href="../classes/window.Map.html">window.Map</a></li>
-                                <li><a href="../classes/window.String.html">window.String</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -166,14 +168,16 @@
                          * @class Camera
                          * @uses platypus.Component
                         */
-                        /*global createjs, PIXI, platypus, include, window */
-                        (function () {
-                            &#x27;use strict&#x27;;
-                            
+                        /*global platypus, window */
+                        import AABB from &#x27;../AABB.js&#x27;;
+                        import {Container} from &#x27;pixi.js&#x27;;
+                        import Data from &#x27;../Data.js&#x27;;
+                        import TweenJS from &#x27;@tweenjs/tween.js&#x27;;
+                        import Vector from &#x27;../Vector.js&#x27;;
+                        import createComponentClass from &#x27;../factory.js&#x27;;
+                        
+                        export default (function () {
                             var DPR = window.devicePixelRatio || 1,
-                                AABB = include(&#x27;platypus.AABB&#x27;),
-                                Data = include(&#x27;platypus.Data&#x27;),
-                                Vector = include(&#x27;platypus.Vector&#x27;),
                                 anchorBound = function (anchorAABB, entityOffsetX, entityOffsetY, entity) {
                                     var aabb = AABB.setUp(entity.x + entityOffsetX, entity.y + entityOffsetY, entity.width, entity.height),
                                         x = anchorAABB.x,
@@ -219,7 +223,7 @@
                                     return event.clientY;
                                 };
                             
-                            return platypus.createComponentClass({
+                            return createComponentClass({
                                 id: &#x27;Camera&#x27;,
                                 properties: {
                                     /**
@@ -246,7 +250,6 @@
                                      * @property mode
                                      * @type String
                                      * @default &#x27;static&#x27;
-                                     * @since 0.9.0
                                      **/
                                     &quot;mode&quot;: &quot;static&quot;,
                                     
@@ -339,7 +342,16 @@
                                      * @type number
                                      * @default: 600
                                      **/
-                                    &quot;transitionAngle&quot;: 600
+                                    &quot;transitionAngle&quot;: 600,
+                        
+                                    /**
+                                     * Sets the z-order of this layer relative to other loaded layers.
+                                     *
+                                     * @property z
+                                     * @type Number
+                                     * @default 0
+                                     */
+                                    &quot;z&quot;: 0
                                 },
                                 initialize: function (definition) {
                                     var worldVP = AABB.setUp(this.x, this.y, this.width, this.height),
@@ -427,14 +439,15 @@
                                     if (this.owner.container) {
                                         this.parentContainer = this.owner.container;
                                     } else if (this.owner.stage) {
-                                        this.canvas = this.canvas || platypus.game.app.display.canvas; //TODO: Probably need to find a better way to handle resizing - DDD 10/4/2015
+                                        this.canvas = this.canvas || platypus.game.canvas; //TODO: Probably need to find a better way to handle resizing - DDD 10/4/2015
                                         this.parentContainer = this.owner.stage;
                                         this.owner.width  = this.canvas.width;
                                         this.owner.height = this.canvas.height;
                                     } else {
                                         platypus.debug.warn(&#x27;Camera: There appears to be no Container on this entity for the camera to display.&#x27;);
                                     }
-                                    this.container = new PIXI.Container();
+                                    this.container = new Container();
+                                    this.container.zIndex = this.z;
                                     this.container.visible = false;
                                     this.parentContainer.addChild(this.container);
                                     this.movedCamera = false;
@@ -487,7 +500,6 @@
                                      *
                                      * @method &#x27;child-entity-updated&#x27;
                                      * @param entity {platypus.Entity} Expects an entity as the message object to determine whether to trigger &#x60;camera-update&#x60; on it.
-                                     * @since 0.6.8
                                      **/
                                     &quot;child-entity-updated&quot;: function (entity) {
                                         this.viewportUpdate = true;
@@ -527,7 +539,6 @@
                                      *
                                      * @method &#x27;pointerdown&#x27;
                                      * @param event {Object} The pointer event.
-                                     * @since 0.9.0
                                      **/
                                     &quot;pointerdown&quot;: function (event) {
                                         var worldVP = this.worldCamera.viewport;
@@ -551,7 +562,6 @@
                                      *
                                      * @method &#x27;pressmove&#x27;
                                      * @param event {Object} The pointer event.
-                                     * @since 0.9.0
                                      **/
                                     &quot;pressmove&quot;: function (event) {
                                         if (this.mouse) {
@@ -568,7 +578,6 @@
                                      *
                                      * @method &#x27;pressup&#x27;
                                      * @param event {Object} The pointer event.
-                                     * @since 0.9.0
                                      **/
                                     &quot;pressup&quot;: function (event) {
                                         if (this.mouse) {
@@ -588,10 +597,6 @@
                                      * @param message.delta {Number} If necessary, the current camera update function may require the length of the tick to adjust movement rate.
                                      **/
                                     &quot;tick&quot;: function (resp) {
-                                        var msg       = this.message,
-                                            viewport  = msg.viewport,
-                                            worldCamera = this.worldCamera;
-                                        
                                         if ((this.state === &#x27;following&#x27;) &amp;&amp; this.followingFunction(this.following, resp.delta)) {
                                             this.viewportUpdate = true;
                                         }
@@ -608,68 +613,33 @@
                                             this.lastWidth = this.owner.width;
                                             this.lastHeight = this.owner.height;
                                         }
-                                        
-                                        if (this.viewportUpdate) {
-                                            this.viewportUpdate = false;
-                                            this.stationary = false;
-                                            msg.stationary = false;
+                        
+                                        if (this.shakeIncrementor &lt; this.shakeTime) {
+                                            const viewport = this.worldCamera.viewport;
+                        
+                                            this.viewportUpdate = true;
+                                            this.shakeIncrementor += resp.delta;
+                                            this.shakeIncrementor = Math.min(this.shakeIncrementor, this.shakeTime);
                                             
-                                            viewport.set(worldCamera.viewport);
-                        
-                                            if (this.shakeIncrementor &lt; this.shakeTime) {
-                                                this.viewportUpdate = true;
-                                                this.shakeIncrementor += resp.delta;
-                                                this.shakeIncrementor = Math.min(this.shakeIncrementor, this.shakeTime);
-                                                
-                                                if (this.shakeIncrementor &lt; this.xShakeTime) {
-                                                    viewport.moveX(viewport.x + Math.sin((this.shakeIncrementor / this.xWaveLength) * (Math.PI * 2)) * this.xMagnitude);
-                                                }
-                                                
-                                                if (this.shakeIncrementor &lt; this.yShakeTime) {
-                                                    viewport.moveY(viewport.y + Math.sin((this.shakeIncrementor / this.yWaveLength) * (Math.PI * 2)) * this.yMagnitude);
-                                                }
+                                            if (this.shakeIncrementor &lt; this.xShakeTime) {
+                                                viewport.moveX(viewport.x + Math.sin((this.shakeIncrementor / this.xWaveLength) * (Math.PI * 2)) * this.xMagnitude);
                                             }
-                        
-                                            // Set up the rest of the camera message:
-                                            msg.scaleX         = this.windowPerWorldUnitWidth;
-                                            msg.scaleY         = this.windowPerWorldUnitHeight;
-                                            msg.orientation    = worldCamera.orientation;
                                             
-                                            // Transform the world to appear within camera
-                                            this.world.setTransform(-viewport.x, -viewport.y, 1, 1, 0);
-                                            this.container.setTransform(viewport.halfWidth * msg.scaleX, viewport.halfHeight * msg.scaleY, msg.scaleX, msg.scaleY, msg.orientation);
-                                            this.container.visible = true;
-                        
-                                            /**
-                                             * This component fires &quot;camera-update&quot; when the position of the camera in the world has changed. This event is triggered on both the entity (typically a layer) as well as children of the entity.
-                                             *
-                                             * @event &#x27;camera-update&#x27;
-                                             * @param message {Object}
-                                             * @param message.world {platypus.AABB} The dimensions of the world map.
-                                             * @param message.orientation {Number} Number describing the orientation of the camera.
-                                             * @param message.scaleX {Number} Number of window pixels that comprise a single world coordinate on the x-axis.
-                                             * @param message.scaleY {Number} Number of window pixels that comprise a single world coordinate on the y-axis.
-                                             * @param message.viewport {platypus.AABB} An AABB describing the world viewport area.
-                                             * @param message.stationary {Boolean} Whether the camera is moving.
-                                             **/
-                                            this.owner.triggerEvent(&#x27;camera-update&#x27;, msg);
-                                            if (this.owner.triggerEventOnChildren) {
-                                                this.owner.triggerEventOnChildren(&#x27;camera-update&#x27;, msg);
-                                            }
-                                        } else if (!this.stationary) {
-                                            this.stationary = true;
-                                            msg.stationary = true;
-                        
-                                            this.owner.triggerEvent(&#x27;camera-update&#x27;, msg);
-                                            if (this.owner.triggerEventOnChildren) {
-                                                this.owner.triggerEventOnChildren(&#x27;camera-update&#x27;, msg);
+                                            if (this.shakeIncrementor &lt; this.yShakeTime) {
+                                                viewport.moveY(viewport.y + Math.sin((this.shakeIncrementor / this.yWaveLength) * (Math.PI * 2)) * this.yMagnitude);
                                             }
                                         }
+                        
+                                        this.updateViewport();
                                         
                                         if (this.lastFollow.begin) {
                                             if (this.lastFollow.begin &lt; Date.now()) {
                                                 this.follow(this.lastFollow);
                                             }
+                                        }
+                        
+                                        if (this.container.zIndex !== this.z) {
+                                            this.container.zIndex = this.z;
                                         }
                                     },
                                     
@@ -677,16 +647,45 @@
                                     * The camera listens for this event to change its world viewport size.
                                     *
                                     * @method &#x27;resize-camera&#x27;
-                                    * @param dimensions {Object} List of key/value pairs describing new viewport size
+                                    * @param [dimensions] {Object} List of key/value pairs describing new viewport size
                                     * @param dimensions.width {number} Width of the camera viewport
                                     * @param dimensions.height {number} Height of the camera viewport
+                                    * @param dimensions.time {number} Time in millseconds over which to tween the scale change.
+                                    * @param [forceUpdate] {Boolean} Whether to update graphics.
                                     **/
-                                    &quot;resize-camera&quot;: function (dimensions) {
-                                        this.width = dimensions.width;
-                                        this.height = dimensions.height;
-                                        this.resize();
+                                    &quot;resize-camera&quot;: function (dimensions = {}, forceUpdate = false) {
+                                        const
+                                            {width, height, time, ease} = dimensions,
+                                            forcedUpdate = forceUpdate || dimensions.forceUpdate;
+                        
+                                        if (time) {
+                                            const
+                                                tween = new TweenJS.Tween(this);
+                                            
+                                            tween.to({width, height}, time);
+                                            if (ease) {
+                                                tween.easing(ease);
+                                            }
+                                            tween.onUpdate(() =&gt; {
+                                                this.resize();
+                                            }).start();
+                                        } else {
+                                            if (width &amp;&amp; height) {
+                                                this.width = dimensions.width;
+                                                this.height = dimensions.height;
+                                            }
+                                            if (this.canvas) {
+                                                this.owner.width  = this.canvas.width;
+                                                this.owner.height = this.canvas.height;
+                                            }
+                                            this.resize();
+                                        }
+                                        if (forcedUpdate) {
+                                            this.updateViewport();
+                                            this.owner.triggerEvent(&#x27;render-update&#x27;);
+                                        }
                                     },
-                                    
+                        
                                     /**
                                      * The camera listens for this event to change its position in the world.
                                      *
@@ -708,12 +707,17 @@
                                             };
                         
                                         return function (location) {
-                                            var v = null,
-                                                worldVP = this.worldCamera.viewport;
-                        
-                                            if (location.time &amp;&amp; window.createjs &amp;&amp; createjs.Tween) {
-                                                v = Vector.setUp(worldVP.x, worldVP.y);
-                                                createjs.Tween.get(v).to({x: location.x, y: location.y}, location.time, location.ease).on(&#x27;change&#x27;, move.bind(this, v)).call(stop.bind(v));
+                                            if (location.time) {
+                                                const
+                                                    worldVP = this.worldCamera.viewport,
+                                                    v = Vector.setUp(worldVP.x, worldVP.y),
+                                                    tween = new TweenJS.Tween(v);
+                                                
+                                                tween.to({x: location.x, y: location.y}, location.time);
+                                                if (location.ease) {
+                                                    tween.easing(location.ease);
+                                                }
+                                                tween.onUpdate(move.bind(this, v)).onStop(stop.bind(v)).start();
                                             } else if (this.move(location.x, location.y)) {
                                                 this.viewportUpdate = true;
                                             }
@@ -1152,6 +1156,56 @@
                                             this.threshold = threshold;
                                         };
                                     }()),
+                        
+                                    updateViewport: function () {
+                                        const
+                                            msg       = this.message,
+                                            viewport  = msg.viewport,
+                                            worldCamera = this.worldCamera;
+                                        
+                                        if (this.viewportUpdate) {
+                                            this.viewportUpdate = false;
+                                            this.stationary = false;
+                                            msg.stationary = false;
+                                            
+                                            viewport.set(worldCamera.viewport);
+                        
+                                            // Set up the rest of the camera message:
+                                            msg.scaleX         = this.windowPerWorldUnitWidth;
+                                            msg.scaleY         = this.windowPerWorldUnitHeight;
+                                            msg.orientation    = worldCamera.orientation;
+                                            
+                                            // Transform the world to appear within camera
+                                            this.world.setTransform(-viewport.x, -viewport.y, 1, 1, 0);
+                                            this.container.setTransform(viewport.halfWidth * msg.scaleX, viewport.halfHeight * msg.scaleY, msg.scaleX, msg.scaleY, msg.orientation);
+                                            this.container.visible = true;
+                        
+                                            /**
+                                             * This component fires &quot;camera-update&quot; when the position of the camera in the world has changed. This event is triggered on both the entity (typically a layer) as well as children of the entity.
+                                             *
+                                             * @event &#x27;camera-update&#x27;
+                                             * @param message {Object}
+                                             * @param message.world {platypus.AABB} The dimensions of the world map.
+                                             * @param message.orientation {Number} Number describing the orientation of the camera.
+                                             * @param message.scaleX {Number} Number of window pixels that comprise a single world coordinate on the x-axis.
+                                             * @param message.scaleY {Number} Number of window pixels that comprise a single world coordinate on the y-axis.
+                                             * @param message.viewport {platypus.AABB} An AABB describing the world viewport area.
+                                             * @param message.stationary {Boolean} Whether the camera is moving.
+                                             **/
+                                            this.owner.triggerEvent(&#x27;camera-update&#x27;, msg);
+                                            if (this.owner.triggerEventOnChildren) {
+                                                this.owner.triggerEventOnChildren(&#x27;camera-update&#x27;, msg);
+                                            }
+                                        } else if (!this.stationary) {
+                                            this.stationary = true;
+                                            msg.stationary = true;
+                        
+                                            this.owner.triggerEvent(&#x27;camera-update&#x27;, msg);
+                                            if (this.owner.triggerEventOnChildren) {
+                                                this.owner.triggerEventOnChildren(&#x27;camera-update&#x27;, msg);
+                                            }
+                                        }
+                                    },
                                     
                                     destroy: function () {
                                         this.parentContainer.removeChild(this.container);
@@ -1187,7 +1241,6 @@
                                      * @param bounds.x {Number} The left edge of the display object.
                                      * @param bounds.y {Number} The top edge of the display object.
                                      * @return {Boolean} Whether the display object intersects the camera&#x27;s bounds.
-                                     * @since 0.10.0
                                      */
                                     isOnCanvas: function (bounds) {
                                         var canvas = this.canvas;

@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v1.0.2 API Documentation : platypus.Game</title>
+	<title>platypus v2.0.0 API Documentation : platypus.Game</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 1.0.2</em>
+            <em>API Documentation for: 2.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/platypus.AABB.html">platypus.AABB</a></li>
                                 <li><a href="../classes/platypus.ActionState.html">platypus.ActionState</a></li>
+                                <li><a href="../classes/platypus.AssetManager.html">platypus.AssetManager</a></li>
                                 <li><a href="../classes/platypus.Async.html">platypus.Async</a></li>
                                 <li><a href="../classes/platypus.CollisionData.html">platypus.CollisionData</a></li>
                                 <li><a href="../classes/platypus.CollisionDataContainer.html">platypus.CollisionDataContainer</a></li>
@@ -46,6 +47,7 @@
                                 <li><a href="../classes/platypus.Component.html">platypus.Component</a></li>
                                 <li><a href="../classes/platypus.components.AIChaser.html">platypus.components.AIChaser</a></li>
                                 <li><a href="../classes/platypus.components.AIPacer.html">platypus.components.AIPacer</a></li>
+                                <li><a href="../classes/platypus.components.AudioMusic.html">platypus.components.AudioMusic</a></li>
                                 <li><a href="../classes/platypus.components.AudioSFX.html">platypus.components.AudioSFX</a></li>
                                 <li><a href="../classes/platypus.components.AudioVO.html">platypus.components.AudioVO</a></li>
                                 <li><a href="../classes/platypus.components.Camera.html">platypus.components.Camera</a></li>
@@ -58,7 +60,6 @@
                                 <li><a href="../classes/platypus.components.Counter.html">platypus.components.Counter</a></li>
                                 <li><a href="../classes/platypus.components.EntityContainer.html">platypus.components.EntityContainer</a></li>
                                 <li><a href="../classes/platypus.components.EntityController.html">platypus.components.EntityController</a></li>
-                                <li><a href="../classes/platypus.components.EventRender.html">platypus.components.EventRender</a></li>
                                 <li><a href="../classes/platypus.components.HandlerCollision.html">platypus.components.HandlerCollision</a></li>
                                 <li><a href="../classes/platypus.components.HandlerController.html">platypus.components.HandlerController</a></li>
                                 <li><a href="../classes/platypus.components.HandlerLogic.html">platypus.components.HandlerLogic</a></li>
@@ -74,6 +75,7 @@
                                 <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicTimer.html">platypus.components.LogicTimer</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
                                 <li><a href="../classes/platypus.components.Motion.html">platypus.components.Motion</a></li>
                                 <li><a href="../classes/platypus.components.Mover.html">platypus.components.Mover</a></li>
@@ -87,7 +89,7 @@
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
-                                <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
+                                <li><a href="../classes/platypus.components.RenderAnimator.html">platypus.components.RenderAnimator</a></li>
                                 <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
@@ -97,7 +99,6 @@
                                 <li><a href="../classes/platypus.components.RenderText.html">platypus.components.RenderText</a></li>
                                 <li><a href="../classes/platypus.components.RenderTiles.html">platypus.components.RenderTiles</a></li>
                                 <li><a href="../classes/platypus.components.SceneChanger.html">platypus.components.SceneChanger</a></li>
-                                <li><a href="../classes/platypus.components.StateRender.html">platypus.components.StateRender</a></li>
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
@@ -107,16 +108,17 @@
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
                                 <li><a href="../classes/platypus.DataMap.html">platypus.DataMap</a></li>
                                 <li><a href="../classes/platypus.Entity.html">platypus.Entity</a></li>
+                                <li><a href="../classes/platypus.EntityLinker.html">platypus.EntityLinker</a></li>
                                 <li><a href="../classes/platypus.Game.html">platypus.Game</a></li>
+                                <li><a href="../classes/platypus.Gamepad.html">platypus.Gamepad</a></li>
                                 <li><a href="../classes/platypus.Messenger.html">platypus.Messenger</a></li>
                                 <li><a href="../classes/platypus.PIXIAnimation.html">platypus.PIXIAnimation</a></li>
-                                <li><a href="../classes/platypus.PlatypusPlugin.html">platypus.PlatypusPlugin</a></li>
-                                <li><a href="../classes/platypus.Scene.html">platypus.Scene</a></li>
+                                <li><a href="../classes/platypus.SFXPlayer.html">platypus.SFXPlayer</a></li>
                                 <li><a href="../classes/platypus.StateMap.html">platypus.StateMap</a></li>
+                                <li><a href="../classes/platypus.Storage.html">platypus.Storage</a></li>
                                 <li><a href="../classes/platypus.Vector.html">platypus.Vector</a></li>
-                                <li><a href="../classes/window.Array.html">window.Array</a></li>
+                                <li><a href="../classes/platypus.VOPlayer.html">platypus.VOPlayer</a></li>
                                 <li><a href="../classes/window.Map.html">window.Map</a></li>
-                                <li><a href="../classes/window.String.html">window.String</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -167,6 +169,35 @@
                         
                         <div class="box intro">
                             <p>This class is used to create the <code>platypus.game</code> object and loads the Platypus game as described by the game configuration files.</p>
+                        <p>Configuration definition typically takes something like the following structures, but is highly dependent on the particular components used in a given game:</p>
+                        <pre class="code prettyprint"><code>{
+                            "atlases": {}, // Keyed list of Spine atlases.
+                            "captions": {}, // Keyed list of captions for closed captioning.
+                            "entities": {}, // Keyed list of entity definitions.
+                            "levels": {}, // Keyed list of Tiled levels.
+                            "mouthCues": {}, // Keyed list of Rhubarb mouth cues for lip synch.
+                            "scenes": {}, // Keyed list of scene definitions.
+                            "skeletons": {}, // Keyed list of Spine skeletons.
+                            "spriteSheets": {} // Keyed list of sprite sheet definitions.
+                        }
+                        </code></pre>
+                        <p>Options may include any of these:</p>
+                        <pre class="code prettyprint"><code>{
+                            audio: '', // Relative path to audio assets (like "assets/audio/").
+                            canvasId: '', // HTML element ID for the canvas to draw to. If specified but unfound, will create a canvas with this ID.
+                            display: {}, // Display options are passed directly to PixiJS for setting up the renderer.
+                            features: { // Features supported for the Springroll application. Defaults are listed below.
+                                sfx: true,
+                                vo: true,
+                                music: true,
+                                sound: true,
+                                captions: true
+                            },
+                            images: '', // Relative path to graphical assets (like "assets/images/").
+                            name: '', // Name of game. Used for local storage keys and displayed in the console on run.
+                            storageKeys: [] // Array of keys to create in local storage on first run so game code may assume they exist.
+                            version: '' // Version of the game. This is displayed in the console on run.
+                        }</code></pre>
                         
                         </div>
                         
@@ -181,7 +212,7 @@
                                                         <code>definition</code>
                                                 </li>
                                                 <li class="arg">
-                                                        <code>applicationInstance</code>
+                                                        <code>options</code>
                                                 </li>
                                                 <li class="arg">
                                                         <code class="optional">[onFinishedLoading]</code>
@@ -229,12 +260,12 @@
                                 
                                                 </li>
                                                 <li class="param">
-                                                        <code class="param-name">applicationInstance</code>
-                                                        <span class="type">springroll.Application</span>
+                                                        <code class="param-name">options</code>
+                                                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
                                 
                                 
                                                     <div class="param-description">
-                                                        <p>The Spring Roll application that the Platypus game is in.</p>
+                                                        <p>Options describing the display options, Springroll features, etc.</p>
                                 
                                                     </div>
                                 
@@ -272,6 +303,7 @@
                                 <li class="api-class-tab index"><a href="#index">Index</a></li>
                         
                                     <li class="api-class-tab methods"><a href="#methods">Methods</a></li>
+                                    <li class="api-class-tab events"><a href="#events">Events</a></li>
                             </ul>
                         
                             <div>
@@ -295,6 +327,10 @@
                         
                                                     </li>
                                                     <li class="index-item method">
+                                                        <a href="#method_load">load</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
                                                         <a href="#method_loadScene">loadScene</a>
                         
                                                     </li>
@@ -302,11 +338,45 @@
                                                         <a href="#method_tick">tick</a>
                         
                                                     </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_tick">tick</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_triggerOnChildren">triggerOnChildren</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_unload">unload</a>
+                        
+                                                    </li>
                                             </ul>
                                         </div>
                         
                         
                         
+                                        <div class="index-section events">
+                                            <h3>Events</h3>
+                        
+                                            <ul class="index-list events">
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;layer-live&#x27;">&#x27;layer-live&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;layer-loaded&#x27;">&#x27;layer-loaded&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;layer-unloaded&#x27;">&#x27;layer-unloaded&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;unload-layer&#x27;">&#x27;unload-layer&#x27;</a>
+                        
+                                                    </li>
+                                            </ul>
+                                        </div>
                                 </div>
                         
                                     <div id="methods" class="api-class-tabpanel">
@@ -327,7 +397,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_Game.js.html#l259"><code>destroy:259</code></a>
+                                                    <a href="../files/src_Game.js.html#l780"><code>destroy:780</code></a>
                                                     </p>
                                             
                                             
@@ -366,7 +436,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_Game.js.html#l244"><code>getEntitiesByType:244</code></a>
+                                                    <a href="../files/src_Game.js.html#l755"><code>getEntitiesByType:755</code></a>
                                                     </p>
                                             
                                             
@@ -419,7 +489,7 @@
                                                     </div>
                                             
                                                     <span class="returns-inline">
-                                                        <span class="type"><a href="../classes/platypus.Entity.html" class="crosslink">platypus.Entity</a></span>
+                                                        <span class="type">Entity</span>
                                                     </span>
                                             
                                             
@@ -431,7 +501,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_Game.js.html#l229"><code>getEntityById:229</code></a>
+                                                    <a href="../files/src_Game.js.html#l730"><code>getEntityById:730</code></a>
                                                     </p>
                                             
                                             
@@ -465,29 +535,29 @@
                                                         <h4>Returns:</h4>
                                             
                                                         <div class="returns-description">
-                                                                    <span class="type"><a href="../classes/platypus.Entity.html" class="crosslink">platypus.Entity</a></span>:
+                                                                    <span class="type">Entity</span>:
                                                                 <p>Returns the entity that matches the specified entity id.</p>
                                             
                                                         </div>
                                                     </div>
                                             
                                             </div>
-                                            <div id="method_loadScene" class="method item">
-                                                <h3 class="name"><code>loadScene</code></h3>
+                                            <div id="method_load" class="method item">
+                                                <h3 class="name"><code>load</code></h3>
                                             
                                                     <div class="args">
                                                         <span class="paren">(</span><ul class="args-list inline commas">
                                                             <li class="arg">
-                                                                    <code>sceneId</code>
-                                                            </li>
-                                                            <li class="arg">
-                                                                    <code>transition=&quot;instant&quot;</code>
+                                                                    <code>layerId</code>
                                                             </li>
                                                             <li class="arg">
                                                                     <code>data</code>
                                                             </li>
                                                             <li class="arg">
-                                                                    <code>preloading=false</code>
+                                                                    <code>isScene</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>progressIdOrFunction</code>
                                                             </li>
                                                         </ul><span class="paren">)</span>
                                                     </div>
@@ -502,7 +572,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_Game.js.html#l193"><code>loadScene:193</code></a>
+                                                    <a href="../files/src_Game.js.html#l477"><code>load:477</code></a>
                                                     </p>
                                             
                                             
@@ -510,7 +580,9 @@
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>Loads a scene.</p>
+                                                    <p>Loads one or more layers.</p>
+                                            <p>If one layer is specified, it will complete loading if no other layers are already loading. If other layers are presently loading, it will complete as soon as other layers are complete.</p>
+                                            <p>If an array of layers is specified, all layers must finish loading before any receive a completion event.</p>
                                             
                                                 </div>
                                             
@@ -519,23 +591,12 @@
                                             
                                                         <ul class="params-list">
                                                             <li class="param">
-                                                                    <code class="param-name">sceneId</code>
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                                                                    <code class="param-name">layerId</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
                                             
                                             
                                                                 <div class="param-description">
-                                                                    <p>The scene to load.</p>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                            <li class="param">
-                                                                    <code class="param-name">transition=&quot;instant&quot;</code>
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <p>What type of transition to make. Currently there are: 'fade-to-black', 'crossfade', and 'instant'.</p>
+                                                                    <p>The layer(s) to load.</p>
                                             
                                                                 </div>
                                             
@@ -552,12 +613,104 @@
                                             
                                                             </li>
                                                             <li class="param">
-                                                                    <code class="param-name">preloading=false</code>
+                                                                    <code class="param-name">isScene</code>
                                                                     <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
                                             
                                             
                                                                 <div class="param-description">
-                                                                    <p>Whether the scene should appear immediately or just be loaded and not shown.</p>
+                                                                    <p>Whether the layers from a previous scene should be replaced by these layers.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">progressIdOrFunction</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function" class="crosslink external" target="_blank">Function</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>Whether to report progress. A string sets the id of progress events whereas a function is called directly with progress.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_loadScene" class="method item">
+                                                <h3 class="name"><code>loadScene</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>layersOrId</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>data</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>progressIdOrFunction</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_Game.js.html#l671"><code>loadScene:671</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Loads a scene.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">layersOrId</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The list of layers, an object with a <code>layers</code> Array property, or scene id to load.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">data</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>A list of key/value pairs describing options or settings for the loading scene.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">progressIdOrFunction</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function" class="crosslink external" target="_blank">Function</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>Whether to report progress. A string sets the id of progress events whereas a function is called directly with progress.</p>
                                             
                                                                 </div>
                                             
@@ -573,7 +726,13 @@
                                                     <div class="args">
                                                         <span class="paren">(</span><ul class="args-list inline commas">
                                                             <li class="arg">
-                                                                    <code>tickEvent</code>
+                                                                    <code>ticker</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>tickMessage</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>deltaTime</code>
                                                             </li>
                                                         </ul><span class="paren">)</span>
                                                     </div>
@@ -588,7 +747,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_Game.js.html#l180"><code>tick:180</code></a>
+                                                    <a href="../files/src_Game.js.html#l424"><code>tick:424</code></a>
                                                     </p>
                                             
                                             
@@ -596,7 +755,7 @@
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>This method causes the game to tick once. It's called by the SpringRoll Application.</p>
+                                                    <p>This method causes the game to tick once.</p>
                                             
                                                 </div>
                                             
@@ -605,12 +764,87 @@
                                             
                                                         <ul class="params-list">
                                                             <li class="param">
-                                                                    <code class="param-name">tickEvent</code>
+                                                                    <code class="param-name">ticker</code>
+                                                                    <span class="type">PIXI.Ticker</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The ticker being used to set the game tick.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">tickMessage</code>
                                                                     <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
                                             
                                             
                                                                 <div class="param-description">
-                                                                    <p>Key/value pairs passed on to the current scene.</p>
+                                                                    <p>Event tracking tick data.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">deltaTime</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The time elapsed since the last tick.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_tick" class="method item">
+                                                <h3 class="name"><code>tick</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>tickMessage</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_Game.js.html#l449"><code>tick:449</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This event is triggered on the game as well as each layer currently loaded.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">tickMessage</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>Event tracking tick data. This object is re-used for subsequent ticks.</p>
                                             
                                                                 </div>
                                             
@@ -620,7 +854,17 @@
                                                                                 <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
                                             
                                                                             <div class="param-description">
-                                                                                <p>The time elapsed since the last tick.</p>
+                                                                                <p>Time in MS passed since last tick.</p>
+                                            
+                                                                            </div>
+                                            
+                                                                        </li>
+                                                                        <li class="param">
+                                                                                <code class="param-name">elapsed</code>
+                                                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                                                            <div class="param-description">
+                                                                                <p>Time in MS passed since game load.</p>
                                             
                                                                             </div>
                                             
@@ -632,10 +876,307 @@
                                             
                                             
                                             </div>
+                                            <div id="method_triggerOnChildren" class="method item">
+                                                <h3 class="name"><code>triggerOnChildren</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>eventId</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>event</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_Game.js.html#l462"><code>triggerOnChildren:462</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This method is used by external objects to trigger messages on the layers as well as internal entities broadcasting messages across the scope of the scene.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">eventId</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>This is the message to process.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">event</code>
+                                                                    <span class="type"></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>This is a message object or other value to pass along to component functions.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_unload" class="method item">
+                                                <h3 class="name"><code>unload</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>layer</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_Game.js.html#l703"><code>unload:703</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Unloads a layer.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">layer</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The layer to unload.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
                                     </div>
                         
                         
                         
+                                    <div id="events" class="api-class-tabpanel">
+                                        <h2 class="off-left">Events</h2>
+                        
+                                            <div id="event_&#x27;layer-live&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;layer-live&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_Game.js.html#l658"><code>&#x27;layer-live&#x27;:658</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This event is triggered on each newly-live layer once it is finished loading and ready to display.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">data</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>A list of key-value pairs of data sent into this Scene from the previous Scene.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;layer-loaded&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;layer-loaded&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_Game.js.html#l617"><code>&#x27;layer-loaded&#x27;:617</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This event is triggered on the layers once all assets have been readied and the layer is created.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">data</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>A list of key-value pairs of data sent into this Scene from the previous Scene.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;layer-unloaded&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;layer-unloaded&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_Game.js.html#l582"><code>&#x27;layer-unloaded&#x27;:582</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This event is triggered on the layers once the Scene is over.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;unload-layer&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;unload-layer&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_Game.js.html#l601"><code>&#x27;unload-layer&#x27;:601</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This event is triggered on the layer to allow children of the layer to place a hold on the closing until they're ready.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">data</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>A list of key-value pairs of data sent into this Scene from the previous Scene.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">hold</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function" class="crosslink external" target="_blank">Function</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>Calling this function places a hold; <code>release</code> must be called to release this hold and unload the layer.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">release</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function" class="crosslink external" target="_blank">Function</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>Calling this function releases a previous hold.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                    </div>
                             </div>
                         </div>
                     </div>

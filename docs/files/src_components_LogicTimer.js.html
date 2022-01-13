@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v1.0.2 API Documentation : src\components\LogicTimer.js</title>
+	<title>platypus v2.0.0 API Documentation : src\components\LogicTimer.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 1.0.2</em>
+            <em>API Documentation for: 2.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/platypus.AABB.html">platypus.AABB</a></li>
                                 <li><a href="../classes/platypus.ActionState.html">platypus.ActionState</a></li>
+                                <li><a href="../classes/platypus.AssetManager.html">platypus.AssetManager</a></li>
                                 <li><a href="../classes/platypus.Async.html">platypus.Async</a></li>
                                 <li><a href="../classes/platypus.CollisionData.html">platypus.CollisionData</a></li>
                                 <li><a href="../classes/platypus.CollisionDataContainer.html">platypus.CollisionDataContainer</a></li>
@@ -46,6 +47,7 @@
                                 <li><a href="../classes/platypus.Component.html">platypus.Component</a></li>
                                 <li><a href="../classes/platypus.components.AIChaser.html">platypus.components.AIChaser</a></li>
                                 <li><a href="../classes/platypus.components.AIPacer.html">platypus.components.AIPacer</a></li>
+                                <li><a href="../classes/platypus.components.AudioMusic.html">platypus.components.AudioMusic</a></li>
                                 <li><a href="../classes/platypus.components.AudioSFX.html">platypus.components.AudioSFX</a></li>
                                 <li><a href="../classes/platypus.components.AudioVO.html">platypus.components.AudioVO</a></li>
                                 <li><a href="../classes/platypus.components.Camera.html">platypus.components.Camera</a></li>
@@ -58,7 +60,6 @@
                                 <li><a href="../classes/platypus.components.Counter.html">platypus.components.Counter</a></li>
                                 <li><a href="../classes/platypus.components.EntityContainer.html">platypus.components.EntityContainer</a></li>
                                 <li><a href="../classes/platypus.components.EntityController.html">platypus.components.EntityController</a></li>
-                                <li><a href="../classes/platypus.components.EventRender.html">platypus.components.EventRender</a></li>
                                 <li><a href="../classes/platypus.components.HandlerCollision.html">platypus.components.HandlerCollision</a></li>
                                 <li><a href="../classes/platypus.components.HandlerController.html">platypus.components.HandlerController</a></li>
                                 <li><a href="../classes/platypus.components.HandlerLogic.html">platypus.components.HandlerLogic</a></li>
@@ -74,6 +75,7 @@
                                 <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicTimer.html">platypus.components.LogicTimer</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
                                 <li><a href="../classes/platypus.components.Motion.html">platypus.components.Motion</a></li>
                                 <li><a href="../classes/platypus.components.Mover.html">platypus.components.Mover</a></li>
@@ -87,7 +89,7 @@
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
-                                <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
+                                <li><a href="../classes/platypus.components.RenderAnimator.html">platypus.components.RenderAnimator</a></li>
                                 <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
@@ -97,7 +99,6 @@
                                 <li><a href="../classes/platypus.components.RenderText.html">platypus.components.RenderText</a></li>
                                 <li><a href="../classes/platypus.components.RenderTiles.html">platypus.components.RenderTiles</a></li>
                                 <li><a href="../classes/platypus.components.SceneChanger.html">platypus.components.SceneChanger</a></li>
-                                <li><a href="../classes/platypus.components.StateRender.html">platypus.components.StateRender</a></li>
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
@@ -107,16 +108,17 @@
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
                                 <li><a href="../classes/platypus.DataMap.html">platypus.DataMap</a></li>
                                 <li><a href="../classes/platypus.Entity.html">platypus.Entity</a></li>
+                                <li><a href="../classes/platypus.EntityLinker.html">platypus.EntityLinker</a></li>
                                 <li><a href="../classes/platypus.Game.html">platypus.Game</a></li>
+                                <li><a href="../classes/platypus.Gamepad.html">platypus.Gamepad</a></li>
                                 <li><a href="../classes/platypus.Messenger.html">platypus.Messenger</a></li>
                                 <li><a href="../classes/platypus.PIXIAnimation.html">platypus.PIXIAnimation</a></li>
-                                <li><a href="../classes/platypus.PlatypusPlugin.html">platypus.PlatypusPlugin</a></li>
-                                <li><a href="../classes/platypus.Scene.html">platypus.Scene</a></li>
+                                <li><a href="../classes/platypus.SFXPlayer.html">platypus.SFXPlayer</a></li>
                                 <li><a href="../classes/platypus.StateMap.html">platypus.StateMap</a></li>
+                                <li><a href="../classes/platypus.Storage.html">platypus.Storage</a></li>
                                 <li><a href="../classes/platypus.Vector.html">platypus.Vector</a></li>
-                                <li><a href="../classes/window.Array.html">window.Array</a></li>
+                                <li><a href="../classes/platypus.VOPlayer.html">platypus.VOPlayer</a></li>
                                 <li><a href="../classes/window.Map.html">window.Map</a></li>
-                                <li><a href="../classes/window.String.html">window.String</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -160,73 +162,119 @@
                         <div class="file">
                             <pre class="code prettyprint linenums">
                         /**
-                        # COMPONENT **LogicTimer**
-                        A timer that can used to trigger events. The timer can increment and decrement. It can be an interval timer, going off over and over. Has a max time which it will not exceed by default this is 1 hour.
+                         * A timer that can used to trigger events. The timer can increment and decrement. It can be an interval timer, going off over and over. Has a max time which it will not exceed by default this is 1 hour.
+                         *
+                         * @namespace platypus.components
+                         * @class LogicTimer
+                         * @uses platypus.Component
+                         */
+                        import createComponentClass from &#x27;../factory.js&#x27;;
                         
-                        ## Dependencies
-                        - [[Handler-Logic]] (on entity&#x27;s parent) - This component listens for a &quot;handle-logic&quot; message to update the timer.
-                        
-                        ## Messages
-                        
-                        ### Listens for:
-                        - **handle-logic** - Handles the update for the timer. Increments or decrements the current time. If it&#x27;s hit the max it stops the timer at the max. If it hits the alarm it sets it off. Sends an update message indicating the timer&#x27;s current time for other components to use.
-                          - @param data.delta (number) - The time passed since the last tick.
-                        - **set** - Set the time.
-                          - @param data.time (number) - The new value for the time.
-                        - **start** - Start the timer counting.
-                        - **stop** - Stop the timer counting.
-                        
-                        ### Local Broadcasts:
-                        - **[alarm message from definition]** - The definition.alarm value from the JSON definition is used as the message id. It&#x27;s sent when the alarm goes off.
-                        - **[update message from definition]** - The definition.update value from the JSON definition is used as the message id. It&#x27;s sent every &#x27;handle-logic&#x27; tick.
-                          - @param message.time (number) - The current time value for the timer.
-                        
-                        ## JSON Definition
-                            {
-                              &quot;type&quot;: &quot;LogicTimer&quot;,
-                              &quot;time&quot; : 0,
-                              //Optional - The starting time for the timer. Defaults to 0.
-                              &quot;alarmTime&quot; : 10000,
-                              //Optional - The time when the alarm will trigger the alarm message. Defaults to undefined, which never triggers the alarm.
-                              &quot;isInterval&quot; : false,
-                              //Optional - Whether or not the alarm fires at intervals of the alarmTime. Defaults to false.
-                              &quot;alarmMessage&quot; : &quot;ding&quot;,
-                              //Optional - The message sent when the alarm goes off. Defaults to an empty string.
-                              &quot;updateMessage&quot; : &quot;&quot;,
-                              //Optional - The message sent when the timer updates. Defaults to an empty string.
-                              &quot;on&quot; : true,
-                              //Optional - Whether the alarm starts on. Defaults to true.
-                              &quot;isIncrementing&quot; : true,
-                              //Optional - Whether the timer is incrementing or decrementing. If the value is false it is decrementing. Defaults to true.
-                              &quot;maxTime&quot; : 3600000
-                              //Optional - The max value, positive or negative, that the timer will count to. At which it stops counting. Default to 3600000 which equals an hour.
-                            }
-                        */
-                        /*global platypus */
-                        (function () {
-                            &#x27;use strict&#x27;;
-                        
-                            return platypus.createComponentClass({
+                        export default (function () {
+                            return createComponentClass({
                                 id: &#x27;LogicTimer&#x27;,
-                                initialize: function (definition) {
-                                    this.time = this.owner.time || definition.time ||  0;
-                                    this.prevTime = this.time;
-                                    this.alarmTime = this.owner.alarmTime || definition.alarmTime || 0;
-                                    this.isInterval = this.owner.isInterval || definition.isInterval || false;
-                                    this.alarmMessage =  this.owner.alarmMessage || definition.alarmMessage || &#x27;&#x27;;
-                                    this.updateMessage = this.owner.updateMessage || definition.updateMessage || &#x27;&#x27;;
-                                    this.isOn = this.owner.on || definition.on || true;
-                                    this.isIncrementing = this.owner.isIncrementing || definition.isIncrementing || true;
-                                    this.maxTime = this.owner.maxTime || definition.maxTime || 3600000; //Max time is 1hr by default.
+                        
+                                properties: {
+                                    /**
+                                     * The starting time for the timer.
+                                     *
+                                     * @property time
+                                     * @type Number
+                                     * @default 0
+                                     */
+                                    time: 0,
+                        
+                                    /**
+                                     * The time when the alarm will trigger the alarm message. Defaults to &#x60;0&#x60;&#x60;, which never triggers the alarm.
+                                     *
+                                     * @property alarmTime
+                                     * @type Number
+                                     * @default 0
+                                     */
+                                    alarmTime: 0,
+                        
+                                    /**
+                                     * Whether or not the alarm fires at intervals of the alarmTime.
+                                     *
+                                     * @property isInterval
+                                     * @type Boolean
+                                     * @default false
+                                     */
+                                    isInterval: false,
+                        
+                                    /**
+                                     * The message sent when the alarm goes off.
+                                     *
+                                     * @property alarmMessage
+                                     * @type String
+                                     * @default &#x27;&#x27;
+                                     */
+                                    alarmMessage: &#x27;&#x27;,
+                        
+                                    /**
+                                     * The message sent when the timer updates.
+                                     *
+                                     * @property updateMessage
+                                     * @type String
+                                     * @default &#x27;&#x27;
+                                     */
+                                    updateMessage: &#x27;&#x27;,
+                        
+                                    /**
+                                     * Whether the alarm starts on.
+                                     *
+                                     * @property isOn
+                                     * @type Boolean
+                                     * @default true
+                                     */
+                                    isOn: true,
+                        
+                                    /**
+                                     * Whether the timer is incrementing or decrementing. If the value is &#x60;false&#x60; it is decrementing.
+                                     *
+                                     * @property isIncrementing
+                                     * @type Boolean
+                                     * @default true
+                                     */
+                                    isIncrementing: true,
+                        
+                                    /**
+                                     * The max value in MS, positive or negative, that the timer will count to. Once reached, it stops counting. Defaults to one hour.
+                                     *
+                                     * @property maxTime
+                                     * @type Number
+                                     * @default 3600000
+                                     */
+                                    maxTime: 3600000,
+                        
+                                    /**
+                                     * Whether this alarm should reset to full initial time if restarted after being stopped.
+                                     *
+                                     * @property resetOnStop
+                                     * @type Boolean
+                                     * @default false
+                                     */
+                                    resetOnStop: false
                                 },
+                        
+                                initialize: function () {
+                                    this.prevTime = this.time;
+                                },
+                        
                                 events: {
-                                    &quot;handle-logic&quot;: function (data) {
+                                    /**
+                                     * This component listens for this event to perform countdown and trigger alarm as needed.
+                                     *
+                                     * @method &#x27;handle-logic&#x27;
+                                     * @param {Number} tick.delta
+                                     */
+                                    &quot;handle-logic&quot;: function (tick) {
                                         if (this.isOn) {
                                             this.prevTime = this.time;
                                             if (this.isIncrementing) {
-                                                this.time += data.delta;
+                                                this.time += tick.delta;
                                             } else {
-                                                this.time -= data.delta;
+                                                this.time -= tick.delta;
                                             }
                                             
                                             if (Math.abs(this.time) &gt; this.maxTime) {
@@ -259,14 +307,36 @@
                                         }
                                         this.owner.trigger(this.updateMessage, {time: this.time});
                                     },
+                        
+                                    /**
+                                     * Sets time for alarm.
+                                     *
+                                     * @method &#x27;set-timer&#x27;
+                                     * @param {Number} data.time Time to set for alarm.
+                                     */
                                     &quot;set-timer&quot;: function (data) {
                                         this.time = data.time;
                                     },
+                        
+                                    /**
+                                     * Starts the timer&#x27;s countdown.
+                                     *
+                                     * @method &#x27;start-timer&#x27;
+                                     */
                                     &quot;start-timer&quot;: function () {
                                         this.isOn = true;
                                     },
+                        
+                                    /**
+                                     * Stops the timer&#x27;s countdown. If &#x60;resetOnStop&#x60; is &#x60;true&#x60;, resets timer.
+                                     *
+                                     * @method &#x27;stop-timer&#x27;
+                                     */
                                     &quot;stop-timer&quot;: function () {
                                         this.isOn = false;
+                                        if (this.resetOnStop) {
+                                            this.time = 0;
+                                        }
                                     }
                                 }
                             });

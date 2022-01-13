@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v1.0.2 API Documentation : src\components\RelayLinker.js</title>
+	<title>platypus v2.0.0 API Documentation : src\components\RelayLinker.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 1.0.2</em>
+            <em>API Documentation for: 2.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/platypus.AABB.html">platypus.AABB</a></li>
                                 <li><a href="../classes/platypus.ActionState.html">platypus.ActionState</a></li>
+                                <li><a href="../classes/platypus.AssetManager.html">platypus.AssetManager</a></li>
                                 <li><a href="../classes/platypus.Async.html">platypus.Async</a></li>
                                 <li><a href="../classes/platypus.CollisionData.html">platypus.CollisionData</a></li>
                                 <li><a href="../classes/platypus.CollisionDataContainer.html">platypus.CollisionDataContainer</a></li>
@@ -46,6 +47,7 @@
                                 <li><a href="../classes/platypus.Component.html">platypus.Component</a></li>
                                 <li><a href="../classes/platypus.components.AIChaser.html">platypus.components.AIChaser</a></li>
                                 <li><a href="../classes/platypus.components.AIPacer.html">platypus.components.AIPacer</a></li>
+                                <li><a href="../classes/platypus.components.AudioMusic.html">platypus.components.AudioMusic</a></li>
                                 <li><a href="../classes/platypus.components.AudioSFX.html">platypus.components.AudioSFX</a></li>
                                 <li><a href="../classes/platypus.components.AudioVO.html">platypus.components.AudioVO</a></li>
                                 <li><a href="../classes/platypus.components.Camera.html">platypus.components.Camera</a></li>
@@ -58,7 +60,6 @@
                                 <li><a href="../classes/platypus.components.Counter.html">platypus.components.Counter</a></li>
                                 <li><a href="../classes/platypus.components.EntityContainer.html">platypus.components.EntityContainer</a></li>
                                 <li><a href="../classes/platypus.components.EntityController.html">platypus.components.EntityController</a></li>
-                                <li><a href="../classes/platypus.components.EventRender.html">platypus.components.EventRender</a></li>
                                 <li><a href="../classes/platypus.components.HandlerCollision.html">platypus.components.HandlerCollision</a></li>
                                 <li><a href="../classes/platypus.components.HandlerController.html">platypus.components.HandlerController</a></li>
                                 <li><a href="../classes/platypus.components.HandlerLogic.html">platypus.components.HandlerLogic</a></li>
@@ -74,6 +75,7 @@
                                 <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicTimer.html">platypus.components.LogicTimer</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
                                 <li><a href="../classes/platypus.components.Motion.html">platypus.components.Motion</a></li>
                                 <li><a href="../classes/platypus.components.Mover.html">platypus.components.Mover</a></li>
@@ -87,7 +89,7 @@
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
-                                <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
+                                <li><a href="../classes/platypus.components.RenderAnimator.html">platypus.components.RenderAnimator</a></li>
                                 <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
@@ -97,7 +99,6 @@
                                 <li><a href="../classes/platypus.components.RenderText.html">platypus.components.RenderText</a></li>
                                 <li><a href="../classes/platypus.components.RenderTiles.html">platypus.components.RenderTiles</a></li>
                                 <li><a href="../classes/platypus.components.SceneChanger.html">platypus.components.SceneChanger</a></li>
-                                <li><a href="../classes/platypus.components.StateRender.html">platypus.components.StateRender</a></li>
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
@@ -107,16 +108,17 @@
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
                                 <li><a href="../classes/platypus.DataMap.html">platypus.DataMap</a></li>
                                 <li><a href="../classes/platypus.Entity.html">platypus.Entity</a></li>
+                                <li><a href="../classes/platypus.EntityLinker.html">platypus.EntityLinker</a></li>
                                 <li><a href="../classes/platypus.Game.html">platypus.Game</a></li>
+                                <li><a href="../classes/platypus.Gamepad.html">platypus.Gamepad</a></li>
                                 <li><a href="../classes/platypus.Messenger.html">platypus.Messenger</a></li>
                                 <li><a href="../classes/platypus.PIXIAnimation.html">platypus.PIXIAnimation</a></li>
-                                <li><a href="../classes/platypus.PlatypusPlugin.html">platypus.PlatypusPlugin</a></li>
-                                <li><a href="../classes/platypus.Scene.html">platypus.Scene</a></li>
+                                <li><a href="../classes/platypus.SFXPlayer.html">platypus.SFXPlayer</a></li>
                                 <li><a href="../classes/platypus.StateMap.html">platypus.StateMap</a></li>
+                                <li><a href="../classes/platypus.Storage.html">platypus.Storage</a></li>
                                 <li><a href="../classes/platypus.Vector.html">platypus.Vector</a></li>
-                                <li><a href="../classes/window.Array.html">window.Array</a></li>
+                                <li><a href="../classes/platypus.VOPlayer.html">platypus.VOPlayer</a></li>
                                 <li><a href="../classes/window.Map.html">window.Map</a></li>
-                                <li><a href="../classes/window.String.html">window.String</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -166,153 +168,92 @@
                          * @class RelayLinker
                          * @uses platypus.Component
                          */
-                        /*global platypus */
-                        (function () {
-                            &#x27;use strict&#x27;;
+                        /* global platypus */
+                        import createComponentClass from &#x27;../factory.js&#x27;;
+                        import {greenSplice} from &#x27;../utils/array.js&#x27;;
                         
-                            var broadcast = function () {
-                                var i = 0,
-                                    link = null;
-                                
-                                for (i = 0; i &lt; this.links.length; i++) {
-                                    link = this.links[i];
-                                    link.trigger.apply(link, arguments);
+                        const
+                            channels = {},
+                            broadcast = function (...args) {
+                                const channel = this.channel;
+                        
+                                for (let i = 0; i &lt; channel.length; i++) {
+                                    channel[i].trigger(...args);
                                 }
                             };
                         
-                            return platypus.createComponentClass({
-                                id: &#x27;RelayLinker&#x27;,
+                        export default createComponentClass({
+                            id: &#x27;RelayLinker&#x27;,
                         
-                                properties: {
-                                    /**
-                                     * The id that defines the &#x27;channel&#x27; the linkers are talking on. This should be matched on the entity/entities you want to talk between.
-                                     *
-                                     * @property linkId
-                                     * @type String
-                                     * @default &#x27;linked&#x27;
-                                     */
-                                    linkId: &#x27;linked&#x27;,
-                                    
-                                    /**
-                                     * This is an object of key/value pairs. The keys are events this component is listening for locally, the value is the event to be broadcast to its linked entities. The value can also be an array of events to be fired on linked entities.
-                                     *
-                                     *      &quot;events&quot;: {
-                                     *          &quot;sleeping&quot;: &quot;good-night&quot;,
-                                     *          &quot;awake&quot;: [&quot;alarm&quot;, &quot;get-up&quot;]
-                                     *      }
-                                     *
-                                     * @property events
-                                     * @type Object
-                                     * @default null
-                                     */
-                                    events: null
-                                },
-                        
-                                initialize: function () {
-                                    var i = 0,
-                                        event = &#x27;&#x27;;
-                        
-                                    if (this.events) {
-                                        for (event in this.events) {
-                                            if (this.events.hasOwnProperty(event)) {
-                                                this.addEventListener(event, broadcast.bind(this, this.events[event]));
-                                            }
-                                        }
-                                    }
-                                    
-                                    if (!this.owner.linkId) {
-                                        this.owner.linkId = this.linkId;
-                                    }
-                                    
-                                    this.addEventListener(&#x27;to-&#x27; + this.linkId + &#x27;-entities&#x27;, broadcast.bind(this, &#x27;from-&#x27; + this.linkId + &#x27;-entities&#x27;));
-                                    this.addEventListener(&#x27;from-&#x27; + this.linkId + &#x27;-entities&#x27;, function (resp) {
-                                        this.owner.trigger(resp.message, resp.value, resp.debug);
-                                    }.bind(this));
-                                    
-                                    this.links = Array.setUp();
-                                    
-                                    if (this.owner.linkEntities) {
-                                        for (i = 0; i &lt; this.owner.linkEntities.length; i++) {
-                                            this.links.push(this.owner.linkEntities[i]);
-                                        }
-                                    }
-                                    
-                                    this.message = {
-                                        message: &#x27;&#x27;,
-                                        value: null
-                                    };
-                                    this.linkMessage = {
-                                        entity: this.owner,
-                                        linkId: this.linkId,
-                                        reciprocate: false
-                                    };
-                                },
+                            properties: {
+                                /**
+                                 * The id that defines the &#x27;channel&#x27; the linkers are talking on. This should be matched on the entity/entities you want to talk between.
+                                 *
+                                 * @property linkId
+                                 * @type String
+                                 * @default &#x27;linked&#x27;
+                                 */
+                                linkId: &#x27;linked&#x27;,
                                 
-                                events: {
+                                /**
+                                 * This is an object of key/value pairs. The keys are events this component is listening for locally, the value is the event to be broadcast to its linked entities. The value can also be an array of events to be fired on linked entities.
+                                 *
+                                 *      &quot;events&quot;: {
+                                 *          &quot;sleeping&quot;: &quot;good-night&quot;,
+                                 *          &quot;awake&quot;: [&quot;alarm&quot;, &quot;get-up&quot;]
+                                 *      }
+                                 *
+                                 * @property events
+                                 * @type Object
+                                 * @default null
+                                 */
+                                events: null
+                            },
                         
-                                    /**
-                                     * Called when the object is added to its parent, on receiving this message, the component tries to link itself with objects with the same link id.
-                                     *
-                                     * @method &#x27;load&#x27;
-                                     */
-                                    &quot;load&quot;: function () {
-                                        var grandparent = this.owner.parent;
-                        
-                                        while (grandparent.parent) {
-                                            grandparent = grandparent.parent;
+                            initialize: function () {
+                                if (this.events) {
+                                    for (const event in this.events) {
+                                        if (this.events.hasOwnProperty(event)) {
+                                            this.addEventListener(event, broadcast.bind(this, this.events[event]));
                                         }
-                                        this.linkMessage.reciprocate = true;
-                                        grandparent.triggerOnChildren(&#x27;link-entity&#x27;, this.linkMessage);
-                                    },
-                                    
-                                    /**
-                                     * On receiving this message, this component checks the linkId of the requesting entity and adds it to its list of connections if it matches.
-                                     *
-                                     * @method &#x27;link-entity&#x27;
-                                     * @param toLink {platypus.Entity} The enquiring entity.
-                                     */
-                                    &quot;link-entity&quot;: function (toLink) {
-                                        if ((toLink.linkId === this.linkId) &amp;&amp; (toLink.entity !== this.owner)) {
-                                            // Make sure this link is not already in place
-                                            if (this.links.indexOf(toLink.entity) === -1) {
-                                                this.links.push(toLink.entity);
-                                                if (toLink.reciprocate) {
-                                                    this.linkMessage.reciprocate = false;
-                                                    toLink.entity.triggerEvent(&#x27;link-entity&#x27;, this.linkMessage);
-                                                }
-                                            }
-                                        }
-                                    },
-                                    
-                                    /**
-                                     * Removes the requesting entity from this component&#x27;s list of linked entities and no farther messages will be transmitted.
-                                     *
-                                     * @method &#x27;unlink-entity&#x27;
-                                     * @param toUnlink {platypus.Entity} The enquiring entity.
-                                     */
-                                    &quot;unlink-entity&quot;: function (toUnlink) {
-                                        var i = this.links.indexOf(toUnlink.entity);
-                                        
-                                        if (i &gt;= 0) {
-                                            this.links.greenSplice(i);
-                                        }
-                                    }
-                                },
-                                
-                                methods: {
-                                    destroy: function () {
-                                        var i = 0;
-                                        
-                                        for (i = 0; i &lt; this.links.length; i++) {
-                                            this.links[i].triggerEvent(&#x27;unlink-entity&#x27;, this.linkMessage);
-                                        }
-                                        this.links.recycle();
-                                        this.links = null;
-                                        this.events = null;
                                     }
                                 }
-                            });
-                        }());
+                                
+                                if (!this.owner.linkId) {
+                                    this.owner.linkId = this.linkId;
+                                }
+                                
+                                // Connect channel, or create if it doesn&#x27;t exist.
+                                this.channel = channels[this.linkId];
+                                if (!this.channel) {
+                                    this.channel = channels[this.linkId] = [];
+                                }
+                            },
+                            
+                            events: {
+                                /**
+                                 * Called when the object is added to its parent, on receiving this message, the component links itself with objects with the same link id.
+                                 *
+                                 * @method &#x27;load&#x27;
+                                 */
+                                &quot;load&quot;: function () {
+                                    this.channel.push(this.owner);
+                                }
+                            },
+                            
+                            methods: {
+                                destroy: function () {
+                                    const index = this.channel.indexOf(this.owner);
+                        
+                                    if (index &gt;= 0) {
+                                        greenSplice(this.channel, index);
+                                    } else {
+                                        platypus.debug.warn(&#x27;RelayLinker: Component destroyed, but entity not found on channel.&#x27;);
+                                    }
+                                    this.events = null;
+                                }
+                            }
+                        });
                         
                             </pre>
                         </div>

@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v1.0.2 API Documentation : src\components\RenderSpine.js</title>
+	<title>platypus v2.0.0 API Documentation : src\components\RenderSpine.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 1.0.2</em>
+            <em>API Documentation for: 2.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/platypus.AABB.html">platypus.AABB</a></li>
                                 <li><a href="../classes/platypus.ActionState.html">platypus.ActionState</a></li>
+                                <li><a href="../classes/platypus.AssetManager.html">platypus.AssetManager</a></li>
                                 <li><a href="../classes/platypus.Async.html">platypus.Async</a></li>
                                 <li><a href="../classes/platypus.CollisionData.html">platypus.CollisionData</a></li>
                                 <li><a href="../classes/platypus.CollisionDataContainer.html">platypus.CollisionDataContainer</a></li>
@@ -46,6 +47,7 @@
                                 <li><a href="../classes/platypus.Component.html">platypus.Component</a></li>
                                 <li><a href="../classes/platypus.components.AIChaser.html">platypus.components.AIChaser</a></li>
                                 <li><a href="../classes/platypus.components.AIPacer.html">platypus.components.AIPacer</a></li>
+                                <li><a href="../classes/platypus.components.AudioMusic.html">platypus.components.AudioMusic</a></li>
                                 <li><a href="../classes/platypus.components.AudioSFX.html">platypus.components.AudioSFX</a></li>
                                 <li><a href="../classes/platypus.components.AudioVO.html">platypus.components.AudioVO</a></li>
                                 <li><a href="../classes/platypus.components.Camera.html">platypus.components.Camera</a></li>
@@ -58,7 +60,6 @@
                                 <li><a href="../classes/platypus.components.Counter.html">platypus.components.Counter</a></li>
                                 <li><a href="../classes/platypus.components.EntityContainer.html">platypus.components.EntityContainer</a></li>
                                 <li><a href="../classes/platypus.components.EntityController.html">platypus.components.EntityController</a></li>
-                                <li><a href="../classes/platypus.components.EventRender.html">platypus.components.EventRender</a></li>
                                 <li><a href="../classes/platypus.components.HandlerCollision.html">platypus.components.HandlerCollision</a></li>
                                 <li><a href="../classes/platypus.components.HandlerController.html">platypus.components.HandlerController</a></li>
                                 <li><a href="../classes/platypus.components.HandlerLogic.html">platypus.components.HandlerLogic</a></li>
@@ -74,6 +75,7 @@
                                 <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicTimer.html">platypus.components.LogicTimer</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
                                 <li><a href="../classes/platypus.components.Motion.html">platypus.components.Motion</a></li>
                                 <li><a href="../classes/platypus.components.Mover.html">platypus.components.Mover</a></li>
@@ -87,7 +89,7 @@
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
-                                <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
+                                <li><a href="../classes/platypus.components.RenderAnimator.html">platypus.components.RenderAnimator</a></li>
                                 <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
@@ -97,7 +99,6 @@
                                 <li><a href="../classes/platypus.components.RenderText.html">platypus.components.RenderText</a></li>
                                 <li><a href="../classes/platypus.components.RenderTiles.html">platypus.components.RenderTiles</a></li>
                                 <li><a href="../classes/platypus.components.SceneChanger.html">platypus.components.SceneChanger</a></li>
-                                <li><a href="../classes/platypus.components.StateRender.html">platypus.components.StateRender</a></li>
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
@@ -107,16 +108,17 @@
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
                                 <li><a href="../classes/platypus.DataMap.html">platypus.DataMap</a></li>
                                 <li><a href="../classes/platypus.Entity.html">platypus.Entity</a></li>
+                                <li><a href="../classes/platypus.EntityLinker.html">platypus.EntityLinker</a></li>
                                 <li><a href="../classes/platypus.Game.html">platypus.Game</a></li>
+                                <li><a href="../classes/platypus.Gamepad.html">platypus.Gamepad</a></li>
                                 <li><a href="../classes/platypus.Messenger.html">platypus.Messenger</a></li>
                                 <li><a href="../classes/platypus.PIXIAnimation.html">platypus.PIXIAnimation</a></li>
-                                <li><a href="../classes/platypus.PlatypusPlugin.html">platypus.PlatypusPlugin</a></li>
-                                <li><a href="../classes/platypus.Scene.html">platypus.Scene</a></li>
+                                <li><a href="../classes/platypus.SFXPlayer.html">platypus.SFXPlayer</a></li>
                                 <li><a href="../classes/platypus.StateMap.html">platypus.StateMap</a></li>
+                                <li><a href="../classes/platypus.Storage.html">platypus.Storage</a></li>
                                 <li><a href="../classes/platypus.Vector.html">platypus.Vector</a></li>
-                                <li><a href="../classes/window.Array.html">window.Array</a></li>
+                                <li><a href="../classes/platypus.VOPlayer.html">platypus.VOPlayer</a></li>
                                 <li><a href="../classes/window.Map.html">window.Map</a></li>
-                                <li><a href="../classes/window.String.html">window.String</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -166,44 +168,89 @@
                          * @class RenderSpine
                          * @uses platypus.Component
                          */
-                        /* global include, platypus */
-                        (function () {
-                            &#x27;use strict&#x27;;
+                        /* global platypus */
+                        import * as PIXI from &#x27;pixi.js&#x27;;
+                        import {arrayCache, union} from &#x27;../utils/array.js&#x27;;
+                        import Data from &#x27;../Data.js&#x27;;
+                        import RenderAnimator from &#x27;./RenderAnimator.js&#x27;;
+                        import RenderContainer from &#x27;./RenderContainer.js&#x27;;
+                        import StateMap from &#x27;../StateMap.js&#x27;;
+                        import createComponentClass from &#x27;../factory.js&#x27;;
                         
-                            var TextureAtlas = include(&#x27;PIXI.spine.core.TextureAtlas&#x27;, false),
-                                AtlasAttachmentLoader = include(&#x27;PIXI.spine.core.AtlasAttachmentLoader&#x27;, false),
-                                BaseTexture = include(&#x27;PIXI.BaseTexture&#x27;),
-                                Data = include(&#x27;platypus.Data&#x27;),
-                                EventRender = include(&#x27;platypus.components.EventRender&#x27;),
-                                RenderContainer = include(&#x27;platypus.components.RenderContainer&#x27;),
-                                SkeletonJson = include(&#x27;PIXI.spine.core.SkeletonJson&#x27;, false),
-                                Spine = include(&#x27;PIXI.spine.Spine&#x27;, false),
-                                StateRender = include(&#x27;platypus.components.StateRender&#x27;),
-                                getBaseTexture = function (path) {
-                                    var asset = null,
-                                        assetCache = platypus.game.app.assetManager.cache;
+                        export default (function () {
+                            const
+                                BaseTexture = PIXI.BaseTexture,
+                                createTest = function (testStates, skin) {
+                                    if (testStates === &#x27;default&#x27;) {
+                                        return defaultTest.bind(null, skin);
+                                    } else {
+                                        //TODO: Better clean-up: Create a lot of these without removing them later... DDD 2/5/2016
+                                        return stateTest.bind(null, skin, StateMap.setUp(testStates));
+                                    }
+                                },
+                                defaultTest = function (skin) {
+                                    return skin;
+                                },
+                                stateTest = function (skin, states, ownerState) {
+                                    if (ownerState.includes(states)) {
+                                        return skin;
+                                    }
+                                    return null;
+                                },
+                                getBaseTexture = function (path, pma) {
+                                    var asset = platypus.assetCache.get(path.substring(path.lastIndexOf(&#x27;/&#x27;) + 1, path.lastIndexOf(&#x27;.&#x27;)));
                                     
-                                    asset = assetCache.read(path.substring(path.lastIndexOf(&#x27;/&#x27;) + 1, path.lastIndexOf(&#x27;.&#x27;)));
                                     if (!asset) {
                                         platypus.debug.warn(&#x27;RenderSpine: &quot;&#x27; + path + &#x27;&quot; is not a loaded asset.&#x27;);
                                     }
-                                    return new BaseTexture(asset);
+                                    return new BaseTexture(asset, {
+                                        alphaMode: pma ? PIXI.ALPHA_MODES.PMA : PIXI.ALPHA_MODES.UNPACK
+                                    });
                                 };
                             
-                            // If PIXI.spine is unavailable, this component doesn&#x27;t work.
-                            if (!Spine) {
-                                return function () {
-                                    platypus.debug.error(&#x27;RenderSpine requires &#x60;PIXI.spine&#x60; to function.&#x27;);
-                                };
-                            }
-                        
-                            return platypus.createComponentClass({
+                            return createComponentClass({
                         
                                 id: &#x27;RenderSpine&#x27;,
                         
                                 properties: {
                                     /**
-                                     * Optional. An object containg key-value pairs that define a mapping from triggered events or entity states to the animation that should play. The list is processed from top to bottom, so the most important actions should be listed first (for example, a jumping animation might take precedence over an idle animation). If not specified, an 1-to-1 animation map is created from the list of animations in the skeleton definition using the animation names as the keys.
+                                     * An object containg key-value pairs that define a mapping from entity states to the animation that should play. The list is processed from top to bottom, so the most important actions should be listed first (for example, a jumping animation might take precedence over an idle animation). If not specified, an 1-to-1 animation map is created from the list of animations in the sprite sheet definition using the animation names as the keys.
+                                     *
+                                     *  &quot;animationStates&quot;:{
+                                     *      &quot;standing&quot;: &quot;default-animation&quot;  // On receiving a &quot;standing&quot; event, or when this.owner.state.standing === true, the &quot;default&quot; animation will begin playing.
+                                     *      &quot;ground,moving&quot;: &quot;walking&quot;,  // Comma separated values have a special meaning when evaluating &quot;state-changed&quot; messages. The above example will cause the &quot;walking&quot; animation to play ONLY if the entity&#x27;s state includes both &quot;moving&quot; and &quot;ground&quot; equal to true.
+                                     *      &quot;ground,striking&quot;: &quot;swing!&quot;, // Putting an exclamation after an animation name causes this animation to complete before going to the next animation. This is useful for animations that would look poorly if interrupted.
+                                     *      &quot;default&quot;: &quot;default-animation&quot; // Optional. &quot;default&quot; is a special property that matches all states. If none of the above states are valid for the entity, it will use the default animation listed here.
+                                     *  }
+                                     *
+                                     * If &#x60;stateBased&#x60; is &#x60;true&#x60; and this property is not set, this component will use the &#x60;animationMap&#x60; property value to define state mappings.
+                                     *
+                                     * @property animationStates
+                                     * @type Object
+                                     * @default animationMap
+                                     */
+                                    animationStates: null,
+                        
+                                    /**
+                                     * An object containg key-value pairs that define a mapping from triggered events to the animation that should play.
+                                     *
+                                     *     &quot;animationEvents&quot;:{
+                                     *         &quot;move&quot;: &quot;walk-animation&quot;,
+                                     *         &quot;jump&quot;: &quot;jumping-animation&quot;
+                                     *     }
+                                     *
+                                     * The above will create two event listeners on the entity, &quot;move&quot; and &quot;jump&quot;, that will play their corresponding animations when the events are triggered.
+                                     *
+                                     * If &#x60;eventBased&#x60; is &#x60;true&#x60; and this property is not set, this component will use the &#x60;animationMap&#x60; property value to define event mappings.
+                                     *
+                                     * @property animationEvents
+                                     * @type Object
+                                     * @default animationMap
+                                     */
+                                    animationEvents: null,
+                        
+                                    /**
+                                     * Optional. An object containing key-value pairs that define a mapping from triggered events or entity states to the animation that should play. The list is processed from top to bottom, so the most important actions should be listed first (for example, a jumping animation might take precedence over an idle animation). If not specified, an 1-to-1 animation map is created from the list of animations in the skeleton definition using the animation names as the keys.
                                      *
                                      *  &quot;animationMap&quot;:{
                                      *      &quot;standing&quot;: &quot;default-animation&quot;  // On receiving a &quot;standing&quot; event, or when this.owner.state.standing === true, the &quot;default&quot; animation will begin playing.
@@ -219,7 +266,39 @@
                                     animationMap: null,
                         
                                     /**
-                                     * Optional. A mask definition that determines where the image should clip. A string can also be used to create more complex shapes via the PIXI graphics API like: &quot;mask&quot;: &quot;r(10,20,40,40).dc(30,10,12)&quot;. Defaults to no mask or, if simply set to true, a rectangle using the entity&#x27;s dimensions.
+                                     * Optional. No, this isn&#x27;t a Stephen R. Lawhead novel. Use this to specify a skin according to the entity&#x27;s state.
+                                     *
+                                     *  &quot;skinMap&quot;:{
+                                     *      &quot;cloaked&quot;: &quot;cloak&quot;  // On receiving a &quot;cloaked&quot; event, or when &#x60;this.owner.state.get(&#x27;cloaked&#x27;) === true&#x60;, this skin will be activated.
+                                     *      &quot;default&quot;: &quot;normal_attire&quot; // Optional. &quot;default&quot; is a special property that matches all states. If none of the above states are valid for the entity, it will use the default skin listed here.
+                                     *  }
+                                     *
+                                     * @property skinMap
+                                     * @type Object
+                                     * @default null
+                                     */
+                                    skinMap: null,
+                        
+                                    /**
+                                     * The scaling factor for this sprite relative to the scale of the container.
+                                     *
+                                     * @property localScaleX
+                                     * @type Number|Array|Object
+                                     * @default 1
+                                     */
+                                    localScaleX: 1,
+                        
+                                   /**
+                                    * The scaling factor for this sprite relative to the scale of the container.
+                                    *
+                                    * @property localScaleY
+                                    * @type Number|Array|Object
+                                    * @default 1
+                                    */
+                                    localScaleY: 1,
+                        
+                                    /**
+                                     * Optional. A mask definition that determines where the image should clip. A string can also be used to create more complex shapes via the PIXI graphics API like: &quot;mask&quot;: &quot;r(10,20,40,40).drawCircle(30,10,12)&quot;. Defaults to no mask or, if simply set to true, a rectangle using the entity&#x27;s dimensions.
                                      *
                                      *  &quot;mask&quot;: {
                                      *      &quot;x&quot;: 10,
@@ -230,7 +309,7 @@
                                      *
                                      *  -OR-
                                      *
-                                     *  &quot;mask&quot;: &quot;r(10,20,40,40).dc(30,10,12)&quot;
+                                     *  &quot;mask&quot;: &quot;r(10,20,40,40).drawCircle(30,10,12)&quot;
                                      *
                                      * @property mask
                                      * @type Object
@@ -277,7 +356,6 @@
                                      * @property offsetX
                                      * @type Number
                                      * @default 0
-                                     * @since 0.11.4
                                      */
                                     offsetX: 0,
                         
@@ -287,7 +365,6 @@
                                      * @property offsetY
                                      * @type Number
                                      * @default 0
-                                     * @since 0.11.4
                                      */
                                     offsetY: 0,
                         
@@ -319,15 +396,6 @@
                                     skeleton: null,
                         
                                     /**
-                                     * Optional. Whether this object can be rotated. It&#x27;s rotational angle is set by setting the this.owner.rotation value on the entity.
-                                     *
-                                     * @property rotate
-                                     * @type Boolean
-                                     * @default false
-                                     */
-                                    rotate: false,
-                        
-                                    /**
                                      * Whether this object can be mirrored over X. To mirror it over X set the this.owner.rotation value to be &gt; 90  and &lt; 270.
                                      *
                                      * @property mirror
@@ -355,7 +423,7 @@
                                     visible: true,
                         
                                     /**
-                                     * Optional. Specifies whether this component should create an EventRender component to listen to events matching the animationMap to animate. Set this to true if the component should animate for on events. Default is &#x60;false&#x60;.
+                                     * Optional. Specifies whether this component should create a RenderAnimator component to listen to events matching the animationMap to animate. Set this to true if the component should animate for on events. Default is &#x60;false&#x60;.
                                      *
                                      * @property eventBased
                                      * @type Boolean
@@ -364,7 +432,16 @@
                                     eventBased: false,
                         
                                     /**
-                                     * Optional. Specifies whether this component should create a StateRender component to handle changes in the entity&#x27;s state that match the animationMap to animate. Set this to true if the component should animate based on &#x60;this.owner.state&#x60;. Default is &#x60;true&#x60;.
+                                     * Optional. Specifies whether the spine image alpha has been premultiplied. Set this to &#x60;false&#x60; if you see bright borders around image parts. Make sure it&#x27;s &#x60;true&#x60; if you see thin black lines around image pieces.
+                                     *
+                                     * @property preMultipliedAlpha
+                                     * @type Boolean
+                                     * @default true
+                                     */
+                                    preMultipliedAlpha: true,
+                        
+                                    /**
+                                     * Optional. Specifies whether this component should create a RenderAnimator component to handle changes in the entity&#x27;s state that match the animationMap to animate. Set this to true if the component should animate based on &#x60;this.owner.state&#x60;. Default is &#x60;true&#x60;.
                                      *
                                      * @property stateBased
                                      * @type Boolean
@@ -420,15 +497,6 @@
                                     skewY: 0,
                         
                                     /**
-                                     * Optional. The rotation of the spine in degrees. All spines on the same entity are rotated the same amount unless they ignore the rotation value by setting &#x27;rotate&#x27; to false.
-                                     *
-                                     * @property rotation
-                                     * @type Number
-                                     * @default 1
-                                     */
-                                    rotation: 0,
-                        
-                                    /**
                                      * Optional. The x position of the entity. Defaults to 0.
                                      *
                                      * @property x
@@ -475,9 +543,9 @@
                                                 return map;
                                             }
                                         },
-                                        imageCallback = function (loadFinished, line, callback) {
+                                        imageCallback = function (pma, loadFinished, line, callback) {
                                             // Not sure if this handles memory well - keeping it in for now.
-                                            var baseTexture = getBaseTexture(line);
+                                            var baseTexture = getBaseTexture(line, pma);
                         
                                             callback(baseTexture);
                         
@@ -487,14 +555,25 @@
                                                 loadFinished();
                                             }
                                         },
-                                        animationEnded = function () {
+                                        animationEnded = function (animationData) {
+                                            const
+                                                animationName = animationData.animation.name;
+                                                
+                                            if (this.playSequence) {
+                                                this.playIndex += 1;
+                                                if (this.playIndex &lt; this.playSequence.length || this.loopSequence) {
+                                                    this.playIndex = this.playIndex % this.playSequence.length;
+                                                    this.innerPlayAnimation(this.playSequence[this.playIndex], false);
+                                                }
+                                            }
+                        
                                             /**
                                              * This event fires each time an animation completes.
                                              *
                                              * @event &#x27;animation-ended&#x27;
                                              * @param animation {String} The id of the animation that ended.
                                              */
-                                            this.owner.triggerEvent(&#x27;animation-ended&#x27;, this.currentAnimation);
+                                            this.owner.triggerEvent(&#x27;animation-ended&#x27;, animationName);
                                         },
                                         handleSpineEvent = function (entry, event) {
                                             var eventName = event.data.name;
@@ -507,84 +586,155 @@
                                         };
                                     
                                     return function (def, callback) {
-                                        var animation = &#x27;&#x27;,
-                                            definition = null,
-                                            settings = platypus.game.settings,
-                                            atlas = settings.atlases[this.atlas],
-                                            map = null,
-                                            skeleton = settings.skeletons[this.skeleton],
-                                            spineAtlas = new TextureAtlas(atlas, imageCallback.bind(null, callback)),
-                                            spineJsonParser = new SkeletonJson(new AtlasAttachmentLoader(spineAtlas)),
-                                            skeletonData = spineJsonParser.readSkeletonData(skeleton),
-                                            spine = this.spine = new Spine(skeletonData);
-                        
-                                        spine.state.addListener({
-                                            event: handleSpineEvent.bind(this),
-                                            complete: animationEnded.bind(this)
-                                        });
-                                        spine.autoUpdate = false;
-                        
-                                        map = createAnimationMap(this.animationMap, skeleton.animations);
-                                        this.stateBased = map &amp;&amp; this.stateBased;
-                                        this.eventBased = map &amp;&amp; this.eventBased;
-                                        if (map) {
-                                            animation = map.default || &#x27;&#x27;;
-                        
-                                            if (this.eventBased) {
-                                                definition = Data.setUp(
-                                                    &#x27;animationMap&#x27;, map,
-                                                    &#x27;component&#x27;, this
-                                                );
-                                                this.owner.addComponent(new EventRender(this.owner, definition));
-                                                definition.recycle();
-                                            }
-                        
-                                            if (this.stateBased) {
-                                                definition = Data.setUp(
-                                                    &#x27;animationMap&#x27;, map,
-                                                    &#x27;forcePlayThrough&#x27;, this.forcePlayThrough,
-                                                    &#x27;component&#x27;, this
-                                                );
-                                                this.owner.addComponent(new StateRender(this.owner, definition));
-                                                definition.recycle();
-                                            }
-                                        }
-                        
-                                        // set up the mixes!
-                                        if (this.mixTimes) {
-                                            this.setMixTimes(this.mixTimes);
-                                        }
-                        
-                                        // play animation
-                                        if (animation) {
-                                            this.currentAnimation = animation;
-                                            spine.state.setAnimation(0, animation, true);
-                                        }
-                        
-                                        spine.x = this.offsetX;
-                                        spine.y = this.offsetY;
-                                        spine.z = this.offsetZ;
-                        
-                                        if (!this.owner.container) {
-                                            definition = Data.setUp(
-                                                &#x27;interactive&#x27;, this.interactive,
-                                                &#x27;mask&#x27;, this.mask,
-                                                &#x27;rotate&#x27;, this.rotate,
-                                                &#x27;mirror&#x27;, this.mirror,
-                                                &#x27;flip&#x27;, this.flip,
-                                                &#x27;visible&#x27;, this.visible,
-                                                &#x27;cache&#x27;, this.cache,
-                                                &#x27;ignoreOpacity&#x27;, this.ignoreOpacity,
-                                                &#x27;scaleX&#x27;, this.scaleX,
-                                                &#x27;scaleY&#x27;, this.scaleY,
-                                                &#x27;skewX&#x27;, this.skewX,
-                                                &#x27;skewY&#x27;, this.skewY,
-                                                &#x27;rotation&#x27;, this.rotation
-                                            );
-                                            this.owner.addComponent(new RenderContainer(this.owner, definition, this.addToContainer.bind(this)));
-                                            definition.recycle();
+                                        const PIXIspine = PIXI.spine,
+                                            core = PIXIspine &amp;&amp; PIXIspine.core,
+                                            Spine = PIXIspine &amp;&amp; PIXIspine.Spine;
+                                        
+                                        // If PIXI.spine is unavailable, this component doesn&#x27;t work.
+                                        if (!Spine || !core) {
+                                            platypus.debug.error(&#x27;RenderSpine requires &#x60;PIXI.spine&#x60; to function.&#x27;);
+                                            return false;
                                         } else {
-                                            this.addToContainer();
+                                            const
+                                                TextureAtlas = core.TextureAtlas,
+                                                AtlasAttachmentLoader = core.AtlasAttachmentLoader,
+                                                SkeletonJson = core.SkeletonJson,
+                                                settings = platypus.game.settings,
+                                                atlas = settings.atlases[this.atlas],
+                                                skeleton = settings.skeletons[this.skeleton],
+                                                spineAtlas = new TextureAtlas(atlas, imageCallback.bind(null, this.preMultipliedAlpha, callback)),
+                                                spineJsonParser = new SkeletonJson(new AtlasAttachmentLoader(spineAtlas)),
+                                                skeletonData = spineJsonParser.readSkeletonData(skeleton),
+                                                spine = this.spine = new Spine(skeletonData),
+                                                map = createAnimationMap(this.animationMap, skeleton.animations);
+                        
+                                            let animation = &#x27;&#x27;;
+                        
+                                            spine.state.addListener({
+                                                event: handleSpineEvent.bind(this),
+                                                complete: animationEnded.bind(this)
+                                            });
+                                            spine.autoUpdate = false;
+                            
+                                            this.stateBased = map &amp;&amp; this.stateBased;
+                                            this.eventBased = map &amp;&amp; this.eventBased;
+                                            if (map) {
+                                                const
+                                                    definition = Data.setUp(
+                                                        &#x27;animationEvents&#x27;, this.eventBased ? this.animationEvents || map : null,
+                                                        &#x27;animationStates&#x27;, this.stateBased ? this.animationStates || map : null,
+                                                        &#x27;forcePlayThrough&#x27;, this.forcePlayThrough,
+                                                        &#x27;component&#x27;, this
+                                                    );
+                        
+                                                this.owner.addComponent(new RenderAnimator(this.owner, definition));
+                                                definition.recycle();
+                        
+                                                animation = map.default || &#x27;&#x27;;
+                                            }
+                            
+                                            // set up the mixes!
+                                            if (this.mixTimes) {
+                                                this.setMixTimes(this.mixTimes);
+                                            }
+                            
+                                            // play animation
+                                            this.currentAnimations = arrayCache.setUp();
+                                            if (animation) {
+                                                this.playAnimation(animation);
+                                            }
+                        
+                                            this.playSequence = null;
+                                            this.playIndex = 0;
+                            
+                                            spine.x = this.offsetX;
+                                            spine.y = this.offsetY;
+                                            spine.z = this.offsetZ;
+                                            spine.scale.x = this.localScaleX;
+                                            spine.scale.y = this.localScaleY;
+                            
+                                            if (this.skinMap) { // Set up skin map handling.
+                                                const switchSkin = function (skin) {
+                                                        if (this.currentSkin !== skin) {
+                                                            this.currentSkin = skin;
+                                                            this.spine.skeleton.setSkin(null);
+                                                            //this.spine.skeleton.skin = null;
+                                                            this.spine.skeleton.setSlotsToSetupPose();
+                                                            this.spine.state.apply(this.spine.skeleton);
+                                                            if (skin) {
+                                                                this.spine.skeleton.setSkinByName(skin);
+                                                                this.spine.skeleton.setSlotsToSetupPose();
+                                                                //this.playAnimation(this.currentAnimations.join(&#x27;;&#x27;));
+                                                                this.spine.state.apply(this.spine.skeleton);
+                                                            }
+                                                        }
+                                                    },
+                                                    map = this.skinMap;
+                                
+                                                this.currentSkin = null;
+                        
+                                                //Handle Events:
+                                                if (this.eventBased) {
+                                                    for (const state in map) {
+                                                        if (map.hasOwnProperty(state)) {
+                                                            this.addEventListener(state, switchSkin.bind(this, map[state]));
+                                                        }
+                                                    }
+                                                }
+                                
+                                                //Handle States:
+                                                if (this.stateBased) {
+                                                    this.state = this.owner.state;
+                                                    this.stateChange = true; //Check state against entity&#x27;s prior state to update skin if necessary on instantiation.
+                                                    this.checkStates = arrayCache.setUp();
+                                                    this.skins = arrayCache.setUp();
+                        
+                                                    for (const state in map) {
+                                                        if (map.hasOwnProperty(state)) {
+                                                            this.checkStates.push(createTest(state, map[state]));
+                                                            this.skins.push(state);
+                                                        }
+                                                    }
+                        
+                                                    this.addEventListener(&#x27;state-changed&#x27;, () =&gt; {
+                                                        this.stateChange = true;
+                                                    });
+                                                    this.addEventListener(&#x27;handle-render&#x27;, () =&gt; {
+                                                        if (this.stateChange) {
+                                                            for (let i = 0; i &lt; this.checkStates.length; i++) {
+                                                                const testCase = this.checkStates[i](this.state);
+                        
+                                                                if (testCase !== null) {
+                                                                    switchSkin.call(this, testCase);
+                                                                    break;
+                                                                }
+                                                            }
+                                                            this.stateChange = false;
+                                                        }
+                                                    });
+                                                }
+                                            }
+                            
+                                            if (!this.owner.container) {
+                                                const
+                                                    definition = Data.setUp(
+                                                        &#x27;interactive&#x27;, this.interactive,
+                                                        &#x27;mask&#x27;, this.mask,
+                                                        &#x27;mirror&#x27;, this.mirror,
+                                                        &#x27;flip&#x27;, this.flip,
+                                                        &#x27;visible&#x27;, this.visible,
+                                                        &#x27;cache&#x27;, this.cache,
+                                                        &#x27;ignoreOpacity&#x27;, this.ignoreOpacity,
+                                                        &#x27;scaleX&#x27;, this.scaleX,
+                                                        &#x27;scaleY&#x27;, this.scaleY,
+                                                        &#x27;skewX&#x27;, this.skewX,
+                                                        &#x27;skewY&#x27;, this.skewY
+                                                    );
+                                                this.owner.addComponent(new RenderContainer(this.owner, definition, this.addToContainer.bind(this)));
+                                                definition.recycle();
+                                            } else {
+                                                this.addToContainer();
+                                            }
                                         }
                         
                                         return true; //using callback
@@ -646,7 +796,6 @@
                                      *
                                      * @method &#x27;stop-animation&#x27;
                                      * @param [animation] {String} The animation to show and pause. If not specified, this method simply pauses the current animation.
-                                     * @since 0.9.0
                                      */
                                     &quot;stop-animation&quot;: function (animation) {
                                         this.stopAnimation(animation);
@@ -657,10 +806,10 @@
                                      *
                                      * @method &#x27;play-animation&#x27;
                                      * @param [animation] {String} The animation to play. If not specified, this method simply unpauses the current animation.
-                                     * @since 0.9.0
+                                     * @param [loop] {Boolean} Whether the played animation should be looped. Loops by default.
                                      */
-                                    &quot;play-animation&quot;: function (animation) {
-                                        this.playAnimation(animation);
+                                    &quot;play-animation&quot;: function (animation, loop) {
+                                        this.playAnimation(animation, loop);
                                     }
                                 },
                         
@@ -669,32 +818,68 @@
                                         var container = this.owner.container;
                         
                                         container.addChild(this.spine);
-                                        container.reorder = true;
                                     },
                                     
-                                    playAnimation: function (animation) {
-                                        var spine = this.spine;
+                                    playAnimation: function (animation, loop = true) {
+                                        if (Array.isArray(animation)) {
+                                            if (animation !== this.playSequence) {
+                                                this.playSequence = animation;
+                                                this.playIndex = 0;
+                                                this.loopSequence = loop;
+                                                return this.innerPlayAnimation(animation[0], false);
+                                            } else {
+                                                return 0; //not sure if this is used
+                                            }
+                                        } else {
+                                            this.playSequence = null;
+                                            this.playIndex = 0;
+                                            return this.innerPlayAnimation(animation, loop);
+                                        }
+                                    },
                         
-                                        if (animation &amp;&amp; spine.state.hasAnimation(animation)) {
-                                            this.currentAnimation = animation;
-                                            spine.state.setAnimation(0, animation, true);
-                                            this.paused = false;
+                                    innerPlayAnimation: function (animation, loop) {
+                                        const spine = this.spine;
+                                        let animated = 0,
+                                            remaining = animation;
                         
-                                            return true;
+                                        while (remaining) {
+                                            const
+                                                semicolon = remaining.indexOf(&#x27;;&#x27;),
+                                                next = (semicolon &gt;= 0) ? remaining.substring(0, semicolon) : remaining;
+                                            
+                                            remaining = (semicolon &gt;= 0) ? remaining.substring(semicolon + 1) : &#x27;&#x27;;
+                        
+                                            if (spine.state.hasAnimation(next)) {
+                                                this.currentAnimations[animated] = next;
+                                                spine.state.setAnimation(animated, next, loop);
+                                            }
+                                            animated += 1;
                                         }
                         
-                                        return false;
+                                        return animated;
                                     },
                         
                                     stopAnimation: function (animation) {
-                                        var spine = this.spine;
+                                        const spine = this.spine;
+                                        let animated = 0,
+                                            remaining = animation;
                         
-                                        if (animation &amp;&amp; spine.state.hasAnimation(animation)) {
-                                            this.currentAnimation = animation;
-                                            spine.state.setAnimation(0, animation, false);
+                                        while (remaining) {
+                                            const
+                                                semicolon = remaining.indexOf(&#x27;;&#x27;),
+                                                next = (semicolon &gt;= 0) ? remaining.substring(0, semicolon) : remaining;
+                                            
+                                            remaining = (semicolon &gt;= 0) ? remaining.substring(semicolon + 1) : &#x27;&#x27;;
+                        
+                                            if (spine.state.hasAnimation(next)) {
+                                                this.currentAnimations[animated] = next;
+                                                spine.state.setAnimation(animated, next, false);
+                                            }
+                                            animated += 1;
                                         }
                         
                                         this.paused = true;
+                                        return animated;
                                     },
                         
                                     setMixTimes: function (mixTimes) {
@@ -741,21 +926,23 @@
                                 getAssetList: (function () {
                                     var
                                         getImages = function (atlas, atlases) {
-                                            var images = Array.setUp(),
-                                                lines = null,
-                                                j = 0;
+                                            const images = arrayCache.setUp();
                         
                                             if (atlas) {
-                                                lines = atlas.split(&#x27;\n&#x27;);
+                                                const findReturns = /\r/g;
+                                                let lines = atlas.replace(findReturns, &#x27;&#x27;).split(&#x27;\n&#x27;),
+                                                    j = lines.length;
+                        
                                                 if (lines.length === 1) { // id, not an actual atlas
                                                     atlas = atlases[atlas];
                                                     if (atlas) {
-                                                        lines = atlas.split(&#x27;\n&#x27;);
+                                                        lines = atlas.replace(findReturns, &#x27;&#x27;).split(&#x27;\n&#x27;);
                                                     } else {
                                                         return images;
                                                     }
+                                                    j = lines.length;
                                                 }
-                                                j = lines.length;
+                        
                                                 while (j--) { // Fix up relative image location paths.
                                                     if (lines[j].substr(lines[j].length - 4) === &#x27;.png&#x27;) {
                                                         images.push(lines[j]);
@@ -775,11 +962,11 @@
                                         
                                         if (Array.isArray(atlas)) {
                                             i = atlas.length;
-                                            images = Array.setUp();
+                                            images = arrayCache.setUp();
                                             while (i--) {
                                                 arr = getImages(atlas[i], atlases);
-                                                images.union(arr);
-                                                arr.recycle();
+                                                union(images, arr);
+                                                arrayCache.recycle(arr);
                                             }
                                             return images;
                                         } else {

@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v1.0.2 API Documentation : platypus.components.TiledLoader</title>
+	<title>platypus v2.0.0 API Documentation : platypus.components.TiledLoader</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 1.0.2</em>
+            <em>API Documentation for: 2.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/platypus.AABB.html">platypus.AABB</a></li>
                                 <li><a href="../classes/platypus.ActionState.html">platypus.ActionState</a></li>
+                                <li><a href="../classes/platypus.AssetManager.html">platypus.AssetManager</a></li>
                                 <li><a href="../classes/platypus.Async.html">platypus.Async</a></li>
                                 <li><a href="../classes/platypus.CollisionData.html">platypus.CollisionData</a></li>
                                 <li><a href="../classes/platypus.CollisionDataContainer.html">platypus.CollisionDataContainer</a></li>
@@ -46,6 +47,7 @@
                                 <li><a href="../classes/platypus.Component.html">platypus.Component</a></li>
                                 <li><a href="../classes/platypus.components.AIChaser.html">platypus.components.AIChaser</a></li>
                                 <li><a href="../classes/platypus.components.AIPacer.html">platypus.components.AIPacer</a></li>
+                                <li><a href="../classes/platypus.components.AudioMusic.html">platypus.components.AudioMusic</a></li>
                                 <li><a href="../classes/platypus.components.AudioSFX.html">platypus.components.AudioSFX</a></li>
                                 <li><a href="../classes/platypus.components.AudioVO.html">platypus.components.AudioVO</a></li>
                                 <li><a href="../classes/platypus.components.Camera.html">platypus.components.Camera</a></li>
@@ -58,7 +60,6 @@
                                 <li><a href="../classes/platypus.components.Counter.html">platypus.components.Counter</a></li>
                                 <li><a href="../classes/platypus.components.EntityContainer.html">platypus.components.EntityContainer</a></li>
                                 <li><a href="../classes/platypus.components.EntityController.html">platypus.components.EntityController</a></li>
-                                <li><a href="../classes/platypus.components.EventRender.html">platypus.components.EventRender</a></li>
                                 <li><a href="../classes/platypus.components.HandlerCollision.html">platypus.components.HandlerCollision</a></li>
                                 <li><a href="../classes/platypus.components.HandlerController.html">platypus.components.HandlerController</a></li>
                                 <li><a href="../classes/platypus.components.HandlerLogic.html">platypus.components.HandlerLogic</a></li>
@@ -74,6 +75,7 @@
                                 <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicTimer.html">platypus.components.LogicTimer</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
                                 <li><a href="../classes/platypus.components.Motion.html">platypus.components.Motion</a></li>
                                 <li><a href="../classes/platypus.components.Mover.html">platypus.components.Mover</a></li>
@@ -87,7 +89,7 @@
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
-                                <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
+                                <li><a href="../classes/platypus.components.RenderAnimator.html">platypus.components.RenderAnimator</a></li>
                                 <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
@@ -97,7 +99,6 @@
                                 <li><a href="../classes/platypus.components.RenderText.html">platypus.components.RenderText</a></li>
                                 <li><a href="../classes/platypus.components.RenderTiles.html">platypus.components.RenderTiles</a></li>
                                 <li><a href="../classes/platypus.components.SceneChanger.html">platypus.components.SceneChanger</a></li>
-                                <li><a href="../classes/platypus.components.StateRender.html">platypus.components.StateRender</a></li>
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
@@ -107,16 +108,17 @@
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
                                 <li><a href="../classes/platypus.DataMap.html">platypus.DataMap</a></li>
                                 <li><a href="../classes/platypus.Entity.html">platypus.Entity</a></li>
+                                <li><a href="../classes/platypus.EntityLinker.html">platypus.EntityLinker</a></li>
                                 <li><a href="../classes/platypus.Game.html">platypus.Game</a></li>
+                                <li><a href="../classes/platypus.Gamepad.html">platypus.Gamepad</a></li>
                                 <li><a href="../classes/platypus.Messenger.html">platypus.Messenger</a></li>
                                 <li><a href="../classes/platypus.PIXIAnimation.html">platypus.PIXIAnimation</a></li>
-                                <li><a href="../classes/platypus.PlatypusPlugin.html">platypus.PlatypusPlugin</a></li>
-                                <li><a href="../classes/platypus.Scene.html">platypus.Scene</a></li>
+                                <li><a href="../classes/platypus.SFXPlayer.html">platypus.SFXPlayer</a></li>
                                 <li><a href="../classes/platypus.StateMap.html">platypus.StateMap</a></li>
+                                <li><a href="../classes/platypus.Storage.html">platypus.Storage</a></li>
                                 <li><a href="../classes/platypus.Vector.html">platypus.Vector</a></li>
-                                <li><a href="../classes/window.Array.html">window.Array</a></li>
+                                <li><a href="../classes/platypus.VOPlayer.html">platypus.VOPlayer</a></li>
                                 <li><a href="../classes/window.Map.html">window.Map</a></li>
-                                <li><a href="../classes/window.String.html">window.String</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -172,7 +174,7 @@
                         
                         
                         <div class="box intro">
-                            <p>This component is attached to a top-level entity (loaded by the <a href="platypus.Scene.html">Scene</a>) and, once its peer components are loaded, ingests a JSON file exported from the <a href="http://www.mapeditor.org/">Tiled map editor</a> and creates the tile maps and entities. Once it has finished loading the map, it removes itself from the list of components on the entity.</p>
+                            <p>This component is attached to a top-level entity and, once its peer components are loaded, ingests a JSON file exported from the <a href="http://www.mapeditor.org/">Tiled map editor</a> and creates the tile maps and entities. Once it has finished loading the map, it removes itself from the list of components on the entity.</p>
                         <p>This component requires an <a href="platypus.components.EntityContainer.html">EntityContainer</a> since it calls <code>entity.addEntity()</code> on the entity, provided by <code>EntityContainer</code>.</p>
                         <p>This component looks for the following entities, and if not found will load default versions:</p>
                         <pre class="code prettyprint"><code>   {
@@ -223,11 +225,11 @@
                         
                                             <ul class="index-list methods">
                                                     <li class="index-item method">
-                                                        <a href="#method_&#x27;load-level&#x27;">&#x27;load-level&#x27;</a>
+                                                        <a href="#method_&#x27;layer-loaded&#x27;">&#x27;layer-loaded&#x27;</a>
                         
                                                     </li>
                                                     <li class="index-item method">
-                                                        <a href="#method_&#x27;scene-loaded&#x27;">&#x27;scene-loaded&#x27;</a>
+                                                        <a href="#method_&#x27;load-level&#x27;">&#x27;load-level&#x27;</a>
                         
                                                     </li>
                                                     <li class="index-item method private inherited">
@@ -238,20 +240,12 @@
                                                         <a href="#method_addMethod">addMethod</a>
                         
                                                     </li>
-                                                    <li class="index-item method">
-                                                        <a href="#method_decodeLayer">decodeLayer</a>
-                        
-                                                    </li>
                                                     <li class="index-item method private inherited">
                                                         <a href="#method_destroy">destroy</a>
                         
                                                     </li>
                                                     <li class="index-item method inherited">
                                                         <a href="#method_getAssetList">getAssetList</a>
-                        
-                                                    </li>
-                                                    <li class="index-item method inherited">
-                                                        <a href="#method_getLateAssetList">getLateAssetList</a>
                         
                                                     </li>
                                                     <li class="index-item method private inherited">
@@ -282,6 +276,10 @@
                         
                                             <ul class="index-list properties">
                                                     <li class="index-item property">
+                                                        <a href="#property_backgroundLoad">backgroundLoad</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
                                                         <a href="#property_entityPositionX">entityPositionX</a>
                         
                                                     </li>
@@ -292,11 +290,6 @@
                                                     <li class="index-item property">
                                                         <a href="#property_images">images</a>
                         
-                                                    </li>
-                                                    <li class="index-item property deprecated">
-                                                        <a href="#property_imagesScale">imagesScale</a>
-                        
-                                                            <span class="flag deprecated">deprecated</span>
                                                     </li>
                                                     <li class="index-item property">
                                                         <a href="#property_layerIncrement">layerIncrement</a>
@@ -326,10 +319,6 @@
                                                         <a href="#property_spriteSheet">spriteSheet</a>
                         
                                                     </li>
-                                                    <li class="index-item property">
-                                                        <a href="#property_unitsPerPixel">unitsPerPixel</a>
-                        
-                                                    </li>
                                             </ul>
                                         </div>
                         
@@ -353,97 +342,8 @@
                                     <div id="methods" class="api-class-tabpanel">
                                         <h2 class="off-left">Methods</h2>
                         
-                                            <div id="method_&#x27;load-level&#x27;" class="method item">
-                                                <h3 class="name"><code>&#x27;load-level&#x27;</code></h3>
-                                            
-                                                    <div class="args">
-                                                        <span class="paren">(</span><ul class="args-list inline commas">
-                                                            <li class="arg">
-                                                                    <code>levelData</code>
-                                                            </li>
-                                                            <li class="arg">
-                                                                    <code>callback</code>
-                                                            </li>
-                                                        </ul><span class="paren">)</span>
-                                                    </div>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l567"><code>&#x27;load-level&#x27;:567</code></a>
-                                                    </p>
-                                            
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>If <code>manuallyLoad</code> is set, the component will wait for this message before loading the Tiled map JSON definition.</p>
-                                            
-                                                </div>
-                                            
-                                                    <div class="params">
-                                                        <h4>Parameters:</h4>
-                                            
-                                                        <ul class="params-list">
-                                                            <li class="param">
-                                                                    <code class="param-name">levelData</code>
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                     
-                                                                </div>
-                                            
-                                                                    <ul class="params-list">
-                                                                        <li class="param">
-                                                                                <code class="param-name">level</code>
-                                                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
-                                            
-                                                                            <div class="param-description">
-                                                                                <p>The level to load.</p>
-                                            
-                                                                            </div>
-                                            
-                                                                        </li>
-                                                                        <li class="param">
-                                                                                <code class="param-name optional">[persistentData]</code>
-                                                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
-                                                                                <span class="flag optional" title="This parameter is optional.">optional</span>
-                                            
-                                                                            <div class="param-description">
-                                                                                <p>Information passed from the last scene.</p>
-                                            
-                                                                            </div>
-                                            
-                                                                        </li>
-                                                                    </ul>
-                                                            </li>
-                                                            <li class="param">
-                                                                    <code class="param-name">callback</code>
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function" class="crosslink external" target="_blank">Function</a></span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <p>The function to call once the level is loaded.</p>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                            
-                                            
-                                            </div>
-                                            <div id="method_&#x27;scene-loaded&#x27;" class="method item">
-                                                <h3 class="name"><code>&#x27;scene-loaded&#x27;</code></h3>
+                                            <div id="method_&#x27;layer-loaded&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;layer-loaded&#x27;</code></h3>
                                             
                                                     <div class="args">
                                                         <span class="paren">(</span><ul class="args-list inline commas">
@@ -466,7 +366,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l547"><code>&#x27;scene-loaded&#x27;:547</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l688"><code>&#x27;layer-loaded&#x27;:688</code></a>
                                                     </p>
                                             
                                             
@@ -543,6 +443,95 @@
                                             
                                             
                                             </div>
+                                            <div id="method_&#x27;load-level&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;load-level&#x27;</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>levelData</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>callback</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_TiledLoader.js.html#l708"><code>&#x27;load-level&#x27;:708</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>If <code>manuallyLoad</code> is set, the component will wait for this message before loading the Tiled map JSON definition.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">levelData</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                     
+                                                                </div>
+                                            
+                                                                    <ul class="params-list">
+                                                                        <li class="param">
+                                                                                <code class="param-name">level</code>
+                                                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                                                            <div class="param-description">
+                                                                                <p>The level to load.</p>
+                                            
+                                                                            </div>
+                                            
+                                                                        </li>
+                                                                        <li class="param">
+                                                                                <code class="param-name optional">[persistentData]</code>
+                                                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                                                                <span class="flag optional" title="This parameter is optional.">optional</span>
+                                            
+                                                                            <div class="param-description">
+                                                                                <p>Information passed from the last scene.</p>
+                                            
+                                                                            </div>
+                                            
+                                                                        </li>
+                                                                    </ul>
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">callback</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function" class="crosslink external" target="_blank">Function</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The function to call once the level is loaded.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
                                             <div id="method_addEventListener" class="method item private inherited">
                                                 <h3 class="name"><code>addEventListener</code></h3>
                                             
@@ -571,7 +560,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_addEventListener">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l112"><code>addEventListener:112</code></a>
+                                                    <a href="../files/src_Component.js.html#l111"><code>addEventListener:111</code></a>
                                                     </p>
                                             
                                             
@@ -644,7 +633,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_addMethod">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l131"><code>addMethod:131</code></a>
+                                                    <a href="../files/src_Component.js.html#l130"><code>addMethod:130</code></a>
                                                     </p>
                                             
                                             
@@ -684,73 +673,6 @@
                                             
                                             
                                             </div>
-                                            <div id="method_decodeLayer" class="method item">
-                                                <h3 class="name"><code>decodeLayer</code></h3>
-                                            
-                                                    <div class="args">
-                                                        <span class="paren">(</span><ul class="args-list inline commas">
-                                                            <li class="arg">
-                                                                    <code>layer</code>
-                                                            </li>
-                                                        </ul><span class="paren">)</span>
-                                                    </div>
-                                            
-                                                    <span class="returns-inline">
-                                                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
-                                                    </span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                    <span class="flag chainable">chainable</span>
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l1269"><code>decodeLayer:1269</code></a>
-                                                    </p>
-                                            
-                                            
-                                            
-                                                        <p>Available since 0.7.1</p>
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>This method decodes a Tiled layer and sets its data to CSV format.</p>
-                                            
-                                                </div>
-                                            
-                                                    <div class="params">
-                                                        <h4>Parameters:</h4>
-                                            
-                                                        <ul class="params-list">
-                                                            <li class="param">
-                                                                    <code class="param-name">layer</code>
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <p>An object describing a Tiled JSON-exported layer.</p>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                            
-                                                    <div class="returns">
-                                                        <h4>Returns:</h4>
-                                            
-                                                        <div class="returns-description">
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>:
-                                                                <p>The same object provided, but with the data field updated.</p>
-                                            
-                                                        </div>
-                                                    </div>
-                                            
-                                            </div>
                                             <div id="method_destroy" class="method item private inherited">
                                                 <h3 class="name"><code>destroy</code></h3>
                                             
@@ -767,7 +689,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_destroy">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l54"><code>destroy:54</code></a>
+                                                    <a href="../files/src_Component.js.html#l53"><code>destroy:53</code></a>
                                                     </p>
                                             
                                             
@@ -811,7 +733,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_getAssetList">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l188"><code>getAssetList:188</code></a>
+                                                    <a href="../files/src_Component.js.html#l187"><code>getAssetList:187</code></a>
                                                     </p>
                                             
                                             
@@ -869,68 +791,6 @@
                                                     </div>
                                             
                                             </div>
-                                            <div id="method_getLateAssetList" class="method item inherited">
-                                                <h3 class="name"><code>getLateAssetList</code></h3>
-                                            
-                                                    <div class="args">
-                                                        <span class="paren">(</span><ul class="args-list inline commas">
-                                                            <li class="arg">
-                                                                    <code>data</code>
-                                                            </li>
-                                                        </ul><span class="paren">)</span>
-                                                    </div>
-                                            
-                                                    <span class="returns-inline">
-                                                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>
-                                                    </span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>Inherited from
-                                                            <a href="../classes/platypus.Component.html#method_getLateAssetList">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l199"><code>getLateAssetList:199</code></a>
-                                                    </p>
-                                            
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    This method can be overwritten to provide the list of assets this component requires. This method is invoked when the list of game scenes is created to determine assets for each scene.
-                                                </div>
-                                            
-                                                    <div class="params">
-                                                        <h4>Parameters:</h4>
-                                            
-                                                        <ul class="params-list">
-                                                            <li class="param">
-                                                                    <code class="param-name">data</code>
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    Scene data that affects the list of assets.
-                                                                </div>
-                                            
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                            
-                                                    <div class="returns">
-                                                        <h4>Returns:</h4>
-                                            
-                                                        <div class="returns-description">
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>:
-                                                                A list of the necessary assets to load.
-                                                        </div>
-                                                    </div>
-                                            
-                                            </div>
                                             <div id="method_removeEventListener" class="method item private inherited">
                                                 <h3 class="name"><code>removeEventListener</code></h3>
                                             
@@ -956,7 +816,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_removeEventListener">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l150"><code>removeEventListener:150</code></a>
+                                                    <a href="../files/src_Component.js.html#l149"><code>removeEventListener:149</code></a>
                                                     </p>
                                             
                                             
@@ -1018,7 +878,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_removeEventListeners">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l85"><code>removeEventListeners:85</code></a>
+                                                    <a href="../files/src_Component.js.html#l84"><code>removeEventListeners:84</code></a>
                                                     </p>
                                             
                                             
@@ -1071,7 +931,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_removeMethod">platypus.Component</a>:
-                                                    <a href="../files/src_Component.js.html#l172"><code>removeMethod:172</code></a>
+                                                    <a href="../files/src_Component.js.html#l171"><code>removeMethod:171</code></a>
                                                     </p>
                                             
                                             
@@ -1124,7 +984,6 @@
                                             
                                             
                                             
-                                                        <p>Available since 0.11.0</p>
                                                 </div>
                                             
                                                 <div class="description">
@@ -1187,6 +1046,32 @@
                                     <div id="properties" class="api-class-tabpanel">
                                         <h2 class="off-left">Properties</h2>
                         
+                                            <div id="property_backgroundLoad" class="property item">
+                                                <h3 class="name"><code>backgroundLoad</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_TiledLoader.js.html#l631"><code>backgroundLoad:631</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Whether to continue loading <code>lazyLoad</code> entities in the background after level starts regardless of camera position. If <code>false</code>, entities with a <code>lazyLoad</code> property will only load once within camera range.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> true</p>
+                                            
+                                            
+                                            </div>
                                             <div id="property_entityPositionX" class="property item">
                                                 <h3 class="name"><code>entityPositionX</code></h3>
                                                 <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
@@ -1198,7 +1083,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l511"><code>entityPositionX:511</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l651"><code>entityPositionX:651</code></a>
                                                     </p>
                                             
                                             
@@ -1224,7 +1109,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l520"><code>entityPositionY:520</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l660"><code>entityPositionY:660</code></a>
                                                     </p>
                                             
                                             
@@ -1250,7 +1135,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l444"><code>images:444</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l595"><code>images:595</code></a>
                                                     </p>
                                             
                                             
@@ -1265,34 +1150,6 @@
                                             
                                             
                                             </div>
-                                            <div id="property_imagesScale" class="property item deprecated">
-                                                <h3 class="name"><code>imagesScale</code></h3>
-                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
-                                            
-                                                    <span class="flag deprecated" title="since v0.11.9">deprecated</span>
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l501"><code>imagesScale:501</code></a>
-                                                    </p>
-                                            
-                                                        <p>Deprecated: since v0.11.9</p>
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>If images are provided, this property sets the scale of the art relative to world coordinates. Available on the entity as <code>entity.imagesScale</code>.</p>
-                                            
-                                                </div>
-                                            
-                                                    <p><strong>Default:</strong> 1</p>
-                                            
-                                            
-                                            </div>
                                             <div id="property_layerIncrement" class="property item">
                                                 <h3 class="name"><code>layerIncrement</code></h3>
                                                 <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
@@ -1304,7 +1161,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l453"><code>layerIncrement:453</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l604"><code>layerIncrement:604</code></a>
                                                     </p>
                                             
                                             
@@ -1330,7 +1187,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l483"><code>level:483</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l642"><code>level:642</code></a>
                                                     </p>
                                             
                                             
@@ -1356,7 +1213,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l529"><code>manuallyLoad:529</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l669"><code>manuallyLoad:669</code></a>
                                                     </p>
                                             
                                             
@@ -1382,11 +1239,10 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l425"><code>offsetMap:425</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l577"><code>offsetMap:577</code></a>
                                                     </p>
                                             
                                             
-                                                        <p>Available since 0.7.5</p>
                                                 </div>
                                             
                                                 <div class="description">
@@ -1409,7 +1265,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l462"><code>separateTiles:462</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l613"><code>separateTiles:613</code></a>
                                                     </p>
                                             
                                             
@@ -1435,7 +1291,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l435"><code>showCollisionTiles:435</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l586"><code>showCollisionTiles:586</code></a>
                                                     </p>
                                             
                                             
@@ -1461,11 +1317,10 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l471"><code>spriteSheet:471</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l622"><code>spriteSheet:622</code></a>
                                                     </p>
                                             
                                             
-                                                        <p>Available since 0.6.6</p>
                                                 </div>
                                             
                                                 <div class="description">
@@ -1474,32 +1329,6 @@
                                                 </div>
                                             
                                                     <p><strong>Default:</strong> null</p>
-                                            
-                                            
-                                            </div>
-                                            <div id="property_unitsPerPixel" class="property item">
-                                                <h3 class="name"><code>unitsPerPixel</code></h3>
-                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l492"><code>unitsPerPixel:492</code></a>
-                                                    </p>
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>Sets how many world units in width and height correspond to a single pixel in the Tiled map. Default is 1: One pixel is one world unit. Available on the entity as <code>entity.unitsPerPixel</code>.</p>
-                                            
-                                                </div>
-                                            
-                                                    <p><strong>Default:</strong> 1</p>
                                             
                                             
                                             </div>
@@ -1520,11 +1349,10 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l1246"><code>&#x27;level-loading-progress&#x27;:1246</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l1412"><code>&#x27;level-loading-progress&#x27;:1412</code></a>
                                                     </p>
                                             
                                             
-                                                        <p>Available since 0.8.3</p>
                                                 </div>
                                             
                                                 <div class="description">
@@ -1595,7 +1423,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l93"><code>&#x27;world-loaded&#x27;:93</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l118"><code>&#x27;world-loaded&#x27;:118</code></a>
                                                     </p>
                                             
                                             
@@ -1677,6 +1505,16 @@
                                             
                                                                             <div class="param-description">
                                                                                 <p>If a camera property is found on one of the loaded entities, this property will point to the entity on load that a world camera should focus on.</p>
+                                            
+                                                                            </div>
+                                            
+                                                                        </li>
+                                                                        <li class="param">
+                                                                                <code class="param-name">lazyLoads</code>
+                                                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>
+                                            
+                                                                            <div class="param-description">
+                                                                                <p>List of objects representing entity definitions that will await camera focus before generating actual entities.</p>
                                             
                                                                             </div>
                                             

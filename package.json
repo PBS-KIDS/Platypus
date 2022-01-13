@@ -1,6 +1,6 @@
 {
     "name": "platypus",
-    "version": "2.0.0-beta",
+    "version": "2.0.0",
     "description": "Platypus Docs",
     "license": "MIT",
     "main": "lib/platypus.js",
@@ -14,7 +14,8 @@
     "scripts": {
         "start": "webpack-dev-server --env.dev",
         "build:release": "webpack --env.prod",
-        "build:debug": "webpack --env.dev"
+        "build:debug": "webpack --env.dev",
+        "build:docs": "grunt build"
     },
     "dependencies": {
         "@tweenjs/tween.js": "18.3.1",
@@ -29,7 +30,6 @@
         "grunt-contrib-compress": "^0.13.0",
         "grunt-contrib-concat": "^1.0.1",
         "grunt-contrib-copy": "^0.8.0",
-        "grunt-contrib-uglify": "^0.9.1",
         "grunt-contrib-yuidoc": "^0.8.0",
         "lodash": "^3.10.0",
         "pako": "^0.2.8",

@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../assets/css/yui-cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
+    <script src="../assets/js/yui-source.js"></script>
+	<title>platypus v2.0.0 API Documentation : platypus.VOPlayer</title>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+                <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Documentation for: 2.0.0</em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+                    <h2 class="off-left">APIs</h2>
+                    <div id="api-tabview" class="tabview">
+                        <ul class="tabs">
+                            <li><a href="#api-classes">Classes</a></li>
+                        </ul>
+                
+                        <div id="api-tabview-filter">
+                            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+                        </div>
+                
+                        <div id="api-tabview-panel">
+                            <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/platypus.AABB.html">platypus.AABB</a></li>
+                                <li><a href="../classes/platypus.ActionState.html">platypus.ActionState</a></li>
+                                <li><a href="../classes/platypus.AssetManager.html">platypus.AssetManager</a></li>
+                                <li><a href="../classes/platypus.Async.html">platypus.Async</a></li>
+                                <li><a href="../classes/platypus.CollisionData.html">platypus.CollisionData</a></li>
+                                <li><a href="../classes/platypus.CollisionDataContainer.html">platypus.CollisionDataContainer</a></li>
+                                <li><a href="../classes/platypus.CollisionShape.html">platypus.CollisionShape</a></li>
+                                <li><a href="../classes/platypus.Component.html">platypus.Component</a></li>
+                                <li><a href="../classes/platypus.components.AIChaser.html">platypus.components.AIChaser</a></li>
+                                <li><a href="../classes/platypus.components.AIPacer.html">platypus.components.AIPacer</a></li>
+                                <li><a href="../classes/platypus.components.AudioMusic.html">platypus.components.AudioMusic</a></li>
+                                <li><a href="../classes/platypus.components.AudioSFX.html">platypus.components.AudioSFX</a></li>
+                                <li><a href="../classes/platypus.components.AudioVO.html">platypus.components.AudioVO</a></li>
+                                <li><a href="../classes/platypus.components.Camera.html">platypus.components.Camera</a></li>
+                                <li><a href="../classes/platypus.components.CameraFollowMe.html">platypus.components.CameraFollowMe</a></li>
+                                <li><a href="../classes/platypus.components.CollisionBasic.html">platypus.components.CollisionBasic</a></li>
+                                <li><a href="../classes/platypus.components.CollisionFilter.html">platypus.components.CollisionFilter</a></li>
+                                <li><a href="../classes/platypus.components.CollisionGroup.html">platypus.components.CollisionGroup</a></li>
+                                <li><a href="../classes/platypus.components.CollisionTiles.html">platypus.components.CollisionTiles</a></li>
+                                <li><a href="../classes/platypus.components.ComponentSwitcher.html">platypus.components.ComponentSwitcher</a></li>
+                                <li><a href="../classes/platypus.components.Counter.html">platypus.components.Counter</a></li>
+                                <li><a href="../classes/platypus.components.EntityContainer.html">platypus.components.EntityContainer</a></li>
+                                <li><a href="../classes/platypus.components.EntityController.html">platypus.components.EntityController</a></li>
+                                <li><a href="../classes/platypus.components.HandlerCollision.html">platypus.components.HandlerCollision</a></li>
+                                <li><a href="../classes/platypus.components.HandlerController.html">platypus.components.HandlerController</a></li>
+                                <li><a href="../classes/platypus.components.HandlerLogic.html">platypus.components.HandlerLogic</a></li>
+                                <li><a href="../classes/platypus.components.HandlerRender.html">platypus.components.HandlerRender</a></li>
+                                <li><a href="../classes/platypus.components.Interactive.html">platypus.components.Interactive</a></li>
+                                <li><a href="../classes/platypus.components.LevelBuilder.html">platypus.components.LevelBuilder</a></li>
+                                <li><a href="../classes/platypus.components.LogicAngularMovement.html">platypus.components.LogicAngularMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicAttachment.html">platypus.components.LogicAttachment</a></li>
+                                <li><a href="../classes/platypus.components.LogicButton.html">platypus.components.LogicButton</a></li>
+                                <li><a href="../classes/platypus.components.LogicCarrier.html">platypus.components.LogicCarrier</a></li>
+                                <li><a href="../classes/platypus.components.LogicDestroyMe.html">platypus.components.LogicDestroyMe</a></li>
+                                <li><a href="../classes/platypus.components.LogicDirectionalMovement.html">platypus.components.LogicDirectionalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
+                                <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
+                                <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicTimer.html">platypus.components.LogicTimer</a></li>
+                                <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
+                                <li><a href="../classes/platypus.components.Motion.html">platypus.components.Motion</a></li>
+                                <li><a href="../classes/platypus.components.Mover.html">platypus.components.Mover</a></li>
+                                <li><a href="../classes/platypus.components.NodeMap.html">platypus.components.NodeMap</a></li>
+                                <li><a href="../classes/platypus.components.NodeResident.html">platypus.components.NodeResident</a></li>
+                                <li><a href="../classes/platypus.components.Orientation.html">platypus.components.Orientation</a></li>
+                                <li><a href="../classes/platypus.components.RandomEvents.html">platypus.components.RandomEvents</a></li>
+                                <li><a href="../classes/platypus.components.RelativePosition.html">platypus.components.RelativePosition</a></li>
+                                <li><a href="../classes/platypus.components.RelayFamily.html">platypus.components.RelayFamily</a></li>
+                                <li><a href="../classes/platypus.components.RelayGame.html">platypus.components.RelayGame</a></li>
+                                <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
+                                <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
+                                <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
+                                <li><a href="../classes/platypus.components.RenderAnimator.html">platypus.components.RenderAnimator</a></li>
+                                <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
+                                <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
+                                <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
+                                <li><a href="../classes/platypus.components.RenderProgress.html">platypus.components.RenderProgress</a></li>
+                                <li><a href="../classes/platypus.components.RenderSpine.html">platypus.components.RenderSpine</a></li>
+                                <li><a href="../classes/platypus.components.RenderSprite.html">platypus.components.RenderSprite</a></li>
+                                <li><a href="../classes/platypus.components.RenderText.html">platypus.components.RenderText</a></li>
+                                <li><a href="../classes/platypus.components.RenderTiles.html">platypus.components.RenderTiles</a></li>
+                                <li><a href="../classes/platypus.components.SceneChanger.html">platypus.components.SceneChanger</a></li>
+                                <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
+                                <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
+                                <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
+                                <li><a href="../classes/platypus.components.Tween.html">platypus.components.Tween</a></li>
+                                <li><a href="../classes/platypus.components.VoiceOver.html">platypus.components.VoiceOver</a></li>
+                                <li><a href="../classes/platypus.components.XHR.html">platypus.components.XHR</a></li>
+                                <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
+                                <li><a href="../classes/platypus.DataMap.html">platypus.DataMap</a></li>
+                                <li><a href="../classes/platypus.Entity.html">platypus.Entity</a></li>
+                                <li><a href="../classes/platypus.EntityLinker.html">platypus.EntityLinker</a></li>
+                                <li><a href="../classes/platypus.Game.html">platypus.Game</a></li>
+                                <li><a href="../classes/platypus.Gamepad.html">platypus.Gamepad</a></li>
+                                <li><a href="../classes/platypus.Messenger.html">platypus.Messenger</a></li>
+                                <li><a href="../classes/platypus.PIXIAnimation.html">platypus.PIXIAnimation</a></li>
+                                <li><a href="../classes/platypus.SFXPlayer.html">platypus.SFXPlayer</a></li>
+                                <li><a href="../classes/platypus.StateMap.html">platypus.StateMap</a></li>
+                                <li><a href="../classes/platypus.Storage.html">platypus.Storage</a></li>
+                                <li><a href="../classes/platypus.Vector.html">platypus.Vector</a></li>
+                                <li><a href="../classes/platypus.VOPlayer.html">platypus.VOPlayer</a></li>
+                                <li><a href="../classes/window.Map.html">window.Map</a></li>
+                            </ul>
+                
+                            <ul id="api-modules" class="apis modules">
+                                <li><a href="../modules/platypus.html">platypus</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+            <div id="api-options">
+                    Show:
+                    <label for="api-show-inherited">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </div>            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1>platypus.VOPlayer Class</h1>
+                        <div class="box meta">
+                        
+                        
+                                <div class="foundat">
+                                    Defined in: <a href="../files/src_VOPlayer.js.html#l1"><code>platypus.VOPlayer:1</code></a>
+                                </div>
+                        
+                                    Module: <a href="../modules/platypus.html">platypus</a>
+                        
+                        </div>
+                        
+                        
+                        <div class="box intro">
+                            <p>This class is used to create <code>platypus.game.voPlayer</code> and manages playback by only playing one at a time, playing a list, and even handling captions at the same time.</p>
+                        <p>This class borrows heavily from SpringRoll v1 to match the original capabilities exposed for Platypus v1.</p>
+                        
+                        </div>
+                        
+                            <div class="constructor">
+                                <h2>Constructor</h2>
+                                <div id="method_platypus.VOPlayer" class="method item">
+                                    <h3 class="name"><code>platypus.VOPlayer</code></h3>
+                                
+                                        <div class="args">
+                                            <span class="paren">(</span><ul class="args-list inline commas">
+                                                <li class="arg">
+                                                        <code>game</code>
+                                                </li>
+                                                <li class="arg">
+                                                        <code>assetCache</code>
+                                                </li>
+                                            </ul><span class="paren">)</span>
+                                        </div>
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                    <div class="meta">
+                                                <p>
+                                                Defined in
+                                        <a href="../files/src_VOPlayer.js.html#l1"><code>platypus.VOPlayer:1</code></a>
+                                        </p>
+                                
+                                
+                                
+                                    </div>
+                                
+                                    <div class="description">
+                                        
+                                    </div>
+                                
+                                        <div class="params">
+                                            <h4>Parameters:</h4>
+                                
+                                            <ul class="params-list">
+                                                <li class="param">
+                                                        <code class="param-name">game</code>
+                                                        <span class="type">Game</span>
+                                
+                                
+                                                    <div class="param-description">
+                                                        <p>The game instance for which to play audio.</p>
+                                
+                                                    </div>
+                                
+                                                </li>
+                                                <li class="param">
+                                                        <code class="param-name">assetCache</code>
+                                                        <span class="type">AssetManager</span>
+                                
+                                
+                                                    <div class="param-description">
+                                                        <p>The Platypus assetManager used to load and unload VO clips.</p>
+                                
+                                                    </div>
+                                
+                                                </li>
+                                            </ul>
+                                        </div>
+                                
+                                
+                                </div>
+                            </div>
+                        
+                        <div id="classdocs" class="tabview">
+                            <ul class="api-class-tabs">
+                                <li class="api-class-tab index"><a href="#index">Index</a></li>
+                        
+                                    <li class="api-class-tab methods"><a href="#methods">Methods</a></li>
+                                    <li class="api-class-tab properties"><a href="#properties">Properties</a></li>
+                                    <li class="api-class-tab events"><a href="#events">Events</a></li>
+                            </ul>
+                        
+                            <div>
+                                <div id="index" class="api-class-tabpanel index">
+                                    <h2 class="off-left">Item Index</h2>
+                        
+                                        <div class="index-section methods">
+                                            <h3>Methods</h3>
+                        
+                                            <ul class="index-list methods">
+                                                    <li class="index-item method private">
+                                                        <a href="#method__onSoundFinished">_onSoundFinished</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method private">
+                                                        <a href="#method__playSound">_playSound</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method private">
+                                                        <a href="#method__syncCaptionToSound">_syncCaptionToSound</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method private">
+                                                        <a href="#method__updateSilence">_updateSilence</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method public">
+                                                        <a href="#method_destroy">destroy</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_getElapsed">getElapsed</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method public">
+                                                        <a href="#method_pause">pause</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method public">
+                                                        <a href="#method_play">play</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method public">
+                                                        <a href="#method_resume">resume</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_setCaptionMute">setCaptionMute</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_setVolume">setVolume</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method public">
+                                                        <a href="#method_stop">stop</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method public">
+                                                        <a href="#method_unloadSound">unloadSound</a>
+                        
+                                                    </li>
+                                            </ul>
+                                        </div>
+                        
+                                        <div class="index-section properties">
+                                            <h3>Properties</h3>
+                        
+                                            <ul class="index-list properties">
+                                                    <li class="index-item property private">
+                                                        <a href="#property__callback">_callback</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property private">
+                                                        <a href="#property__cancelledCallback">_cancelledCallback</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property private">
+                                                        <a href="#property__captions">_captions</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property private">
+                                                        <a href="#property__currentVO">_currentVO</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property private">
+                                                        <a href="#property__listCounter">_listCounter</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property private">
+                                                        <a href="#property__soundInstance">_soundInstance</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property private">
+                                                        <a href="#property__timer">_timer</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property public">
+                                                        <a href="#property_captions">captions</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_currentDuration">currentDuration</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_currentPosition">currentPosition</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property public">
+                                                        <a href="#property_currentVO">currentVO</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property public">
+                                                        <a href="#property_paused">paused</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property public">
+                                                        <a href="#property_playing">playing</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property private">
+                                                        <a href="#property_preloadingNextSound">preloadingNextSound</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property public">
+                                                        <a href="#property_voList">voList</a>
+                        
+                                                    </li>
+                                            </ul>
+                                        </div>
+                        
+                        
+                                        <div class="index-section events">
+                                            <h3>Events</h3>
+                        
+                                            <ul class="index-list events">
+                                                    <li class="index-item event">
+                                                        <a href="#event_end">end</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_start">start</a>
+                        
+                                                    </li>
+                                            </ul>
+                                        </div>
+                                </div>
+                        
+                                    <div id="methods" class="api-class-tabpanel">
+                                        <h2 class="off-left">Methods</h2>
+                        
+                                            <div id="method__onSoundFinished" class="method item private">
+                                                <h3 class="name"><code>_onSoundFinished</code></h3>
+                                            
+                                                    <span class="paren">()</span>
+                                            
+                                            
+                                            
+                                                    <span class="flag private">private</span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_VOPlayer.js.html#l319"><code>_onSoundFinished:319</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Callback for when audio/timer is finished to advance to the next item in the list.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="method__playSound" class="method item private">
+                                                <h3 class="name"><code>_playSound</code></h3>
+                                            
+                                                    <span class="paren">()</span>
+                                            
+                                            
+                                            
+                                                    <span class="flag private">private</span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_VOPlayer.js.html#l420"><code>_playSound:420</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Plays the current audio item and begins preloading the next item.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="method__syncCaptionToSound" class="method item private">
+                                                <h3 class="name"><code>_syncCaptionToSound</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>elapsed</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                                    <span class="flag private">private</span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_VOPlayer.js.html#l407"><code>_syncCaptionToSound:407</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The update callback used for updating captions with active audio.
+                                            This method is bound to the VOPlayer instance.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">elapsed</code>
+                                                                    <span class="type">Int</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The time elapsed since the previous frame, in milliseconds.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method__updateSilence" class="method item private">
+                                                <h3 class="name"><code>_updateSilence</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>elapsed</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                                    <span class="flag private">private</span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_VOPlayer.js.html#l392"><code>_updateSilence:392</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The update callback used for silence timers.
+                                            This method is bound to the VOPlayer instance.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">elapsed</code>
+                                                                    <span class="type">Int</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The time elapsed since the previous frame, in milliseconds.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_destroy" class="method item public">
+                                                <h3 class="name"><code>destroy</code></h3>
+                                            
+                                                    <span class="paren">()</span>
+                                            
+                                            
+                                            
+                                                    <span class="flag public">public</span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_VOPlayer.js.html#l574"><code>destroy:574</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Cleans up this VOPlayer.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="method_getElapsed" class="method item">
+                                                <h3 class="name"><code>getElapsed</code></h3>
+                                            
+                                                    <span class="paren">()</span>
+                                            
+                                                    <span class="returns-inline">
+                                                        <span class="type">Int</span>
+                                                    </span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_VOPlayer.js.html#l195"><code>getElapsed:195</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Calculates the amount of time elapsed in the current playlist of audio/silence.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                                    <div class="returns">
+                                                        <h4>Returns:</h4>
+                                            
+                                                        <div class="returns-description">
+                                                                    <span class="type">Int</span>:
+                                                                <p>The elapsed time in milliseconds.</p>
+                                            
+                                                        </div>
+                                                    </div>
+                                            
+                                            </div>
+                                            <div id="method_pause" class="method item public">
+                                                <h3 class="name"><code>pause</code></h3>
+                                            
+                                                    <span class="paren">()</span>
+                                            
+                                            
+                                            
+                                                    <span class="flag public">public</span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_VOPlayer.js.html#l235"><code>pause:235</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Pauses the current VO, caption, or silence timer if the VOPlayer is playing.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="method_play" class="method item public">
+                                                <h3 class="name"><code>play</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>idOrList</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code class="optional">[callback]</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code class="optional">[cancelledCallback]</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                                    <span class="flag public">public</span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_VOPlayer.js.html#l276"><code>play:276</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Plays a single audio alias, interrupting any current playback.
+                                            Alternatively, plays a list of audio files, timers, and/or functions.
+                                            Audio in the list will be preloaded to minimize pauses for loading.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">idOrList</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The alias of the audio file to play or the
+                                            array of items to play/call in order.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name optional">[callback]</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function" class="crosslink external" target="_blank">Function</a></span>
+                                                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The function to call when playback is complete.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name optional">[cancelledCallback]</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function" class="crosslink external" target="_blank">Function</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The function to call when playback
+                                            is interrupted with a stop() or play() call. If this value is a boolean
+                                            <code>true</code> then callback will be used instead.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_resume" class="method item public">
+                                                <h3 class="name"><code>resume</code></h3>
+                                            
+                                                    <span class="paren">()</span>
+                                            
+                                            
+                                            
+                                                    <span class="flag public">public</span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_VOPlayer.js.html#l253"><code>resume:253</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Resumes the current VO, caption, or silence timer if the VOPlayer was paused.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="method_setCaptionMute" class="method item">
+                                                <h3 class="name"><code>setCaptionMute</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>muted</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_VOPlayer.js.html#l546"><code>setCaptionMute:546</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Whether to mute captions.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">muted</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                     
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_setVolume" class="method item">
+                                                <h3 class="name"><code>setVolume</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>volume</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_VOPlayer.js.html#l533"><code>setVolume:533</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Sets the volume of VO playback.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">volume</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                     
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_stop" class="method item public">
+                                                <h3 class="name"><code>stop</code></h3>
+                                            
+                                                    <span class="paren">()</span>
+                                            
+                                            
+                                            
+                                                    <span class="flag public">public</span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_VOPlayer.js.html#l492"><code>stop:492</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Stops playback of any audio/timer.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="method_unloadSound" class="method item public">
+                                                <h3 class="name"><code>unloadSound</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>sound</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                                    <span class="flag public">public</span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_VOPlayer.js.html#l559"><code>unloadSound:559</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Unloads an audio track this VOPlayer has played.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">sound</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>Sound to unload.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                    </div>
+                        
+                                    <div id="properties" class="api-class-tabpanel">
+                                        <h2 class="off-left">Properties</h2>
+                        
+                                            <div id="property__callback" class="property item private">
+                                                <h3 class="name"><code>_callback</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function" class="crosslink external" target="_blank">Function</a></span>
+                                            
+                                            
+                                                    <span class="flag private">private</span>
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_VOPlayer.js.html#l75"><code>_callback:75</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The callback for when the list is finished.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="property__cancelledCallback" class="property item private">
+                                                <h3 class="name"><code>_cancelledCallback</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function" class="crosslink external" target="_blank">Function</a></span>
+                                            
+                                            
+                                                    <span class="flag private">private</span>
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_VOPlayer.js.html#l82"><code>_cancelledCallback:82</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The callback for when the list is interrupted for any reason.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="property__captions" class="property item private">
+                                                <h3 class="name"><code>_captions</code></h3>
+                                                <span class="type">springroll.Captions</span>
+                                            
+                                            
+                                                    <span class="flag private">private</span>
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_VOPlayer.js.html#l96"><code>_captions:96</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The captions object</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="property__currentVO" class="property item private">
+                                                <h3 class="name"><code>_currentVO</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                                            
+                                            
+                                                    <span class="flag private">private</span>
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_VOPlayer.js.html#l61"><code>_currentVO:61</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The current audio alias being played.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="property__listCounter" class="property item private">
+                                                <h3 class="name"><code>_listCounter</code></h3>
+                                                <span class="type">Int</span>
+                                            
+                                            
+                                                    <span class="flag private">private</span>
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_VOPlayer.js.html#l54"><code>_listCounter:54</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The current position in voList.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="property__soundInstance" class="property item private">
+                                                <h3 class="name"><code>_soundInstance</code></h3>
+                                                <span class="type">SoundInstance</span>
+                                            
+                                            
+                                                    <span class="flag private">private</span>
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_VOPlayer.js.html#l68"><code>_soundInstance:68</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The current audio instance being played.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="property__timer" class="property item private">
+                                                <h3 class="name"><code>_timer</code></h3>
+                                                <span class="type">Int</span>
+                                            
+                                            
+                                                    <span class="flag private">private</span>
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_VOPlayer.js.html#l89"><code>_timer:89</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>A timer for silence entries in the list, in milliseconds.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="property_captions" class="property item public">
+                                                <h3 class="name"><code>captions</code></h3>
+                                                <span class="type">Captions</span>
+                                            
+                                            
+                                                    <span class="flag public">public</span>
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_VOPlayer.js.html#l142"><code>captions:142</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The springroll.Captions object used for captions. The developer is responsible for initializing this with a captions dictionary config file and a reference to a text field.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="property_currentDuration" class="property item">
+                                                <h3 class="name"><code>currentDuration</code></h3>
+                                                <span class="type">Int</span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_VOPlayer.js.html#l176"><code>currentDuration:176</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The duration of the currently playing item of audio/silence in milliseconds. If this is waiting on an audio file to load for the first time, it will be 0, as there is no duration data to give.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="property_currentPosition" class="property item">
+                                                <h3 class="name"><code>currentPosition</code></h3>
+                                                <span class="type">Int</span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_VOPlayer.js.html#l159"><code>currentPosition:159</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The amount of time elapsed in the currently playing item of audio/silence in milliseconds</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="property_currentVO" class="property item public">
+                                                <h3 class="name"><code>currentVO</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                                    <span class="flag public">public</span>
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_VOPlayer.js.html#l131"><code>currentVO:131</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The current VO alias that is playing, even if it is just a caption. If a silence timer
+                                            is running, currentVO will be null.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="property_paused" class="property item public">
+                                                <h3 class="name"><code>paused</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                                    <span class="flag public">public</span>
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_VOPlayer.js.html#l37"><code>paused:37</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>If the sound is currently paused. Setting this has no effect - use pause()
+                                            and resume().</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="property_playing" class="property item public">
+                                                <h3 class="name"><code>playing</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                                    <span class="flag public">public</span>
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_VOPlayer.js.html#l121"><code>playing:121</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>If VOPlayer is currently playing (audio or silence).</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="property_preloadingNextSound" class="property item private">
+                                                <h3 class="name"><code>preloadingNextSound</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                                            
+                                            
+                                                    <span class="flag private">private</span>
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_VOPlayer.js.html#l30"><code>preloadingNextSound:30</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Preloading next sound.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="property_voList" class="property item public">
+                                                <h3 class="name"><code>voList</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>
+                                            
+                                            
+                                                    <span class="flag public">public</span>
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_VOPlayer.js.html#l46"><code>voList:46</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The current list of audio/silence times/functions.
+                                            Generally you will not need to modify this.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                    </div>
+                        
+                        
+                                    <div id="events" class="api-class-tabpanel">
+                                        <h2 class="off-left">Events</h2>
+                        
+                                            <div id="event_end" class="events item">
+                                                <h3 class="name"><code>end</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_VOPlayer.js.html#l115"><code>end:115</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Fired when a new VO, caption, or silence timer completes</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">currentVO</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The alias of the VO or caption that has begun, or null if it is a silence timer.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_start" class="events item">
+                                                <h3 class="name"><code>start</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_VOPlayer.js.html#l109"><code>start:109</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Fired when a new VO, caption, or silence timer begins</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">currentVO</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The alias of the VO or caption that has begun, or null if it is a silence timer.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

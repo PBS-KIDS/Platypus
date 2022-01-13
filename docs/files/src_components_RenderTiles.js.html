@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v1.0.2 API Documentation : src\components\RenderTiles.js</title>
+	<title>platypus v2.0.0 API Documentation : src\components\RenderTiles.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 1.0.2</em>
+            <em>API Documentation for: 2.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/platypus.AABB.html">platypus.AABB</a></li>
                                 <li><a href="../classes/platypus.ActionState.html">platypus.ActionState</a></li>
+                                <li><a href="../classes/platypus.AssetManager.html">platypus.AssetManager</a></li>
                                 <li><a href="../classes/platypus.Async.html">platypus.Async</a></li>
                                 <li><a href="../classes/platypus.CollisionData.html">platypus.CollisionData</a></li>
                                 <li><a href="../classes/platypus.CollisionDataContainer.html">platypus.CollisionDataContainer</a></li>
@@ -46,6 +47,7 @@
                                 <li><a href="../classes/platypus.Component.html">platypus.Component</a></li>
                                 <li><a href="../classes/platypus.components.AIChaser.html">platypus.components.AIChaser</a></li>
                                 <li><a href="../classes/platypus.components.AIPacer.html">platypus.components.AIPacer</a></li>
+                                <li><a href="../classes/platypus.components.AudioMusic.html">platypus.components.AudioMusic</a></li>
                                 <li><a href="../classes/platypus.components.AudioSFX.html">platypus.components.AudioSFX</a></li>
                                 <li><a href="../classes/platypus.components.AudioVO.html">platypus.components.AudioVO</a></li>
                                 <li><a href="../classes/platypus.components.Camera.html">platypus.components.Camera</a></li>
@@ -58,7 +60,6 @@
                                 <li><a href="../classes/platypus.components.Counter.html">platypus.components.Counter</a></li>
                                 <li><a href="../classes/platypus.components.EntityContainer.html">platypus.components.EntityContainer</a></li>
                                 <li><a href="../classes/platypus.components.EntityController.html">platypus.components.EntityController</a></li>
-                                <li><a href="../classes/platypus.components.EventRender.html">platypus.components.EventRender</a></li>
                                 <li><a href="../classes/platypus.components.HandlerCollision.html">platypus.components.HandlerCollision</a></li>
                                 <li><a href="../classes/platypus.components.HandlerController.html">platypus.components.HandlerController</a></li>
                                 <li><a href="../classes/platypus.components.HandlerLogic.html">platypus.components.HandlerLogic</a></li>
@@ -74,6 +75,7 @@
                                 <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicTimer.html">platypus.components.LogicTimer</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
                                 <li><a href="../classes/platypus.components.Motion.html">platypus.components.Motion</a></li>
                                 <li><a href="../classes/platypus.components.Mover.html">platypus.components.Mover</a></li>
@@ -87,7 +89,7 @@
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
-                                <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
+                                <li><a href="../classes/platypus.components.RenderAnimator.html">platypus.components.RenderAnimator</a></li>
                                 <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
@@ -97,7 +99,6 @@
                                 <li><a href="../classes/platypus.components.RenderText.html">platypus.components.RenderText</a></li>
                                 <li><a href="../classes/platypus.components.RenderTiles.html">platypus.components.RenderTiles</a></li>
                                 <li><a href="../classes/platypus.components.SceneChanger.html">platypus.components.SceneChanger</a></li>
-                                <li><a href="../classes/platypus.components.StateRender.html">platypus.components.StateRender</a></li>
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
@@ -107,16 +108,17 @@
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
                                 <li><a href="../classes/platypus.DataMap.html">platypus.DataMap</a></li>
                                 <li><a href="../classes/platypus.Entity.html">platypus.Entity</a></li>
+                                <li><a href="../classes/platypus.EntityLinker.html">platypus.EntityLinker</a></li>
                                 <li><a href="../classes/platypus.Game.html">platypus.Game</a></li>
+                                <li><a href="../classes/platypus.Gamepad.html">platypus.Gamepad</a></li>
                                 <li><a href="../classes/platypus.Messenger.html">platypus.Messenger</a></li>
                                 <li><a href="../classes/platypus.PIXIAnimation.html">platypus.PIXIAnimation</a></li>
-                                <li><a href="../classes/platypus.PlatypusPlugin.html">platypus.PlatypusPlugin</a></li>
-                                <li><a href="../classes/platypus.Scene.html">platypus.Scene</a></li>
+                                <li><a href="../classes/platypus.SFXPlayer.html">platypus.SFXPlayer</a></li>
                                 <li><a href="../classes/platypus.StateMap.html">platypus.StateMap</a></li>
+                                <li><a href="../classes/platypus.Storage.html">platypus.Storage</a></li>
                                 <li><a href="../classes/platypus.Vector.html">platypus.Vector</a></li>
-                                <li><a href="../classes/window.Array.html">window.Array</a></li>
+                                <li><a href="../classes/platypus.VOPlayer.html">platypus.VOPlayer</a></li>
                                 <li><a href="../classes/window.Map.html">window.Map</a></li>
-                                <li><a href="../classes/window.String.html">window.String</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -170,31 +172,19 @@
                          * @class RenderTiles
                          * @uses platypus.Component
                          */
-                        /* global include, platypus, recycle, springroll */
-                        (function () {
-                            &#x27;use strict&#x27;;
+                        /* global platypus */
+                        import {Container, Graphics, Rectangle, RenderTexture, Sprite} from &#x27;pixi.js&#x27;;
+                        import {arrayCache, greenSlice, greenSplice, union} from &#x27;../utils/array.js&#x27;;
+                        import AABB from &#x27;../AABB.js&#x27;;
+                        import PIXIAnimation from &#x27;../PIXIAnimation.js&#x27;;
+                        import RenderContainer from &#x27;./RenderContainer.js&#x27;;
+                        import config from &#x27;config&#x27;;
+                        import createComponentClass from &#x27;../factory.js&#x27;;
+                        import recycle from &#x27;recycle&#x27;;
                         
+                        export default (function () {
                             var EDGE_BLEED = 1,
                                 EDGES_BLEED = EDGE_BLEED * 2,
-                                AABB              = include(&#x27;platypus.AABB&#x27;),
-                                PIXIAnimation     = include(&#x27;platypus.PIXIAnimation&#x27;),
-                                Application       = include(&#x27;springroll.Application&#x27;),
-                                CanvasRenderer    = include(&#x27;PIXI.CanvasRenderer&#x27;),
-                                Container         = include(&#x27;PIXI.Container&#x27;),
-                                Graphics          = include(&#x27;PIXI.Graphics&#x27;),
-                                ParticleContainer = Container, //Excluding ParticleContainer atm due to https://github.com/pixijs/pixi.js/issues/4008 -- include(&#x27;PIXI.particles.ParticleContainer&#x27;),
-                                Rectangle = include(&#x27;PIXI.Rectangle&#x27;),
-                                RenderContainer = include(&#x27;platypus.components.RenderContainer&#x27;),
-                                RenderTexture = include(&#x27;PIXI.RenderTexture&#x27;),
-                                Sprite            = include(&#x27;PIXI.Sprite&#x27;),
-                                clearRenderTexture = function (renderer, renderTexture, clearColor) { // This is pulled from https://github.com/pixijs/pixi.js/pull/3647 and should be in a future build of PIXI
-                                    var baseTexture = renderTexture.baseTexture,
-                                        renderTarget = baseTexture._glRenderTargets[renderer.CONTEXT_UID];
-                                        
-                                    if (renderTarget) {
-                                        renderTarget.clear(clearColor);
-                                    }
-                                },
                                 doNothing = function () {
                                     return null;
                                 },
@@ -212,8 +202,6 @@
                                     return x;
                                 },
                                 transformCheck = function (v, tile) {
-                                    var x = 0;
-                        
                                     if (0x80000000 &amp; v) {
                                         tile.scale.x = -1;
                                     }
@@ -221,7 +209,7 @@
                                         tile.scale.y = -1;
                                     }
                                     if (0x20000000 &amp; v) {
-                                        x = tile.scale.x;
+                                        const x = tile.scale.x;
                                         tile.scale.x = tile.scale.y;
                                         tile.scale.y = -x;
                                         tile.rotation = Math.PI / 2;
@@ -229,7 +217,7 @@
                                 },
                                 Template = function (tileSpriteSheet, id, uninitializedTiles) {
                                     this.id = id;
-                                    this.instances = Array.setUp();
+                                    this.instances = arrayCache.setUp();
                                     this.index = 0;
                         
                                     // jit sprite
@@ -252,14 +240,15 @@
                             };
                         
                             prototype.initialize = function () {
-                                var index = +(this.id.substring(4)),
+                                const
+                                    index = +(this.id.substring(4)),
                                     anim = &#x27;tile&#x27; + (0x0fffffff &amp; index),
                                     tile = new Sprite((this.tileSpriteSheet._animations[anim] || this.tileSpriteSheet._animations.default).texture);
                                     
                                 transformCheck(index, tile);
                                 tile.template = this; // backwards reference for clearing index later.
                                 this.instances.push(tile);
-                                this.uninitializedTiles.greenSplice(this.uninitializedTiles.indexOf(this));
+                                greenSplice(this.uninitializedTiles, this.uninitializedTiles.indexOf(this));
                         
                                 delete this.getNext;
                             };
@@ -275,7 +264,7 @@
                                     // Copy properties
                                     instance.scale    = template.scale;
                                     instance.rotation = template.rotation;
-                                    instance.anchor   = template.anchor;
+                                    instance.anchor   = template.anchor || template._animation.anchor;
                                 }
                         
                                 this.index += 1;
@@ -294,13 +283,13 @@
                                     this.instances[i].destroy();
                                 }
                                 
-                                this.instances.recycle();
+                                arrayCache.recycle(this.instances);
                                 this.recycle();
                             };
                         
-                            recycle.add(Template, !!springroll.Debug, &#x27;Template&#x27;);
+                            recycle.add(Template, &#x27;Template&#x27;, Template, null, true, config.dev);
                         
-                            return platypus.createComponentClass({
+                            return createComponentClass({
                         
                                 id: &#x27;RenderTiles&#x27;,
                         
@@ -385,7 +374,6 @@
                                      * @property tileCache
                                      * @type boolean
                                      * @default true
-                                     * @since 0.6.4
                                      */
                                     tileCache: true,
                         
@@ -413,7 +401,6 @@
                                      * @property top
                                      * @type Number
                                      * @default 0
-                                     * @since 0.7.5
                                      */
                                     top: 0,
                                     
@@ -423,7 +410,6 @@
                                      * @property left
                                      * @type Number
                                      * @default 0
-                                     * @since 0.7.5
                                      */
                                     left: 0
                                 },
@@ -437,7 +423,7 @@
                         
                                     this.tiles            = {};
                         
-                                    this.renderer         = Application.instance.display.renderer;
+                                    this.renderer         = platypus.game.renderer;
                                     this.tilesSprite      = null;
                                     this.cacheTexture     = null;
                                     this.mapContainer      = null;
@@ -450,20 +436,19 @@
                                     this.cache = AABB.setUp();
                                     this.cachePixels = AABB.setUp();
                         
-                                    this.uninitializedTiles = Array.setUp();
+                                    this.uninitializedTiles = arrayCache.setUp();
                         
                                     // Set up containers
                                     this.spriteSheet = PIXIAnimation.formatSpriteSheet(this.spriteSheet);
                                     this.tileSpriteSheet = new PIXIAnimation(this.spriteSheet);
-                                    this.tileContainer = ((this.spriteSheet.images.length &gt; 1) || (this.renderer instanceof CanvasRenderer)) ? new Container() : new ParticleContainer(15000, {position: true, rotation: true, scale: true});
+                                    this.tileContainer = new Container();
                                     this.mapContainer = new Container();
                                     this.mapContainer.addChild(this.tileContainer);
                                     
-                                    this.reorderedStage = false;
                                     this.updateCache = false;
                         
                                     // Prepare map tiles
-                                    this.imageMap = Array.setUp(this.createMap(imgMap));
+                                    this.imageMap = arrayCache.setUp(this.createMap(imgMap));
                         
                                     this.tilesWidth  = this.imageMap[0].length;
                                     this.tilesHeight = this.imageMap[0][0].length;
@@ -599,8 +584,6 @@
                                             sprite = null,
                                             z = this.owner.z;
                         
-                                        container.reorder = true;
-                        
                                         this.ready = true;
                         
                                         this.updateRegion(0);
@@ -678,8 +661,8 @@
                                         // Determine whether to merge this image with the background.
                                         if (this.entityCache &amp;&amp; object) { //TODO: currently only handles a single display object on the cached entity.
                                             if (!this.doMap) {
-                                                this.doMap = Array.setUp();
-                                                this.cachedDisplayObjects = Array.setUp();
+                                                this.doMap = arrayCache.setUp();
+                                                this.cachedDisplayObjects = arrayCache.setUp();
                                                 this.populate = this.populateTilesAndEntities;
                                             }
                                             this.cachedDisplayObjects.push(object);
@@ -696,11 +679,11 @@
                                             // Find tiles that should include this display object
                                             for (x = left; x &lt; right; x++) {
                                                 if (!this.doMap[x]) {
-                                                    this.doMap[x] = Array.setUp();
+                                                    this.doMap[x] = arrayCache.setUp();
                                                 }
                                                 for (y = top; y &lt; bottom; y++) {
                                                     if (!this.doMap[x][y]) {
-                                                        this.doMap[x][y] = Array.setUp();
+                                                        this.doMap[x][y] = arrayCache.setUp();
                                                     }
                                                     this.doMap[x][y].push(object);
                                                 }
@@ -758,9 +741,9 @@
                                             return mapDefinition;
                                         }
                         
-                                        map = Array.setUp();
+                                        map = arrayCache.setUp();
                                         for (x = 0; x &lt; mapDefinition.length; x++) {
-                                            map[x] = Array.setUp();
+                                            map[x] = arrayCache.setUp();
                                             for (y = 0; y &lt; mapDefinition[x].length; y++) {
                                                 index = mapDefinition[x][y];
                                                 this.updateTile(index, map, x, y);
@@ -881,10 +864,10 @@
                                             z = this.owner.z,
                                             col = null,
                                             ct = null,
-                                            cg = Array.setUp();
+                                            cg = arrayCache.setUp();
                         
                                         for (x = 0; x &lt; tsw; x += ctw) {
-                                            col = Array.setUp();
+                                            col = arrayCache.setUp();
                                             cg.push(col);
                                             for (y = 0; y &lt; tsh; y += cth) {
                                                 // This prevents us from using too large of a cache for the right and bottom edges of the map.
@@ -959,7 +942,7 @@
                                             z = 0,
                                             layer = 0,
                                             tile  = null,
-                                            tiles = Array.setUp();
+                                            tiles = arrayCache.setUp();
                         
                                         this.tileContainer.removeChildren();
                                         for (x = bounds.left; x &lt;= bounds.right; x++) {
@@ -984,7 +967,7 @@
                                         for (z = 0; z &lt; tiles.length; z++) {
                                             tiles[z].clear();
                                         }
-                                        tiles.recycle();
+                                        arrayCache.recycle(tiles);
                                     },
                                     
                                     populateTilesAndEntities: function (bounds, oldBounds) {
@@ -994,8 +977,8 @@
                                             layer   = 0,
                                             tile    = null,
                                             ent     = null,
-                                            ents    = Array.setUp(),
-                                            tiles   = Array.setUp(),
+                                            ents    = arrayCache.setUp(),
+                                            tiles   = arrayCache.setUp(),
                                             oList   = null;
                         
                                         this.tileContainer.removeChildren();
@@ -1050,8 +1033,8 @@
                                             tiles[z].clear();
                                         }
                                         
-                                        tiles.recycle();
-                                        ents.recycle();
+                                        arrayCache.recycle(tiles);
+                                        arrayCache.recycle(ents);
                                     },
                                     
                                     renderCache: function (bounds, dest, src, wrapper, oldCache, oldBounds) {
@@ -1063,7 +1046,7 @@
                                             src.addChild(oldCache); // To copy last rendering over.
                                         }
                         
-                                        clearRenderTexture(renderer, dest);
+                                        //clearRenderTexture(renderer, dest);
                                         src.x = -bounds.left * this.tileWidth;
                                         src.y = -bounds.top * this.tileHeight;
                                         renderer.render(wrapper, dest);
@@ -1079,7 +1062,7 @@
                                         border.lineStyle(1, 0x000000);
                                         border.drawRect(0.5, 0.5, this.cacheClipWidth + 1, this.cacheClipHeight + 1);
                         
-                                        clearRenderTexture(renderer, dest);
+                                        //clearRenderTexture(renderer, dest);
                         
                                         // There is probably a better way to do this. Currently for the extrusion, everything is rendered once offset in the n, s, e, w directions and then once in the middle to create the effect.
                                         wrapper.mask = border;
@@ -1167,7 +1150,7 @@
                                                     this.container.removeChild(grid[x][y]);
                                                 }
                                             }
-                                            grid.recycle(2);
+                                            arrayCache.recycle(grid, 2);
                                             delete this.cacheGrid;
                                         } else if (this.tilesSprite) {
                                             if (this.tilesSprite.texture.alternate) {
@@ -1179,7 +1162,7 @@
                                             this.container.removeChild(this.mapContainer);
                                         }
                                         
-                                        img.recycle(2);
+                                        arrayCache.recycle(img, 2);
                                         
                                         for (key in this.tiles) {
                                             if (this.tiles.hasOwnProperty(key)) {
@@ -1195,7 +1178,7 @@
                                             for (x = 0; x &lt; this.cachedDisplayObjects.length; x++) {
                                                 this.cachedDisplayObjects[x].destroy();
                                             }
-                                            this.cachedDisplayObjects.recycle();
+                                            arrayCache.recycle(this.cachedDisplayObjects);
                         
                                             for (x = 0; x &lt; map.length; x++) {
                                                 if (map[x]) {
@@ -1204,16 +1187,16 @@
                                                             map[x][y].recycle();
                                                         }
                                                     }
-                                                    map[x].recycle();
+                                                    arrayCache.recycle(map[x]);
                                                 }
                                             }
-                                            map.recycle();
+                                            arrayCache.recycle(map);
                                         }
                                         
                                         this.laxCam.recycle();
                                         this.cache.recycle();
                                         this.cachePixels.recycle();
-                                        this.uninitializedTiles.recycle();
+                                        arrayCache.recycle(this.uninitializedTiles);
                                     }
                                 },
                                 
@@ -1224,11 +1207,11 @@
                                                 if (typeof ss === &#x27;string&#x27;) {
                                                     return getImages(spriteSheets[ss], spriteSheets);
                                                 } else if (ss.images) {
-                                                    return ss.images.greenSlice();
+                                                    return greenSlice(ss.images);
                                                 }
                                             }
                         
-                                            return Array.setUp();
+                                            return arrayCache.setUp();
                                         };
                                     
                                     return function (component, props, defaultProps) {
@@ -1243,19 +1226,19 @@
                                                 return getImages(ss, spriteSheets);
                                             } else if (Array.isArray(ss)) {
                                                 i = ss.length;
-                                                images = Array.setUp();
+                                                images = arrayCache.setUp();
                                                 while (i--) {
                                                     arr = getImages(ss[i], spriteSheets);
-                                                    images.union(arr);
-                                                    arr.recycle();
+                                                    union(images, arr);
+                                                    arrayCache.recycle(arr);
                                                 }
                                                 return images;
                                             } else if (ss.images) {
-                                                return ss.images.greenSlice();
+                                                return greenSlice(ss.images);
                                             }
                                         }
                                         
-                                        return Array.setUp();
+                                        return arrayCache.setUp();
                                     };
                                 }())
                             });

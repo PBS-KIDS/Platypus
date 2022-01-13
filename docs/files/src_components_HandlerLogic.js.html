@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v1.0.2 API Documentation : src\components\HandlerLogic.js</title>
+	<title>platypus v2.0.0 API Documentation : src\components\HandlerLogic.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 1.0.2</em>
+            <em>API Documentation for: 2.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/platypus.AABB.html">platypus.AABB</a></li>
                                 <li><a href="../classes/platypus.ActionState.html">platypus.ActionState</a></li>
+                                <li><a href="../classes/platypus.AssetManager.html">platypus.AssetManager</a></li>
                                 <li><a href="../classes/platypus.Async.html">platypus.Async</a></li>
                                 <li><a href="../classes/platypus.CollisionData.html">platypus.CollisionData</a></li>
                                 <li><a href="../classes/platypus.CollisionDataContainer.html">platypus.CollisionDataContainer</a></li>
@@ -46,6 +47,7 @@
                                 <li><a href="../classes/platypus.Component.html">platypus.Component</a></li>
                                 <li><a href="../classes/platypus.components.AIChaser.html">platypus.components.AIChaser</a></li>
                                 <li><a href="../classes/platypus.components.AIPacer.html">platypus.components.AIPacer</a></li>
+                                <li><a href="../classes/platypus.components.AudioMusic.html">platypus.components.AudioMusic</a></li>
                                 <li><a href="../classes/platypus.components.AudioSFX.html">platypus.components.AudioSFX</a></li>
                                 <li><a href="../classes/platypus.components.AudioVO.html">platypus.components.AudioVO</a></li>
                                 <li><a href="../classes/platypus.components.Camera.html">platypus.components.Camera</a></li>
@@ -58,7 +60,6 @@
                                 <li><a href="../classes/platypus.components.Counter.html">platypus.components.Counter</a></li>
                                 <li><a href="../classes/platypus.components.EntityContainer.html">platypus.components.EntityContainer</a></li>
                                 <li><a href="../classes/platypus.components.EntityController.html">platypus.components.EntityController</a></li>
-                                <li><a href="../classes/platypus.components.EventRender.html">platypus.components.EventRender</a></li>
                                 <li><a href="../classes/platypus.components.HandlerCollision.html">platypus.components.HandlerCollision</a></li>
                                 <li><a href="../classes/platypus.components.HandlerController.html">platypus.components.HandlerController</a></li>
                                 <li><a href="../classes/platypus.components.HandlerLogic.html">platypus.components.HandlerLogic</a></li>
@@ -74,6 +75,7 @@
                                 <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicTimer.html">platypus.components.LogicTimer</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
                                 <li><a href="../classes/platypus.components.Motion.html">platypus.components.Motion</a></li>
                                 <li><a href="../classes/platypus.components.Mover.html">platypus.components.Mover</a></li>
@@ -87,7 +89,7 @@
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
-                                <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
+                                <li><a href="../classes/platypus.components.RenderAnimator.html">platypus.components.RenderAnimator</a></li>
                                 <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
@@ -97,7 +99,6 @@
                                 <li><a href="../classes/platypus.components.RenderText.html">platypus.components.RenderText</a></li>
                                 <li><a href="../classes/platypus.components.RenderTiles.html">platypus.components.RenderTiles</a></li>
                                 <li><a href="../classes/platypus.components.SceneChanger.html">platypus.components.SceneChanger</a></li>
-                                <li><a href="../classes/platypus.components.StateRender.html">platypus.components.StateRender</a></li>
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
@@ -107,16 +108,17 @@
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
                                 <li><a href="../classes/platypus.DataMap.html">platypus.DataMap</a></li>
                                 <li><a href="../classes/platypus.Entity.html">platypus.Entity</a></li>
+                                <li><a href="../classes/platypus.EntityLinker.html">platypus.EntityLinker</a></li>
                                 <li><a href="../classes/platypus.Game.html">platypus.Game</a></li>
+                                <li><a href="../classes/platypus.Gamepad.html">platypus.Gamepad</a></li>
                                 <li><a href="../classes/platypus.Messenger.html">platypus.Messenger</a></li>
                                 <li><a href="../classes/platypus.PIXIAnimation.html">platypus.PIXIAnimation</a></li>
-                                <li><a href="../classes/platypus.PlatypusPlugin.html">platypus.PlatypusPlugin</a></li>
-                                <li><a href="../classes/platypus.Scene.html">platypus.Scene</a></li>
+                                <li><a href="../classes/platypus.SFXPlayer.html">platypus.SFXPlayer</a></li>
                                 <li><a href="../classes/platypus.StateMap.html">platypus.StateMap</a></li>
+                                <li><a href="../classes/platypus.Storage.html">platypus.Storage</a></li>
                                 <li><a href="../classes/platypus.Vector.html">platypus.Vector</a></li>
-                                <li><a href="../classes/window.Array.html">window.Array</a></li>
+                                <li><a href="../classes/platypus.VOPlayer.html">platypus.VOPlayer</a></li>
                                 <li><a href="../classes/window.Map.html">window.Map</a></li>
-                                <li><a href="../classes/window.String.html">window.String</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -166,12 +168,12 @@
                          * @class HandlerLogic
                          * @uses platypus.Component
                          **/
-                        /* global include, platypus */
-                        (function () {
-                            &#x27;use strict&#x27;;
+                        import {arrayCache, greenSplice} from &#x27;../utils/array.js&#x27;;
+                        import AABB from &#x27;../AABB.js&#x27;;
+                        import createComponentClass from &#x27;../factory.js&#x27;;
                         
-                            var AABB = include(&#x27;platypus.AABB&#x27;),
-                                addAll = function (all, active) {
+                        export default (function () {
+                            var addAll = function (all, active) {
                                     var j = all.length;
                                     
                                     active.length = 0;
@@ -198,7 +200,7 @@
                                     return (item === &#x27;handle-logic&#x27; || item === &#x27;handle-post-collision-logic&#x27; || item === &#x27;prepare-logic&#x27; || item === &#x27;state-changed&#x27; || item === &#x27;handle-movement&#x27;);
                                 };
                         
-                            return platypus.createComponentClass({
+                            return createComponentClass({
                                 id: &quot;HandlerLogic&quot;,
                                 properties: {
                                     /**
@@ -207,7 +209,6 @@
                                      * @property alwaysOn
                                      * @type Boolean
                                      * @default false
-                                     * @since 0.7.1
                                      */
                                     alwaysOn: false
                                 },
@@ -240,19 +241,19 @@
                                     maxStepsPerTick: 100,
                                     
                                     /**
-                                     * Whether logic should occur at an alternate speed. This is useful for simulations where the game should speed up or slow down.
+                                     * A multiplier that alters the speed at which the game is running. This is achieved by scaling the delta time in each tick.
+                                     * Defaults to 1. Values &lt; 1 will slow down the logic, &gt; 1 will speed it up.
                                      *
                                      * @property timeMultiplier
                                      * @type number
                                      * @default 1
-                                     * @since 0.7.1
                                      */
                                     timeMultiplier: 1
                                 },
                                 initialize: function () {
-                                    this.entities = Array.setUp();
-                                    this.activeEntities = Array.setUp();
-                                    this.removals = Array.setUp();
+                                    this.entities = arrayCache.setUp();
+                                    this.activeEntities = arrayCache.setUp();
+                                    this.removals = arrayCache.setUp();
                                     
                                     this.inLogicLoop = false;
                         
@@ -280,7 +281,6 @@
                                      *
                                      * @method &#x27;child-entity-updated&#x27;
                                      * @param entity {platypus.Entity} The entity that is being considered.
-                                     * @since v0.12.0
                                      */
                                     &quot;child-entity-updated&quot;: function (entity) {
                                         var j = this.entities.indexOf(entity),
@@ -294,7 +294,7 @@
                                                 this.activeEntities.push(entity);
                                             }
                                         } else if (!logical &amp;&amp; (j &gt;= 0)) {
-                                            this.entities.greenSplice(j);
+                                            greenSplice(this.entities, j);
                                             if (this.inLogicLoop) {
                                                 this.removals.push(entity);
                                             }
@@ -328,7 +328,7 @@
                                         var j = this.entities.indexOf(entity);
                                         
                                         if (j &gt;= 0) {
-                                            this.entities.greenSplice(j);
+                                            greenSplice(this.entities, j);
                                             if (this.inLogicLoop) {
                                                 this.removals.push(entity);
                                             }
@@ -353,7 +353,6 @@
                                              * Notifies children entities that logic has been paused.
                                              *
                                              * @event &#x27;logic-paused&#x27;
-                                             * @since 0.8.4
                                              */
                                             this.owner.triggerEventOnChildren(&#x27;logic-paused&#x27;);
                                         }
@@ -371,7 +370,6 @@
                                              * Notifies children entities that logic has been unpaused.
                                              *
                                              * @event &#x27;logic-unpaused&#x27;
-                                             * @since 0.8.4
                                              */
                                             this.owner.triggerEventOnChildren(&#x27;logic-unpaused&#x27;);
                                         }
@@ -414,7 +412,7 @@
                                             msg = this.message,
                                             actives = this.activeEntities,
                                             removals = this.removals,
-                                            stepLength = this.stepLength;
+                                            stepLength = this.stepLength * this.timeMultiplier;
                                         
                                         this.leftoverTime += (resp.delta * this.timeMultiplier);
                                         cycles = Math.floor(this.leftoverTime / stepLength) || 1;
@@ -428,6 +426,7 @@
                                 //        this.leftoverTime = Math.max(this.leftoverTime - (cycles * this.stepLength), 0);
                                 
                                         // This makes the frames exact, but varying step numbers between ticks can cause movement to be jerky
+                                        msg.gameDelta = this.stepLength;
                                         msg.delta = stepLength;
                                         this.leftoverTime = Math.max(this.leftoverTime - (cycles * stepLength), 0);
                                 
@@ -453,13 +452,14 @@
                                                 /**
                                                  * This event is triggered on the top-level layer to signify a &quot;handle-logic&quot; event is about to be triggered on children. This is unique from the layer&#x27;s &quot;tick&quot; event in that it occurs the same number of times as the &quot;handle-logic&quot; event and will not occur if HandlerLogic is paused.
                                                  *
-                                                 * @event &#x27;logic-tick&#x27;
-                                                 * @param tick.delta {Number} The time that has passed since the last tick.
+                                                 * @event &#x27;handle-logic&#x27;
+                                                 * @param tick.delta {Number} The time that has passed since the last tick as manipulated by the timeMultiplier.
+                                                 * @param tick.gameDelta {Number} The time that has passed since the last tick. Unmanipulated by timeMultiplier. Use for components that need to run on actual time.
                                                  * @param tick.camera {null|platypus.AABB} The range of the logic camera area. This is typically larger than the visible camera. This value is &#x60;null&#x60; if &#x60;alwaysOn&#x60; is set to &#x60;true&#x60; on this component.
                                                  * @param tick.entities {Array} This is a list of all the logically active entities.
-                                                 * @since 0.8.1
+                                                 * @param tick.tick {Object} Tick object from &quot;tick&quot; event.
                                                  */
-                                                this.owner.triggerEvent(&#x27;logic-tick&#x27;, msg);
+                                                this.owner.triggerEvent(&#x27;handle-logic&#x27;, msg);
                                             
                                                 if (this.owner.triggerEventOnChildren) {
                                                     this.owner.triggerEventOnChildren(&#x27;handle-ai&#x27;, msg);
@@ -477,7 +477,6 @@
                                                      * @param tick.delta {Number} The time that has passed since the last tick.
                                                      * @param tick.camera {null|platypus.AABB} The range of the logic camera area. This is typically larger than the visible camera. This value is &#x60;null&#x60; if &#x60;alwaysOn&#x60; is set to &#x60;true&#x60; on this component.
                                                      * @param tick.entities {Array} This is a list of all the logically active entities.
-                                                     * @since 0.6.8
                                                      */
                                                     entity.triggerEvent(&#x27;prepare-logic&#x27;, msg);
                         
@@ -500,7 +499,6 @@
                                                      * @param tick.delta {Number} The time that has passed since the last tick.
                                                      * @param tick.camera {null|platypus.AABB} The range of the logic camera area. This is typically larger than the visible camera. This value is &#x60;null&#x60; if &#x60;alwaysOn&#x60; is set to &#x60;true&#x60; on this component.
                                                      * @param tick.entities {Array} This is a list of all the logically active entities.
-                                                     * @since 0.6.8
                                                      */
                                                     entity.triggerEvent(&#x27;handle-movement&#x27;, msg);
                                                 }
@@ -512,7 +510,7 @@
                                                     while (i--) {
                                                         j = actives.indexOf(removals[i]);
                                                         if (j &gt;= 0) {
-                                                            actives.greenSplice(j);
+                                                            greenSplice(actives, j);
                                                         }
                                                     }
                                                     removals.length = 0;
@@ -567,9 +565,12 @@
                                 
                                 methods: {
                                     destroy: function () {
-                                        this.entities.recycle();
-                                        this.activeEntities.recycle();
-                                        this.removals.recycle();
+                                        arrayCache.recycle(this.entities);
+                                        this.entities = null;
+                                        arrayCache.recycle(this.activeEntities);
+                                        this.activeEntities = null;
+                                        arrayCache.recycle(this.removals);
+                                        this.removals = null;
                                     }
                                 }
                             });

@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v1.0.2 API Documentation : src\components\RenderSprite.js</title>
+	<title>platypus v2.0.0 API Documentation : src\components\RenderSprite.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 1.0.2</em>
+            <em>API Documentation for: 2.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/platypus.AABB.html">platypus.AABB</a></li>
                                 <li><a href="../classes/platypus.ActionState.html">platypus.ActionState</a></li>
+                                <li><a href="../classes/platypus.AssetManager.html">platypus.AssetManager</a></li>
                                 <li><a href="../classes/platypus.Async.html">platypus.Async</a></li>
                                 <li><a href="../classes/platypus.CollisionData.html">platypus.CollisionData</a></li>
                                 <li><a href="../classes/platypus.CollisionDataContainer.html">platypus.CollisionDataContainer</a></li>
@@ -46,6 +47,7 @@
                                 <li><a href="../classes/platypus.Component.html">platypus.Component</a></li>
                                 <li><a href="../classes/platypus.components.AIChaser.html">platypus.components.AIChaser</a></li>
                                 <li><a href="../classes/platypus.components.AIPacer.html">platypus.components.AIPacer</a></li>
+                                <li><a href="../classes/platypus.components.AudioMusic.html">platypus.components.AudioMusic</a></li>
                                 <li><a href="../classes/platypus.components.AudioSFX.html">platypus.components.AudioSFX</a></li>
                                 <li><a href="../classes/platypus.components.AudioVO.html">platypus.components.AudioVO</a></li>
                                 <li><a href="../classes/platypus.components.Camera.html">platypus.components.Camera</a></li>
@@ -58,7 +60,6 @@
                                 <li><a href="../classes/platypus.components.Counter.html">platypus.components.Counter</a></li>
                                 <li><a href="../classes/platypus.components.EntityContainer.html">platypus.components.EntityContainer</a></li>
                                 <li><a href="../classes/platypus.components.EntityController.html">platypus.components.EntityController</a></li>
-                                <li><a href="../classes/platypus.components.EventRender.html">platypus.components.EventRender</a></li>
                                 <li><a href="../classes/platypus.components.HandlerCollision.html">platypus.components.HandlerCollision</a></li>
                                 <li><a href="../classes/platypus.components.HandlerController.html">platypus.components.HandlerController</a></li>
                                 <li><a href="../classes/platypus.components.HandlerLogic.html">platypus.components.HandlerLogic</a></li>
@@ -74,6 +75,7 @@
                                 <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicTimer.html">platypus.components.LogicTimer</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
                                 <li><a href="../classes/platypus.components.Motion.html">platypus.components.Motion</a></li>
                                 <li><a href="../classes/platypus.components.Mover.html">platypus.components.Mover</a></li>
@@ -87,7 +89,7 @@
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
-                                <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
+                                <li><a href="../classes/platypus.components.RenderAnimator.html">platypus.components.RenderAnimator</a></li>
                                 <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
@@ -97,7 +99,6 @@
                                 <li><a href="../classes/platypus.components.RenderText.html">platypus.components.RenderText</a></li>
                                 <li><a href="../classes/platypus.components.RenderTiles.html">platypus.components.RenderTiles</a></li>
                                 <li><a href="../classes/platypus.components.SceneChanger.html">platypus.components.SceneChanger</a></li>
-                                <li><a href="../classes/platypus.components.StateRender.html">platypus.components.StateRender</a></li>
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
@@ -107,16 +108,17 @@
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
                                 <li><a href="../classes/platypus.DataMap.html">platypus.DataMap</a></li>
                                 <li><a href="../classes/platypus.Entity.html">platypus.Entity</a></li>
+                                <li><a href="../classes/platypus.EntityLinker.html">platypus.EntityLinker</a></li>
                                 <li><a href="../classes/platypus.Game.html">platypus.Game</a></li>
+                                <li><a href="../classes/platypus.Gamepad.html">platypus.Gamepad</a></li>
                                 <li><a href="../classes/platypus.Messenger.html">platypus.Messenger</a></li>
                                 <li><a href="../classes/platypus.PIXIAnimation.html">platypus.PIXIAnimation</a></li>
-                                <li><a href="../classes/platypus.PlatypusPlugin.html">platypus.PlatypusPlugin</a></li>
-                                <li><a href="../classes/platypus.Scene.html">platypus.Scene</a></li>
+                                <li><a href="../classes/platypus.SFXPlayer.html">platypus.SFXPlayer</a></li>
                                 <li><a href="../classes/platypus.StateMap.html">platypus.StateMap</a></li>
+                                <li><a href="../classes/platypus.Storage.html">platypus.Storage</a></li>
                                 <li><a href="../classes/platypus.Vector.html">platypus.Vector</a></li>
-                                <li><a href="../classes/window.Array.html">window.Array</a></li>
+                                <li><a href="../classes/platypus.VOPlayer.html">platypus.VOPlayer</a></li>
                                 <li><a href="../classes/window.Map.html">window.Map</a></li>
-                                <li><a href="../classes/window.String.html">window.String</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -166,22 +168,56 @@
                          * @class RenderSprite
                          * @uses platypus.Component
                          */
-                        /* global include, platypus */
-                        (function () {
-                            &#x27;use strict&#x27;;
-                            
-                            var AABB = include(&#x27;platypus.AABB&#x27;),
-                                Data = include(&#x27;platypus.Data&#x27;),
-                                EventRender = include(&#x27;platypus.components.EventRender&#x27;),
-                                RenderContainer = include(&#x27;platypus.components.RenderContainer&#x27;),
-                                PIXIAnimation = include(&#x27;platypus.PIXIAnimation&#x27;),
-                                StateRender = include(&#x27;platypus.components.StateRender&#x27;);
-                            
-                            return platypus.createComponentClass({
+                        /* global platypus */
+                        import {arrayCache, greenSlice, union} from &#x27;../utils/array.js&#x27;;
+                        import Data from &#x27;../Data.js&#x27;;
+                        import PIXIAnimation from &#x27;../PIXIAnimation.js&#x27;;
+                        import RenderAnimator from &#x27;./RenderAnimator.js&#x27;;
+                        import RenderContainer from &#x27;./RenderContainer.js&#x27;;
+                        import createComponentClass from &#x27;../factory.js&#x27;;
+                        
+                        export default (function () {
+                            return createComponentClass({
                                 
                                 id: &#x27;RenderSprite&#x27;,
                                 
                                 properties: {
+                                    /**
+                                     * An object containg key-value pairs that define a mapping from entity states to the animation that should play. The list is processed from top to bottom, so the most important actions should be listed first (for example, a jumping animation might take precedence over an idle animation). If not specified, an 1-to-1 animation map is created from the list of animations in the sprite sheet definition using the animation names as the keys.
+                                     *
+                                     *  &quot;animationStates&quot;:{
+                                     *      &quot;standing&quot;: &quot;default-animation&quot;  // On receiving a &quot;standing&quot; event, or when this.owner.state.standing === true, the &quot;default&quot; animation will begin playing.
+                                     *      &quot;ground,moving&quot;: &quot;walking&quot;,  // Comma separated values have a special meaning when evaluating &quot;state-changed&quot; messages. The above example will cause the &quot;walking&quot; animation to play ONLY if the entity&#x27;s state includes both &quot;moving&quot; and &quot;ground&quot; equal to true.
+                                     *      &quot;ground,striking&quot;: &quot;swing!&quot;, // Putting an exclamation after an animation name causes this animation to complete before going to the next animation. This is useful for animations that would look poorly if interrupted.
+                                     *      &quot;default&quot;: &quot;default-animation&quot; // Optional. &quot;default&quot; is a special property that matches all states. If none of the above states are valid for the entity, it will use the default animation listed here.
+                                     *  }
+                                     *
+                                     * If &#x60;stateBased&#x60; is &#x60;true&#x60; and this property is not set, this component will use the &#x60;animationMap&#x60; property value to define state mappings.
+                                     *
+                                     * @property animationStates
+                                     * @type Object
+                                     * @default animationMap
+                                     */
+                                    animationStates: null,
+                        
+                                    /**
+                                     * An object containg key-value pairs that define a mapping from triggered events to the animation that should play.
+                                     *
+                                     *     &quot;animationEvents&quot;:{
+                                     *         &quot;move&quot;: &quot;walk-animation&quot;,
+                                     *         &quot;jump&quot;: &quot;jumping-animation&quot;
+                                     *     }
+                                     *
+                                     * The above will create two event listeners on the entity, &quot;move&quot; and &quot;jump&quot;, that will play their corresponding animations when the events are triggered.
+                                     *
+                                     * If &#x60;eventBased&#x60; is &#x60;true&#x60; and this property is not set, this component will use the &#x60;animationMap&#x60; property value to define event mappings.
+                                     *
+                                     * @property animationEvents
+                                     * @type Object
+                                     * @default animationMap
+                                     */
+                                    animationEvents: null,
+                        
                                    /**
                                      * spriteSheet can either be a String or an object. If a string, the spritesheet data will be loaded from the file with a matching name in the spritesheet folder. Otherwise the definition is in full here. That spritesheet data defines an EaselJS sprite sheet to use for rendering. See https://createjs.com/docs/easeljs/classes/SpriteSheet.html for the full specification.
                                      *
@@ -223,7 +259,7 @@
                                      *         &quot;default&quot;: &quot;default-animation&quot; // Optional. &quot;default&quot; is a special property that matches all states. If none of the above states are valid for the entity, it will use the default animation listed here.
                                      *     }
                                      *
-                                     * This data is used to create EventRender or StateRender components on the entity if the &#x60;eventBased&#x60; or &#x60;stateBased&#x60; properties are set to &#x60;true&#x60;.
+                                     * This data may also be used to create a RenderAnimator component on the entity if the &#x60;eventBased&#x60; or &#x60;stateBased&#x60; properties are set to &#x60;true&#x60;.
                                      *
                                      * @property animationMap
                                      * @type Object
@@ -232,7 +268,7 @@
                                     animationMap: null,
                         
                                     /**
-                                     * Optional. A mask definition that determines where the image should clip. A string can also be used to create more complex shapes via the PIXI graphics API like: &quot;mask&quot;: &quot;r(10,20,40,40).dc(30,10,12)&quot;. Defaults to no mask or, if simply set to true, a rectangle using the entity&#x27;s dimensions.
+                                     * Optional. A mask definition that determines where the image should clip. A string can also be used to create more complex shapes via the PIXI graphics API like: &quot;mask&quot;: &quot;r(10,20,40,40).drawCircle(30,10,12)&quot;. Defaults to no mask or, if simply set to true, a rectangle using the entity&#x27;s dimensions.
                                      *
                                      *  &quot;mask&quot;: {
                                      *      &quot;x&quot;: 10,
@@ -243,7 +279,7 @@
                                      *
                                      *  -OR-
                                      *
-                                     *  &quot;mask&quot;: &quot;r(10,20,40,40).dc(30,10,12)&quot;
+                                     *  &quot;mask&quot;: &quot;r(10,20,40,40).drawCircle(30,10,12)&quot;
                                      *
                                      * @property mask
                                      * @type Object
@@ -267,7 +303,6 @@
                                      * @property interactive
                                      * @type Boolean|Object
                                      * @default false
-                                     * @since 0.9.0
                                      */
                                     interactive: false,
                         
@@ -277,7 +312,6 @@
                                      * @property offsetX
                                      * @type Number
                                      * @default 0
-                                     * @since 0.11.0
                                      */
                                     offsetX: 0,
                         
@@ -287,7 +321,6 @@
                                      * @property offsetY
                                      * @type Number
                                      * @default 0
-                                     * @since 0.11.0
                                      */
                                     offsetY: 0,
                         
@@ -306,18 +339,8 @@
                                      * @property restart
                                      * @type Boolean
                                      * @default true
-                                     * @since 0.9.2
                                      */
                                     restart: true,
-                        
-                                    /**
-                                     * Optional. Whether this object can be rotated. It&#x27;s rotational angle is set by setting the this.owner.rotation value on the entity.
-                                     *
-                                     * @property rotate
-                                     * @type Boolean
-                                     * @default false
-                                     */
-                                    rotate: false,
                         
                                     /**
                                      * Whether this object can be mirrored over X. To mirror it over X set the this.owner.rotation value to be &gt; 90  and &lt; 270.
@@ -347,7 +370,7 @@
                                     visible: true,
                         
                                     /**
-                                     * Optional. Specifies whether this component should create an EventRender component to listen to events matching the animationMap to animate. Set this to true if the component should animate for on events. Default is &#x60;false&#x60;.
+                                     * Optional. Specifies whether this component should create an RenderAnimator component to listen to events matching the animationMap to animate. Set this to true if the component should animate for on events. Default is &#x60;false&#x60;.
                                      *
                                      * @property eventBased
                                      * @type Boolean
@@ -356,7 +379,7 @@
                                     eventBased: false,
                         
                                     /**
-                                     * Optional. Specifies whether this component should create a StateRender component to handle changes in the entity&#x27;s state that match the animationMap to animate. Set this to true if the component should animate based on &#x60;this.owner.state&#x60;. Default is &#x60;true&#x60;.
+                                     * Optional. Specifies whether this component should create a RenderAnimator component to handle changes in the entity&#x27;s state that match the animationMap to animate. Set this to true if the component should animate based on &#x60;this.owner.state&#x60;. Default is &#x60;true&#x60;.
                                      *
                                      * @property stateBased
                                      * @type Boolean
@@ -417,6 +440,24 @@
                                      * @default 1
                                      */
                                     scaleY: 1,
+                                    
+                                    /**
+                                    * The scaling factor for this sprite relative to the scale of the container.
+                                    *
+                                    * @property localScaleX
+                                    * @type Number|Array|Object
+                                    * @default 1
+                                    */
+                                    localScaleX: 1,
+                        
+                                   /**
+                                    * The scaling factor for this sprite relative to the scale of the container.
+                                    *
+                                    * @property localScaleY
+                                    * @type Number|Array|Object
+                                    * @default 1
+                                    */
+                                    localScaleY: 1,
                         
                                     /**
                                      * The skew factor for this component.
@@ -443,16 +484,7 @@
                                      * @type Number
                                      * @default 0
                                      */
-                                    skewY: 0,
-                        
-                                    /**
-                                     * Optional. The rotation of the sprite in degrees. All sprites on the same entity are rotated the same amount unless they ignore the rotation value by setting &#x27;rotate&#x27; to false.
-                                     *
-                                     * @property rotation
-                                     * @type Number
-                                     * @default 1
-                                     */
-                                    rotation: 0
+                                    skewY: 0
                                 },
                         
                                 initialize: (function () {
@@ -502,41 +534,32 @@
                                         if (map) {
                                             animation = map.default || &#x27;&#x27;;
                         
-                                            if (this.eventBased) {
-                                                definition = Data.setUp(
-                                                    &#x27;animationMap&#x27;, map,
-                                                    &#x27;restart&#x27;, this.restart,
-                                                    &#x27;component&#x27;, this
-                                                );
-                                                this.owner.addComponent(new EventRender(this.owner, definition));
-                                                definition.recycle();
-                                            }
-                        
-                                            if (this.stateBased) {
-                                                definition = Data.setUp(
-                                                    &#x27;animationMap&#x27;, map,
-                                                    &#x27;forcePlayThrough&#x27;, this.forcePlayThrough,
-                                                    &#x27;component&#x27;, this
-                                                );
-                                                this.owner.addComponent(new StateRender(this.owner, definition));
-                                                definition.recycle();
-                                            }
+                                            definition = Data.setUp(
+                                                &#x27;animationEvents&#x27;, this.eventBased ? this.animationEvents || map : null,
+                                                &#x27;animationStates&#x27;, this.stateBased ? this.animationStates || map : null,
+                                                &#x27;forcePlayThrough&#x27;, this.forcePlayThrough,
+                                                &#x27;restart&#x27;, this.restart,
+                                                &#x27;component&#x27;, this
+                                            );
+                                            this.owner.addComponent(new RenderAnimator(this.owner, definition));
+                                            definition.recycle();
                                         }
                                         
                                         /*
                                          * PIXIAnimation created here:
                                          */
                                         this.sprite = new PIXIAnimation(ss, animation);
-                                        this.sprite.on(&#x27;complete&#x27;, animationEnded.bind(this));
+                                        this.sprite.onComplete = animationEnded.bind(this);
                                         this.sprite.x = this.offsetX;
                                         this.sprite.y = this.offsetY;
                                         this.sprite.z = this.offsetZ;
+                                        this.sprite.scale.x = this.localScaleX;
+                                        this.sprite.scale.y = this.localScaleY;
                         
                                         if (!this.owner.container) {
                                             definition = Data.setUp(
                                                 &#x27;interactive&#x27;, this.interactive,
                                                 &#x27;mask&#x27;, this.mask,
-                                                &#x27;rotate&#x27;, this.rotate,
                                                 &#x27;mirror&#x27;, this.mirror,
                                                 &#x27;flip&#x27;, this.flip,
                                                 &#x27;visible&#x27;, this.visible,
@@ -545,8 +568,7 @@
                                                 &#x27;scaleX&#x27;, this.scaleX,
                                                 &#x27;scaleY&#x27;, this.scaleY,
                                                 &#x27;skewX&#x27;, this.skewX,
-                                                &#x27;skewY&#x27;, this.skewY,
-                                                &#x27;rotation&#x27;, this.rotation
+                                                &#x27;skewY&#x27;, this.skewY
                                             );
                                             this.owner.addComponent(new RenderContainer(this.owner, definition, this.addToContainer.bind(this)));
                                             definition.recycle();
@@ -585,7 +607,6 @@
                                      *
                                      * @method &#x27;stop-animation&#x27;
                                      * @param [animation] {String} The animation to show and pause. If not specified, this method simply pauses the current animation.
-                                     * @since 0.9.0
                                      */
                                     &quot;stop-animation&quot;: function (animation) {
                                         this.stopAnimation(animation);
@@ -596,26 +617,26 @@
                                      *
                                      * @method &#x27;play-animation&#x27;
                                      * @param [animation] {String} The animation to play. If not specified, this method simply unpauses the current animation.
-                                     * @since 0.9.0
+                                     * @param [loop = true] {Boolean} Whether this animation should loop.
+                                     * @param [restart = true] {Boolean} Whether to restart the animation if it&#x27;s currently playing.
                                      */
-                                    &quot;play-animation&quot;: function (animation, restart) {
-                                        this.playAnimation(animation, restart);
+                                    &quot;play-animation&quot;: function (animation, loop, restart) {
+                                        this.playAnimation(animation, loop, restart);
                                     }
                                 },
                                 
                                 methods: {
                                     addToContainer: function () {
-                                        var container = this.owner.container;
+                                        const container = this.owner.container;
                         
                                         container.addChild(this.sprite);
-                                        container.reorder = true;
                                     },
                                     
-                                    playAnimation: function (animation, restart) {
+                                    playAnimation: function (animation, loop, restart) {
                                         var sprite = this.sprite;
                         
                                         if (animation &amp;&amp; sprite.has(animation)) {
-                                            sprite.gotoAndPlay(animation, restart);
+                                            sprite.gotoAndPlay(animation, loop, restart);
                                         } else {
                                             sprite.play();
                                         }
@@ -645,11 +666,11 @@
                                                 if (typeof ss === &#x27;string&#x27;) {
                                                     return getImages(spriteSheets[ss], spriteSheets);
                                                 } else if (ss.images) {
-                                                    return ss.images.greenSlice();
+                                                    return greenSlice(ss.images);
                                                 }
                                             }
                         
-                                            return Array.setUp();
+                                            return arrayCache.setUp();
                                         };
                                     
                                     return function (component, props, defaultProps) {
@@ -657,15 +678,15 @@
                                             i = 0,
                                             images = null,
                                             spriteSheets = platypus.game.settings.spriteSheets,
-                                            ss = component.spriteSheet || props.spriteSheet || defaultProps.spriteSheet;
+                                            ss = component.spriteSheet || props.spriteSheet || (defaultProps &amp;&amp; defaultProps.spriteSheet) || null;
                                         
                                         if (Array.isArray(ss)) {
                                             i = ss.length;
-                                            images = Array.setUp();
+                                            images = arrayCache.setUp();
                                             while (i--) {
                                                 arr = getImages(ss[i], spriteSheets);
-                                                images.union(arr);
-                                                arr.recycle();
+                                                union(images, arr);
+                                                arrayCache.recycle(arr);
                                             }
                                             return images;
                                         } else {

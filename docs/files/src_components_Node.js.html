@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v1.0.2 API Documentation : src\components\Node.js</title>
+	<title>platypus v2.0.0 API Documentation : src\components\Node.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 1.0.2</em>
+            <em>API Documentation for: 2.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/platypus.AABB.html">platypus.AABB</a></li>
                                 <li><a href="../classes/platypus.ActionState.html">platypus.ActionState</a></li>
+                                <li><a href="../classes/platypus.AssetManager.html">platypus.AssetManager</a></li>
                                 <li><a href="../classes/platypus.Async.html">platypus.Async</a></li>
                                 <li><a href="../classes/platypus.CollisionData.html">platypus.CollisionData</a></li>
                                 <li><a href="../classes/platypus.CollisionDataContainer.html">platypus.CollisionDataContainer</a></li>
@@ -46,6 +47,7 @@
                                 <li><a href="../classes/platypus.Component.html">platypus.Component</a></li>
                                 <li><a href="../classes/platypus.components.AIChaser.html">platypus.components.AIChaser</a></li>
                                 <li><a href="../classes/platypus.components.AIPacer.html">platypus.components.AIPacer</a></li>
+                                <li><a href="../classes/platypus.components.AudioMusic.html">platypus.components.AudioMusic</a></li>
                                 <li><a href="../classes/platypus.components.AudioSFX.html">platypus.components.AudioSFX</a></li>
                                 <li><a href="../classes/platypus.components.AudioVO.html">platypus.components.AudioVO</a></li>
                                 <li><a href="../classes/platypus.components.Camera.html">platypus.components.Camera</a></li>
@@ -58,7 +60,6 @@
                                 <li><a href="../classes/platypus.components.Counter.html">platypus.components.Counter</a></li>
                                 <li><a href="../classes/platypus.components.EntityContainer.html">platypus.components.EntityContainer</a></li>
                                 <li><a href="../classes/platypus.components.EntityController.html">platypus.components.EntityController</a></li>
-                                <li><a href="../classes/platypus.components.EventRender.html">platypus.components.EventRender</a></li>
                                 <li><a href="../classes/platypus.components.HandlerCollision.html">platypus.components.HandlerCollision</a></li>
                                 <li><a href="../classes/platypus.components.HandlerController.html">platypus.components.HandlerController</a></li>
                                 <li><a href="../classes/platypus.components.HandlerLogic.html">platypus.components.HandlerLogic</a></li>
@@ -74,6 +75,7 @@
                                 <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicTimer.html">platypus.components.LogicTimer</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
                                 <li><a href="../classes/platypus.components.Motion.html">platypus.components.Motion</a></li>
                                 <li><a href="../classes/platypus.components.Mover.html">platypus.components.Mover</a></li>
@@ -87,7 +89,7 @@
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
-                                <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
+                                <li><a href="../classes/platypus.components.RenderAnimator.html">platypus.components.RenderAnimator</a></li>
                                 <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
@@ -97,7 +99,6 @@
                                 <li><a href="../classes/platypus.components.RenderText.html">platypus.components.RenderText</a></li>
                                 <li><a href="../classes/platypus.components.RenderTiles.html">platypus.components.RenderTiles</a></li>
                                 <li><a href="../classes/platypus.components.SceneChanger.html">platypus.components.SceneChanger</a></li>
-                                <li><a href="../classes/platypus.components.StateRender.html">platypus.components.StateRender</a></li>
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
@@ -107,16 +108,17 @@
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
                                 <li><a href="../classes/platypus.DataMap.html">platypus.DataMap</a></li>
                                 <li><a href="../classes/platypus.Entity.html">platypus.Entity</a></li>
+                                <li><a href="../classes/platypus.EntityLinker.html">platypus.EntityLinker</a></li>
                                 <li><a href="../classes/platypus.Game.html">platypus.Game</a></li>
+                                <li><a href="../classes/platypus.Gamepad.html">platypus.Gamepad</a></li>
                                 <li><a href="../classes/platypus.Messenger.html">platypus.Messenger</a></li>
                                 <li><a href="../classes/platypus.PIXIAnimation.html">platypus.PIXIAnimation</a></li>
-                                <li><a href="../classes/platypus.PlatypusPlugin.html">platypus.PlatypusPlugin</a></li>
-                                <li><a href="../classes/platypus.Scene.html">platypus.Scene</a></li>
+                                <li><a href="../classes/platypus.SFXPlayer.html">platypus.SFXPlayer</a></li>
                                 <li><a href="../classes/platypus.StateMap.html">platypus.StateMap</a></li>
+                                <li><a href="../classes/platypus.Storage.html">platypus.Storage</a></li>
                                 <li><a href="../classes/platypus.Vector.html">platypus.Vector</a></li>
-                                <li><a href="../classes/window.Array.html">window.Array</a></li>
+                                <li><a href="../classes/platypus.VOPlayer.html">platypus.VOPlayer</a></li>
                                 <li><a href="../classes/window.Map.html">window.Map</a></li>
-                                <li><a href="../classes/window.String.html">window.String</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -183,13 +185,25 @@
                               // Optional. Determines whether the entity&#x27;s orientation is updated by movement across the NodeMap. Default is false.
                             }
                         */
-                        /* global platypus */
-                        (function () {
-                            &#x27;use strict&#x27;;
-                            
-                            return platypus.createComponentClass({
+                        import {arrayCache, greenSplice} from &#x27;../utils/array.js&#x27;;
+                        import Vector from &#x27;../Vector.js&#x27;;
+                        import createComponentClass from &#x27;../factory.js&#x27;;
+                        
+                        export default (function () {
+                            return createComponentClass({
                                 
                                 id: &#x27;Node&#x27;,
+                        
+                                properties: {
+                                    /**
+                                     * If provided, treats these property names as neighbors, assigning them to the neighbors object. For example, [&quot;east&quot;, &quot;west&quot;] creates &#x60;entity.east&#x60; and &#x60;entity.west&#x60; entity properties that are pointers to those neighbors.
+                                     *
+                                     * @property neighborProperties
+                                     * @type Array
+                                     * @default null
+                                     */
+                                    neighborProperties: null
+                                },
                                 
                                 publicProperties: {
                                     x: 0,
@@ -198,36 +212,60 @@
                                 },
                                 
                                 initialize: function (definition) {
-                                    this.nodeId = definition.nodeId || this.owner.nodeId || this.owner.id || String(Math.random());
+                                    const owner = this.owner;
+                        
+                                    this.nodeId = definition.nodeId || owner.nodeId || owner.id || String(Math.random());
                                     
                                     if ((typeof this.nodeId !== &#x27;string&#x27;) &amp;&amp; (this.nodeId.length)) {
                                         this.nodeId = definition.nodeId.join(&#x27;|&#x27;);
                                     }
                                     
-                                    this.owner.nodeId = this.nodeId;
+                                    owner.nodeId = this.nodeId;
                                     
-                                    this.owner.isNode = true;
-                                    this.map = this.owner.map = this.owner.map || null;
-                                    this.contains = this.owner.contains = Array.setUp();
-                                    this.edgesContain = this.owner.edgesContain = Array.setUp();
+                                    owner.isNode = true;
+                                    this.map = owner.map = owner.map || owner.parent || null;
+                                    this.contains = owner.contains = arrayCache.setUp();
+                                    this.edgesContain = owner.edgesContain = arrayCache.setUp();
                                     
-                                    platypus.Vector.assign(this.owner, &#x27;position&#x27;, &#x27;x&#x27;, &#x27;y&#x27;, &#x27;z&#x27;);
+                                    Vector.assign(owner, &#x27;position&#x27;, &#x27;x&#x27;, &#x27;y&#x27;, &#x27;z&#x27;);
                                     
-                                    this.neighbors = this.owner.neighbors = definition.neighbors || this.owner.neighbors || {};
+                                    this.neighbors = owner.neighbors = definition.neighbors || owner.neighbors || {};
+                                    
+                                    if (this.neighborProperties) {
+                                        const properties = this.neighborProperties;
+                        
+                                        for (let i = 0; i &lt; properties.length; i++) {
+                                            const
+                                                propertyName = properties[i],
+                                                value = owner[propertyName];
+                        
+                                            if (value) {
+                                                this.neighbors[propertyName] = value;
+                                            }
+                                            Object.defineProperty(owner, propertyName, {
+                                                get: () =&gt; this.neighbors[propertyName],
+                                                set: (value) =&gt; {
+                                                    if (value !== this.neighbors[propertyName]) {
+                                                        this.neighbors[propertyName] = value;
+                                                        for (let i = 0; i &lt; this.contains.length; i++) {
+                                                            this.contains[i].triggerEvent(&#x27;set-directions&#x27;);
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
                                 },
                                 
                                 events: {
                                     &quot;add-neighbors&quot;: function (neighbors) {
-                                        var i = 0,
-                                            direction = null;
-                                        
-                                        for (direction in neighbors) {
+                                        for (const direction in neighbors) {
                                             if (neighbors.hasOwnProperty(direction)) {
                                                 this.neighbors[direction] = neighbors[direction];
                                             }
                                         }
                                         
-                                        for (i = 0; i &lt; this.contains.length; i++) {
+                                        for (let i = 0; i &lt; this.contains.length; i++) {
                                             this.contains[i].triggerEvent(&#x27;set-directions&#x27;);
                                         }
                                     },
@@ -257,8 +295,10 @@
                                 
                                 methods: {
                                     destroy: function () {
-                                        this.contains.recycle();
-                                        this.edgesContain.recycle();
+                                        arrayCache.recycle(this.contains);
+                                        this.contains = this.owner.contains = null;
+                                        arrayCache.recycle(this.edgesContain);
+                                        this.edgesContain = this.owner.edgesContain = null;
                                     }
                                 },
                                 
@@ -309,7 +349,7 @@
                                         
                                         for (i = 0; i &lt; this.contains.length; i++) {
                                             if (this.contains[i] === entity) {
-                                                return this.contains.greenSplice(i);
+                                                return greenSplice(this.contains, i);
                                             }
                                         }
                                         return false;
@@ -330,7 +370,7 @@
                                         
                                         for (i = 0; i &lt; this.edgesContain.length; i++) {
                                             if (this.edgesContain[i] === entity) {
-                                                return this.edgesContain.greenSplice(i);
+                                                return greenSplice(this.edgesContain, i);
                                             }
                                         }
                                         return false;

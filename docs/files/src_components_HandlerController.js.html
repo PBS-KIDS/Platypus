@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v1.0.2 API Documentation : src\components\HandlerController.js</title>
+	<title>platypus v2.0.0 API Documentation : src\components\HandlerController.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 1.0.2</em>
+            <em>API Documentation for: 2.0.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/platypus.AABB.html">platypus.AABB</a></li>
                                 <li><a href="../classes/platypus.ActionState.html">platypus.ActionState</a></li>
+                                <li><a href="../classes/platypus.AssetManager.html">platypus.AssetManager</a></li>
                                 <li><a href="../classes/platypus.Async.html">platypus.Async</a></li>
                                 <li><a href="../classes/platypus.CollisionData.html">platypus.CollisionData</a></li>
                                 <li><a href="../classes/platypus.CollisionDataContainer.html">platypus.CollisionDataContainer</a></li>
@@ -46,6 +47,7 @@
                                 <li><a href="../classes/platypus.Component.html">platypus.Component</a></li>
                                 <li><a href="../classes/platypus.components.AIChaser.html">platypus.components.AIChaser</a></li>
                                 <li><a href="../classes/platypus.components.AIPacer.html">platypus.components.AIPacer</a></li>
+                                <li><a href="../classes/platypus.components.AudioMusic.html">platypus.components.AudioMusic</a></li>
                                 <li><a href="../classes/platypus.components.AudioSFX.html">platypus.components.AudioSFX</a></li>
                                 <li><a href="../classes/platypus.components.AudioVO.html">platypus.components.AudioVO</a></li>
                                 <li><a href="../classes/platypus.components.Camera.html">platypus.components.Camera</a></li>
@@ -58,7 +60,6 @@
                                 <li><a href="../classes/platypus.components.Counter.html">platypus.components.Counter</a></li>
                                 <li><a href="../classes/platypus.components.EntityContainer.html">platypus.components.EntityContainer</a></li>
                                 <li><a href="../classes/platypus.components.EntityController.html">platypus.components.EntityController</a></li>
-                                <li><a href="../classes/platypus.components.EventRender.html">platypus.components.EventRender</a></li>
                                 <li><a href="../classes/platypus.components.HandlerCollision.html">platypus.components.HandlerCollision</a></li>
                                 <li><a href="../classes/platypus.components.HandlerController.html">platypus.components.HandlerController</a></li>
                                 <li><a href="../classes/platypus.components.HandlerLogic.html">platypus.components.HandlerLogic</a></li>
@@ -74,6 +75,7 @@
                                 <li><a href="../classes/platypus.components.LogicDragDrop.html">platypus.components.LogicDragDrop</a></li>
                                 <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicRotationalMovement.html">platypus.components.LogicRotationalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicTimer.html">platypus.components.LogicTimer</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
                                 <li><a href="../classes/platypus.components.Motion.html">platypus.components.Motion</a></li>
                                 <li><a href="../classes/platypus.components.Mover.html">platypus.components.Mover</a></li>
@@ -87,7 +89,7 @@
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
-                                <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
+                                <li><a href="../classes/platypus.components.RenderAnimator.html">platypus.components.RenderAnimator</a></li>
                                 <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
@@ -97,7 +99,6 @@
                                 <li><a href="../classes/platypus.components.RenderText.html">platypus.components.RenderText</a></li>
                                 <li><a href="../classes/platypus.components.RenderTiles.html">platypus.components.RenderTiles</a></li>
                                 <li><a href="../classes/platypus.components.SceneChanger.html">platypus.components.SceneChanger</a></li>
-                                <li><a href="../classes/platypus.components.StateRender.html">platypus.components.StateRender</a></li>
                                 <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
                                 <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
                                 <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
@@ -107,16 +108,17 @@
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
                                 <li><a href="../classes/platypus.DataMap.html">platypus.DataMap</a></li>
                                 <li><a href="../classes/platypus.Entity.html">platypus.Entity</a></li>
+                                <li><a href="../classes/platypus.EntityLinker.html">platypus.EntityLinker</a></li>
                                 <li><a href="../classes/platypus.Game.html">platypus.Game</a></li>
+                                <li><a href="../classes/platypus.Gamepad.html">platypus.Gamepad</a></li>
                                 <li><a href="../classes/platypus.Messenger.html">platypus.Messenger</a></li>
                                 <li><a href="../classes/platypus.PIXIAnimation.html">platypus.PIXIAnimation</a></li>
-                                <li><a href="../classes/platypus.PlatypusPlugin.html">platypus.PlatypusPlugin</a></li>
-                                <li><a href="../classes/platypus.Scene.html">platypus.Scene</a></li>
+                                <li><a href="../classes/platypus.SFXPlayer.html">platypus.SFXPlayer</a></li>
                                 <li><a href="../classes/platypus.StateMap.html">platypus.StateMap</a></li>
+                                <li><a href="../classes/platypus.Storage.html">platypus.Storage</a></li>
                                 <li><a href="../classes/platypus.Vector.html">platypus.Vector</a></li>
-                                <li><a href="../classes/window.Array.html">window.Array</a></li>
+                                <li><a href="../classes/platypus.VOPlayer.html">platypus.VOPlayer</a></li>
                                 <li><a href="../classes/window.Map.html">window.Map</a></li>
-                                <li><a href="../classes/window.String.html">window.String</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -167,192 +169,231 @@
                          * @uses platypus.Component
                          */
                         /* global platypus, window */
-                        (function () {
-                            &#x27;use strict&#x27;;
+                        import {arrayCache, greenSplice} from &#x27;../utils/array.js&#x27;;
+                        import Gamepad from &#x27;../Gamepad.js&#x27;;
+                        import createComponentClass from &#x27;../factory.js&#x27;;
                         
-                            var
-                                keyMap = { //Note: if this list is changed, be sure to update https://github.com/PBS-KIDS/Platypus/wiki/Handler-controller-key-list
-                                    kc0: &#x27;unknown&#x27;,
-                                    kc8: &#x27;backspace&#x27;,
-                                    kc9: &#x27;tab&#x27;,
-                                    kc12: &#x27;numpad-5-shift&#x27;,
-                                    kc13: &#x27;enter&#x27;,
-                                    kc16: &#x27;shift&#x27;,
-                                    kc17: &#x27;ctrl&#x27;,
-                                    kc18: &#x27;alt&#x27;,
-                                    kc19: &#x27;pause&#x27;,
-                                    kc20: &#x27;caps-lock&#x27;,
-                                    kc27: &#x27;esc&#x27;,
-                                    kc32: &#x27;space&#x27;,
-                                    kc33: &#x27;page-up&#x27;,
-                                    kc34: &#x27;page-down&#x27;,
-                                    kc35: &#x27;end&#x27;,
-                                    kc36: &#x27;home&#x27;,
-                                    kc37: &#x27;left-arrow&#x27;,
-                                    kc38: &#x27;up-arrow&#x27;,
-                                    kc39: &#x27;right-arrow&#x27;,
-                                    kc40: &#x27;down-arrow&#x27;,
-                                    kc42: &#x27;numpad-multiply&#x27;,
-                                    kc43: &#x27;numpad-add&#x27;,
-                                    kc44: &#x27;print-screen&#x27;,
-                                    kc45: &#x27;insert&#x27;,
-                                    kc46: &#x27;delete&#x27;,
-                                    kc47: &#x27;numpad-division&#x27;,
-                                    kc48: &#x27;0&#x27;,
-                                    kc49: &#x27;1&#x27;,
-                                    kc50: &#x27;2&#x27;,
-                                    kc51: &#x27;3&#x27;,
-                                    kc52: &#x27;4&#x27;,
-                                    kc53: &#x27;5&#x27;,
-                                    kc54: &#x27;6&#x27;,
-                                    kc55: &#x27;7&#x27;,
-                                    kc56: &#x27;8&#x27;,
-                                    kc57: &#x27;9&#x27;,
-                                    kc59: &#x27;semicolon&#x27;,
-                                    kc61: &#x27;equals&#x27;,
-                                    kc65: &#x27;a&#x27;,
-                                    kc66: &#x27;b&#x27;,
-                                    kc67: &#x27;c&#x27;,
-                                    kc68: &#x27;d&#x27;,
-                                    kc69: &#x27;e&#x27;,
-                                    kc70: &#x27;f&#x27;,
-                                    kc71: &#x27;g&#x27;,
-                                    kc72: &#x27;h&#x27;,
-                                    kc73: &#x27;i&#x27;,
-                                    kc74: &#x27;j&#x27;,
-                                    kc75: &#x27;k&#x27;,
-                                    kc76: &#x27;l&#x27;,
-                                    kc77: &#x27;m&#x27;,
-                                    kc78: &#x27;n&#x27;,
-                                    kc79: &#x27;o&#x27;,
-                                    kc80: &#x27;p&#x27;,
-                                    kc81: &#x27;q&#x27;,
-                                    kc82: &#x27;r&#x27;,
-                                    kc83: &#x27;s&#x27;,
-                                    kc84: &#x27;t&#x27;,
-                                    kc85: &#x27;u&#x27;,
-                                    kc86: &#x27;v&#x27;,
-                                    kc87: &#x27;w&#x27;,
-                                    kc88: &#x27;x&#x27;,
-                                    kc89: &#x27;y&#x27;,
-                                    kc90: &#x27;z&#x27;,
-                                    kc91: &#x27;left-windows-start&#x27;,
-                                    kc92: &#x27;right-windows-start&#x27;,
-                                    kc93: &#x27;windows-menu&#x27;,
-                                    kc96: &#x27;back-quote&#x27;,
-                                    kc106: &#x27;numpad-multiply&#x27;,
-                                    kc107: &#x27;numpad-add&#x27;,
-                                    kc109: &#x27;numpad-minus&#x27;,
-                                    kc110: &#x27;numpad-period&#x27;,
-                                    kc111: &#x27;numpad-division&#x27;,
-                                    kc112: &#x27;f1&#x27;,
-                                    kc113: &#x27;f2&#x27;,
-                                    kc114: &#x27;f3&#x27;,
-                                    kc115: &#x27;f4&#x27;,
-                                    kc116: &#x27;f5&#x27;,
-                                    kc117: &#x27;f6&#x27;,
-                                    kc118: &#x27;f7&#x27;,
-                                    kc119: &#x27;f8&#x27;,
-                                    kc120: &#x27;f9&#x27;,
-                                    kc121: &#x27;f10&#x27;,
-                                    kc122: &#x27;f11&#x27;,
-                                    kc123: &#x27;f12&#x27;,
-                                    kc144: &#x27;num-lock&#x27;,
-                                    kc145: &#x27;scroll-lock&#x27;,
-                                    kc186: &#x27;semicolon&#x27;,
-                                    kc187: &#x27;equals&#x27;,
-                                    kc188: &#x27;comma&#x27;,
-                                    kc189: &#x27;hyphen&#x27;,
-                                    kc190: &#x27;period&#x27;,
-                                    kc191: &#x27;forward-slash&#x27;,
-                                    kc192: &#x27;back-quote&#x27;,
-                                    kc219: &#x27;open-bracket&#x27;,
-                                    kc220: &#x27;back-slash&#x27;,
-                                    kc221: &#x27;close-bracket&#x27;,
-                                    kc222: &#x27;quote&#x27;
-                                };
+                        const
+                            /**
+                             * Sends a &#x27;handle-controller&#x27; message to all the entities the component is handling. If an entity does not handle the message, it&#x27;s removed it from the entity list.
+                             *
+                             * @method &#x27;broadcastHandleController&#x27;
+                             * @param tick {Object} An object containing tick data.
+                             */
+                            broadcastHandleController = function (tick) {
+                                if (hasGamepads) {
+                                    const
+                                        gamepads = [...window.navigator.getGamepads()],
+                                        standards = this.gamepads;
                         
-                            return platypus.createComponentClass({
-                                
-                                id: &#x27;HandlerController&#x27;,
-                                
-                                initialize: function () {
-                                    this.callbackKeyUp   = null;
-                                    this.callbackKeyDown = null;
-                                    
-                                    if (platypus.game.settings.debug) { // If this is a test build, leave in the browser key combinations so debug tools can be opened as expected.
-                                        this.callbackKeyDown = function (event) {
-                                            this.keyDown(event);
-                                        }.bind(this);
-                                        this.callbackKeyUp = function (event) {
-                                            this.keyUp(event);
-                                        }.bind(this);
-                                    } else { // Otherwise remove default browser behavior for key inputs so that they do not interfere with game-play.
-                                        this.callbackKeyDown = function (event) {
-                                            this.keyDown(event);
-                                            event.preventDefault(); // this may be too aggressive - if problems arise, we may need to limit this to certain key combos that get in the way of game-play. Example: (event.metaKey &amp;&amp; event.keyCode == 37) causes an accidental cmd key press to send the browser back a page while playing and hitting the left arrow button.
-                                        }.bind(this);
-                                        this.callbackKeyUp = function (event) {
-                                            this.keyUp(event);
-                                            event.preventDefault(); // this may be too aggressive - if problems arise, we may need to limit this to certain key combos that get in the way of game-play. Example: (event.metaKey &amp;&amp; event.keyCode == 37) causes an accidental cmd key press to send the browser back a page while playing and hitting the left arrow button.
-                                        }.bind(this);
-                                    }
-                                    
-                                    window.addEventListener(&#x27;keydown&#x27;, this.callbackKeyDown, true);
-                                    window.addEventListener(&#x27;keyup&#x27;,   this.callbackKeyUp,   true);
-                                },
-                                events: {
-                                    /**
-                                     * Sends a &#x27;handle-controller&#x27; message to all the entities the component is handling. If an entity does not handle the message, it&#x27;s removed it from the entity list.
-                                     *
-                                     * @method &#x27;tick&#x27;
-                                     * @param tick {Object} An object containing tick data.
-                                     */
-                                    &quot;tick&quot;: function (tick) {
+                                    for (let i = 0; i &lt; gamepads.length; i++) {
+                                        const gamepad = gamepads[i];
                         
-                                        /**
-                                         * Sent to entities on each tick to handle whatever they need to regarding controls.
-                                         *
-                                         * @event &#x27;handle-controller&#x27;
-                                         * @param tick {Object} An object containing tick data.
-                                         */
-                                        if (this.owner.triggerEventOnChildren) {
-                                            this.owner.triggerEventOnChildren(&#x27;handle-controller&#x27;, tick);
+                                        if (gamepad) {
+                                            const standard = standards[gamepad.index];
+                        
+                                            if (!standard) { // set up initial values so events can be triggered later
+                                                standards[gamepad.index] = Gamepad.setUp(gamepad, onDown.bind(this, &#x27;gamepad&#x27;), onUp.bind(this, &#x27;gamepad&#x27;), onChange.bind(this, &#x27;gamepad&#x27;));
+                                            } else {
+                                                standard.update(gamepad);
+                                            }
                                         }
-                                    }
-                                },
-                                methods: {
-                                    keyDown: function (event) {
-                        
-                                        /**
-                                         *  Message sent to an entity when a key goes from up to down.
-                                         *
-                                         * @event &#x27;key:[keyId]:down&#x27;
-                                         * @param event {DOMEvent} The DOM event that triggered the keydown event.
-                                         */
-                                        if (this.owner.triggerEventOnChildren) {
-                                            this.owner.triggerEventOnChildren(&#x27;key:&#x27; + (keyMap[&#x27;kc&#x27; + event.keyCode] || (&#x27;key-code-&#x27; + event.keyCode)) + &#x27;:down&#x27;, event);
-                                        }
-                                    },
-                                    keyUp: function (event) {
-                        
-                                        /**
-                                         * Message sent to child entities when a key goes from down to up.
-                                         *
-                                         * @event &#x27;key:[keyId]:up&#x27;
-                                         * @param event {DOMEvent} The DOM event that triggered the keyup event.
-                                         */
-                                        if (this.owner.triggerEventOnChildren) {
-                                            this.owner.triggerEventOnChildren(&#x27;key:&#x27; + (keyMap[&#x27;kc&#x27; + event.keyCode] || (&#x27;key-code-&#x27; + event.keyCode)) + &#x27;:up&#x27;, event);
-                                        }
-                                    },
-                                    destroy: function () {
-                                        window.removeEventListener(&#x27;keydown&#x27;, this.callbackKeyDown);
-                                        window.removeEventListener(&#x27;keyup&#x27;,   this.callbackKeyUp);
                                     }
                                 }
-                            });
-                        }());
+                        
+                                /**
+                                 * Triggered on owner and child entities on each tick to handle whatever they need to regarding controls.
+                                 *
+                                 * @event &#x27;handle-controller&#x27;
+                                 * @param tick {Object} An object containing tick data.
+                                 */
+                                this.triggerOnAll(&#x27;handle-controller&#x27;, tick);
+                            },
+                            onDown = function (type, event) {
+                                /**
+                                 *  Triggered on owner and child entities when a key goes from up to down.
+                                 *
+                                 * @event &#x27;[event.code]:down&#x27;
+                                 * @param event {DOMEvent} The DOM event that triggered the keydown event.
+                                 */
+                                this.triggerControlAction(event.code, &#x27;down&#x27;, event);
+                        
+                                updatePrecedence(type);
+                            },
+                            onUp = function (type, event) {
+                                /**
+                                 * Triggered on owner and child entities when a key goes from down to up.
+                                 *
+                                 * @event &#x27;[event.code]:up&#x27;
+                                 * @param event {DOMEvent} The DOM event that triggered the keyup event.
+                                 */
+                                this.triggerControlAction(event.code, &#x27;up&#x27;, event);
+                        
+                                updatePrecedence(type);
+                            },
+                            onChange = function (type, event) {
+                                /**
+                                 * Triggered on owner and child entities when an axis changes.
+                                 *
+                                 * @event &#x27;[event.code]:change&#x27;
+                                 * @param event {DOMEvent} The event that triggered the change event.
+                                 */
+                                this.triggerControlAction(event.code, &#x27;change&#x27;, event);
+                        
+                                updatePrecedence(type);
+                            },
+                            updatePrecedence = (type) =&gt; {
+                                if (type !== inputs[0]) {
+                                    const was = inputs.indexOf(type);
+                        
+                                    if (was &gt; 0) {
+                                        greenSplice(inputs, was);
+                                    }
+                        
+                                    inputs.unshift(type);
+                        
+                                    for (let i = 0; i &lt; notifies.length; i++) {
+                                        notifies[i](inputs);
+                                    }
+                                }
+                            },
+                            inputs = [],
+                            notifies = [],
+                            detectInvalids = {},
+                            detectProcessing = {};
+                        let hasGamepads = false,
+                            gameWideReady = false;
+                        
+                        window.addEventListener(&quot;gamepadconnected&quot;, () =&gt; {
+                            hasGamepads = true;
+                            updatePrecedence(&#x27;gamepad&#x27;);
+                        });
+                        
+                        window.addEventListener(&#x27;touchstart&#x27;, () =&gt; {
+                            updatePrecedence(&#x27;touch&#x27;);
+                        });
+                        
+                        window.addEventListener(&#x27;mousedown&#x27;, () =&gt; {
+                            updatePrecedence(&#x27;mouse&#x27;);
+                        });
+                        
+                          
+                        //window.addEventListener(&quot;gamepaddisconnected&quot;, (event) =&gt; {});
+                        
+                        export default createComponentClass({
+                            
+                            id: &#x27;HandlerController&#x27;,
+                            properties: {
+                                /**
+                                 * Whether &#x27;handle-controller&#x27; event should fire based on the &#x27;handle-logic&#x27; event instead of the &#x27;tick&#x27; event.
+                                 *
+                                 * @property useHandleLogic
+                                 * @type Boolean
+                                 * @default false
+                                 */
+                                useHandleLogic: false
+                            },
+                        
+                            publicProperties: {
+                                inputPrecedence: inputs
+                            },
+                            
+                            initialize: function () {
+                                if (platypus.game.settings.debug) { // If this is a test build, leave in the browser key combinations so debug tools can be opened as expected.
+                                    this.callbackKeyDown = onDown.bind(this, &#x27;keyboard&#x27;);
+                                    this.callbackKeyUp = onUp.bind(this, &#x27;keyboard&#x27;);
+                                } else { // Otherwise remove default browser behavior for key inputs so that they do not interfere with game-play.
+                                    this.callbackKeyDown = (event) =&gt; {
+                                        onDown.call(this, &#x27;keyboard&#x27;, event);
+                                        event.preventDefault(); // this may be too aggressive - if problems arise, we may need to limit this to certain key combos that get in the way of game-play. Example: (event.metaKey &amp;&amp; event.keyCode == 37) causes an accidental cmd key press to send the browser back a page while playing and hitting the left arrow button.
+                                    };
+                                    this.callbackKeyUp = (event) =&gt; {
+                                        onUp.call(this, &#x27;keyboard&#x27;, event);
+                                        event.preventDefault(); // this may be too aggressive - if problems arise, we may need to limit this to certain key combos that get in the way of game-play. Example: (event.metaKey &amp;&amp; event.keyCode == 37) causes an accidental cmd key press to send the browser back a page while playing and hitting the left arrow button.
+                                    };
+                                }
+                                
+                                window.addEventListener(&#x27;keydown&#x27;, this.callbackKeyDown, true);
+                                window.addEventListener(&#x27;keyup&#x27;,   this.callbackKeyUp,   true);
+                        
+                                if (this.useHandleLogic) {
+                                    this.addEventListener(&#x27;handle-logic&#x27;, broadcastHandleController);
+                                } else {
+                                    this.addEventListener(&#x27;tick&#x27;, broadcastHandleController);
+                                }
+                        
+                                this.gamepads = arrayCache.setUp();
+                        
+                                this.notifier = (inputs) =&gt; {
+                                    /**
+                                     * Triggered on owner and child entities when player uses a new imput method. (For example, going from mouse to keyboard or keyboard to gamepad.)
+                                     *
+                                     * @event &#x27;input-precedence-updated&#x27;
+                                     * @param inputs {Array} A list of input methods, ordered by precedence with index 0 being the most recent input method.
+                                     */
+                                    this.triggerOnAll(&#x27;input-precedence-updated&#x27;, inputs);
+                                };
+                                notifies.push(this.notifier);
+                        
+                                if (!gameWideReady) { // Need info at the game level to handle missed control input across layers
+                                    gameWideReady = true;
+                                    platypus.game.on(&#x27;tick&#x27;, function () {
+                                        for (const key in detectInvalids) {
+                                            if (detectInvalids.hasOwnProperty(key)) {
+                                                if (detectInvalids[key] === 0) {
+                                                    this.triggerOnChildren(&#x27;invalid-input&#x27;, key);
+                                                } else {
+                                                    this.triggerOnChildren(&#x27;valid-input&#x27;, key);
+                                                }
+                                                delete detectInvalids[key];
+                                            }
+                                        }
+                                    }.bind(platypus.game));
+                                }
+                            },
+                            events: {
+                                &#x27;invalid-input&#x27;: function (input) {
+                                    this.owner.triggerEventOnChildren(&#x27;invalid-input&#x27;, input);
+                                },
+                                &#x27;valid-input&#x27;: function (input) {
+                                    this.owner.triggerEventOnChildren(&#x27;valid-input&#x27;, input);
+                                }
+                            },
+                            methods: {
+                                destroy: function () {
+                                    window.removeEventListener(&#x27;keydown&#x27;, this.callbackKeyDown);
+                                    window.removeEventListener(&#x27;keyup&#x27;,   this.callbackKeyUp);
+                                    for (let i = 0; i &lt; this.gamepads.length; i++) {
+                                        if (this.gamepads[i]) {
+                                            this.gamepads[i].recycle();
+                                        }
+                                    }
+                                    arrayCache.recycle(this.gamepads);
+                                    greenSplice(notifies, notifies.indexOf(this.notifier));
+                                },
+                                triggerControlAction: function (control, action, ...args) {
+                                    const
+                                        event = &#x60;${control}:${action}&#x60;;
+                        
+                                    detectProcessing[control] = (detectProcessing[control] || 0) + this.triggerOnAll(event, ...args);
+                                    if (action === &#x27;up&#x27;) {
+                                        detectInvalids[control] = (detectInvalids[control] || 0) + detectProcessing[control];
+                                        detectProcessing[control] = 0;
+                                    }
+                                },
+                                triggerOnAll: function (event, ...args) {
+                                    const
+                                        owner = this.owner;
+                                    let count = owner.triggerEvent(event, ...args);
+                        
+                                    if (owner.triggerEventOnChildren) {
+                                        count += owner.triggerEventOnChildren(event, ...args);
+                                    }
+                                    
+                                    return count;
+                                }
+                            }
+                        });
                         
                             </pre>
                         </div>
