@@ -52,6 +52,7 @@ export default createComponentClass(/** @lends XHR.prototype */{
      * @uses platypus.Component
      * @constructs
      * @param {*} definition 
+     * @listens request
      */
     initialize: function (definition) {
         this.setProperties(definition);
@@ -61,14 +62,13 @@ export default createComponentClass(/** @lends XHR.prototype */{
         /**
          * On receiving this message, this component makes a request from the server using the provided information. Note that properties set here will reset the properties set by this component's JSON definition.
          *
-         * @method
-         * @listens event:request
-         * @param message {Object}
-         * @param message.method {String} XHR method to use: must be "GET" or "POST".
-         * @param message.path {String} The path to the server resource.
-         * @param [message.responseType="text"] {String} Response type expected.
-         * @param [message.data] {Object} An object of string key/value pairs to be transmitted to the server.
-         * @param message.onload {Function} A function that should be run on receiving a response from the server. This defaults to triggering a "response" message containing the responseText value.
+         * @event request
+         * @property {Object} message
+         * @property {String} message.method XHR method to use: must be "GET" or "POST".
+         * @property {String} message.path The path to the server resource.
+         * @property {String} [message.responseType="text"] Response type expected.
+         * @property {Object} [message.data] An object of string key/value pairs to be transmitted to the server.
+         * @property {Function} message.onload A function that should be run on receiving a response from the server. This defaults to triggering a "response" message containing the responseText value.
          */
         "request": function (resp) {
             this.setProperties(resp);
