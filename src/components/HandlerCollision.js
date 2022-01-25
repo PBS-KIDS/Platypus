@@ -1219,7 +1219,7 @@ export default (function () {
              *
              * @method getShapeCollisions
              * @param shape {CollisionShape} The shape to check for collisions.
-             * @param collisionTypes {Array of strings} The collision types to check against.
+             * @param collisionTypes {String[]} The collision types to check against.
              * @return collisions {Array} This is a list of collision objects describing the soft collisions.
              */
             getShapeCollisions: function (shape, collisionTypes) {
@@ -1238,7 +1238,7 @@ export default (function () {
              * @method getPointCollisions
              * @param x {number} The x-axis value.
              * @param y {number} The y-axis value.
-             * @param collisionTypes {Array of strings} The collision types to check against.
+             * @param collisionTypes {String[]} The collision types to check against.
              * @return collisions {Array} This is a list of collision objects describing the soft collisions.
              */
             getPointCollisions: function (x, y, collisionTypes) {

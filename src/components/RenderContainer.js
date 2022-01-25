@@ -473,7 +473,7 @@ export default (function () {
              * A setup message used to add the sprite to the stage. On receiving this message, the component sets its parent container to the stage contained in the message if it doesn't already have one.
              *
              * @method 'handle-render-load'
-             * @param data.renderGroups {Array of PIXI.Container} Containers to categorize display of groups of entities.
+             * @param data.renderGroups {PIXI.Container[]} Containers to categorize display of groups of entities.
              */
             "handle-render-load": function () {
                 const owner = this.owner;

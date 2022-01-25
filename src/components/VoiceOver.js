@@ -211,7 +211,7 @@ export default (function () {
              *      ],
              *
              * @property generatedVoiceOverMap
-             * @type Object Array
+             * @type Object[]
              * @default null
              */
             generatedVoiceOverMaps: null

@@ -46,7 +46,7 @@ export default (function () {
              * The event to trigger when the user mouses over the button
              *
              * @property hoverAudio
-             * @type String or an Array of Strings and Message Objects
+             * @type String|String[]|Message[]
              * @default ""
              */
             "onHover": "",

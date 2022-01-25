@@ -173,7 +173,7 @@ export default (function () {
              * This message triggers a new message on the entity that includes what button on the mouse was pressed: "mouse:left-button:down", "mouse:middle-button:down", or "mouse:right-button:down".
              *
              * @method 'pointerdown'
-             * @param value.event {DOM Event object} This event object is passed along with the new message.
+             * @param value.event {Event} This event object is passed along with the new message.
              */
             "pointerdown": function (value) {
                 if (value.pixiEvent.data.pointerType === 'mouse') {
@@ -181,19 +181,19 @@ export default (function () {
                      * This component triggers the state of mouse inputs on the entity if a render component of the entity accepts mouse input.
                      *
                      * @event 'mouse:mouse-left:down'
-                     * @param message {DOM Event object} The original mouse event object is passed along with the control message.
+                     * @param message {Event} The original mouse event object is passed along with the control message.
                      */
                     /**
                      * This component triggers the state of mouse inputs on the entity if a render component of the entity accepts mouse input (for example [[Render-Animation]]).
                      *
                      * @event 'mouse:mouse-middle:down'
-                     * @param message {DOM Event object} The original mouse event object is passed along with the control message.
+                     * @param message {Event} The original mouse event object is passed along with the control message.
                      */
                     /**
                      * This component triggers the state of mouse inputs on the entity if a render component of the entity accepts mouse input (for example [[Render-Animation]]).
                      *
                      * @event 'mouse:mouse-right:down'
-                     * @param message {DOM Event object} The original mouse event object is passed along with the control message.
+                     * @param message {Event} The original mouse event object is passed along with the control message.
                      */
                     this.owner.triggerEvent('mouse:' + mouseMap[value.event.button || 0] + ':down', value.event);
                 }
@@ -203,7 +203,7 @@ export default (function () {
                      * This event is triggered when there is an active touch in the joystick area.
                      *
                      * @event 'joystick:down'
-                     * @param message {DOM Event object} The original pointer event object is passed along with the control message.
+                     * @param message {Event} The original pointer event object is passed along with the control message.
                      */
                     this.owner.triggerEvent('joystick:down', value.event);
                     this.handleJoy(value);
@@ -214,7 +214,7 @@ export default (function () {
              * This message triggers a new message on the entity that includes what button on the mouse was released: "mouse:left-button:up", "mouse:middle-button:up", or "mouse:right-button:up".
              *
              * @method 'pressup'
-             * @param value.event {DOM Event object} This event object is passed along with the new message.
+             * @param value.event {Event} This event object is passed along with the new message.
              */
             "pressup": function (value) {
                 var owner = this.owner;
@@ -224,19 +224,19 @@ export default (function () {
                      * This component triggers the state of mouse inputs on the entity if a render component of the entity accepts mouse input (for example [[Render-Animation]]).
                      *
                      * @event 'mouse:mouse-left:up'
-                     * @param message {DOM Event object} The original mouse event object is passed along with the control message.
+                     * @param message {Event} The original mouse event object is passed along with the control message.
                      */
                     /**
                      * This component triggers the state of mouse inputs on the entity if a render component of the entity accepts mouse input (for example [[Render-Animation]]).
                      *
                      * @event 'mouse:mouse-middle:up'
-                     * @param message {DOM Event object} The original mouse event object is passed along with the control message.
+                     * @param message {Event} The original mouse event object is passed along with the control message.
                      */
                     /**
                      * This component triggers the state of mouse inputs on the entity if a render component of the entity accepts mouse input (for example [[Render-Animation]]).
                      *
                      * @event 'mouse:mouse-right:up'
-                     * @param message {DOM Event object} The original mouse event object is passed along with the control message.
+                     * @param message {Event} The original mouse event object is passed along with the control message.
                      */
                     owner.triggerEvent('mouse:' + mouseMap[value.event.button || 0] + ':up', value.event);
                 }
@@ -246,7 +246,7 @@ export default (function () {
                      * This event is triggered when there is an active touch is released from the joystick area.
                      *
                      * @event 'joystick:up'
-                     * @param message {DOM Event object} The original pointer event object is passed along with the control message.
+                     * @param message {Event} The original pointer event object is passed along with the control message.
                      */
                     owner.triggerEvent('joystick:up', value.event);
                     /**
@@ -320,97 +320,97 @@ export default (function () {
                      * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due north.
                      *
                      * @event 'north'
-                     * @param message {DOM Event object} The original pointer event object is passed along with the control message.
+                     * @param message {Event} The original pointer event object is passed along with the control message.
                      */
                     /**
                      * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due north-northeast.
                      *
                      * @event 'north-northeast'
-                     * @param message {DOM Event object} The original pointer event object is passed along with the control message.
+                     * @param message {Event} The original pointer event object is passed along with the control message.
                      */
                     /**
                      * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due northeast.
                      *
                      * @event 'northeast'
-                     * @param message {DOM Event object} The original pointer event object is passed along with the control message.
+                     * @param message {Event} The original pointer event object is passed along with the control message.
                      */
                     /**
                      * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due east-northeast.
                      *
                      * @event 'east-northeast'
-                     * @param message {DOM Event object} The original pointer event object is passed along with the control message.
+                     * @param message {Event} The original pointer event object is passed along with the control message.
                      */
                     /**
                      * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due east.
                      *
                      * @event 'east'
-                     * @param message {DOM Event object} The original pointer event object is passed along with the control message.
+                     * @param message {Event} The original pointer event object is passed along with the control message.
                      */
                     /**
                      * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due east-southeast.
                      *
                      * @event 'east-southeast'
-                     * @param message {DOM Event object} The original pointer event object is passed along with the control message.
+                     * @param message {Event} The original pointer event object is passed along with the control message.
                      */
                     /**
                      * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due southeast.
                      *
                      * @event 'southeast'
-                     * @param message {DOM Event object} The original pointer event object is passed along with the control message.
+                     * @param message {Event} The original pointer event object is passed along with the control message.
                      */
                     /**
                      * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due south-southeast.
                      *
                      * @event 'south-southeast'
-                     * @param message {DOM Event object} The original pointer event object is passed along with the control message.
+                     * @param message {Event} The original pointer event object is passed along with the control message.
                      */
                     /**
                      * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due south.
                      *
                      * @event 'south'
-                     * @param message {DOM Event object} The original pointer event object is passed along with the control message.
+                     * @param message {Event} The original pointer event object is passed along with the control message.
                      */
                     /**
                      * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due south-southwest.
                      *
                      * @event 'south-southwest'
-                     * @param message {DOM Event object} The original pointer event object is passed along with the control message.
+                     * @param message {Event} The original pointer event object is passed along with the control message.
                      */
                     /**
                      * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due southwest.
                      *
                      * @event 'southwest'
-                     * @param message {DOM Event object} The original pointer event object is passed along with the control message.
+                     * @param message {Event} The original pointer event object is passed along with the control message.
                      */
                     /**
                      * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due west-southwest.
                      *
                      * @event 'west-southwest'
-                     * @param message {DOM Event object} The original pointer event object is passed along with the control message.
+                     * @param message {Event} The original pointer event object is passed along with the control message.
                      */
                     /**
                      * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due west.
                      *
                      * @event 'west'
-                     * @param message {DOM Event object} The original pointer event object is passed along with the control message.
+                     * @param message {Event} The original pointer event object is passed along with the control message.
                      */
                     /**
                      * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due west-northwest.
                      *
                      * @event 'west-northwest'
-                     * @param message {DOM Event object} The original pointer event object is passed along with the control message.
+                     * @param message {Event} The original pointer event object is passed along with the control message.
                      */
                     /**
                      * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due northwest.
                      *
                      * @event 'northwest'
-                     * @param message {DOM Event object} The original pointer event object is passed along with the control message.
+                     * @param message {Event} The original pointer event object is passed along with the control message.
                      */
                     /**
                      * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due north-northwest.
                      *
                      * @event 'north-northwest'
-                     * @param message {DOM Event object} The original pointer event object is passed along with the control message.
+                     * @param message {Event} The original pointer event object is passed along with the control message.
                      */
                     owner.triggerEvent(direction, event);
 

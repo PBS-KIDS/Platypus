@@ -149,7 +149,7 @@ export default (function () {
              * The entity's canvas element is used to determine the window size of the camera.
              *
              * @property canvas
-             * @type DOMElement Canvas
+             * @type Canvas
              * @default null
              */
             "canvas": null,

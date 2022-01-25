@@ -260,7 +260,7 @@ export default (function () {
              * When a ["Motion"]("Motion"%20Component.html) component is added, this component adds it to its list of movers.
              *
              * @method 'component-added'
-             * @param component {"Motion" Component} The motion to add as a mover on this entity.
+             * @param component {Motion} The motion to add as a mover on this entity.
              */
             "component-added": function (component) {
                 if (component.type === 'Motion') {
@@ -272,7 +272,7 @@ export default (function () {
              * When a ["Motion"]("Motion"%20Component.html) component is removed, this component removes it from its list of movers.
              *
              * @method 'component-removed'
-             * @param component {"Motion" Component} The motion to remove as a mover from this entity.
+             * @param component {Motion} The motion to remove as a mover from this entity.
              */
             "component-removed": function (component) {
                 var i = 0;
@@ -574,7 +574,7 @@ export default (function () {
              *
              * @method addMover
              * @param mover {Object} For motion definition properties, see the ["Motion"]("Motion"%20Component.html) component.
-             * @return motion {"Motion" Component}
+             * @return motion {Motion}
              */
             addMover: function (mover) {
                 var m = this.owner.addComponent(new platypus.components.Motion(this.owner, mover));
@@ -586,7 +586,7 @@ export default (function () {
              * This method removes a mover from the entity.
              *
              * @method removeMover
-             * @param motion {"Motion" Component}
+             * @param motion {Motion}
              */
             removeMover: function (m) {
                 this.owner.removeComponent(m);
