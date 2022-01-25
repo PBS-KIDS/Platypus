@@ -107,6 +107,7 @@ export default (function () {
          * @memberof platypus.components
          * @uses platypus.Component
          * @constructs
+         * @listens platypus.Entity#camera-update
          * @listens platypus.Entity#handle-logic
          */
         initialize: function (/*definition, callback*/) {
@@ -134,13 +135,6 @@ export default (function () {
                 }
             },
 
-            /**
-             * This component listens for camera updates to reposition the entity if its bottom, left, right, or top properties have been set.
-             *
-             * @method 'camera-update'
-             * @param camera {platypus.Data} Camera update information
-             * @param camera.viewport {platypus.AABB} The bounding box describing the camera viewport location in the world.
-             */
             "camera-update": function (camera) {
                 this.aabb.set(camera.viewport);
                 if (this.cameraSizes) {

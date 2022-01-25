@@ -88,6 +88,7 @@ export default (function () {
          * @uses platypus.Component
          * @constructs
          * @param {*} definition 
+         * @listens platypus.Entity#camera-update
          * @fires platypus.Entity#handle-logic
          * @fires platypus.Entity#prepare-logic
          * @fires platypus.Entity#handle-movement
@@ -222,13 +223,6 @@ export default (function () {
                 }
             },
             
-            /**
-             * Changes the active logic area when the camera location changes.
-             *
-             * @method 'camera-update'
-             * @param camera {Object}
-             * @param camera.viewport {platypus.AABB} The AABB describing the camera viewport in world units.
-             */
             "camera-update": function (camera) {
                 var buffer = this.buffer,
                     cam = this.camera,

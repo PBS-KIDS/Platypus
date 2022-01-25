@@ -131,6 +131,7 @@ export default (function () {
          * @memberof platypus.components
          * @uses platypus.Component
          * @constructs
+         * @listens platypus.Entity#camera-update
          * @listens platypus.Entity#load
          */
         initialize: function () {
@@ -156,12 +157,6 @@ export default (function () {
                 }
             },
 
-            /**
-             * Listens for this event to determine whether this sprite is visible.
-             *
-             * @method 'camera-update'
-             * @param camera.viewport {platypus.AABB} Camera position and size.
-             */
             "camera-update": function () {
                 // Set visiblity of sprite if within camera bounds
                 this.needsCameraCheck = true;

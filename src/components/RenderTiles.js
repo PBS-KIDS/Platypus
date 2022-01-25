@@ -1,14 +1,3 @@
-/**
- * This component handles rendering tile map backgrounds.
- *
- * When rendering the background, this component figures out what tiles are being displayed and caches them so they are rendered as one image rather than individually.
- *
- * As the camera moves, the cache is updated by blitting the relevant part of the old cached image into a new cache and then rendering tiles that have shifted into the camera's view into the cache.
- *
- * @memberof platypus.components
- * @class RenderTiles
- * @uses platypus.Component
- */
 /* global platypus */
 import {Container, Graphics, Rectangle, RenderTexture, Sprite} from 'pixi.js';
 import {arrayCache, greenSlice, greenSplice, union} from '../utils/array.js';
@@ -251,6 +240,19 @@ export default (function () {
             left: 0
         },
 
+        /**
+         * This component handles rendering tile map backgrounds.
+         *
+         * When rendering the background, this component figures out what tiles are being displayed and caches them so they are rendered as one image rather than individually.
+         *
+         * As the camera moves, the cache is updated by blitting the relevant part of the old cached image into a new cache and then rendering tiles that have shifted into the camera's view into the cache.
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @listens platypus.Entity#camera-loaded
+         * @listens platypus.Entity#camera-update
+         */
         initialize: function (definition) {
             var imgMap = this.imageMap;
 
@@ -364,14 +366,6 @@ export default (function () {
                 }
             },
 
-            /**
-             * Provides the width and height of the world.
-             *
-             * @method 'camera-loaded'
-             * @param camera {Object}
-             * @param camera.world {platypus.AABB} The dimensions of the world.
-             * @param camera.viewport {platypus.AABB} The AABB describing the camera viewport in world units.
-             */
             "camera-loaded": function (camera) {
                 this.worldWidth  = camera.world.width;
                 this.worldHeight = camera.world.height;
@@ -381,13 +375,6 @@ export default (function () {
                 }
             },
 
-            /**
-             * Triggered when the camera moves, this function updates which tiles need to be rendered and caches the image.
-             *
-             * @method 'camera-update'
-             * @param camera {Object} Provides information about the camera.
-             * @param camera.viewport {platypus.AABB} The AABB describing the camera viewport in world units.
-             */
             "camera-update": function (camera) {
                 if (this.ready) {
                     this.updateCamera(camera);

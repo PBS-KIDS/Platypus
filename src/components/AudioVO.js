@@ -1,10 +1,3 @@
-/**
- * This component plays audio using the SpringRoll VOPlayer instance. Audio is played by triggering specific messages defined in the audio component definition.
- *
- * @memberof platypus.components
- * @class AudioVO
- * @uses platypus.Component
- */
 /*global platypus */
 import Data from '../Data.js';
 import {arrayCache} from '../utils/array.js';
@@ -74,7 +67,7 @@ export default (function () {
                 /**
                  * When an audio sequence is finished playing, this event is triggered.
                  *
-                 * @event sequence-complete
+                 * @event platypus.Entity#sequence-complete
                  */
                 this.owner.triggerEvent('sequence-complete');
             }
@@ -114,6 +107,14 @@ export default (function () {
             audioMap: null
         },
             
+        /**
+         * This component plays audio using the SpringRoll VOPlayer instance. Audio is played by triggering specific messages defined in the audio component definition.
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @fires platypus.Entity#sequence-complete
+         */
         initialize: function () {
             var key = '';
             

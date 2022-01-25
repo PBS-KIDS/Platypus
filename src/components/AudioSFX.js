@@ -34,7 +34,7 @@ const
                     /**
                      * When a sound effect is finished playing, this event is triggered.
                      *
-                     * @event clip-complete
+                     * @event platypus.Entity#clip-complete
                      */
                     this.owner.triggerEvent('clip-complete');
                 }
@@ -252,7 +252,9 @@ export default createComponentClass(/** @lends AudioSFX.prototype */{
      * @memberof platypus.components
      * @uses platypus.Component
      * @constructs
+     * @listens platypus.Entity#camera-update
      * @listens platypus.Entity#state-changed
+     * @fires platypus.Entity#clip-complete
      */
     initialize: function () {
         var key      = '',
@@ -319,13 +321,6 @@ export default createComponentClass(/** @lends AudioSFX.prototype */{
             
             this.autoPanFilter = new Sound.filters.StereoFilter(lastPan);
 
-            /**
-             * Changes panning (if `autoPan` is set) when the camera location changes.
-             *
-             * @method 'camera-update'
-             * @param camera {Object}
-             * @param camera.viewport {platypus.AABB} The AABB describing the camera viewport in world units.
-             */
             this.addEventListener("camera-update", function (camera) {
                 const
                     delta = this.owner.x - camera.viewport.x,

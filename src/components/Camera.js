@@ -190,6 +190,8 @@ export default (function () {
          * @uses platypus.Component
          * @constructs
          * @listens platypus.Entity#load
+         * @fires platypus.Entity#camera-loaded
+         * @fires platypus.Entity#camera-update
          */
         initialize: function (definition) {
             var worldVP = AABB.setUp(this.x, this.y, this.width, this.height),
@@ -320,9 +322,10 @@ export default (function () {
                     /**
                      * On receiving a "world-loaded" message, the camera broadcasts the world size to all children in the world.
                      *
-                     * @event 'camera-loaded'
-                     * @param message
-                     * @param message.world {platypus.AABB} The dimensions of the world map.
+                     * @event platypus.Entity#camera-loaded
+                     * @param camera {Object}
+                     * @param camera.world {platypus.AABB} The dimensions of the world.
+                     * @param camera.viewport {platypus.AABB} The AABB describing the camera viewport in world units.
                      **/
                     entity.triggerEvent('camera-loaded', this.cameraLoadedMessage);
                 }
@@ -1016,7 +1019,7 @@ export default (function () {
                     /**
                      * This component fires "camera-update" when the position of the camera in the world has changed. This event is triggered on both the entity (typically a layer) as well as children of the entity.
                      *
-                     * @event 'camera-update'
+                     * @event platypus.Entity#camera-update
                      * @param message {Object}
                      * @param message.world {platypus.AABB} The dimensions of the world map.
                      * @param message.orientation {Number} Number describing the orientation of the camera.

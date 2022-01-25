@@ -126,6 +126,7 @@ export default (function () {
          * @uses platypus.Component
          * @constructs
          * @listens platypus.Entity#handle-logic
+         * @listens platypus.Entity#sequence-complete
          */
         initialize: function () {
             var x = 0,
@@ -204,11 +205,6 @@ export default (function () {
             
             "handle-logic": updateLogic,
 
-            /**
-             * Fired when audioVO finishes. Clears the playing tutorial returning it to the internal list of tutorials if it will be played again.
-             *
-             * @method 'sequence-complete'
-             */
             "sequence-complete": function () {
                 if (this.playing.timesToReplay >= 0) {
                     this.tutorials.push(this.playing);

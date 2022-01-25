@@ -1,10 +1,3 @@
-/**
- * This component is attached to entities that will appear in the game world. It creates a PIXI Container to contain all other display objects on the entity and keeps the container updates with the entity's location and other dynamic properties.
- *
- * @memberof platypus.components
- * @class RenderContainer
- * @uses platypus.Component
- */
 /* global platypus */
 import {Container, Graphics, Matrix, filters} from 'pixi.js';
 import AABB from '../AABB.js';
@@ -290,6 +283,14 @@ export default (function () {
             z: 0
         },
         
+        /**
+         * This component is attached to entities that will appear in the game world. It creates a PIXI Container to contain all other display objects on the entity and keeps the container updates with the entity's location and other dynamic properties.
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @listens platypus.Entity#camera-update
+         */
         initialize: function () {
             const
                 owner = this.owner,
@@ -456,12 +457,6 @@ export default (function () {
                 }
             },
 
-            /**
-             * Listens for this event to determine whether this sprite is visible.
-             *
-             * @method 'camera-update'
-             * @param camera.viewport {platypus.AABB} Camera position and size.
-             */
             "camera-update": function (camera) {
                 this.camera.set(camera.viewport);
                 

@@ -35,6 +35,7 @@ export default createComponentClass(/** @lends LogicDragDrop.prototype */{
      * @memberof platypus.components
      * @uses platypus.Component
      * @constructs
+     * @listens platypus.Entity#camera-update
      * @listens platypus.Entity#component-added
      * @listens platypus.Entity#handle-logic
      * @listens platypus.Entity#handle-post-collision-logic
@@ -60,13 +61,6 @@ export default createComponentClass(/** @lends LogicDragDrop.prototype */{
     },
 
     events: {
-        /**
-         * This component listens for camera updates to know when a dragged item goes off-camera.
-         *
-         * @method 'camera-update'
-         * @param camera {platypus.Data} Camera update information
-         * @param camera.viewport {platypus.AABB} The bounding box describing the camera viewport location in the world.
-         */
         "camera-update": function (camera) {
             this.aabb.set(camera.viewport);
             this.checkCamera();

@@ -675,6 +675,7 @@ export default (function () {
          * @memberof platypus.components
          * @uses platypus.Component
          * @constructs
+         * @listens platypus.Entity#camera-update
          * @listens platypus.Entity#layer-loaded
          */
         initialize: function () {

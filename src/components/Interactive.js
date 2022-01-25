@@ -1,9 +1,3 @@
-/**
- * This component accepts touches and clicks on the entity. It is typically automatically added by a render component that requires interactive functionality.
- *
- * @class Interactive
- * @uses platypus.Component
- */
 import {Circle, Polygon, Rectangle} from 'pixi.js';
 import AABB from '../AABB.js';
 import Data from '../Data.js';
@@ -93,6 +87,14 @@ export default createComponentClass(/** @lends Interactive.prototype */{
         buttonMode: false
     },
     
+    /**
+     * This component accepts touches and clicks on the entity. It is typically automatically added by a render component that requires interactive functionality.
+     *
+     * @memberof platypus.components
+     * @uses platypus.Component
+     * @constructs
+     * @listens platypus.Entity#camera-update
+     */
     initialize: function () {
         this.pressed = false;
         this.camera = AABB.setUp();
@@ -102,12 +104,6 @@ export default createComponentClass(/** @lends Interactive.prototype */{
     },
 
     events: {
-        /**
-         * Listens for this event to determine whether this sprite is visible.
-         *
-         * @method 'camera-update'
-         * @param camera.viewport {platypus.AABB} Camera position and size.
-         */
         "camera-update": function (camera) {
             this.camera.set(camera.viewport);
         },
