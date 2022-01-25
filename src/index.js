@@ -1,6 +1,5 @@
 /* eslint-disable sort-imports */
 /**
- * @module platypus
  * @namespace platypus
  */
 /* global global, navigator, window */
