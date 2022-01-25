@@ -1,10 +1,3 @@
-/**
- * This component moves the entity in the direction of an internally stored angle value. When moving, the entity constantly accelerates the entity in a direction up to a max velocity.
- *
- * @memberof platypus.components
- * @class LogicAngularMovement
- * @uses platypus.Component
- */
 import {arrayCache} from '../utils/array.js';
 import createComponentClass from '../factory.js';
 
@@ -55,6 +48,14 @@ export default (function () {
 
         },
 
+        /**
+         * This component moves the entity in the direction of an internally stored angle value. When moving, the entity constantly accelerates the entity in a direction up to a max velocity.
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @listens Entity#handle-logic
+         */
         initialize: function () {
             this.angle     = this.startAngle;
             this.v         = arrayCache.setUp(0, 0);
@@ -64,13 +65,6 @@ export default (function () {
         },
 
         events: {
-
-            /**
-             * Updates the position, velocity, and rotation of the entity
-             *
-             * @method 'handle-logic'
-             * @param tick {Object} The tick data.
-             */
             "handle-logic": function (tick) {
                 var PI  = Math.PI,
                     sin = Math.sin,

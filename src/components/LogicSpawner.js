@@ -1,17 +1,4 @@
 /**
-# COMPONENT **LogicSpawner**
-This component creates an entity and propels it away. This is useful for casting, firing, tossing, and related behaviors.
-
-## Dependencies:
-- [[HandlerLogic]] (on entity's parent) - This component listens for a logic tick message to determine whether it should be spawning or not.
-
-## Messages
-
-### Listens for:
-- **handle-logic** - On a `tick` logic message, the component checks its current state to decide whether to spawn entities.
-- **spawn** - creates an entity on the following tick message.
-  - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: false results in no entities being created. Is this primarily for controller input.
-
 ## JSON Definition
     {
       "type": "LogicSpawner"
@@ -41,6 +28,15 @@ export default (function () {
         
         id: 'LogicSpawner',
         
+        /**
+         * This component creates an entity and propels it away. This is useful for casting, firing, tossing, and related behaviors.
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @param {*} definition 
+         * @listens Entity#handle-logic
+         */
         initialize: function (definition) {
             var className = this.owner.spawneeClass || definition.spawneeClass,
                 prop = '',

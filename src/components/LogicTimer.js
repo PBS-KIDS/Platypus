@@ -1,10 +1,3 @@
-/**
- * A timer that can used to trigger events. The timer can increment and decrement. It can be an interval timer, going off over and over. Has a max time which it will not exceed by default this is 1 hour.
- *
- * @memberof platypus.components
- * @class LogicTimer
- * @uses platypus.Component
- */
 import createComponentClass from '../factory.js';
 
 export default (function () {
@@ -94,17 +87,19 @@ export default (function () {
             resetOnStop: false
         },
 
+        /**
+         * A timer that can used to trigger events. The timer can increment and decrement. It can be an interval timer, going off over and over. Has a max time which it will not exceed by default this is 1 hour.
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @listens Entity#handle-logic
+         */
         initialize: function () {
             this.prevTime = this.time;
         },
 
         events: {
-            /**
-             * This component listens for this event to perform countdown and trigger alarm as needed.
-             *
-             * @method 'handle-logic'
-             * @param {Number} tick.delta
-             */
             "handle-logic": function (tick) {
                 if (this.isOn) {
                     this.prevTime = this.time;

@@ -1,10 +1,3 @@
-/**
- * This component listens for messages and, according to its preset settings, will remove and add components to the entity. This is useful if certain events should modify the behavior of the entity in some way: for example, acquiring a pogo-stick might add a jumping component so the hero can jump.
- *
- * @memberof platypus.components
- * @class ComponentSwitcher
- * @uses platypus.Component
- */
 /* global platypus */
 import {arrayCache, union} from '../utils/array.js';
 import createComponentClass from '../factory.js';
@@ -52,6 +45,14 @@ export default (function () {
             componentMap: null
         },
         
+        /**
+         * This component listens for messages and, according to its preset settings, will remove and add components to the entity. This is useful if certain events should modify the behavior of the entity in some way: for example, acquiring a pogo-stick might add a jumping component so the hero can jump.
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @listens Entity#prepare-logic
+         */
         initialize: function () {
             var event = '';
             
@@ -72,11 +73,6 @@ export default (function () {
         },
         
         events: {
-            /**
-             * This component handles component-switching on this call so that it doesn't interfere with the "handle-logic" loop.
-             *
-             * @method 'prepare-logic'
-             */
             "prepare-logic": function () {
                 var i = 0;
                 

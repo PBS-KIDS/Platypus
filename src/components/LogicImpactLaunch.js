@@ -60,6 +60,7 @@ export default (function () {
          * @uses platypus.Component
          * @constructs
          * @listens Entity#component-added
+         * @listens Entity#handle-logic
          */
         initialize: function (definition) {
             this.stunState = definition.state || "stunned";

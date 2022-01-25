@@ -36,6 +36,9 @@ export default createComponentClass(/** @lends LogicDragDrop.prototype */{
      * @uses platypus.Component
      * @constructs
      * @listens Entity#component-added
+     * @listens Entity#handle-logic
+     * @listens Entity#handle-post-collision-logic
+     * @listens Entity#prepare-logic
      */
     initialize: function () {
         this.aabb = AABB.setUp();
@@ -75,20 +78,10 @@ export default createComponentClass(/** @lends LogicDragDrop.prototype */{
             }
         },
         
-        /**
-         * Listens for this event to check bounds.
-         *
-         * @method 'prepare-logic'
-         */
         "prepare-logic": function () {
             this.checkCamera(); // may end dragging
         },
 
-        /**
-         * Updates the object's location on the handle-logic tick.
-         *
-         * @method 'handle-logic'
-         */
         "handle-logic": function () {
             if (this.state.get('dragging')) {
                 this.owner.x = this.nextX;
@@ -99,11 +92,6 @@ export default createComponentClass(/** @lends LogicDragDrop.prototype */{
             this.state.set('noDrop', false);
         },
 
-        /**
-         * Resolves whether the object state after we check if there are any collisions. If the object was dropped and can be dropped, it is.
-         *
-         * @method 'handle-post-collision-logic'
-         */
         "handle-post-collision-logic": function () {
             if (this.tryDrop) {
                 this.tryDrop = false;

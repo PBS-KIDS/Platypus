@@ -1,12 +1,3 @@
-/**
- * This component causes this entity to collide with other entities. It must be part of a collision group and will receive messages when colliding with other entities in the collision group.
- *
- * Multiple collision components may be added to a single entity if distinct messages should be triggered for certain collision areas on the entity or if the soft collision area is a different shape from the solid collision area. Be aware that too many additional collision areas may adversely affect performance.
- *
- * @memberof platypus.components
- * @class CollisionBasic
- * @uses platypus.Component
- */
 import {arrayCache, greenSplice} from '../utils/array.js';
 import AABB from '../AABB.js';
 import CollisionShape from '../CollisionShape.js';
@@ -431,6 +422,16 @@ export default createComponentClass(/** @lends CollisionBasic.prototype */{
         jumpThrough: false
     },
     
+    /**
+     * This component causes this entity to collide with other entities. It must be part of a collision group and will receive messages when colliding with other entities in the collision group.
+     *
+     * Multiple collision components may be added to a single entity if distinct messages should be triggered for certain collision areas on the entity or if the soft collision area is a different shape from the solid collision area. Be aware that too many additional collision areas may adversely affect performance.
+     *
+     * @memberof platypus.components
+     * @uses platypus.Component
+     * @constructs
+     * @listens Entity#handle-logic
+     */
     initialize: function (definition) {
         var arr = null,
             x            = 0,
@@ -672,11 +673,6 @@ export default createComponentClass(/** @lends CollisionBasic.prototype */{
             }
         },
         
-        /**
-         * If the entity is stuck to another entity, this component tries to unstick the entity on each logic step.
-         *
-         * @method 'handle-logic'
-         */
         "handle-logic": function () {
             if (this.move) {
                 this.owner.position.add(this.move); // By trying to move into it, we should get pushed back out.

@@ -1,10 +1,3 @@
-/**
- * This component handles capturing and relaying input information to the entities that care about it. It takes mouse, keyboard, and custom input messages. State messages are sent immediately to the entities when they are received, the 'HandlerController' message is sent to demarcate ticks.
- *
- * @memberof platypus.components
- * @class HandlerController
- * @uses platypus.Component
- */
 /* global platypus, window */
 import {arrayCache, greenSplice} from '../utils/array.js';
 import Gamepad from '../Gamepad.js';
@@ -135,6 +128,14 @@ export default createComponentClass(/** @lends HandlerController.prototype */{
         inputPrecedence: inputs
     },
     
+    /**
+     * This component handles capturing and relaying input information to the entities that care about it. It takes mouse, keyboard, and custom input messages. State messages are sent immediately to the entities when they are received, the 'HandlerController' message is sent to demarcate ticks.
+     *
+     * @memberof platypus.components
+     * @uses platypus.Component
+     * @constructs
+     * @listens Entity#handle-logic
+     */
     initialize: function () {
         if (platypus.game.settings.debug) { // If this is a test build, leave in the browser key combinations so debug tools can be opened as expected.
             this.callbackKeyDown = onDown.bind(this, 'keyboard');

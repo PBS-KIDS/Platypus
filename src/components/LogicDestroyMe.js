@@ -1,10 +1,3 @@
-/**
- * This component allows an entity to be removed from the stage when "destroy-me" is triggered.
- *
- * @memberof platypus.components
- * @class LogicDestroyMe
- * @uses platypus.Component
- */
 import createComponentClass from '../factory.js';
 
 export default (function () {
@@ -30,15 +23,18 @@ export default (function () {
              */
             destroyed: false
         },
-        
-        events: {// These are messages that this component listens for
 
-            /**
-             * On a `tick` logic message, the component checks whether it should be removed or not.
-             *
-             * @method 'prepare-logic'
-             * @param message.delta {number} To measure the delay before removal, the component keeps a running count of step lengths.
-             */
+        /**
+         * This component allows an entity to be removed from the stage when "destroy-me" is triggered.
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @listens Entity#prepare-logic
+         */
+        initialize: function () {},
+        
+        events: {
             "prepare-logic": function (tick) {
                 var dT = tick.delta;
                 

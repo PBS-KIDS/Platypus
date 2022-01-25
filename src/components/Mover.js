@@ -166,6 +166,8 @@ export default (function () {
          * @constructs
          * @listens Entity#component-added
          * @listens Entity#component-removed
+         * @listens Entity#handle-movement
+         * @listens Entity#handle-post-collision-logic
          * @listens Entity#load
          */
         initialize: function () {
@@ -334,13 +336,6 @@ export default (function () {
                 }
             },
             
-            /**
-             * On each "handle-movement" event, this component moves the entity according to the list of movers on the entity.
-             *
-             * @method 'handle-movement'
-             * @param tick {Object}
-             * @param tick.delta {number} The amount of time in milliseconds since the last tick.
-             */
             "handle-movement": function (tick) {
                 var delta    = tick.delta,
                     m        = null,

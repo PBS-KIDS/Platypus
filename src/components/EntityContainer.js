@@ -1,12 +1,4 @@
 /**
- * This component allows the entity to contain child entities. It will add several methods to the entity to manage adding and removing entities.
- *
- * @memberof platypus.components
- * @class EntityContainer
- * @extends platypus.Messenger
- * @uses platypus.Component
- */
-/**
 ### Local Broadcasts:
 - **child-entity-added** - This message is triggered when a new entity has been added to the list of children entities.
   - @param message ([[Entity]] object) - The entity that was just added.
@@ -20,30 +12,6 @@
   - @param message ([[Entity]] object) - The entity that was just removed.
 - **[Messages specified in definition]** - Listens for specified messages and on receiving them, re-triggers them on child entities.
   - @param message (object) - sends the message object received by the original message.
-
-## Entity Methods:
-- **addEntity** -  This method will add the provided entity to this component's list of entities.
-  - @param entity ([[Entity]] object) - Required. This is the entity to be added as a child.
-  - @return entity ([[Entity]] object) - Returns the entity that was just added.
-- **removeEntity** - This method will remove the provided entity from the list of child entities.
-  - @param message ([[Entity]] object) - Required. The entity to remove.
-  - @return entity ([[Entity]] object | false) - Returns the entity that was just removed. If the entity was not foudn as a child, `false` is returned, indicated that the provided entity was not a child of this entity.
-- **getEntitiesByType** - This method will return all child entities (including grandchildren) that match the provided type.
-  - @param type (string) - Required. The entity type to find.
-  - @return entities (Array of [[Entity]] objects) - Returns the entities that match the specified entity type.
-- **getEntityById** - This method will return the first child entity it finds with a matching id (including grandchildren).
-  - @param id (string) - Required. The entity id to find.
-  - @return entity ([[Entity]] object) - Returns the entity that matches the specified entity id.
-- **triggerOnChildren** - This method is used by both internal components and external entities to trigger messages on the child entities.
-  - @param event (variant) - This is the message(s) to process. This can be a string, an object containing an "event" property (and optionally a "message" property, overriding the value below), or an array of the same.
-  - @param value (variant) - This is a message object or other value to pass along to component functions.
-  - @param debug (boolean) - This flags whether to output message contents and subscriber information to the console during game development. A "value" object parameter (above) will also set this flag if value.debug is set to true.
-  - @return integer - The number of handlers for the triggered message: this is useful for determining how many child entities care about a given message.
-- **triggerEvent** - This method is used by both internal components and external entities to trigger messages on the child entities.
-  - @param event (string) - This is the message to process.
-  - @param value (variant) - This is a message object or other value to pass along to component functions.
-  - @param debug (boolean) - This flags whether to output message contents and subscriber information to the console during game development. A "value" object parameter (above) will also set this flag if value.debug is set to true.
-  - @return integer - The number of handlers for the triggered message: this is useful for determining how many child entities care about a given message.
 */
 /* global platypus */
 import {arrayCache, greenSlice, greenSplice, union} from '../utils/array.js';
@@ -73,6 +41,15 @@ export default (function () {
                 childEvents: []
             },
             
+            /**
+             * This component allows the entity to contain child entities. It will add several methods to the entity to manage adding and removing entities.
+             *
+             * @memberof platypus.components
+             * @extends platypus.Messenger
+             * @uses platypus.Component
+             * @constructs
+             * @listens Entity#handle-logic
+             */
             initialize: (function () {
                 var
                     entityInit = function (entityDefinition, callback) {
@@ -151,11 +128,6 @@ export default (function () {
                     this.updateChildEventListeners(entity);
                 },
 
-                /**
-                 * On receiving this message, this component checks to see if any entities being added are ready. If so, they are added to the world. This is so ready entities don't have to wait until the end of a complete tick, but can be inserted between logic ticks.
-                 *
-                 * @method 'handle-logic'
-                 */
                 "handle-logic": function () {
                     var adding = null,
                         adds = this.newAdds,

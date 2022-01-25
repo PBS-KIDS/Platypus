@@ -130,6 +130,7 @@ export default (function () {
              */
             "orientationMatrix": null
         },
+
         /**
          * This component handles the orientation of an entity. It maintains an `orientationMatrix` property on the owner to describe the entity's orientation using an affine transformation matrix.
          *
@@ -152,6 +153,7 @@ export default (function () {
          * @memberof platypus.components
          * @uses platypus.Component
          * @constructs
+         * @listens Entity#handle-logic
          * @listens Entity#load
          */
         initialize: (function () {
@@ -265,12 +267,6 @@ export default (function () {
                 delete this.loadedOrientationMatrix;
             },
             
-            /**
-             * On the 'handle-logic' event, this component updates any transformational tweening of the entity.
-             *
-             * @method 'handle-logic'
-             * @param tick.delta {number} Time passed since the last logic step.
-             */
             "handle-logic": function (tick) {
                 var i = this.tweens.length,
                     delta = tick.delta,

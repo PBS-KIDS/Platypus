@@ -1,20 +1,4 @@
 /**
-# COMPONENT **LogicStateMachine**
-This component is a general purpose state-machine for an entity, taking in various message inputs to determine the entity's state and triggering messages as necessary when a certain state occurs or several state combinations are in place.
-
-## Dependencies:
-- [[HandlerLogic]] (on entity's parent) - This component listens for a logic tick message to maintain and update its location.
-
-## Messages
-
-### Listens for:
-- **handle-logic** - On a `tick` logic message, the component checks sustained inputs for changes in state.
-- **update-state** - Updates the entity's state according to this message's state information.
-  - @param message (object) - This is an object of key/value pairs where keys are states and the values are booleans to turn on and off states.
-- **state-changed** - Updates the entity's state according to this message's state information, and broadcasts any applicable messages.
-  - @param message (object) - This is an object of key/value pairs where keys are states and the values are booleans to turn on and off states.
-- **[input messages]** - This component listens for messages as determined by the JSON settings.
-
 ### Local Broadcasts:
 - **[output messages]** - This component triggers output messages as determined by the JSON settings.
 
@@ -204,6 +188,16 @@ export default (function () {
             outputs: null
         },
         
+        /**
+         * This component is a general purpose state-machine for an entity, taking in various message inputs to determine the entity's state and triggering messages as necessary when a certain state occurs or several state combinations are in place.
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @param {*} definition 
+         * @listens Entity#handle-logic
+         * @listens Entity#state-changed
+         */
         initialize: function (definition) {
             var i = 0,
                 inputDefinition = this.inputs,

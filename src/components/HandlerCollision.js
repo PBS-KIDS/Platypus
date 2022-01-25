@@ -1,10 +1,3 @@
-/**
- * This component checks for collisions between entities which typically have either a [CollisionTiles](platypus.components.CollisionTiles.html) component for tile maps or a [CollisionBasic](platypus.components.CollisionBasic.html) component for other entities. It uses `EntityContainer` component messages if triggered to add to its collision list and also listens for explicit add/remove messages (useful in the absence of an `EntityContainer` component).
- *
- * @memberof platypus.components
- * @class HandlerCollision
- * @uses platypus.Component
- */
 import {arrayCache, greenSplice, union} from '../utils/array.js';
 import AABB from '../AABB.js';
 import CollisionData from '../CollisionData.js';
@@ -57,6 +50,14 @@ export default (function () {
             gridBits: 8
         },
         
+        /**
+         * This component checks for collisions between entities which typically have either a [CollisionTiles](platypus.components.CollisionTiles.html) component for tile maps or a [CollisionBasic](platypus.components.CollisionBasic.html) component for other entities. It uses `EntityContainer` component messages if triggered to add to its collision list and also listens for explicit add/remove messages (useful in the absence of an `EntityContainer` component).
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @listens Entity#check-collision-group
+         */
         initialize: function () {
             this.againstGrid = Data.setUp();
             
@@ -130,13 +131,6 @@ export default (function () {
                 this.addCollisionEntity(entity);
             },
             
-            /**
-             * This message causes the component to go through the entities and check for collisions.
-             *
-             * @method 'check-collision-group'
-             * @param options {Object}
-             * @param [options.camera] {Object} Specifies a region in which to check for collisions. Expects the camera object to contain the following properties: top, left, width, height, and buffer.
-             */
             "check-collision-group": function (resp) {
                 this.checkCamera(resp.camera, resp.entities);
                 this.checkGroupCollisions();

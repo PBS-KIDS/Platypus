@@ -1,9 +1,3 @@
-/**
- * Timeline enables the scheduling of events based on a linear timeline
- *
- * @class Timeline
- * @uses platypus.Component
- */
 /* global platypus */
 import {arrayCache, greenSplice} from '../utils/array.js';
 import Data from '../Data.js';
@@ -75,6 +69,14 @@ export default (function () {
             "timelines": {}
         },
         
+        /**
+         * Timeline enables the scheduling of events based on a linear timeline
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @listens Entity#handle-logic
+         */
         initialize: function () {
             var x = 0;
             
@@ -87,12 +89,6 @@ export default (function () {
         },
 
         events: {
-            /**
-             * Checks game clock against timelines and triggers events as needed.
-             *
-             * @method 'handle-logic'
-             * @param tick.delta {Number} The length of the tick.
-             */
             "handle-logic": updateLogic,
 
             /**

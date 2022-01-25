@@ -1,10 +1,3 @@
-/**
- * This component allows this entity to be carried by other entities with which it collides. Entities that should carry this entity need to have a [[Logic-Carrier]] component attached.
- *
- * @memberof platypus.components
- * @class LogicPortable
- * @uses platypus.Component
- */
 import createComponentClass from '../factory.js';
 
 export default (function () {
@@ -22,6 +15,15 @@ export default (function () {
                 down: true //default is false, 'true' means as soon as carrier is connected downward
             }
         },
+
+        /**
+         * This component allows this entity to be carried by other entities with which it collides. Entities that should carry this entity need to have a [[Logic-Carrier]] component attached.
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @listens Entity#handle-logic
+         */
         initialize: function () {
             this.carrier = this.lastCarrier = null;
             this.message = {
@@ -29,11 +31,6 @@ export default (function () {
             };
         },
         events: {
-            /**
-             * On receiving this message, this component triggers 'carry-me' or 'release-me' if its connection to a carrying entity has changed.
-             *
-             * @method 'handle-logic'
-             */
             "handle-logic": function () {
                 var msg = this.message;
                 

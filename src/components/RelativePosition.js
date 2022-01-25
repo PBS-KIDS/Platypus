@@ -1,9 +1,3 @@
-/**
- * This component positions an entity relative to the camera viewport, according to `left`, `top`, `right`, and `left` properties.
- *
- * @class RelativePosition
- * @uses platypus.Component
- */
 import AABB from '../AABB.js';
 import createComponentClass from '../factory.js';
 
@@ -107,6 +101,14 @@ export default (function () {
             y: 0
         },
         
+        /**
+         * This component positions an entity relative to the camera viewport, according to `left`, `top`, `right`, and `left` properties.
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @listens Entity#handle-logic
+         */
         initialize: function (/*definition, callback*/) {
             this.aabb = AABB.setUp();
             this.lastBottom = null;
@@ -116,12 +118,7 @@ export default (function () {
             this.cameraSizesIndex = -1;
         },
 
-        events: {// These are messages that this component listens for
-            /**
-             * This component uses location updates to reposition the entity if its bottom, left, right, or top properties have been set.
-             *
-             * @method 'handle-logic'
-             */
+        events: {
             "handle-logic": function () {
                 var bottom = this.bottom,
                     left = this.left,

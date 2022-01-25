@@ -1,10 +1,3 @@
-/**
- * This component changes the (x, y) position of an object according to its current speed and heading. It maintains its own heading information independent of other components allowing it to be used simultaneously with other logic components like [[Logic-Pushable]]. It accepts directional messages that can stand alone, or come from a mapped controller, in which case it checks the `pressed` value of the message before changing its course accordingly.
- *
- * @memberof platypus.components
- * @class LogicRotationalMovement
- * @uses platypus.Component
- */
 import createComponentClass from '../factory.js';
 
 export default (function () {
@@ -50,6 +43,14 @@ export default (function () {
             "degree": 1
         },
 
+        /**
+         * This component changes the (x, y) position of an object according to its current speed and heading. It maintains its own heading information independent of other components allowing it to be used simultaneously with other logic components like [[Logic-Pushable]]. It accepts directional messages that can stand alone, or come from a mapped controller, in which case it checks the `pressed` value of the message before changing its course accordingly.
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @listens Entity#handle-logic
+         */
         initialize: function () {
             var state = this.owner.state;
             
@@ -66,13 +67,8 @@ export default (function () {
             this.turningRight = false;
             this.turningLeft = false;
         },
+
         events: {
-            /**
-             * On receiving this event, the component updates its location according to its current state.
-             *
-             * @method 'handle-logic'
-             * @param tick.delta {Number} To determine how far to move the entity, the component checks the length of the tick.
-             */
             "handle-logic": function (tick) {
                 var state = this.state;
                 

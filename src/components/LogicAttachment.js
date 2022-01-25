@@ -1,10 +1,3 @@
-/**
- * Creates an entity and connects it with the owner entity. This is useful for entities that have a one-to-one relationship with a given entity and must move as if connected to the host entity.
- *
- * @memberof platypus.components
- * @class LogicAttachment
- * @uses platypus.Component
- */
 import Entity from '../Entity.js';
 import {arrayCache} from '../utils/array.js';
 import createComponentClass from '../factory.js';
@@ -93,6 +86,14 @@ export default (function () {
             offsetZ: 0.01
         },
 
+        /**
+         * Creates an entity and connects it with the owner entity. This is useful for entities that have a one-to-one relationship with a given entity and must move as if connected to the host entity.
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @listens Entity#handle-logic
+         */
         initialize: function () {
             var event = '',
                 events = this.events;
@@ -125,13 +126,7 @@ export default (function () {
             }
         },
 
-        events: {// These are messages that this component listens for
-
-            /**
-             * On receiving this message, updates the attached entity's position.
-             *
-             * @method 'handle-logic'
-             */
+        events: {
             "handle-logic": function () {
                 var offset = 0,
                     state  = this.state;

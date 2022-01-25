@@ -1,20 +1,5 @@
 /**
 # COMPONENT **NodeResident**
-This component connects an entity to its parent's [[NodeMap]]. It manages navigating the NodeMap and triggering events on the entity related to its position.
-
-## Dependencies
-- [[NodeMap]] (on entity's parent) - This component uses the `NodeMap` to determine its location and navigate to other nodes.
-- [[HandlerLogic]] (on entity's parent) - This component listens for a logic tick message to maintain and update its location.
-
-## Messages
-
-### Listens for:
-- **handle-logic** - On a `tick` logic message, the component updates its location and triggers messages regarding its neighbors.
-  - @param message.delta (Number) - This component uses the current time to determine its progress along an edge if moving from node to node on the map.
-- **goto-node** - Begins moving the entity along edges to get to sent node.
-  - @param node (Node) - The node that this entity should move to.
-- **follow** - Causes this entity to follow another entity. The leading entity must also have a `NodeResident` component and exist in the NodeMap.
-  - @param entity (Entity) - The entity that this entity should follow.
 
 ### Local Broadcasts:
 - **next-to-[entity-type]** - This message is triggered when the entity is placed on a node. It will trigger on all neighboring entities, as well as on itself on behalf of neighboring entities.
@@ -50,14 +35,6 @@ This component connects an entity to its parent's [[NodeMap]]. It manages naviga
       // Optional. Determines whether the entity's orientation is updated by movement across the NodeMap. Default is false.
     }
 */
-
-/**
- * This component connects an entity to its parent's [[NodeMap]]. It manages navigating the NodeMap and triggering events on the entity related to its position.
- *
- * @memberof platypus.components
- * @class NodeResident
- * @uses platypus.Component
- */
 import {arrayCache, greenSlice} from '../utils/array.js';
 import createComponentClass from '../factory.js';
 
@@ -167,6 +144,14 @@ export default (function () {
             speed: 0
         },
         
+        /**
+         * This component connects an entity to its parent's [[NodeMap]]. It manages navigating the NodeMap and triggering events on the entity related to its position.
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @listens Entity#handle-logic
+         */
         initialize: function (definition) {
             const
                 offset = definition.offset || this.owner.nodeOffset || {},

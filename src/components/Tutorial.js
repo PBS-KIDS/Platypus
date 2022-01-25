@@ -1,9 +1,3 @@
-/**
- * Tutorial provides a framework for playing tutorials. It allows the user to define things such as under what conditions tutorials will play, how often they play, and which tutorials have priority.
- *
- * @class Tutorial
- * @uses platypus.Component
- */
 /* global platypus */
 import createComponentClass from '../factory.js';
 import {greenSlice} from '../utils/array.js';
@@ -125,6 +119,14 @@ export default (function () {
             "tutorialDefs": []
         },
          
+        /**
+         * Tutorial provides a framework for playing tutorials. It allows the user to define things such as under what conditions tutorials will play, how often they play, and which tutorials have priority.
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @listens Entity#handle-logic
+         */
         initialize: function () {
             var x = 0,
                 entityType = null,
@@ -200,12 +202,6 @@ export default (function () {
              */
             "peer-entity-removed": entityRemoved,
             
-            /**
-             * Checks tutorials to determine if they should play.
-             *
-             * @method 'handle-logic'
-             * @param tick.delta {Number} The length of the tick.
-             */
             "handle-logic": updateLogic,
 
             /**

@@ -1,10 +1,3 @@
-/**
- * Replicates logic for a wind-up toy: listens for a wind-up message over a series of ticks to charge, and then begins racing once the charge is complete.
- *
- * @memberof platypus.components
- * @class LogicWindUpRacer
- * @uses platypus.Component
- */
 import createComponentClass from '../factory.js';
 
 export default (function () {
@@ -41,6 +34,14 @@ export default (function () {
             windTime: 500
         },
         
+        /**
+         * Replicates logic for a wind-up toy: listens for a wind-up message over a series of ticks to charge, and then begins racing once the charge is complete.
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @listens Entity#handle-logic
+         */
         initialize: function () {
             var thisState = this.owner.state;
             
@@ -59,12 +60,6 @@ export default (function () {
         },
 
         events: {
-            /**
-             * On a `tick` logic message, the component updates its charging counter if necessary.
-             *
-             * @method 'handle-logic'
-             * @param message.delta {Number} To determine how much to charge, the component checks the length of the tick.
-             */
             "handle-logic": function (resp) {
                 var thisState = this.state;
                 

@@ -1,16 +1,4 @@
 /**
-# COMPONENT **LogicRegionSpawner**
-This component spawns new entities within a given area at set intervals.
-
-## Dependencies
-- [[HandlerLogic]] (on entity's parent) - This component listens for a logic tick message to determine whether to spawn another entity.
-
-## Messages
-
-### Listens for:
-- **handle-logic** - On a `tick` logic message, the component determines whether to spawn another entity.
-  - @param message.delta - To determine whether to spawn, the component keeps a running count of tick lengths.
-
 ## JSON Definition
     {
       "type": "LogicRegionSpawner",
@@ -40,6 +28,15 @@ export default (function () {
         
         id: 'LogicRegionSpawner',
         
+        /**
+         * This component spawns new entities within a given area at set intervals.
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @param {*} definition 
+         * @listens Entity#handle-logic
+         */
         initialize: function (definition) {
             var x       = 0,
                 y       = 0,

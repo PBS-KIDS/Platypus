@@ -1,9 +1,3 @@
-/**
- * This component is typically added to an entity automatically by a render component. It handles mapping entity states and events to playable animations.
- *
- * @class RenderAnimator
- * @uses platypus.Component
- */
 import StateMap from '../StateMap.js';
 import {arrayCache} from '../utils/array.js';
 import createComponentClass from '../factory.js';
@@ -126,6 +120,14 @@ export default (function () {
             loop: false
         },
 
+        /**
+         * This component is typically added to an entity automatically by a render component. It handles mapping entity states and events to playable animations.
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @listens Entity#state-changed
+         */
         initialize: (function () {
             const
                 trigger = function (animation, loop, restart) {
@@ -205,11 +207,6 @@ export default (function () {
         } ()),
 
         events: {
-            /**
-             * This listens for the entity state to change and will update the currently playing animation.
-             *
-             * @method 'state-changed'
-             */
             "state-changed": function () {
                 this.stateChange = true;
             },

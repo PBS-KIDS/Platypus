@@ -1,10 +1,3 @@
-/**
- * Provides button functionality for a RenderSprite component.
- *
- * @memberof platypus.components
- * @class LogicButton
- * @uses platypus.Component
- */
 import AABB from '../AABB.js';
 import Data from '../Data.js';
 import createComponentClass from '../factory.js';
@@ -126,6 +119,14 @@ export default (function () {
             "top": null
         },
 
+        /**
+         * Provides button functionality for a RenderSprite component.
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @listens Entity#handle-logic
+         */
         initialize: function () {
             var state = this.owner.state;
             
@@ -147,11 +148,6 @@ export default (function () {
         },
 
         events: {
-            /**
-             * This component uses location updates to reposition the entity if its bottom, left, right, or top properties have been set.
-             *
-             * @method 'handle-logic'
-             */
             "handle-logic": function () {
                 var bottom = this.bottom,
                     left = this.left,

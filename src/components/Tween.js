@@ -1,10 +1,3 @@
-/**
- * This component takes a list of tween definitions and plays them as needed. This component requires TweenJS.
- *
- * @memberof platypus.components
- * @class Tween
- * @uses platypus.Component
- */
 /* global platypus */
 import Data from '../Data.js';
 import TweenJS from '@tweenjs/tween.js';
@@ -80,6 +73,14 @@ export default createComponentClass(/** @lends Tween.prototype */{
         events: null
     },
     
+    /**
+     * This component takes a list of tween definitions and plays them as needed. This component requires TweenJS.
+     *
+     * @memberof platypus.components
+     * @uses platypus.Component
+     * @constructs
+     * @listens Entity#handle-logic
+     */
     initialize: function () {
         var event = '',
             events = this.events;
@@ -123,12 +124,6 @@ export default createComponentClass(/** @lends Tween.prototype */{
             this.runTween(tween);
         },
 
-        /**
-         * This component listens for this event to manage tween playback.
-         *
-         * @method 'handle-logic'
-         * @param {Number} tick.delta
-         */
         'handle-logic': function (tick) {
             if (!this.paused) {
                 this.time += tick.delta;

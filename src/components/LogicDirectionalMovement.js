@@ -61,6 +61,7 @@ export default (function () {
          * @uses platypus.Component
          * @constructs
          * @listens Entity#component-added
+         * @listens Entity#handle-logic
          */
         initialize: function () {
             var state = this.state = this.owner.state;
@@ -116,11 +117,6 @@ export default (function () {
                 }
             },
             
-            /**
-             * On receiving this message, the component updates its direction of motion according to its current state.
-             *
-             * @method 'handle-logic'
-             */
             "handle-logic": function () {
                 var state = this.state,
                     up        = this.up        || this.upLeft || this.upRight,

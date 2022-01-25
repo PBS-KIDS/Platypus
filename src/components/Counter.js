@@ -1,10 +1,3 @@
-/**
- * A simple component that keeps count of something and sends messages each time the count changes. Can also have a total. When it does it will display 'count / total'.
- *
- * @memberof platypus.components
- * @class Counter
- * @uses platypus.Component
- */
 import Data from '../Data.js';
 import createComponentClass from '../factory.js';
 
@@ -24,6 +17,14 @@ export default (function () {
             total: 0
         },
 
+        /**
+         * A simple component that keeps count of something and sends messages each time the count changes. Can also have a total. When it does it will display 'count / total'.
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @listens Entity#handle-logic
+         */
         initialize: function () {
             this.count = 0;
             this.lastTotal = 0;
@@ -34,11 +35,6 @@ export default (function () {
         },
 
         events: {
-            /**
-             * Each step, this component detects whether the count has changed and triggers an 'update-content' event if so.
-             *
-             * @method 'handle-logic'
-             */
             "handle-logic": function () {
                 var update  = false,
                     msg = this.message;

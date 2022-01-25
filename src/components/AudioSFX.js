@@ -1,10 +1,3 @@
-/**
- * This component plays audio using the SpringRoll Sound instance. Audio is played in one of two ways, by triggering specific messages defined in the audio component definition or using an audio map which plays sounds when the entity enters specified states.
- *
- * @memberof platypus.components
- * @class AudioSFX
- * @uses platypus.Component
- */
 /* global platypus */
 import {arrayCache, greenSplice} from '../utils/array.js';
 import Data from '../Data.js';
@@ -253,6 +246,14 @@ export default createComponentClass(/** @lends AudioSFX.prototype */{
         stateBased: false
     },
 
+    /**
+     * This component plays audio using the SpringRoll Sound instance. Audio is played in one of two ways, by triggering specific messages defined in the audio component definition or using an audio map which plays sounds when the entity enters specified states.
+     *
+     * @memberof platypus.components
+     * @uses platypus.Component
+     * @constructs
+     * @listens Entity#state-changed
+     */
     initialize: function () {
         var key      = '',
             playClip = null,
@@ -382,12 +383,7 @@ export default createComponentClass(/** @lends AudioSFX.prototype */{
                 this.stateChange = false;
             }
         },
-            
-        /**
-         * This component listens for changes to the entity state and tests the current state of the entity against the audio map. If a match is found, the matching audio clip is played.
-         *
-         * @method 'state-changed'
-         */
+
         "state-changed": function () {
             this.stateChange = true;
         },

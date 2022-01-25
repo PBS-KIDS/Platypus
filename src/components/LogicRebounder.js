@@ -1,22 +1,4 @@
 /**
-# COMPONENT **LogicRebounder**
-This component works with `CollisionBasic` to cause entities to bounce away on solid collisions.
-
-## Dependencies
-- [[CollisionBasic]] - Relies on collision messages to perform rebounding movement.
-
-## Messages
-
-### Listens for:
-- **handle-logic** - On receiving this message, `LogicRebounder` clears its stored collision information.
-- **hit-static** - On receiving this message, `LogicRebounder` rebounds.
-  - @param message.direction (2d vector) - This is the direction in which the collision occurred, tangental to the impact interface.
-- **hit-non-static** - On receiving this message, `LogicRebounder` rebounds.
-  - @param message.direction (2d vector) - This is the direction in which the collision occurred, tangental to the impact interface.
-  - @param message.entity ([[entity]]) - This is the entity with which this entity is colliding.
-- **share-velocity** - On receiving this message, `LogicRebounder` stores collision information.
-  - @param entity ([[entity]]) - This is the entity with which this entity is colliding.
-
 ### Peer Broadcasts:
 - **share-velocity** - This component triggers this message to prevent double collision calls.
   - @param entity ([[entity]]) - This entity.
@@ -40,6 +22,15 @@ export default (function () {
     return createComponentClass(/** @lends LogicRebounder.prototype */{
         id: 'LogicRebounder',
         
+        /**
+         * This component works with `CollisionBasic` to cause entities to bounce away on solid collisions.
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @param {*} definition 
+         * @listens Entity#handle-logic
+         */
         initialize: function (definition) {
             Vector.assign(this.owner, 'velocity', 'dx', 'dy', 'dz');
 
