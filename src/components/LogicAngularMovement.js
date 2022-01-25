@@ -55,6 +55,7 @@ export default (function () {
          * @uses platypus.Component
          * @constructs
          * @listens platypus.Entity#handle-logic
+         * @listens platypus.Entity#stop
          */
         initialize: function () {
             this.angle     = this.startAngle;
@@ -125,11 +126,7 @@ export default (function () {
             "move": function () {
                 this.moving = true;
             },
-            /**
-             * Stops the movement toward the heading angle.
-             *
-             * @method 'stop'
-             */
+
             "stop": function () {
                 this.moving = false;
                 this.v[0] = 0;

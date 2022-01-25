@@ -1,9 +1,3 @@
-/**
- * The Messenger object facilitates communication between components and other game objects. Messenger is currently used by [Entity](platypus.Entity.html) and [EntityContainer](platypus.components.EntityContainer).
- *
- * @memberof platypus
- * @class Messenger
- */
 /* global platypus, window */
 import {arrayCache, greenSlice} from './utils/array.js';
 import config from 'config';
@@ -18,6 +12,11 @@ export default (function () {
             };
         };
 
+    /**
+     * The Messenger object facilitates communication between components and other game objects. Messenger is currently used by [Entity](platypus.Entity.html) and [EntityContainer](platypus.components.EntityContainer).
+     *
+     * @memberof platypus
+     */
     class Messenger {
         /**
          * @constructor

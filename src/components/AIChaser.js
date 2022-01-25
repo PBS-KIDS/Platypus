@@ -45,6 +45,7 @@ export default (function () {
          * @uses platypus.Component
          * @constructs
          * @listens platypus.Entity#load
+         * @fires platypus.Entity#chase
          */
         initialize: function () {
             this.target = this.owner.target || null;
@@ -95,7 +96,7 @@ export default (function () {
                     /**
                      * This event is triggered whenever the entity begins chasing another entity or stops chasing another entity.
                      *
-                     * @event 'chase'
+                     * @event platypus.Entity#chase
                      * @param chasing {boolean} Whether the entity is chasing another entity.
                      */
                     this.owner.triggerEvent('chase', c);

@@ -160,7 +160,7 @@ export default (function () {
      *     }
      *
      * @memberof platypus
-     * @extends Messenger
+     * @extends platypus.Messenger
      */
     class Game extends Messenger {
         /**

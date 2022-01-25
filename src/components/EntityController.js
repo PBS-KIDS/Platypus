@@ -1,10 +1,3 @@
-/**
- * This component listens for input messages triggered on the entity and updates the state of any controller inputs it is listening for. It then broadcasts messages on the entity corresponding to the input it received.
- *
- * @memberof platypus.components
- * @class EntityController
- * @uses platypus.Component
- */
 import ActionState from '../ActionState.js';
 import Data from '../Data.js';
 import DataMap from '../DataMap.js';
@@ -112,6 +105,14 @@ export default (function () {
             paused: false
         },
         
+        /**
+         * This component listens for input messages triggered on the entity and updates the state of any controller inputs it is listening for. It then broadcasts messages on the entity corresponding to the input it received.
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @fires platypus.Entity#stop
+         */
         initialize: function (definition) {
             var key = '',
                 filter = null;
@@ -249,11 +250,7 @@ export default (function () {
                      * @param message {Event} The original pointer event object is passed along with the control message.
                      */
                     owner.triggerEvent('joystick:up', value.event);
-                    /**
-                     * This event is triggered to stop movement once the joystick is released.
-                     *
-                     * @event 'stop'
-                     */
+                    
                     owner.triggerEvent('stop');
                 }
             },

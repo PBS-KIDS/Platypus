@@ -1,17 +1,17 @@
-/**
- * This class is used to create `platypus.game.voPlayer` and manages playback by only playing one at a time, playing a list, and even handling captions at the same time.
- *
- * This class borrows heavily from SpringRoll v1 to match the original capabilities exposed for Platypus v1.
- *
- * @memberof platypus
- * @class VOPlayer
- */
 /* global platypus */
 import {arrayCache, greenSlice, greenSplice} from './utils/array.js';
 import Data from './Data.js';
 import Messenger from './Messenger.js';
 import Sound from 'pixi-sound';
 
+/**
+ * This class is used to create `platypus.game.voPlayer` and manages playback by only playing one at a time, playing a list, and even handling captions at the same time.
+ *
+ * This class borrows heavily from SpringRoll v1 to match the original capabilities exposed for Platypus v1.
+ *
+ * @memberof platypus
+ * @extends platypus.Messenger
+ */
 export default class VOPlayer extends Messenger {
     /**
      * @constructor
@@ -107,18 +107,6 @@ export default class VOPlayer extends Messenger {
         this.currentlyLoadingAudio = false;
         this.playQueue = arrayCache.setUp();
     }
-
-    /**
-     * Fired when a new VO, caption, or silence timer begins
-     * @event start
-     * @param {String} currentVO The alias of the VO or caption that has begun, or null if it is a silence timer.
-     */
-
-    /**
-     * Fired when a new VO, caption, or silence timer completes
-     * @event end
-     * @param {String} currentVO The alias of the VO or caption that has begun, or null if it is a silence timer.
-     */
 
     /**
      * If VOPlayer is currently playing (audio or silence).
@@ -256,6 +244,7 @@ export default class VOPlayer extends Messenger {
      * Resumes the current VO, caption, or silence timer if the VOPlayer was paused.
      * @method resume
      * @public
+     * @listens platypus.Game#tick
      */
     resume () {
         if (!this.paused) return;
@@ -327,6 +316,11 @@ export default class VOPlayer extends Messenger {
         if (this._listCounter >= 0) {
             const currentVO = this._currentVO;
 
+            /**
+             * Fired when a new VO, caption, or silence timer completes
+             * @event platypus.VOPlayer#end
+             * @param {String} currentVO The alias of the VO or caption that has begun, or null if it is a silence timer.
+             */
             this.trigger("end", currentVO);
             if (typeof currentVO === "string") {
                 this.voList[0] += Sound.duration(currentVO) * 1000;
@@ -373,6 +367,11 @@ export default class VOPlayer extends Messenger {
                 c();
             }
         } else {
+            /**
+             * Fired when a new VO, caption, or silence timer begins
+             * @event platypus.VOPlayer#start
+             * @param {String} currentVO The alias of the VO or caption that has begun, or null if it is a silence timer.
+             */
             this._currentVO = this.voList[this._listCounter];
             if (typeof this._currentVO === "string") {
                 //If the sound doesn't exist, then we play it and let it fail,

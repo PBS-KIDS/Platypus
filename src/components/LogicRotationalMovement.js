@@ -50,6 +50,9 @@ export default (function () {
          * @uses platypus.Component
          * @constructs
          * @listens platypus.Entity#handle-logic
+         * @listens platypus.Entity#stop
+         * @listens platypus.Entity#go-forward
+         * @listens platypus.Entity#go-backward
          */
         initialize: function () {
             var state = this.owner.state;
@@ -133,12 +136,6 @@ export default (function () {
                 }
             },
 
-            /**
-             * On receiving this event, the entity goes forward.
-             *
-             * @method 'go-forward'
-             * @param [state.pressed] {boolean} If `state` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new orientation.
-             */
             "go-forward": function (state) {
                 if (!state || state.pressed) {
                     this.moving = true;
@@ -148,12 +145,6 @@ export default (function () {
                 }
             },
 
-            /**
-             * On receiving this event, the entity goes backward.
-             *
-             * @method 'go-backward'
-             * @param [state.pressed] {boolean} If `state` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new orientation.
-             */
             "go-backward": function (state) {
                 if (!state || state.pressed) {
                     this.moving = true;
@@ -163,12 +154,6 @@ export default (function () {
                 }
             },
 
-            /**
-             * Stops rotational and linear motion until movement messages are again received.
-             *
-             * @method 'stop'
-             * @param [state.pressed] {Boolean} If `state` is included, the component checks the value of `pressed`: a value of false will not stop the entity.
-             */
             "stop": function (state) {
                 if (!state || state.pressed) {
                     this.moving = false;

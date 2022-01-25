@@ -1,10 +1,3 @@
-/**
- * This component acts as a simple AI that will reverse the movement direction of an object when it collides with something.
- *
- * @memberof platypus.components
- * @class AIPacer
- * @uses platypus.Component
- */
 import createComponentClass from '../factory.js';
 
 export default (function () {
@@ -31,6 +24,18 @@ export default (function () {
             direction: null
         },
         
+        /**
+         * This component acts as a simple AI that will reverse the movement direction of an object when it collides with something.
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @fires platypus.Entity#stop
+         * @fires platypus.Entity#go-left
+         * @fires platypus.Entity#go-right
+         * @fires platypus.Entity#go-down
+         * @fires platypus.Entity#go-up
+         */
         initialize: function () {
             this.lastDirection    = '';
             this.currentDirection = this.direction || ((this.movement === 'horizontal') ? 'left' : 'up');
@@ -47,31 +52,32 @@ export default (function () {
                     this.lastDirection = this.currentDirection;
                     
                     /**
-                     * Triggers this event prior to changing direction.
+                     * Stops motion in all directions until movement messages are again received.
                      *
-                     * @event 'stop'
+                     * @event platypus.Entity#stop
+                     * @param {boolean} [message.pressed] If `message` is included, the component checks the value of `pressed`: a value of false will not stop the entity.
                      */
                     this.owner.triggerEvent('stop');
                     
                     /**
                      * Triggers this event when the entity is moving right and collides with something.
                      *
-                     * @event 'go-left'
+                     * @event platypus.Entity#go-left
                      */
                     /**
                      * Triggers this event when the entity is moving left and collides with something.
                      *
-                     * @event 'go-right'
+                     * @event platypus.Entity#go-right
                      */
                     /**
                      * Triggers this event when the entity is moving up and collides with something.
                      *
-                     * @event 'go-down'
+                     * @event platypus.Entity#go-down
                      */
                     /**
                      * Triggers this event when the entity is moving down and collides with something.
                      *
-                     * @event 'go-up'
+                     * @event platypus.Entity#go-up
                      */
                     this.owner.triggerEvent('go-' + this.currentDirection);
                 }
