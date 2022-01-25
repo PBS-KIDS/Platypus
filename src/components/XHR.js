@@ -52,17 +52,17 @@ export default createComponentClass(/** @lends XHR.prototype */{
      * @uses platypus.Component
      * @constructs
      * @param {*} definition 
-     * @listens request
+     * @listens Entity#request
      */
     initialize: function (definition) {
         this.setProperties(definition);
     },
 
-    events: /** @lends XHR.prototype */{// These are messages that this component listens for
+    events: {// These are messages that this component listens for
         /**
          * On receiving this message, this component makes a request from the server using the provided information. Note that properties set here will reset the properties set by this component's JSON definition.
          *
-         * @event request
+         * @event Entity#request
          * @property {Object} message
          * @property {String} message.method XHR method to use: must be "GET" or "POST".
          * @property {String} message.path The path to the server resource.
