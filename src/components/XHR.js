@@ -61,7 +61,8 @@ export default createComponentClass(/** @lends XHR.prototype */{
         /**
          * On receiving this message, this component makes a request from the server using the provided information. Note that properties set here will reset the properties set by this component's JSON definition.
          *
-         * @method 'request'
+         * @method
+         * @listens event:request
          * @param message {Object}
          * @param message.method {String} XHR method to use: must be "GET" or "POST".
          * @param message.path {String} The path to the server resource.
