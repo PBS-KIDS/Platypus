@@ -71,6 +71,7 @@ export default (function () {
          * @param [callback] {Function} A function to run once all of the components on the Entity have been loaded. The first parameter is the entity itself.
          * @param [parent] {Entity} Presets the parent of the entity so that the parent entity is available during component instantiation. Overrides `parent` in properties definitions.
          * @return {Entity} Returns the new entity made up of the provided components.
+         * @fires Entity#load
          */
         constructor (definition, instanceDefinition, callback, parent) {
             var i                    = 0,
@@ -161,7 +162,7 @@ export default (function () {
                 /**
                  * The entity triggers `load` on itself once all the properties and components have been attached, notifying the components that all their peer components are ready for messages.
                  *
-                 * @event load
+                 * @event Entity#load
                  */
                 this.triggerEvent('load');
 

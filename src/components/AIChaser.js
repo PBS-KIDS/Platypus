@@ -1,10 +1,3 @@
-/**
- * This component acts as a simple AI that will chase another entity.
- *
- * @memberof platypus.components
- * @class AIChaser
- * @uses platypus.Component
- */
 /* global platypus */
 import Vector from '../Vector.js';
 import createComponentClass from '../factory.js';
@@ -45,6 +38,14 @@ export default (function () {
             speed: 0.3
         },
         
+        /**
+         * This component acts as a simple AI that will chase another entity.
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @listens Entity#load
+         */
         initialize: function () {
             this.target = this.owner.target || null;
             this.offset = Vector.setUp(0, 0);
@@ -53,11 +54,6 @@ export default (function () {
         },
 
         events: {
-            /**
-             * This component listens for this event to initialize movement.
-             *
-             * @method 'load'
-             */
             "load": function () {
                 if (!this.owner.addMover) {
                     platypus.debug.warn('The "AIChaser" component requires a "Mover" component to function correctly.');

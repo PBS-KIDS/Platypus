@@ -1,14 +1,3 @@
-/**
- * This component uses its definition to load an AudioVO component and a RenderSprite component. These work in an interconnected way to render animations corresponding to one or more audio tracks.
- *
- * In addition to its own properties, this component also accepts all properties accepted by [RenderSprite](platypus.components.RenderSprite.html) and [AudioVO](platypus.components.AudioVO.html) and passes them along when it creates those components.
- *
- * @memberof platypus.components
- * @class VoiceOver
- * @uses platypus.Component
- * @uses platypus.AudioVO
- * @uses platypus.RenderSprite
- */
 /* global platypus */
 import {arrayCache, greenSlice} from '../utils/array.js';
 import Async from '../Async.js';
@@ -218,6 +207,18 @@ export default (function () {
 
         },
 
+        /**
+         * This component uses its definition to load an AudioVO component and a RenderSprite component. These work in an interconnected way to render animations corresponding to one or more audio tracks.
+         *
+         * In addition to its own properties, this component also accepts all properties accepted by [RenderSprite](platypus.components.RenderSprite.html) and [AudioVO](platypus.components.AudioVO.html) and passes them along when it creates those components.
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @uses platypus.AudioVO
+         * @uses platypus.RenderSprite
+         * @constructs
+         * @listens Entity#load
+         */
         initialize: function (definition, callback) {
             var i = '',
                 x = 0,
@@ -332,11 +333,6 @@ export default (function () {
         },
 
         events: {
-            /**
-             * On receiving this message, this component removes itself from the entity. (It creates the [[RenderSprite]] and [[AudioVO]] components in its constructor.)
-             *
-             * @method 'load'
-             */
             "load": function () {
                 this.owner.removeComponent(this);
             }

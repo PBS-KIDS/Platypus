@@ -1,23 +1,19 @@
-/**
- * This component allows this entity carry other entities with which it collides. Entities that this component should carry need to have a [[Logic-Portable]] component attached to notify this entity that they are portable.
- *
- * @memberof platypus.components
- * @class LogicCarrier
- * @uses platypus.Component
- */
 /* global platypus */
 import createComponentClass from '../factory.js';
 
 export default (function () {
     return createComponentClass(/** @lends LogicCarrier.prototype */{
         id: 'LogicCarrier',
+        /**
+         * This component allows this entity carry other entities with which it collides. Entities that this component should carry need to have a [[Logic-Portable]] component attached to notify this entity that they are portable.
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @listens Entity#load
+         */
         initialize: function () {},
         events: {
-            /**
-             * On receiving this message, the component ensures that it has a peer collision group component, and adds one if not.
-             *
-             * @method 'load'
-             */
             "load": function () {
                 /**
                  * On receiving a `carry-me` message, this component triggers this message to add the portable peer to the collision group.

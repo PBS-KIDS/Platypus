@@ -1,26 +1,3 @@
-/**
- * This component handles the orientation of an entity. It maintains an `orientationMatrix` property on the owner to describe the entity's orientation using an affine transformation matrix.
- *
- * Several methods on this component accept either a 3x3 2D Array or a string to describe orientation changes. Accepted strings include:
- *  - "horizontal"       - This flips the entity around the y-axis.
- *  - "vertical"         - This flips the entity around the x-axis.
- *  - "diagonal"         - This flips the entity around the x=y axis.
- *  - "diagonal-inverse" - This flips the entity around the x=-y axis.
- *  - "rotate-90"        - This rotates the entity 90 degrees clockwise.
- *  - "rotate-180"       - This rotates the entity 180 degrees clockwise (noticeable when tweening).
- *  - "rotate-270"       - This rotates the entity 90 degrees counter-clockwise.
- *
- * NOTE: This component absorbs specific properties already on the entity into orientation:
- *  - **orientationMatrix**: 3x3 2D array describing an affine transformation.
- *  - If the above is not provided, these properties are used to set initial orientation. This is useful when importing Tiled maps.
- *     - **scaleX**: absorb -1 if described
- *     - **scaleY**: absorb -1 if described
- *     - **rotation**: absorb 90 degree rotations
- *
- * @memberof platypus.components
- * @class Orientation
- * @uses platypus.Component
- */
 import {arrayCache, greenSplice} from '../utils/array.js';
 import Data from '../Data.js';
 import Vector from '../Vector.js';
@@ -153,6 +130,30 @@ export default (function () {
              */
             "orientationMatrix": null
         },
+        /**
+         * This component handles the orientation of an entity. It maintains an `orientationMatrix` property on the owner to describe the entity's orientation using an affine transformation matrix.
+         *
+         * Several methods on this component accept either a 3x3 2D Array or a string to describe orientation changes. Accepted strings include:
+         *  - "horizontal"       - This flips the entity around the y-axis.
+         *  - "vertical"         - This flips the entity around the x-axis.
+         *  - "diagonal"         - This flips the entity around the x=y axis.
+         *  - "diagonal-inverse" - This flips the entity around the x=-y axis.
+         *  - "rotate-90"        - This rotates the entity 90 degrees clockwise.
+         *  - "rotate-180"       - This rotates the entity 180 degrees clockwise (noticeable when tweening).
+         *  - "rotate-270"       - This rotates the entity 90 degrees counter-clockwise.
+         *
+         * NOTE: This component absorbs specific properties already on the entity into orientation:
+         *  - **orientationMatrix**: 3x3 2D array describing an affine transformation.
+         *  - If the above is not provided, these properties are used to set initial orientation. This is useful when importing Tiled maps.
+         *     - **scaleX**: absorb -1 if described
+         *     - **scaleY**: absorb -1 if described
+         *     - **rotation**: absorb 90 degree rotations
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @listens Entity#load
+         */
         initialize: (function () {
             var setupOrientation = function (self, orientation) {
                 var vector = Vector.setUp(1, 0, 0),
@@ -236,11 +237,6 @@ export default (function () {
         }()),
 
         events: {
-            /**
-             * This component listens for this event prior to loading initial transformations.
-             *
-             * @method 'load'
-             */
             "load": function () {
                 if (this.loadedOrientationMatrix) {
                     this.transform(this.loadedOrientationMatrix);

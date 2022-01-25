@@ -1,10 +1,3 @@
-/**
- * A component that handles updating the render components on entities that are rendering via PIXI. Calls 'handle-render on children entities every tick. Also initializes handlers for mouse events on the layer level.
- *
- * @memberof platypus.components
- * @class HandlerRender
- * @uses platypus.Component
- */
 /* global platypus */
 import {Container} from 'pixi.js';
 import Data from '../Data.js';
@@ -57,6 +50,14 @@ export default (function () {
              timeMultiplier: 1
         },
 
+        /**
+         * A component that handles updating the render components on entities that are rendering via PIXI. Calls 'handle-render on children entities every tick. Also initializes handlers for mouse events on the layer level.
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @listens Entity#load
+         */
         initialize: function () {
             let definition = null;
             
@@ -83,11 +84,6 @@ export default (function () {
         },
 
         events: {
-            /**
-             * Once the entity is loaded, this component triggers "render-world" to notify other components about the entities' display container.
-             *
-             * @method 'load'
-             */
             "load": function () {
                 /**
                  * Once the entity is loaded, this component triggers "render-world" to notify other components about the entities' display container.

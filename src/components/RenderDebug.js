@@ -1,10 +1,3 @@
-/**
- * This component is attached to entities that will appear in the game world. It serves two purposes. First, it displays a rectangle that indicates the location of the entity. By default it uses the specified position and dimensions of the object (in grey). If the object has a collision component it will display the AABB of the collision shape (in pink). If the entity has a LogicCarrier component and is/was carrying an object, a green rectangle will be drawn showing the collision group. The RenderDebug component also allows the developer to right-click on an entity and it will print the object in the debug console.
- *
- * @memberof platypus.components
- * @class RenderDebug
- * @uses platypus.Component
- */
 import {Container, Graphics} from 'pixi.js';
 import {arrayCache} from '../utils/array.js';
 import config from 'config';
@@ -132,6 +125,14 @@ export default (function () {
             offsetZ: 10000
         },
         
+        /**
+         * This component is attached to entities that will appear in the game world. It serves two purposes. First, it displays a rectangle that indicates the location of the entity. By default it uses the specified position and dimensions of the object (in grey). If the object has a collision component it will display the AABB of the collision shape (in pink). If the entity has a LogicCarrier component and is/was carrying an object, a green rectangle will be drawn showing the collision group. The RenderDebug component also allows the developer to right-click on an entity and it will print the object in the debug console.
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @listens Entity#load
+         */
         initialize: function () {
             this.container = new Container();
             this.parentContainer = this.owner.parent.worldContainer;
@@ -147,12 +148,7 @@ export default (function () {
             this.renderColor = standardizeColor(this.renderColor);
         },
         
-        events: {// These are messages that this component listens for
-            /**
-             * Removes this component if not in a debug build.
-             *
-             * @method 'load'
-             */
+        events: {
             "load": function () {
                 if (!config.dev) {
                     this.owner.removeComponent(this);

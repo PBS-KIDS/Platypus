@@ -1,10 +1,3 @@
-/**
- * This component handles entity motion via velocity and acceleration changes. This is useful for directional movement, gravity, bounce-back collision reactions, jumping, etc.
- *
- * @memberof platypus.components
- * @class Mover
- * @uses platypus.Component
- */
 /* global platypus */
 import {arrayCache, greenSplice} from '../utils/array.js';
 import Vector from '../Vector.js';
@@ -165,6 +158,14 @@ export default (function () {
             reorientVelocities: true
         },
         
+        /**
+         * This component handles entity motion via velocity and acceleration changes. This is useful for directional movement, gravity, bounce-back collision reactions, jumping, etc.
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @listens Entity#load
+         */
         initialize: function () {
             var maxMagnitude = Infinity,
                 max = this.maxMagnitude,
@@ -285,11 +286,6 @@ export default (function () {
                 }
             },
             
-            /**
-             * This component listens for a "load" event before setting up its mover list.
-             *
-             * @method 'load'
-             */
             "load": function () {
                 var i = 0,
                     movs = this.moversCopy;

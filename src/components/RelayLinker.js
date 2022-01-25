@@ -1,10 +1,3 @@
-/**
- * Allows an entity to communicate directly with one or more entities via the message model by passing local events directly to the linked entities as new triggered events.
- *
- * @memberof platypus.components
- * @class RelayLinker
- * @uses platypus.Component
- */
 /* global platypus */
 import createComponentClass from '../factory.js';
 import {greenSplice} from '../utils/array.js';
@@ -47,6 +40,14 @@ export default createComponentClass(/** @lends RelayLinker.prototype */{
         events: null
     },
 
+    /**
+     * Allows an entity to communicate directly with one or more entities via the message model by passing local events directly to the linked entities as new triggered events.
+     *
+     * @memberof platypus.components
+     * @uses platypus.Component
+     * @constructs
+     * @listens Entity#load
+     */
     initialize: function () {
         if (this.events) {
             for (const event in this.events) {
@@ -68,11 +69,6 @@ export default createComponentClass(/** @lends RelayLinker.prototype */{
     },
     
     events: {
-        /**
-         * Called when the object is added to its parent, on receiving this message, the component links itself with objects with the same link id.
-         *
-         * @method 'load'
-         */
         "load": function () {
             this.channel.push(this.owner);
         }

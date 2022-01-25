@@ -1,10 +1,3 @@
-/**
- * This component controls the game camera deciding where and how it should move. The camera also broadcasts messages when the window resizes or its orientation changes.
- *
- * @memberof platypus.components
- * @class Camera
- * @uses platypus.Component
-*/
 /*global platypus, window */
 import AABB from '../AABB.js';
 import {Container} from 'pixi.js';
@@ -190,6 +183,14 @@ export default (function () {
              */
             "z": 0
         },
+        /**
+         * This component controls the game camera deciding where and how it should move. The camera also broadcasts messages when the window resizes or its orientation changes.
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @listens Entity#load
+         */
         initialize: function (definition) {
             var worldVP = AABB.setUp(this.x, this.y, this.width, this.height),
                 worldCamera = Data.setUp(
@@ -290,11 +291,6 @@ export default (function () {
             this.movedCamera = false;
         },
         events: {
-            /**
-             * Sets up the camera window size on load.
-             *
-             * @method 'load'
-             */
             "load": function () {
                 this.resize();
             },
