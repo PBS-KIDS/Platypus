@@ -1,41 +1,3 @@
-/**
- * This class is used to create the `platypus.game` object and loads the Platypus game as described by the game configuration files.
- *
- * Configuration definition typically takes something like the following structures, but is highly dependent on the particular components used in a given game:
- *
- *     {
- *         "atlases": {}, // Keyed list of Spine atlases.
- *         "captions": {}, // Keyed list of captions for closed captioning.
- *         "entities": {}, // Keyed list of entity definitions.
- *         "levels": {}, // Keyed list of Tiled levels.
- *         "mouthCues": {}, // Keyed list of Rhubarb mouth cues for lip synch.
- *         "scenes": {}, // Keyed list of scene definitions.
- *         "skeletons": {}, // Keyed list of Spine skeletons.
- *         "spriteSheets": {} // Keyed list of sprite sheet definitions.
- *     }
- *
- * Options may include any of these:
- *
- *     {
- *         audio: '', // Relative path to audio assets (like "assets/audio/").
- *         canvasId: '', // HTML element ID for the canvas to draw to. If specified but unfound, will create a canvas with this ID.
- *         display: {}, // Display options are passed directly to PixiJS for setting up the renderer.
- *         features: { // Features supported for the Springroll application. Defaults are listed below.
- *             sfx: true,
- *             vo: true,
- *             music: true,
- *             sound: true,
- *             captions: true
- *         },
- *         images: '', // Relative path to graphical assets (like "assets/images/").
- *         name: '', // Name of game. Used for local storage keys and displayed in the console on run.
- *         storageKeys: [] // Array of keys to create in local storage on first run so game code may assume they exist.
- *         version: '' // Version of the game. This is displayed in the console on run.
- *     }
- *
- * @memberof platypus
- * @class Game
- */
 /* global document, platypus, window */
 import {Application, CaptionPlayer, ScaleManager, TextRenderer} from 'springroll';
 import {Container, Renderer, Ticker} from 'pixi.js';
@@ -162,6 +124,44 @@ export default (function () {
             }.bind(ticker));
         };
 
+    /**
+     * This class is used to create the `platypus.game` object and loads the Platypus game as described by the game configuration files.
+     *
+     * Configuration definition typically takes something like the following structures, but is highly dependent on the particular components used in a given game:
+     *
+     *     {
+     *         "atlases": {}, // Keyed list of Spine atlases.
+     *         "captions": {}, // Keyed list of captions for closed captioning.
+     *         "entities": {}, // Keyed list of entity definitions.
+     *         "levels": {}, // Keyed list of Tiled levels.
+     *         "mouthCues": {}, // Keyed list of Rhubarb mouth cues for lip synch.
+     *         "scenes": {}, // Keyed list of scene definitions.
+     *         "skeletons": {}, // Keyed list of Spine skeletons.
+     *         "spriteSheets": {} // Keyed list of sprite sheet definitions.
+     *     }
+     *
+     * Options may include any of these:
+     *
+     *     {
+     *         audio: '', // Relative path to audio assets (like "assets/audio/").
+     *         canvasId: '', // HTML element ID for the canvas to draw to. If specified but unfound, will create a canvas with this ID.
+     *         display: {}, // Display options are passed directly to PixiJS for setting up the renderer.
+     *         features: { // Features supported for the Springroll application. Defaults are listed below.
+     *             sfx: true,
+     *             vo: true,
+     *             music: true,
+     *             sound: true,
+     *             captions: true
+     *         },
+     *         images: '', // Relative path to graphical assets (like "assets/images/").
+     *         name: '', // Name of game. Used for local storage keys and displayed in the console on run.
+     *         storageKeys: [] // Array of keys to create in local storage on first run so game code may assume they exist.
+     *         version: '' // Version of the game. This is displayed in the console on run.
+     *     }
+     *
+     * @memberof platypus
+     * @extends Messenger
+     */
     class Game extends Messenger {
         /**
          * @constructor
@@ -488,6 +488,10 @@ export default (function () {
          * @param data {Object} A list of key/value pairs describing options or settings for the loading scene.
          * @param isScene {Boolean} Whether the layers from a previous scene should be replaced by these layers.
          * @param progressIdOrFunction {String|Function} Whether to report progress. A string sets the id of progress events whereas a function is called directly with progress.
+         * @fires platypus.Entity#layer-unloaded
+         * @fires platypus.Entity#unload-layer
+         * @fires platypus.Entity#layer-loaded
+         * @fires platypus.Entity#layer-live
         **/
         load (layerId, data, isScene, progressIdOrFunction) {
             this.loadingQueue.push(layerId);
@@ -584,7 +588,7 @@ export default (function () {
                                                 /**
                                                  * This event is triggered on the layers once the Scene is over.
                                                  *
-                                                 * @event 'layer-unloaded'
+                                                 * @event platypus.Entity#layer-unloaded
                                                  */
                                                 layer.triggerEvent('layer-unloaded');
     
@@ -603,7 +607,7 @@ export default (function () {
                                 /**
                                  * This event is triggered on the layer to allow children of the layer to place a hold on the closing until they're ready.
                                  *
-                                 * @event 'unload-layer'
+                                 * @event platypus.Entity#unload-layer
                                  * @param data {Object} A list of key-value pairs of data sent into this Scene from the previous Scene.
                                  * @param hold {Function} Calling this function places a hold; `release` must be called to release this hold and unload the layer.
                                  * @param release {Function} Calling this function releases a previous hold.
@@ -619,8 +623,12 @@ export default (function () {
                             /**
                              * This event is triggered on the layers once all assets have been readied and the layer is created.
                              *
-                             * @event 'layer-loaded'
-                             * @param data {Object} A list of key-value pairs of data sent into this Scene from the previous Scene.
+                             * @event platypus.Entity#layer-loaded
+                             * @param persistentData {Object} Data passed from the last scene into this one.
+                             * @param persistentData.level {Object} A level name or definition to load if the level is not already specified.
+                             * @param holds {platypus.Data} An object that handles any holds on before making the scene live.
+                             * @param holds.count {Number} The number of holds to wait for before triggering "scene-live"
+                             * @param holds.release {Function} The method to trigger to let the scene loader know that one hold has been released.
                              */
                             layer.triggerEvent('layer-loaded', data, holds);
                         }
@@ -660,7 +668,7 @@ export default (function () {
                             /**
                              * This event is triggered on each newly-live layer once it is finished loading and ready to display.
                              *
-                             * @event 'layer-live'
+                             * @event platypus.Entity#layer-live
                              * @param data {Object} A list of key-value pairs of data sent into this Scene from the previous Scene.
                              */
                             layer.triggerEvent('layer-live', data);

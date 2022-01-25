@@ -1,12 +1,3 @@
-/**
- * This component works in tandem with `TiledLoader` by taking several Tiled maps and combining them before `TiledLoader` processes them. Tiled maps must use the same tilesets for this to function correctly.
- *
- * Note: Set "manuallyLoad" to `true` in the `TiledLoader` component JSON definition so that it will wait for this component's "load-level" call.
- *
- * @memberof platypus.components
- * @class LevelBuilder
- * @uses platypus.Component
- */
 /* global atob, platypus */
 import {arrayCache, greenSlice, greenSplice, union} from '../utils/array.js';
 import createComponentClass from '../factory.js';
@@ -356,18 +347,21 @@ export default (function () {
         publicProperties: {
         },
         
+        /**
+         * This component works in tandem with `TiledLoader` by taking several Tiled maps and combining them before `TiledLoader` processes them. Tiled maps must use the same tilesets for this to function correctly.
+         *
+         * Note: Set "manuallyLoad" to `true` in the `TiledLoader` component JSON definition so that it will wait for this component's "load-level" call.
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @listens platypus.Entity#layer-loaded
+         */
         initialize: function () {
             this.levelMessage = {level: null, persistentData: null};
         },
 
-        events: {// These are messages that this component listens for
-
-            /**
-             * When the layer has loaded, LevelBuilder compiles the level based on the template and pieces and sends it to the TiledLoader.
-             *
-             * @method 'layer-loaded'
-             * @param persistentData {Object} The persistent data from the previous scene.
-             */
+        events: {
             "layer-loaded": function (data) {
                 var templateRow  = null,
                     piecesToCopy = null,

@@ -1,41 +1,3 @@
-/**
- * This component is attached to a top-level entity and, once its peer components are loaded, ingests a JSON file exported from the [Tiled map editor](http://www.mapeditor.org/) and creates the tile maps and entities. Once it has finished loading the map, it removes itself from the list of components on the entity.
- *
- * This component requires an [EntityContainer](platypus.components.EntityContainer.html) since it calls `entity.addEntity()` on the entity, provided by `EntityContainer`.
- *
- * This component looks for the following entities, and if not found will load default versions:
-
-        {
-            "render-layer": {
-                "id": "render-layer",
-                "components":[{
-                    "type": "RenderTiles",
-                    "spriteSheet": "import",
-                    "imageMap":    "import",
-                    "entityCache": true
-                }]
-            },
-            "collision-layer": {
-                "id": "collision-layer",
-                "components":[{
-                    "type": "CollisionTiles",
-                    "collisionMap": "import"
-                }]
-            },
-            "image-layer": {
-                "id": "image-layer",
-                "components":[{
-                    "type": "RenderTiles",
-                    "spriteSheet": "import",
-                    "imageMap":    "import"
-                }]
-            }
-        }
-
- * @memberof platypus.components
- * @class TiledLoader
- * @uses platypus.Component
- */
 /* global atob, platypus */
 import {arrayCache, greenSlice, union} from '../utils/array.js';
 import AABB from '../AABB.js';
@@ -676,6 +638,45 @@ export default (function () {
             manuallyLoad: false
         },
 
+        /**
+         * This component is attached to a top-level entity and, once its peer components are loaded, ingests a JSON file exported from the [Tiled map editor](http://www.mapeditor.org/) and creates the tile maps and entities. Once it has finished loading the map, it removes itself from the list of components on the entity.
+         *
+         * This component requires an [EntityContainer](platypus.components.EntityContainer.html) since it calls `entity.addEntity()` on the entity, provided by `EntityContainer`.
+         *
+         * This component looks for the following entities, and if not found will load default versions:
+
+                {
+                    "render-layer": {
+                        "id": "render-layer",
+                        "components":[{
+                            "type": "RenderTiles",
+                            "spriteSheet": "import",
+                            "imageMap":    "import",
+                            "entityCache": true
+                        }]
+                    },
+                    "collision-layer": {
+                        "id": "collision-layer",
+                        "components":[{
+                            "type": "CollisionTiles",
+                            "collisionMap": "import"
+                        }]
+                    },
+                    "image-layer": {
+                        "id": "image-layer",
+                        "components":[{
+                            "type": "RenderTiles",
+                            "spriteSheet": "import",
+                            "imageMap":    "import"
+                        }]
+                    }
+                }
+
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @listens platypus.Entity#layer-loaded
+         */
         initialize: function () {
             this.assetCache = platypus.assetCache;
             this.layerZ = 0;
@@ -684,17 +685,6 @@ export default (function () {
         },
 
         events: {
-
-            /**
-             * On receiving this message, the component commences loading the Tiled map JSON definition. Once finished, it removes itself from the entity's list of components.
-             *
-             * @method 'layer-loaded'
-             * @param persistentData {Object} Data passed from the last scene into this one.
-             * @param persistentData.level {Object} A level name or definition to load if the level is not already specified.
-             * @param holds {platypus.Data} An object that handles any holds on before making the scene live.
-             * @param holds.count {Number} The number of holds to wait for before triggering "scene-live"
-             * @param holds.release {Function} The method to trigger to let the scene loader know that one hold has been released.
-             */
             "layer-loaded": function (persistentData, holds) {
                 if (!this.manuallyLoad) {
                     holds.count += 1;
