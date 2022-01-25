@@ -88,12 +88,12 @@ export default (function () {
          * @uses platypus.Component
          * @constructs
          * @param {*} definition 
-         * @fires Entity#handle-logic
-         * @fires Entity#prepare-logic
-         * @fires Entity#handle-movement
-         * @fires Entity#check-collision-group
-         * @fires Entity#handle-post-collision-logic
-         * @fires Entity#state-changed
+         * @fires platypus.Entity#handle-logic
+         * @fires platypus.Entity#prepare-logic
+         * @fires platypus.Entity#handle-movement
+         * @fires platypus.Entity#check-collision-group
+         * @fires platypus.Entity#handle-post-collision-logic
+         * @fires platypus.Entity#state-changed
          */
         initialize: function () {
             this.entities = arrayCache.setUp();
@@ -186,7 +186,7 @@ export default (function () {
              * @method 'pause-logic'
              * @param [options] {Object}
              * @param [options.time] {number} If set, this will pause the logic for this number of milliseconds. If not set, logic is paused until an `unpause-logic` message is triggered.
-             * @fires Entity#logic-paused
+             * @fires platypus.Entity#logic-paused
              */
             "pause-logic": function (resp) {
                 if (resp && resp.time) {
@@ -198,7 +198,7 @@ export default (function () {
                     /**
                      * Notifies children entities that logic has been paused.
                      *
-                     * @event Entity#logic-paused
+                     * @event platypus.Entity#logic-paused
                      */
                     this.owner.triggerEventOnChildren('logic-paused');
                 }
@@ -208,7 +208,7 @@ export default (function () {
              * When this event is triggered, `handle-logic` messages begin firing each tick.
              *
              * @method 'unpause-logic'
-             * @fires Entity#logic-unpaused
+             * @fires platypus.Entity#logic-unpaused
              */
             "unpause-logic": function () {
                 this.paused = 0;
@@ -216,7 +216,7 @@ export default (function () {
                     /**
                      * Notifies children entities that logic has been unpaused.
                      *
-                     * @event Entity#logic-unpaused
+                     * @event platypus.Entity#logic-unpaused
                      */
                     this.owner.triggerEventOnChildren('logic-unpaused');
                 }
@@ -299,7 +299,7 @@ export default (function () {
                         /**
                          * This event is triggered on the top-level layer to signify a "handle-logic" event is about to be triggered on children, and is then subsequently triggered on all of the layer's child entities. This is unique from the layer's "tick" event in that it occurs the same number of times as the "handle-logic" event and will not occur if HandlerLogic is paused.
                          *
-                         * @event Entity#handle-logic
+                         * @event platypus.Entity#handle-logic
                          * @param tick.delta {Number} The time that has passed since the last tick as manipulated by the timeMultiplier.
                          * @param tick.gameDelta {Number} The time that has passed since the last tick. Unmanipulated by timeMultiplier. Use for components that need to run on actual time.
                          * @param tick.camera {null|platypus.AABB} The range of the logic camera area. This is typically larger than the visible camera. This value is `null` if `alwaysOn` is set to `true` on this component.
@@ -319,7 +319,7 @@ export default (function () {
                             /**
                              * This event is triggered on children entities to run anything that should occur before "handle-logic". For example, removing or adding components should happen here and not in "handle-logic".
                              *
-                             * @event Entity#prepare-logic
+                             * @event platypus.Entity#prepare-logic
                              * @param tick {Object}
                              * @param tick.delta {Number} The time that has passed since the last tick.
                              * @param tick.camera {null|platypus.AABB} The range of the logic camera area. This is typically larger than the visible camera. This value is `null` if `alwaysOn` is set to `true` on this component.
@@ -332,7 +332,7 @@ export default (function () {
                             /**
                              * This event is triggered on children entities to move. This happens immediately after logic so entity logic can determine movement.
                              *
-                             * @event Entity#handle-movement
+                             * @event platypus.Entity#handle-movement
                              * @param tick {Object}
                              * @param tick.delta {Number} The time that has passed since the last tick.
                              * @param tick.camera {null|platypus.AABB} The range of the logic camera area. This is typically larger than the visible camera. This value is `null` if `alwaysOn` is set to `true` on this component.
@@ -358,7 +358,7 @@ export default (function () {
                         /**
                          * This event is triggered on the entity (layer) to test collisions once logic has been completed.
                          *
-                         * @event Entity#check-collision-group
+                         * @event platypus.Entity#check-collision-group
                          * @param tick {Object}
                          * @param tick.delta {Number} The time that has passed since the last tick.
                          * @param tick.camera {null|platypus.AABB} The range of the logic camera area. This is typically larger than the visible camera. This value is `null` if `alwaysOn` is set to `true` on this component.
@@ -368,7 +368,7 @@ export default (function () {
                             /**
                              * This event is triggered on entities to run logic that may depend upon collision responses.
                              *
-                             * @event Entity#handle-post-collision-logic
+                             * @event platypus.Entity#handle-post-collision-logic
                              * @param tick {Object}
                              * @param tick.delta {Number} The time that has passed since the last tick.
                              * @param tick.camera {null|platypus.AABB} The range of the logic camera area. This is typically larger than the visible camera. This value is `null` if `alwaysOn` is set to `true` on this component.
@@ -378,7 +378,7 @@ export default (function () {
                             /**
                              * Triggered on entities when the entity's state has been changed.
                              *
-                             * @event Entity#state-changed
+                             * @event platypus.Entity#state-changed
                              * @param state {Object} A list of key/value pairs representing the owner's state (this value equals `entity.state`).
                              */
                             while (i--) {

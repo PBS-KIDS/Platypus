@@ -79,7 +79,7 @@ export default createComponentClass(/** @lends Tween.prototype */{
      * @memberof platypus.components
      * @uses platypus.Component
      * @constructs
-     * @listens Entity#handle-logic
+     * @listens platypus.Entity#handle-logic
      */
     initialize: function () {
         var event = '',

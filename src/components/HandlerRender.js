@@ -56,7 +56,7 @@ export default (function () {
          * @memberof platypus.components
          * @uses platypus.Component
          * @constructs
-         * @listens Entity#load
+         * @listens platypus.Entity#load
          */
         initialize: function () {
             let definition = null;

@@ -29,7 +29,7 @@ export default (function () {
          * @uses platypus.Component
          * @constructs
          * @param {*} definition 
-         * @listens Entity#handle-logic
+         * @listens platypus.Entity#handle-logic
          */
         initialize: function (definition) {
             Vector.assign(this.owner, 'velocity', 'dx', 'dy', 'dz');

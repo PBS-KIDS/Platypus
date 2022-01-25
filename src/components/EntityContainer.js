@@ -48,7 +48,7 @@ export default (function () {
              * @extends platypus.Messenger
              * @uses platypus.Component
              * @constructs
-             * @listens Entity#handle-logic
+             * @listens platypus.Entity#handle-logic
              */
             initialize: (function () {
                 var

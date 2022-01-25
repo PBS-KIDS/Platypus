@@ -189,7 +189,7 @@ export default (function () {
          * @memberof platypus.components
          * @uses platypus.Component
          * @constructs
-         * @listens Entity#load
+         * @listens platypus.Entity#load
          */
         initialize: function (definition) {
             var worldVP = AABB.setUp(this.x, this.y, this.width, this.height),

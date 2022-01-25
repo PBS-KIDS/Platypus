@@ -217,7 +217,7 @@ export default (function () {
          * @uses platypus.AudioVO
          * @uses platypus.RenderSprite
          * @constructs
-         * @listens Entity#load
+         * @listens platypus.Entity#load
          */
         initialize: function (definition, callback) {
             var i = '',

@@ -252,7 +252,7 @@ export default createComponentClass(/** @lends AudioSFX.prototype */{
      * @memberof platypus.components
      * @uses platypus.Component
      * @constructs
-     * @listens Entity#state-changed
+     * @listens platypus.Entity#state-changed
      */
     initialize: function () {
         var key      = '',

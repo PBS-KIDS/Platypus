@@ -134,7 +134,7 @@ export default createComponentClass(/** @lends HandlerController.prototype */{
      * @memberof platypus.components
      * @uses platypus.Component
      * @constructs
-     * @listens Entity#handle-logic
+     * @listens platypus.Entity#handle-logic
      */
     initialize: function () {
         if (platypus.game.settings.debug) { // If this is a test build, leave in the browser key combinations so debug tools can be opened as expected.

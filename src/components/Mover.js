@@ -164,11 +164,11 @@ export default (function () {
          * @memberof platypus.components
          * @uses platypus.Component
          * @constructs
-         * @listens Entity#component-added
-         * @listens Entity#component-removed
-         * @listens Entity#handle-movement
-         * @listens Entity#handle-post-collision-logic
-         * @listens Entity#load
+         * @listens platypus.Entity#component-added
+         * @listens platypus.Entity#component-removed
+         * @listens platypus.Entity#handle-movement
+         * @listens platypus.Entity#handle-post-collision-logic
+         * @listens platypus.Entity#load
          */
         initialize: function () {
             var maxMagnitude = Infinity,

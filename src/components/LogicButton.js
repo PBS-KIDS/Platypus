@@ -125,7 +125,7 @@ export default (function () {
          * @memberof platypus.components
          * @uses platypus.Component
          * @constructs
-         * @listens Entity#handle-logic
+         * @listens platypus.Entity#handle-logic
          */
         initialize: function () {
             var state = this.owner.state;

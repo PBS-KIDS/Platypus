@@ -46,7 +46,7 @@ export default createComponentClass(/** @lends RelayLinker.prototype */{
      * @memberof platypus.components
      * @uses platypus.Component
      * @constructs
-     * @listens Entity#load
+     * @listens platypus.Entity#load
      */
     initialize: function () {
         if (this.events) {

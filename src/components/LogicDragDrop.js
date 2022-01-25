@@ -35,10 +35,10 @@ export default createComponentClass(/** @lends LogicDragDrop.prototype */{
      * @memberof platypus.components
      * @uses platypus.Component
      * @constructs
-     * @listens Entity#component-added
-     * @listens Entity#handle-logic
-     * @listens Entity#handle-post-collision-logic
-     * @listens Entity#prepare-logic
+     * @listens platypus.Entity#component-added
+     * @listens platypus.Entity#handle-logic
+     * @listens platypus.Entity#handle-post-collision-logic
+     * @listens platypus.Entity#prepare-logic
      */
     initialize: function () {
         this.aabb = AABB.setUp();

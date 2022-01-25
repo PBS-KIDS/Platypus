@@ -28,7 +28,7 @@ export default (function () {
          * @uses platypus.Component
          * @constructs
          * @param {*} definition 
-         * @listens Entity#handle-logic
+         * @listens platypus.Entity#handle-logic
          */
         initialize: function (definition) {
             this.yPush = definition.push || definition.yPush || 0;
@@ -45,7 +45,7 @@ export default (function () {
             this.lastY = this.owner.y;
             this.pushers = arrayCache.setUp();
         },
-        
+
         events: {
             "handle-logic": function (resp) {
                 var i = 0,

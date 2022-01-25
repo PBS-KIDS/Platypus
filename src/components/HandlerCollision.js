@@ -56,7 +56,7 @@ export default (function () {
          * @memberof platypus.components
          * @uses platypus.Component
          * @constructs
-         * @listens Entity#check-collision-group
+         * @listens platypus.Entity#check-collision-group
          */
         initialize: function () {
             this.againstGrid = Data.setUp();

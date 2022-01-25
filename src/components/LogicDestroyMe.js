@@ -30,7 +30,7 @@ export default (function () {
          * @memberof platypus.components
          * @uses platypus.Component
          * @constructs
-         * @listens Entity#prepare-logic
+         * @listens platypus.Entity#prepare-logic
          */
         initialize: function () {},
         

@@ -69,7 +69,7 @@ export default (function () {
          * @param {Function} [callback] A function to run once all of the components on the Entity have been loaded. The first parameter is the entity itself.
          * @param {Entity} [parent] Presets the parent of the entity so that the parent entity is available during component instantiation. Overrides `parent` in properties definitions.
          * @return {Entity} Returns the new entity made up of the provided components.
-         * @fires Entity#load
+         * @fires platypus.Entity#load
          */
         constructor (definition, instanceDefinition, callback, parent) {
             var i                    = 0,
@@ -160,7 +160,7 @@ export default (function () {
                 /**
                  * The entity triggers `load` on itself once all the properties and components have been attached, notifying the components that all their peer components are ready for messages.
                  *
-                 * @event Entity#load
+                 * @event platypus.Entity#load
                  */
                 this.triggerEvent('load');
 
@@ -228,7 +228,7 @@ export default (function () {
          * @method addComponent
          * @param {platypus.Component} component Must be an object that functions as a Component.
          * @return {platypus.Component} Returns the same object that was submitted.
-         * @fires Entity#component-added
+         * @fires platypus.Entity#component-added
         **/
         addComponent (component) {
             this.components.push(component);
@@ -236,7 +236,7 @@ export default (function () {
             /**
              * The entity triggers `component-added` on itself once a component has been attached, notifying other components of their peer component.
              *
-             * @event Entity#component-added
+             * @event platypus.Entity#component-added
              * @param {platypus.Component} component The added component.
              * @param {String} component.type The type of component.
              **/
@@ -250,7 +250,7 @@ export default (function () {
          * @method removeComponent
          * @param {Component} component Must be a [[Component]] attached to the entity.
          * @return {Component} Returns the same object that was submitted if removal was successful; otherwise returns false (the component was not found attached to the entity).
-         * @fires Entity#component-removed
+         * @fires platypus.Entity#component-removed
         **/
         removeComponent (component) {
             var i = 0;
@@ -258,7 +258,7 @@ export default (function () {
             /**
              * The entity triggers `component-removed` on itself once a component has been removed, notifying other components of their peer component's removal.
              *
-             * @event Entity#component-removed
+             * @event platypus.Entity#component-removed
              * @param {Component} component The removed component.
              * @param {String} component.type The type of component.
              **/

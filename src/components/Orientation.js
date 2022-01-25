@@ -153,8 +153,8 @@ export default (function () {
          * @memberof platypus.components
          * @uses platypus.Component
          * @constructs
-         * @listens Entity#handle-logic
-         * @listens Entity#load
+         * @listens platypus.Entity#handle-logic
+         * @listens platypus.Entity#load
          */
         initialize: (function () {
             var setupOrientation = function (self, orientation) {

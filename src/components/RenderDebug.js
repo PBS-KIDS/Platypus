@@ -131,7 +131,7 @@ export default (function () {
          * @memberof platypus.components
          * @uses platypus.Component
          * @constructs
-         * @listens Entity#load
+         * @listens platypus.Entity#load
          */
         initialize: function () {
             this.container = new Container();

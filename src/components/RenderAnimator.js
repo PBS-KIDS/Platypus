@@ -126,7 +126,7 @@ export default (function () {
          * @memberof platypus.components
          * @uses platypus.Component
          * @constructs
-         * @listens Entity#state-changed
+         * @listens platypus.Entity#state-changed
          */
         initialize: (function () {
             const
