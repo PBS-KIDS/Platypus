@@ -43,7 +43,7 @@ export default (function () {
             }
         };
     
-    return createComponentClass({
+    return createComponentClass(/** @lends Timeline.prototype */{
         
         id: 'Timeline',
         

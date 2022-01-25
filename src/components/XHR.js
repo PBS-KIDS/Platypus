@@ -11,7 +11,7 @@ import createComponentClass from '../factory.js';
 export default (function () {
     var XMLHttpRequest = window.XMLHttpRequest;
 
-    return createComponentClass({
+    return createComponentClass(/** @lends XHR.prototype */{
         id: 'XHR',
         
         properties: {

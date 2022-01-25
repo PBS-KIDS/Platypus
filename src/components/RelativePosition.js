@@ -8,7 +8,7 @@ import AABB from '../AABB.js';
 import createComponentClass from '../factory.js';
 
 export default (function () {
-    return createComponentClass({
+    return createComponentClass(/** @lends RelativePosition.prototype */{
         
         id: 'RelativePosition',
 

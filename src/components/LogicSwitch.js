@@ -27,7 +27,7 @@ This component serves as a switch in the game world, typically tied to collision
 import createComponentClass from '../factory.js';
 
 export default (function () {
-    return createComponentClass({
+    return createComponentClass(/** @lends LogicSwitch.prototype */{
         
         id: 'LogicSwitch',
         

@@ -96,7 +96,7 @@ export default (function () {
             }
         };
 
-    return createComponentClass({
+    return createComponentClass(/** @lends Tutorial.prototype */{
         
         id: 'Tutorial',
         

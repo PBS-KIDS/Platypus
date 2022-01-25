@@ -45,7 +45,7 @@ export default (function () {
             });
         };
     
-    return createComponentClass({
+    return createComponentClass(/** @lends RenderSpine.prototype */{
 
         id: 'RenderSpine',
 

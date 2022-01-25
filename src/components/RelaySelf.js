@@ -14,7 +14,7 @@ export default (function () {
         owner.trigger.apply(owner, arguments);
     };
 
-    return createComponentClass({
+    return createComponentClass(/** @lends RelaySelf.prototype */{
         id: 'RelaySelf',
         
         properties: {

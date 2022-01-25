@@ -152,7 +152,7 @@ const
         }
     };
 
-export default createComponentClass({
+export default createComponentClass(/** @lends AudioSFX.prototype */{
     id: 'AudioSFX',
     
     properties: {

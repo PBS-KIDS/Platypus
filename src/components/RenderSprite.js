@@ -14,7 +14,7 @@ import RenderContainer from './RenderContainer.js';
 import createComponentClass from '../factory.js';
 
 export default (function () {
-    return createComponentClass({
+    return createComponentClass(/** @lends RenderSprite.prototype */{
         
         id: 'RenderSprite',
         

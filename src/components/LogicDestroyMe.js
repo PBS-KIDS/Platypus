@@ -8,7 +8,7 @@
 import createComponentClass from '../factory.js';
 
 export default (function () {
-    return createComponentClass({
+    return createComponentClass(/** @lends LogicDestroyMe.prototype */{
         id: 'LogicDestroyMe',
         
         properties: {

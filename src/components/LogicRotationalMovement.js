@@ -18,7 +18,7 @@ export default (function () {
             return m * sin(a);
         };
     
-    return createComponentClass({
+    return createComponentClass(/** @lends LogicRotationalMovement.prototype */{
         id: 'LogicRotationalMovement',
 
         properties: {

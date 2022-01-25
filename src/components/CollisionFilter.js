@@ -21,7 +21,7 @@ export default (function () {
             }
         };
     
-    return createComponentClass({
+    return createComponentClass(/** @lends CollisionFilter.prototype */{
         id: 'CollisionFilter',
         
         properties: {

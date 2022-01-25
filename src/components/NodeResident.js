@@ -141,7 +141,7 @@ export default (function () {
             return true;
         };
 
-    return createComponentClass({
+    return createComponentClass(/** @lends NodeResident.prototype */{
         
         id: 'NodeResident',
 

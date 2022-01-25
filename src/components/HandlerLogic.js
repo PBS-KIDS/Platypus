@@ -37,7 +37,7 @@ export default (function () {
             return (item === 'handle-logic' || item === 'handle-post-collision-logic' || item === 'prepare-logic' || item === 'state-changed' || item === 'handle-movement');
         };
 
-    return createComponentClass({
+    return createComponentClass(/** @lends HandlerLogic.prototype */{
         id: "HandlerLogic",
         properties: {
             /**

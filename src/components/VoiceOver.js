@@ -114,7 +114,7 @@ export default (function () {
             }
         };
 
-    return createComponentClass({
+    return createComponentClass(/** @lends VoiceOver.prototype */{
         id: 'VoiceOver',
         
         properties: {

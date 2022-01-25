@@ -20,7 +20,7 @@ const
     pointerInstances = {},
     orphanPointers = [];
 
-export default createComponentClass({
+export default createComponentClass(/** @lends Interactive.prototype */{
     id: 'Interactive',
 
     properties: {

@@ -570,7 +570,7 @@ export default (function () {
             return tilesets;
         };
 
-    return createComponentClass({
+    return createComponentClass(/** @lends TiledLoader.prototype */{
         id: 'TiledLoader',
 
         properties: {

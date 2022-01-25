@@ -9,7 +9,7 @@ import Data from '../Data.js';
 import createComponentClass from '../factory.js';
 
 export default (function () {
-    return createComponentClass({
+    return createComponentClass(/** @lends Counter.prototype */{
 
         id: 'Counter',
 

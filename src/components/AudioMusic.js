@@ -14,7 +14,7 @@ const
     Tween = TweenJS.Tween,
     tracks = {}; // List of actively-playing tracks.
 
-export default createComponentClass({
+export default createComponentClass(/** @lends AudioMusic.prototype */{
     id: 'AudioMusic',
     
     properties: {

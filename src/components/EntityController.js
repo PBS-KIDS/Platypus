@@ -52,7 +52,7 @@ export default (function () {
             }
         };
 
-    return createComponentClass({
+    return createComponentClass(/** @lends EntityController.prototype */{
         id: 'EntityController',
         
         properties: {

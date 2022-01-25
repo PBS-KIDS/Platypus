@@ -65,7 +65,7 @@ export default (function () {
             }
         };
     
-    return createComponentClass({
+    return createComponentClass(/** @lends Motion.prototype */{
         
         id: 'Motion',
 

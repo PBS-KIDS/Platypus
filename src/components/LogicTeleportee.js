@@ -30,7 +30,7 @@ import Vector from '../Vector.js';
 import createComponentClass from '../factory.js';
 
 export default (function () {
-    return createComponentClass({
+    return createComponentClass(/** @lends LogicTeleportee.prototype */{
         id: 'LogicTeleportee',
         
         initialize: function () {

@@ -9,7 +9,7 @@ import {arrayCache, greenSlice} from '../utils/array.js';
 import createComponentClass from '../factory.js';
 
 export default (function () {
-    return createComponentClass({
+    return createComponentClass(/** @lends RenderDestroyMe.prototype */{
         id: 'RenderDestroyMe',
         
         properties: {

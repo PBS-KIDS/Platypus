@@ -18,7 +18,7 @@ export default (function () {
         }
     };
     
-    return createComponentClass({
+    return createComponentClass(/** @lends RelayParent.prototype */{
         id: 'RelayParent',
         
         properties: {

@@ -15,7 +15,7 @@ export default (function () {
             this.switches.push(event);
         };
     
-    return createComponentClass({
+    return createComponentClass(/** @lends ComponentSwitcher.prototype */{
         id: 'ComponentSwitcher',
         
         properties: {

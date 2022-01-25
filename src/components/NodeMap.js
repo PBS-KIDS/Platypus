@@ -95,7 +95,7 @@ export default (function () {
         arrayCache.recycle(this.contains);
     }, true, config.dev);
     
-    return createComponentClass({
+    return createComponentClass(/** @lends NodeMap.prototype */{
         id: 'NodeMap',
         
         publicProperties: {

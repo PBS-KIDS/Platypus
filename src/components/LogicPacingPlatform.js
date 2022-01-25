@@ -31,7 +31,7 @@ This component changes the (x, y) position of an object according to its speed a
 import createComponentClass from '../factory.js';
 
 export default (function () {
-    return createComponentClass({
+    return createComponentClass(/** @lends LogicPacingPlatform.prototype */{
         
         id: 'LogicPacingPlatform',
         

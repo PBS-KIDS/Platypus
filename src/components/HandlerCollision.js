@@ -47,7 +47,7 @@ export default (function () {
             return a.collisionGroup.getAllEntities() - b.collisionGroup.getAllEntities();
         };
     
-    return createComponentClass({
+    return createComponentClass(/** @lends HandlerCollision.prototype */{
         id: 'HandlerCollision',
         
         properties: {

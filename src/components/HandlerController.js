@@ -117,7 +117,7 @@ window.addEventListener('mousedown', () => {
   
 //window.addEventListener("gamepaddisconnected", (event) => {});
 
-export default createComponentClass({
+export default createComponentClass(/** @lends HandlerController.prototype */{
     
     id: 'HandlerController',
     properties: {

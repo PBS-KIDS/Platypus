@@ -35,7 +35,7 @@ This component listens for redirected collision messages and fires a message on 
 import createComponentClass from '../factory.js';
 
 export default (function () {
-    return createComponentClass({
+    return createComponentClass(/** @lends LogicTeleporter.prototype */{
         id: 'LogicTeleporter',
 
         initialize: function (definition) {

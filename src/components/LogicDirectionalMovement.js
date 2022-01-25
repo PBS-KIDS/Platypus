@@ -38,7 +38,7 @@ export default (function () {
             }
         };
     
-    return createComponentClass({
+    return createComponentClass(/** @lends LogicDirectionalMovement.prototype */{
         id: 'LogicDirectionalMovement',
         
         properties: {

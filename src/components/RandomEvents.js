@@ -26,7 +26,7 @@ export default (function () {
         };
     };
 
-    return createComponentClass({
+    return createComponentClass(/** @lends RandomEvents.prototype */{
         id: 'RandomEvents',
         
         initialize: function (definition) {

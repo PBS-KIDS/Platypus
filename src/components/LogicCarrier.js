@@ -9,7 +9,7 @@
 import createComponentClass from '../factory.js';
 
 export default (function () {
-    return createComponentClass({
+    return createComponentClass(/** @lends LogicCarrier.prototype */{
         id: 'LogicCarrier',
         initialize: function () {},
         events: {

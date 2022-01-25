@@ -105,7 +105,7 @@ export default (function () {
             return m;
         };
     
-    return createComponentClass({
+    return createComponentClass(/** @lends Orientation.prototype */{
         id: 'Orientation',
         publicProperties: {
             /**

@@ -126,7 +126,7 @@ export default (function () {
 
     recycle.add(Template, 'Template', Template, null, true, config.dev);
 
-    return createComponentClass({
+    return createComponentClass(/** @lends RenderTiles.prototype */{
 
         id: 'RenderTiles',
 

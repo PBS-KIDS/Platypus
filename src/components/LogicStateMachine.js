@@ -154,7 +154,7 @@ export default (function () {
         }
     };
 
-    return createComponentClass({
+    return createComponentClass(/** @lends LogicStateMachine.prototype */{
         id: 'LogicStateMachine',
         
         properties: {

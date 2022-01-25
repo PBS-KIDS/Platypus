@@ -19,7 +19,7 @@ export default (function () {
             }
         };
 
-    return createComponentClass({
+    return createComponentClass(/** @lends LogicAttachment.prototype */{
 
         id: 'LogicAttachment',
 

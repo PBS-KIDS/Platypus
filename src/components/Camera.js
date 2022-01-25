@@ -60,7 +60,7 @@ export default (function () {
             return event.clientY;
         };
     
-    return createComponentClass({
+    return createComponentClass(/** @lends Camera.prototype */{
         id: 'Camera',
         properties: {
             /**

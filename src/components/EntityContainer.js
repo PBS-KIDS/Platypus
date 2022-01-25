@@ -59,7 +59,7 @@ export default (function () {
                 this.triggerOnChildren(event, value, debug);
             };
         },
-        EntityContainer = createComponentClass({
+        EntityContainer = createComponentClass(/** @lends EntityContainer.prototype */{
             id: 'EntityContainer',
             
             properties: {

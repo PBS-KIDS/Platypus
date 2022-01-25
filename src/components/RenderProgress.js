@@ -10,7 +10,7 @@ import {Container, Graphics, Point} from 'pixi.js';
 import createComponentClass from '../factory.js';
 
 export default (function () {
-    return createComponentClass({
+    return createComponentClass(/** @lends RenderProgress.prototype */{
         
         id: 'RenderProgress',
         

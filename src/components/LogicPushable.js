@@ -37,7 +37,7 @@ export default (function () {
         return (direction / Math.abs(direction)) * magnitude;
     };
     
-    return createComponentClass({
+    return createComponentClass(/** @lends LogicPushable.prototype */{
         id: 'LogicPushable',
         initialize: function (definition) {
             this.yPush = definition.push || definition.yPush || 0;

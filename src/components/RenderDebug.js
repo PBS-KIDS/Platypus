@@ -63,7 +63,7 @@ export default (function () {
             }
         };
     
-    return createComponentClass({
+    return createComponentClass(/** @lends RenderDebug.prototype */{
         
         id: 'RenderDebug',
 

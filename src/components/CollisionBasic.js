@@ -275,7 +275,7 @@ const
         }
     };
 
-export default createComponentClass({
+export default createComponentClass(/** @lends CollisionBasic.prototype */{
         
     id: 'CollisionBasic',
 

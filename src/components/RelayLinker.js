@@ -19,7 +19,7 @@ const
         }
     };
 
-export default createComponentClass({
+export default createComponentClass(/** @lends RelayLinker.prototype */{
     id: 'RelayLinker',
 
     properties: {

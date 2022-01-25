@@ -81,7 +81,7 @@ export default (function () {
             arrayCache.recycle(soundList);
         };
     
-    return createComponentClass({
+    return createComponentClass(/** @lends AudioVO.prototype */{
         id: 'AudioVO',
         
         properties: {

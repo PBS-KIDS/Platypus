@@ -34,7 +34,7 @@ import DataMap from '../DataMap.js';
 import createComponentClass from '../factory.js';
 
 export default (function () {
-    return createComponentClass({
+    return createComponentClass(/** @lends LogicPortal.prototype */{
         id: 'LogicPortal',
         initialize: function (definition) {
             var i = 0,

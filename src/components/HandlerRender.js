@@ -12,7 +12,7 @@ import Interactive from './Interactive.js';
 import createComponentClass from '../factory.js';
 
 export default (function () {
-    return createComponentClass({
+    return createComponentClass(/** @lends HandlerRender.prototype */{
 
         id: "HandlerRender",
 

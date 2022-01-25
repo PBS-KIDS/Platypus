@@ -36,7 +36,7 @@ import {arrayCache} from '../utils/array.js';
 import createComponentClass from '../factory.js';
 
 export default (function () {
-    return createComponentClass({
+    return createComponentClass(/** @lends LogicRegionSpawner.prototype */{
         
         id: 'LogicRegionSpawner',
         

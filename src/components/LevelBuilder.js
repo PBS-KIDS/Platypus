@@ -312,7 +312,7 @@ export default (function () {
             return arr;
         };
 
-    return createComponentClass({
+    return createComponentClass(/** @lends LevelBuilder.prototype */{
         id: 'LevelBuilder',
         
         properties: {

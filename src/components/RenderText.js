@@ -26,7 +26,7 @@ export default (function () {
             }
         };
     
-    return createComponentClass({
+    return createComponentClass(/** @lends RenderText.prototype */{
         
         id: 'RenderText',
         

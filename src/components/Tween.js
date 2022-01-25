@@ -35,7 +35,7 @@ const
         this.trigger.apply(this, arguments);
     };
 
-export default createComponentClass({
+export default createComponentClass(/** @lends Tween.prototype */{
     id: 'Tween',
 
     properties: {

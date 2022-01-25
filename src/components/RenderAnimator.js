@@ -53,7 +53,7 @@ export default (function () {
             this.owner.triggerEvent('stop-animation', animation);
         };
 
-    return createComponentClass({
+    return createComponentClass(/** @lends RenderAnimator.prototype */{
         id: 'RenderAnimator',
 
         properties: {
