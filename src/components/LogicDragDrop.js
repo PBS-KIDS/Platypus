@@ -1,10 +1,3 @@
-/**
- * A component that allows an object to be dragged and dropped. Can use collision to prevent dropping the objects in certain locations.
- *
- * @memberof platypus.components
- * @class LogicDragDrop
- * @uses platypus.Component
- */
 /* global platypus */
 import AABB from '../AABB.js';
 import {Rectangle} from 'pixi.js';
@@ -36,6 +29,14 @@ export default createComponentClass(/** @lends LogicDragDrop.prototype */{
         stickyClick: false
     },
     
+    /**
+     * A component that allows an object to be dragged and dropped. Can use collision to prevent dropping the objects in certain locations.
+     *
+     * @memberof platypus.components
+     * @uses platypus.Component
+     * @constructs
+     * @listens Entity#component-added
+     */
     initialize: function () {
         this.aabb = AABB.setUp();
         this.nextX = this.owner.x;
@@ -68,13 +69,6 @@ export default createComponentClass(/** @lends LogicDragDrop.prototype */{
             this.checkCamera();
         },
 
-        /**
-         * This component listens for added components to determine whether it should check for collision.
-         *
-         * @method 'component-added'
-         * @param component {platypus.Component} Component added to entity.
-         * @param component.type {String} Type of component to detect whether it's a collision component.
-         */
         "component-added": function (component) {
             if (component.type === 'CollisionBasic') {
                 this.hasCollision = true;

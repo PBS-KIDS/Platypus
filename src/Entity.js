@@ -1,33 +1,3 @@
-/**
- * The Entity object acts as a container for components, facilitates communication between components and other game objects, and includes properties set by components to maintain a current state. The entity object serves as the foundation for most of the game objects in the platypus engine.
- *
- * ## JSON Definition Example
-     {
-         "id": "entity-id",
-         // "entity-id" becomes `entity.type` once the entity is created.
-      
-         "components": [
-         // This array lists one or more component definition objects
-      
-             {"type": "example-component"}
-            // The component objects must include a "type" property corresponding to a component to load, but may also include additional properties to customize the component in a particular way for this entity.
-         ],
-      
-         "properties": {
-         // This object lists properties that will be attached directly to this entity.
-      
-             "x": 240
-             // For example, `x` becomes `entity.x` on the new entity.
-         },
-
-         "preload": ['image.png', 'sound.mp3']
-         // assets that need to be loaded before this entity loads
-     }
- *
- * @memberof platypus
- * @class Entity
- * @extends Messenger
-**/
 /* global platypus */
 import {arrayCache, greenSplice, union} from './utils/array.js';
 import Async from './Async.js';
@@ -59,17 +29,45 @@ export default (function () {
         },
         entityIds = {};
 
+    /**
+     * The Entity object acts as a container for components, facilitates communication between components and other game objects, and includes properties set by components to maintain a current state. The entity object serves as the foundation for most of the game objects in the platypus engine.
+     *
+     * ## JSON Definition Example
+         {
+             "id": "entity-id",
+            // "entity-id" becomes `entity.type` once the entity is created.
+        
+            "components": [
+            // This array lists one or more component definition objects
+        
+                {"type": "example-component"}
+                // The component objects must include a "type" property corresponding to a component to load, but may also include additional properties to customize the component in a particular way for this entity.
+            ],
+        
+            "properties": {
+            // This object lists properties that will be attached directly to this entity.
+        
+                "x": 240
+                // For example, `x` becomes `entity.x` on the new entity.
+            },
+
+            "preload": ['image.png', 'sound.mp3']
+            // assets that need to be loaded before this entity loads
+        }
+     *
+     * @memberof platypus
+     * @extends Messenger
+    **/
     class Entity extends Messenger {
         /**
-         * @constructor
-         * @param [definition] {Object} Base definition for the entity.
-         * @param [definition.id] {Object} This declares the type of entity and will be stored on the Entity as `entity.type` after instantiation.
-         * @param [definition.components] {Object} This lists the components that should be attached to this entity.
-         * @param [definition.properties] {Object} [definition.properties] This is a list of key/value pairs that are added directly to the Entity as `entity.key = value`.
-         * @param [instanceDefinition] {Object} Specific instance definition including properties that override the base definition properties.
-         * @param [instanceDefinition.properties] {Object} This is a list of key/value pairs that are added directly to the Entity as `entity.key = value`.
-         * @param [callback] {Function} A function to run once all of the components on the Entity have been loaded. The first parameter is the entity itself.
-         * @param [parent] {Entity} Presets the parent of the entity so that the parent entity is available during component instantiation. Overrides `parent` in properties definitions.
+         * @param {Object} [definition] Base definition for the entity.
+         * @param {Object} [definition.id] This declares the type of entity and will be stored on the Entity as `entity.type` after instantiation.
+         * @param {Object} [definition.components] This lists the components that should be attached to this entity.
+         * @param {Object} [definition.properties] [definition.properties] This is a list of key/value pairs that are added directly to the Entity as `entity.key = value`.
+         * @param {Object} [instanceDefinition] Specific instance definition including properties that override the base definition properties.
+         * @param {Object} [instanceDefinition.properties] This is a list of key/value pairs that are added directly to the Entity as `entity.key = value`.
+         * @param {Function} [callback] A function to run once all of the components on the Entity have been loaded. The first parameter is the entity itself.
+         * @param {Entity} [parent] Presets the parent of the entity so that the parent entity is available during component instantiation. Overrides `parent` in properties definitions.
          * @return {Entity} Returns the new entity made up of the provided components.
          * @fires Entity#load
          */
@@ -225,11 +223,12 @@ export default (function () {
         }
         
         /**
-        * Attaches the provided component to the entity.
-        *
-        * @method addComponent
-        * @param {platypus.Component} component Must be an object that functions as a Component.
-        * @return {platypus.Component} Returns the same object that was submitted.
+         * Attaches the provided component to the entity.
+         *
+         * @method addComponent
+         * @param {platypus.Component} component Must be an object that functions as a Component.
+         * @return {platypus.Component} Returns the same object that was submitted.
+         * @fires Entity#component-added
         **/
         addComponent (component) {
             this.components.push(component);
@@ -237,7 +236,7 @@ export default (function () {
             /**
              * The entity triggers `component-added` on itself once a component has been attached, notifying other components of their peer component.
              *
-             * @event component-added
+             * @event Entity#component-added
              * @param {platypus.Component} component The added component.
              * @param {String} component.type The type of component.
              **/
@@ -246,11 +245,12 @@ export default (function () {
         }
         
         /**
-        * Removes the mentioned component from the entity.
-        *
-        * @method removeComponent
-        * @param {Component} component Must be a [[Component]] attached to the entity.
-        * @return {Component} Returns the same object that was submitted if removal was successful; otherwise returns false (the component was not found attached to the entity).
+         * Removes the mentioned component from the entity.
+         *
+         * @method removeComponent
+         * @param {Component} component Must be a [[Component]] attached to the entity.
+         * @return {Component} Returns the same object that was submitted if removal was successful; otherwise returns false (the component was not found attached to the entity).
+         * @fires Entity#component-removed
         **/
         removeComponent (component) {
             var i = 0;
@@ -258,7 +258,7 @@ export default (function () {
             /**
              * The entity triggers `component-removed` on itself once a component has been removed, notifying other components of their peer component's removal.
              *
-             * @event component-removed
+             * @event Entity#component-removed
              * @param {Component} component The removed component.
              * @param {String} component.type The type of component.
              **/

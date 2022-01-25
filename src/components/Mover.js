@@ -164,6 +164,8 @@ export default (function () {
          * @memberof platypus.components
          * @uses platypus.Component
          * @constructs
+         * @listens Entity#component-added
+         * @listens Entity#component-removed
          * @listens Entity#load
          */
         initialize: function () {
@@ -257,24 +259,12 @@ export default (function () {
         },
 
         events: {
-            /**
-             * When a ["Motion"]("Motion"%20Component.html) component is added, this component adds it to its list of movers.
-             *
-             * @method 'component-added'
-             * @param component {Motion} The motion to add as a mover on this entity.
-             */
             "component-added": function (component) {
                 if (component.type === 'Motion') {
                     this.movers.push(component);
                 }
             },
             
-            /**
-             * When a ["Motion"]("Motion"%20Component.html) component is removed, this component removes it from its list of movers.
-             *
-             * @method 'component-removed'
-             * @param component {Motion} The motion to remove as a mover from this entity.
-             */
             "component-removed": function (component) {
                 var i = 0;
                 

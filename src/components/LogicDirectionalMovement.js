@@ -1,10 +1,3 @@
-/**
- * This component changes the [Motion](platypus.components.Motion.html) of an entity according to its current speed and heading. It accepts directional messages that can stand alone, or come from a mapped controller, in which case it checks the `pressed` value of the message before changing its course.
- *
- * @memberof platypus.components
- * @class LogicDirectionalMovement
- * @uses platypus.Component
- */
 /* global platypus */
 import Vector from '../Vector.js';
 import createComponentClass from '../factory.js';
@@ -61,6 +54,14 @@ export default (function () {
             speed: 0.3
         },
         
+        /**
+         * This component changes the [Motion](platypus.components.Motion.html) of an entity according to its current speed and heading. It accepts directional messages that can stand alone, or come from a mapped controller, in which case it checks the `pressed` value of the message before changing its course.
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @listens Entity#component-added
+         */
         initialize: function () {
             var state = this.state = this.owner.state;
             
@@ -88,11 +89,6 @@ export default (function () {
             this.owner.heading = this.owner.heading || 0;
         },
         events: {
-            /**
-             * This method checks to make sure there is a `Mover` component attached and sets up initial heading.
-             *
-             * @method 'component-added'
-             */
             "component-added": function (component) {
                 if (component === this) {
                     if (!this.owner.addMover) {

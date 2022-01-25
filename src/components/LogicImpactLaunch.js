@@ -1,37 +1,3 @@
-/**
-# COMPONENT **LogicImpactLaunch**
-This component will cause the entity to move in a certain direction on colliding with another entity.
-
-## Dependencies:
-- [[HandlerLogic]] (on entity's parent) - This component listens for a logic tick message to maintain and update its location.
-
-## Messages
-
-### Listens for:
-- **handle-logic** - On a `tick` logic message, the component updates its location according to its current state.
-- **impact-launch** - On receiving this message, the component causes the entity's position to change according to the preset behavior.
-  - @param collisionInfo.x (number) - Either 1,0, or -1. 1 if we're colliding with an object on our right. -1 if on our left. 0 if not at all.
-  - @param collisionInfo.y (number) - Either 1,0, or -1. 1 if we're colliding with an object on our bottom. -1 if on our top. 0 if not at all.
-- **hit-solid** - On receiving this message, the component discontinues its impact-launch behavior.
-  - @param collisionInfo.y (number) - Either 1,0, or -1. If colliding below, impact-launch behavior ceases.
-
-## JSON Definition:
-    {
-      "type": "LogicImpactLaunch",
-      
-      "state": "launching",
-      // Optional: This sets the state of the entity while it's being launched. Defaults to "stunned".
-      
-      "accelerationX": 5,
-      "accelerationY": 5,
-      // Optional: acceleration entity should have in world units while being launched. Defaults to -0.2 for x and -0.6 for y.
-      
-      "flipX": true,
-      "flipY": true
-      // Optional: whether the directions of acceleration should flip according to the direction of the collision. Defaults to false for y and true for x.
-    }
-
-*/
 /* global platypus */
 import Vector from '../Vector.js';
 import createComponentClass from '../factory.js';
@@ -41,12 +7,60 @@ export default (function () {
         id: 'LogicImpactLaunch',
         
         properties: {
+            /**
+             * Acceleration in X entity should have in world units while being launched.
+             *
+             * @property accelerationX
+             * @type number
+             * @default -0.3
+             */
             accelerationX: -0.3,
+
+            /**
+             * Acceleration in Y entity should have in world units while being launched.
+             *
+             * @property accelerationY
+             * @type number
+             * @default -0.8
+             */
             accelerationY: -0.8,
+
+            /**
+             * Whether X acceleration should flip according to the direction of the collision.
+             *
+             * @property flipX
+             * @type boolean
+             * @default true
+             */
             flipX: true,
-            flipY: false
+
+            /**
+             * Whether Y acceleration should flip according to the direction of the collision.
+             *
+             * @property flipY
+             * @type boolean
+             * @default false
+             */
+            flipY: false,
+
+            /**
+             * This sets the state of the entity while it's being launched. Defaults to "stunned".
+             *
+             * @property state
+             * @type string
+             * @default "stunned"
+             */
+             state: "stunned"
         },
         
+        /**
+         * This component will cause the entity to move in a certain direction on colliding with another entity.
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @listens Entity#component-added
+         */
         initialize: function (definition) {
             this.stunState = definition.state || "stunned";
             
