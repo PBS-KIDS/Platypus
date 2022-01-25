@@ -9,9 +9,10 @@ import {arrayCache, greenSlice} from './utils/array.js';
 import config from 'config';
 import recycle from 'recycle';
 
+/** @lends Vector.prototype */
 export default (function () {
     /**
-     * @constructor
+     * @constructs
      * @param {number|Array|Vector} x The x coordinate or an array or Vector describing the whole vector.
      * @param {number} [y] The y coordinate.
      * @param {number} [z] The z coordinate.
