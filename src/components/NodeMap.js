@@ -1,7 +1,7 @@
 /**
  * This component sets up a NodeMap to be used by the [NodeResident](platypus.components.NodeResident.html) component on this entity's child entities.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class NodeMap
  * @uses platypus.Component
  */

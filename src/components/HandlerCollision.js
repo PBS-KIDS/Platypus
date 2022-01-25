@@ -1,7 +1,7 @@
 /**
  * This component checks for collisions between entities which typically have either a [CollisionTiles](platypus.components.CollisionTiles.html) component for tile maps or a [CollisionBasic](platypus.components.CollisionBasic.html) component for other entities. It uses `EntityContainer` component messages if triggered to add to its collision list and also listens for explicit add/remove messages (useful in the absence of an `EntityContainer` component).
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class HandlerCollision
  * @uses platypus.Component
  */

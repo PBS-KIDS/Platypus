@@ -1,7 +1,7 @@
 /**
  * This component acts as a simple AI that will chase another entity.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class AIChaser
  * @uses platypus.Component
  */

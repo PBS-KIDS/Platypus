@@ -32,7 +32,7 @@
             }
         }
 
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class TiledLoader
  * @uses platypus.Component
  */

@@ -1,7 +1,7 @@
 /**
  * This class is instantiated by Platypus at `platypus.assetCache` to track assets: loading assets needed for particular layers and unloading assets once they're no longer needed.
  *
- * @namespace platypus
+ * @memberof platypus
  * @class AssetManager
  * @constructor
 **/

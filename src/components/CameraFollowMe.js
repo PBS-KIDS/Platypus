@@ -1,7 +1,7 @@
 /**
  * This component can request that the camera focus on this entity.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class CameraFollowMe
  * @uses platypus.Component
  */

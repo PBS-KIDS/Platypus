@@ -3,7 +3,7 @@
  *
  * Multiple collision components may be added to a single entity if distinct messages should be triggered for certain collision areas on the entity or if the soft collision area is a different shape from the solid collision area. Be aware that too many additional collision areas may adversely affect performance.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class CollisionBasic
  * @uses platypus.Component
  */

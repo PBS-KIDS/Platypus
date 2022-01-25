@@ -1,7 +1,7 @@
 /**
  * This class defines an asynchronous set up wherein multiple calls can be made and a final function will be run once the calls are completed. Something like `Promise.all` but better for avoiding garbage collection.
  *
- * @namespace platypus
+ * @memberof platypus
  * @class Async
  * @constructor
  * @param functions {Array} An array of functions where each function accepts a `callback` parameter and runs `callback()` on completion to notify the completion of the call.

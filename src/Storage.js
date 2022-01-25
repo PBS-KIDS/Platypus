@@ -1,7 +1,7 @@
 /**
  * This class is used to create the Platypus storage system accessible at `platypus.storage`. It uses Springroll UserData if available, with a fallback to local storage if not.
  *
- * @namespace platypus
+ * @memberof platypus
  * @class Storage
  * @constructor
  * @return {Data} Returns the new Storage object.

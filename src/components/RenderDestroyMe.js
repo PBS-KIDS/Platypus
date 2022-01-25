@@ -1,7 +1,7 @@
 /**
  * This component will destroy the entity once an animation has finished. This is useful for explosions or similar animations where the entity is no longer needed once the animation completes.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class RenderDestroyMe
  * @uses platypus.Component
  */

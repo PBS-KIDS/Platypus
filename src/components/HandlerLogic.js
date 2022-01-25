@@ -1,7 +1,7 @@
 /**
  * A component that handles updating logic components. Each tick it calls all the entities that accept 'handle-logic' messages. This component is usually used on an "action-layer".
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class HandlerLogic
  * @uses platypus.Component
  **/

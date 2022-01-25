@@ -1,7 +1,7 @@
 /**
  * Replicates logic for a wind-up toy: listens for a wind-up message over a series of ticks to charge, and then begins racing once the charge is complete.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class LogicWindUpRacer
  * @uses platypus.Component
  */

@@ -9,7 +9,7 @@
  *  * `prototype` is an optional prototype that this component extends.
  * See [component-template.js]("component-template"%20Component.html) for an example componentDefinition that can be sent into this component class factory.
  *
- * @namespace platypus
+ * @memberof platypus
  * @class Component
  * @static
  */

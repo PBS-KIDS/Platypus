@@ -5,7 +5,7 @@
  *
  * As the camera moves, the cache is updated by blitting the relevant part of the old cached image into a new cache and then rendering tiles that have shifted into the camera's view into the cache.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class RenderTiles
  * @uses platypus.Component
  */

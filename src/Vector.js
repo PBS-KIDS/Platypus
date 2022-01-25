@@ -1,7 +1,7 @@
 /**
  * This class defines a multi-dimensional vector object and a variety of methods for manipulating the vector.
  *
- * @namespace platypus
+ * @memberof platypus
  * @class Vector
  * @constructor
  * @param x {number|Array|Vector} The x coordinate or an array or Vector describing the whole vector.

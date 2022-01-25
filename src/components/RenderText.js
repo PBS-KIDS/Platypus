@@ -1,7 +1,7 @@
 /**
  * This component is attached to entities that should display text.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class RenderText
  * @uses platypus.Component
  */

@@ -127,6 +127,10 @@ export default (function () {
         isIOS     = isIPod || isIPhone  || isIPad,
         isMobile  = isIOS  || isAndroid || isSilk;
 
+    /**
+     * @namespace platypus.components
+     * @memberof platypus
+     */
     platypus.components = {
         "Interactive": Interactive,
         "AIChaser": AIChaser,

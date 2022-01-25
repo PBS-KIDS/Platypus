@@ -1,7 +1,7 @@
 /**
  * This component allows an entity to communicate directly with one or more entities via the message model, by passing local messages directly to entities in the same family as new triggered events. This component is placed on a single entity and all entities created by this entity become part of its "family".
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class RelayFamily
  * @uses platypus.Component
  */

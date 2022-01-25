@@ -1,7 +1,7 @@
 /**
  * This component will listen for a particular collision message and, depending on a given entity.state attribute, retrigger the collision as another collision message.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class CollisionFilter
  * @uses platypus.Component
  */

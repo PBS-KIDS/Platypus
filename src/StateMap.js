@@ -1,7 +1,7 @@
 /**
  * This class defines a state object to use for entity states with helper methods. It includes recycle methods to encourage reuse.
  *
- * @namespace platypus
+ * @memberof platypus
  * @class StateMap
  * @constructor
  * @return stateMap {platypus.StateMap} Returns the new StateMap object.

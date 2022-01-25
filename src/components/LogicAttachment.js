@@ -1,7 +1,7 @@
 /**
  * Creates an entity and connects it with the owner entity. This is useful for entities that have a one-to-one relationship with a given entity and must move as if connected to the host entity.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class LogicAttachment
  * @uses platypus.Component
  */

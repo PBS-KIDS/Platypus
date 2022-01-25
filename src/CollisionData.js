@@ -1,7 +1,7 @@
 /**
  * CollisionData holds collision data passed to entities during collisions with other entities. This class is primarily used by the ["HandlerCollision"]("HandlerCollision"%20Component.html) Component to trigger messages on child entities as collision occur.
  *
- * @namespace platypus
+ * @memberof platypus
  * @class CollisionData
  * @constructor
  * @param occurredOrData {Boolean|CollisionData} Whether this represents an actual collision between two shapes. If a CollisionData instance is provided, the instance's full set of values are copied.

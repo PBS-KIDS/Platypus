@@ -1,7 +1,7 @@
 /**
  * This component listens for input messages triggered on the entity and updates the state of any controller inputs it is listening for. It then broadcasts messages on the entity corresponding to the input it received.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class EntityController
  * @uses platypus.Component
  */

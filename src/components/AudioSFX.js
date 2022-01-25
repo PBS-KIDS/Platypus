@@ -1,7 +1,7 @@
 /**
  * This component plays audio using the SpringRoll Sound instance. Audio is played in one of two ways, by triggering specific messages defined in the audio component definition or using an audio map which plays sounds when the entity enters specified states.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class AudioSFX
  * @uses platypus.Component
  */

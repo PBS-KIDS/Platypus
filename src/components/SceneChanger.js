@@ -1,7 +1,7 @@
 /**
  * This component allows the entity to initiate a change from the current scene to another scene.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class SceneChanger
  * @extends platypus.Component
  */

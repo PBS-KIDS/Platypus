@@ -1,7 +1,7 @@
 /**
  * This component plays audio using the SpringRoll VOPlayer instance. Audio is played by triggering specific messages defined in the audio component definition.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class AudioVO
  * @uses platypus.Component
  */

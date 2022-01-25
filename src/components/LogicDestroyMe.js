@@ -1,7 +1,7 @@
 /**
  * This component allows an entity to be removed from the stage when "destroy-me" is triggered.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class LogicDestroyMe
  * @uses platypus.Component
  */

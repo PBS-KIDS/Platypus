@@ -1,7 +1,7 @@
 /**
  * This component takes a list of tween definitions and plays them as needed. This component requires TweenJS.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class Tween
  * @uses platypus.Component
  */

@@ -1,7 +1,7 @@
 /**
  * A component that allows an object to be dragged and dropped. Can use collision to prevent dropping the objects in certain locations.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class LogicDragDrop
  * @uses platypus.Component
  */

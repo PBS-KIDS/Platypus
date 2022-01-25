@@ -1,7 +1,7 @@
 /**
  * This class defines a generic iterable data object. It behaves similarly to Map but maintains a list of keys as an Array. It includes recycle methods to encourage reuse.
  *
- * @namespace platypus
+ * @memberof platypus
  * @class DataMap
  * @constructor
  * @return dataMap {platypus.DataMap} Returns the new DataMap object.

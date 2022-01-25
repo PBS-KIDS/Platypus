@@ -1,5 +1,5 @@
 /**
- * @namespace window
+ * @memberof window
  */
 /**
  * This class defines a limited polyfill for Map. If the browser supports Map, this class is not used.

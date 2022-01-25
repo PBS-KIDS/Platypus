@@ -1,7 +1,7 @@
 /**
  * A simple component that keeps count of something and sends messages each time the count changes. Can also have a total. When it does it will display 'count / total'.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class Counter
  * @uses platypus.Component
  */

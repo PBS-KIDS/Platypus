@@ -1,7 +1,7 @@
 /**
  * This component moves the entity in the direction of an internally stored angle value. When moving, the entity constantly accelerates the entity in a direction up to a max velocity.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class LogicAngularMovement
  * @uses platypus.Component
  */

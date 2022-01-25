@@ -1,7 +1,7 @@
 /**
  * Allows an entity to communicate directly with one or more entities via the message model by passing local events directly to the linked entities as new triggered events.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class RelayLinker
  * @uses platypus.Component
  */

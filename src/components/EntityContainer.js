@@ -1,7 +1,7 @@
 /**
  * This component allows the entity to contain child entities. It will add several methods to the entity to manage adding and removing entities.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class EntityContainer
  * @extends platypus.Messenger
  * @uses platypus.Component

@@ -1,7 +1,7 @@
 /**
  * A timer that can used to trigger events. The timer can increment and decrement. It can be an interval timer, going off over and over. Has a max time which it will not exceed by default this is 1 hour.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class LogicTimer
  * @uses platypus.Component
  */

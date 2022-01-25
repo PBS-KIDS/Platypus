@@ -1,7 +1,7 @@
 /**
  * A component that handles updating the render components on entities that are rendering via PIXI. Calls 'handle-render on children entities every tick. Also initializes handlers for mouse events on the layer level.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class HandlerRender
  * @uses platypus.Component
  */

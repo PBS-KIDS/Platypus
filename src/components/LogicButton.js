@@ -1,7 +1,7 @@
 /**
  * Provides button functionality for a RenderSprite component.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class LogicButton
  * @uses platypus.Component
  */

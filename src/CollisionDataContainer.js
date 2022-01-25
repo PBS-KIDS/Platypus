@@ -1,7 +1,7 @@
 /**
  * CollisionDataContainer holds lists of CollisionData passed to entities during collisions with other entities. This class is primarily used by the ["HandlerCollision"]("HandlerCollision"%20Component.html) Component to trigger messages on child entities as collisions occur.
  *
- * @namespace platypus
+ * @memberof platypus
  * @class CollisionDataContainer
  * @constructor
  * @return {platypus.CollisionDataContainer} Returns the new aabb object.

@@ -1,7 +1,7 @@
 /**
  * This component acts as a simple AI that will reverse the movement direction of an object when it collides with something.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class AIPacer
  * @uses platypus.Component
  */

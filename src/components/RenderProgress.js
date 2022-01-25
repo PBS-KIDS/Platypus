@@ -1,7 +1,7 @@
 /**
  * This component creates a visual progress bar that can be used for loading assets or showing other types of progress changes.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class RenderProgress
  * @uses platypus.Component
  */

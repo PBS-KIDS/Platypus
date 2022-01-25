@@ -54,7 +54,7 @@ This component connects an entity to its parent's [[NodeMap]]. It manages naviga
 /**
  * This component connects an entity to its parent's [[NodeMap]]. It manages navigating the NodeMap and triggering events on the entity related to its position.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class NodeResident
  * @uses platypus.Component
  */

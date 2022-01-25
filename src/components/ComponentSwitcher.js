@@ -1,7 +1,7 @@
 /**
  * This component listens for messages and, according to its preset settings, will remove and add components to the entity. This is useful if certain events should modify the behavior of the entity in some way: for example, acquiring a pogo-stick might add a jumping component so the hero can jump.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class ComponentSwitcher
  * @uses platypus.Component
  */

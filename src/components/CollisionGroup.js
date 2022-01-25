@@ -1,7 +1,7 @@
 /**
  * This component groups other entities with this entity for collision checking. This is useful for carrying and moving platforms. It uses `EntityContainer` component messages if triggered to add to its collision list and also listens for explicit add/remove messages (useful in the absence of an `EntityContainer` component).
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class CollisionGroup
  * @uses platypus.Component
  */

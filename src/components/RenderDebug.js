@@ -1,7 +1,7 @@
 /**
  * This component is attached to entities that will appear in the game world. It serves two purposes. First, it displays a rectangle that indicates the location of the entity. By default it uses the specified position and dimensions of the object (in grey). If the object has a collision component it will display the AABB of the collision shape (in pink). If the entity has a LogicCarrier component and is/was carrying an object, a green rectangle will be drawn showing the collision group. The RenderDebug component also allows the developer to right-click on an entity and it will print the object in the debug console.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class RenderDebug
  * @uses platypus.Component
  */

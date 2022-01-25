@@ -1,7 +1,7 @@
 /**
  * This component is attached to entities that will appear in the game world. It creates a PIXI Container to contain all other display objects on the entity and keeps the container updates with the entity's location and other dynamic properties.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class RenderContainer
  * @uses platypus.Component
  */

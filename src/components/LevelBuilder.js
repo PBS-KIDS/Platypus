@@ -3,7 +3,7 @@
  *
  * Note: Set "manuallyLoad" to `true` in the `TiledLoader` component JSON definition so that it will wait for this component's "load-level" call.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class LevelBuilder
  * @uses platypus.Component
  */

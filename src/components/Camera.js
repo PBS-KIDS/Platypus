@@ -1,7 +1,7 @@
 /**
  * This component controls the game camera deciding where and how it should move. The camera also broadcasts messages when the window resizes or its orientation changes.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class Camera
  * @uses platypus.Component
 */

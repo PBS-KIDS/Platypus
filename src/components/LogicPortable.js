@@ -1,7 +1,7 @@
 /**
  * This component allows this entity to be carried by other entities with which it collides. Entities that should carry this entity need to have a [[Logic-Carrier]] component attached.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class LogicPortable
  * @uses platypus.Component
  */

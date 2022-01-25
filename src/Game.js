@@ -33,7 +33,7 @@
  *         version: '' // Version of the game. This is displayed in the console on run.
  *     }
  *
- * @namespace platypus
+ * @memberof platypus
  * @class Game
  * @constructor
  * @param definition {Object} Collection of configuration settings, typically from config.json.

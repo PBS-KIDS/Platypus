@@ -3,7 +3,7 @@
  *
  * This class borrows heavily from SpringRoll v1 to match the original capabilities exposed for Platypus v1.
  *
- * @namespace platypus
+ * @memberof platypus
  * @class VOPlayer
  * @constructor
  * @param {Game} game The game instance for which to play audio.

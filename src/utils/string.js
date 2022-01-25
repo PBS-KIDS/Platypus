@@ -1,5 +1,5 @@
 /**
- * @namespace window
+ * @memberof window
  */
 import {arrayCache} from './array.js';
 

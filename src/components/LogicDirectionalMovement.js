@@ -1,7 +1,7 @@
 /**
  * This component changes the [Motion](platypus.components.Motion.html) of an entity according to its current speed and heading. It accepts directional messages that can stand alone, or come from a mapped controller, in which case it checks the `pressed` value of the message before changing its course.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class LogicDirectionalMovement
  * @uses platypus.Component
  */

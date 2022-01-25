@@ -1,7 +1,7 @@
 /**
  * This class defines an action state based on one or more inputs. This is used by [EntityController](platypus.components.EntityController.html) to produce event messages listing whether a particular action is "triggered", "pressed", and/or "released".
  *
- * @namespace platypus
+ * @memberof platypus
  * @class ActionState
  * @constructor
  * @param event {String} The name of the event to trigger on the Entity.

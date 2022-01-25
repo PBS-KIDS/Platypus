@@ -12,7 +12,7 @@
  *       }
  *     }
  *     
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class RandomEvents
  * @uses platypus.Component
 */

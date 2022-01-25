@@ -1,7 +1,7 @@
 /**
  * This component handles entity motion via velocity and acceleration changes. This is useful for directional movement, gravity, bounce-back collision reactions, jumping, etc.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class Mover
  * @uses platypus.Component
  */

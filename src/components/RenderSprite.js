@@ -1,7 +1,7 @@
 /**
  * This component is attached to entities that will appear in the game world. It renders a static or animated image. It listens for messages triggered on the entity or changes in the logical state of the entity to play a corresponding animation.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class RenderSprite
  * @uses platypus.Component
  */

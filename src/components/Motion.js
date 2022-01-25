@@ -1,7 +1,7 @@
 /**
  * This component works in tandem with the [Mover](platypus.components.Mover.html) component by adding a vector of motion to the entity. This component is typically created by `Mover` and doesn't need to be added separately.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class Motion
  * @uses platypus.Component
  */

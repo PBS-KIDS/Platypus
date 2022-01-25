@@ -1,7 +1,7 @@
 /**
  * This component plays sfx audio and manages Springroll volume changes.
  *
- * @namespace platypus
+ * @memberof platypus
  * @class SFXPlayer
  */
 /* global platypus */

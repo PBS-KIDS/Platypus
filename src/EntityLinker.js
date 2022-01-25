@@ -1,7 +1,7 @@
 /**
  * This class defines a linker for TiledLoader to connect entity pointer properties as soon as both entities are created.
  *
- * @namespace platypus
+ * @memberof platypus
  * @class EntityLinker
  * @constructor
  * @return {EntityLinker} Returns the new EntityLinker object.

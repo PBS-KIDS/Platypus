@@ -24,7 +24,7 @@
          // assets that need to be loaded before this entity loads
      }
  *
- * @namespace platypus
+ * @memberof platypus
  * @class Entity
  * @constructor
  * @extends Messenger

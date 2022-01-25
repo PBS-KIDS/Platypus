@@ -1,7 +1,7 @@
 /**
  * This component provides component-based XHR communication with a server.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class XHR
  * @uses platypus.Component
  */

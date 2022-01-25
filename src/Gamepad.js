@@ -1,7 +1,7 @@
 /**
  * This class defines an axis-aligned bounding box (AABB) which is used during the collision process to determine if two objects are colliding. This is used in a few places including [CollisionBasic](platypus.components.CollisionBasic.html) and [[Collision-Shape]].
  *
- * @namespace platypus
+ * @memberof platypus
  * @class Gamepad
  * @constructor
  * @param gamepad {number} The browser's gamepad object.

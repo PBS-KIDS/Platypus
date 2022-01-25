@@ -1,7 +1,7 @@
 /**
  * This component listens for specified local entity messages and re-broadcasts them at the scene level.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class RelayGame
  * @uses platypus.Component
  */

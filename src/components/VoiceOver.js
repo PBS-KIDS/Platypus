@@ -3,7 +3,7 @@
  *
  * In addition to its own properties, this component also accepts all properties accepted by [RenderSprite](platypus.components.RenderSprite.html) and [AudioVO](platypus.components.AudioVO.html) and passes them along when it creates those components.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class VoiceOver
  * @uses platypus.Component
  * @uses platypus.AudioVO

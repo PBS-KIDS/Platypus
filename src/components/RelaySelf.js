@@ -1,7 +1,7 @@
 /**
  * This component listens for specified local entity messages and re-broadcasts them on itself as other messages.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class RelaySelf
  * @uses platypus.Component
  */

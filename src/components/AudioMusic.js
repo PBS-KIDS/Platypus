@@ -1,7 +1,7 @@
 /**
  * This component plays music or background ambiance.
  *
- * @namespace platypus.components
+ * @memberof platypus.components
  * @class AudioMusic
  * @uses platypus.Component
  */

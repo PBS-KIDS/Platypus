@@ -1,7 +1,7 @@
 /**
  * This class defines a generic data object to use for messaging. It includes recycle methods to encourage reuse.
  *
- * @namespace platypus
+ * @memberof platypus
  * @class Data
  * @constructor
  * @return {Data} Returns the new Data object.
