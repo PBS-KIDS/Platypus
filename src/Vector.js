@@ -3,10 +3,6 @@
  *
  * @memberof platypus
  * @class Vector
- * @constructor
- * @param x {number|Array|Vector} The x coordinate or an array or Vector describing the whole vector.
- * @param [y] {number} The y coordinate.
- * @param [z] {number} The z coordinate.
  */
 /*global platypus */
 import {arrayCache, greenSlice} from './utils/array.js';
@@ -14,6 +10,12 @@ import config from 'config';
 import recycle from 'recycle';
 
 export default (function () {
+    /**
+     * @constructor
+     * @param {number|Array|Vector} x The x coordinate or an array or Vector describing the whole vector.
+     * @param {number} [y] The y coordinate.
+     * @param {number} [z] The z coordinate.
+     */
     var Vector = function (x, y, z) {
             if (this.matrix) { // Recycled vectors will already have a matrix array. Resetting x, y, z to 0's to properly handle a set-up array of less than 3 dimensions.
                 this.matrix[0] = 0;

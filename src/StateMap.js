@@ -3,8 +3,6 @@
  *
  * @memberof platypus
  * @class StateMap
- * @constructor
- * @return stateMap {platypus.StateMap} Returns the new StateMap object.
  * @extends platypus.DataMap
  */
 import DataMap from './DataMap.js';
@@ -14,6 +12,10 @@ import {greenSplit} from './utils/string.js';
 import recycle from 'recycle';
 
 export default (function () {
+    /**
+     * @constructor
+     * @return stateMap {platypus.StateMap} Returns the new StateMap object.
+     */
     var StateMap = function (first) {
             var l = arguments.length;
             

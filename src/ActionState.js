@@ -3,11 +3,6 @@
  *
  * @memberof platypus
  * @class ActionState
- * @constructor
- * @param event {String} The name of the event to trigger on the Entity.
- * @param states {Object} A list of key/value pairs describing what states should be `true` or `false` on the Entity for this action to be triggered.
- * @param trigger {Function} The function to be called if one or more inputs are active and the current state of the Entity is valid.
- * @return {ActionState} Returns the new ActionState object.
  */
 import Data from './Data.js';
 import StateMap from './StateMap.js';
@@ -16,6 +11,13 @@ import config from 'config';
 import recycle from 'recycle';
 
 export default  (function () {
+    /**
+     * @constructor
+     * @param event {String} The name of the event to trigger on the Entity.
+     * @param states {Object} A list of key/value pairs describing what states should be `true` or `false` on the Entity for this action to be triggered.
+     * @param trigger {Function} The function to be called if one or more inputs are active and the current state of the Entity is valid.
+     * @return {ActionState} Returns the new ActionState object.
+     */
     var ActionState = function (event, states, trigger) {
             /**
              * The name of the event to trigger on the Entity.

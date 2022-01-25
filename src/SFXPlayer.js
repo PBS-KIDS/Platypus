@@ -9,6 +9,9 @@ import {arrayCache, greenSplice} from './utils/array.js';
 import Sound from 'pixi-sound';
 
 export default class SFXPlayer {
+    /**
+     * @constructor
+     */
     constructor () {
         this.volume = 1;
         this.player = Sound;

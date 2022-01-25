@@ -3,17 +3,19 @@
  *
  * @memberof platypus
  * @class AABB
- * @constructor
- * @param x {number} The x position of the AABB. The x is always located in the center of the object.
- * @param y {number} The y position of the AABB. The y is always located in the center of the object.
- * @param width {number} The width of the AABB.
- * @param height {number} The height of the AABB.
- * @return {platypus.AABB} Returns the new aabb object.
  */
 import config from 'config';
 import recycle from 'recycle';
 
 export default (function () {
+    /**
+     * @constructor
+     * @param x {number} The x position of the AABB. The x is always located in the center of the object.
+     * @param y {number} The y position of the AABB. The y is always located in the center of the object.
+     * @param width {number} The width of the AABB.
+     * @param height {number} The height of the AABB.
+     * @return {platypus.AABB} Returns the new aabb object.
+     */
     var AABB = function (x, y, width, height) {
             if (x instanceof AABB) {
                 this.set(x);

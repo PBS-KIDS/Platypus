@@ -3,10 +3,6 @@
  *
  * @memberof platypus
  * @class Async
- * @constructor
- * @param functions {Array} An array of functions where each function accepts a `callback` parameter and runs `callback()` on completion to notify the completion of the call.
- * @param callback {Function} The function to run once the list of functions has finished.
- * @return {platypus.Async} Returns the new Async object.
  */
 /*global clearTimeout, setTimeout */
 import config from 'config';
@@ -25,6 +21,12 @@ export default (function () {
             callback();
             this.recycle();
         },
+        /**
+         * @constructor
+         * @param functions {Array} An array of functions where each function accepts a `callback` parameter and runs `callback()` on completion to notify the completion of the call.
+         * @param callback {Function} The function to run once the list of functions has finished.
+         * @return {platypus.Async} Returns the new Async object.
+         */
         Async = function (arr, finalCallback) {
             const finalCB = final.bind(this, finalCallback),
                 length = arr.length;

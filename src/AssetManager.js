@@ -3,7 +3,6 @@
  *
  * @memberof platypus
  * @class AssetManager
- * @constructor
 **/
 /* global platypus, setTimeout */
 import Data from './Data.js';
@@ -34,6 +33,9 @@ const
     };
 
 export default class AssetManager {
+    /**
+     * @constructor
+     */
     constructor () {
         this.assets = DataMap.setUp();
         this.counts = Data.setUp();

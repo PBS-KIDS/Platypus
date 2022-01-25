@@ -3,23 +3,25 @@
  *
  * @memberof platypus
  * @class CollisionData
- * @constructor
- * @param occurredOrData {Boolean|CollisionData} Whether this represents an actual collision between two shapes. If a CollisionData instance is provided, the instance's full set of values are copied.
- * @param direction {Number} 1 or -1 to define the direction of the collision.
- * @param position {Number} A positive number describing position along the line of collision direction.
- * @param deltaMovement {Number} A positive number describing the magnitude of overlap.
- * @param aABB {platypus.AABB} An AABB of the colliding shape.
- * @param thisShape {platypus.Shape} The moving shape.
- * @param thatShape {platypus.Shape} The stationary shape being collided with.
- * @param vector {platypus.Vector} The vector describing the contact point.
- * @param stuck {Number} The amount of unwarranted overlap if shapes start in a collided position before moving.
- * @return {platypus.CollisionData} Returns the new CollisionData object.
  */
 import Vector from './Vector.js';
 import config from 'config';
 import recycle from 'recycle';
 
 export default (function () {
+    /**
+     * @constructor
+     * @param occurredOrData {Boolean|CollisionData} Whether this represents an actual collision between two shapes. If a CollisionData instance is provided, the instance's full set of values are copied.
+     * @param direction {Number} 1 or -1 to define the direction of the collision.
+     * @param position {Number} A positive number describing position along the line of collision direction.
+     * @param deltaMovement {Number} A positive number describing the magnitude of overlap.
+     * @param aABB {platypus.AABB} An AABB of the colliding shape.
+     * @param thisShape {platypus.Shape} The moving shape.
+     * @param thatShape {platypus.Shape} The stationary shape being collided with.
+     * @param vector {platypus.Vector} The vector describing the contact point.
+     * @param stuck {Number} The amount of unwarranted overlap if shapes start in a collided position before moving.
+     * @return {platypus.CollisionData} Returns the new CollisionData object.
+     */
     var CollisionData = function (occurredOrData) {
             if (!this.vector) {
                 this.vector = Vector.setUp();

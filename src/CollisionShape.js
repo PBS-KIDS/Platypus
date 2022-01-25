@@ -3,20 +3,6 @@
  *
  * @memberof platypus
  * @class CollisionShape
- * @constructor
- * @param owner {platypus.Entity} The entity that uses this shape.
- * @param definition {Object} This is an object of key/value pairs describing the shape.
- * @param definition.x {number} The x position of the shape. The x is always located in the center of the object.
- * @param definition.y {number} The y position of the shape. The y is always located in the center of the object.
- * @param [definition.type="rectangle"] {String} The type of shape this is. Currently this can be either "rectangle" or "circle".
- * @param [definition.width] {number} The width of the shape if it's a rectangle.
- * @param [definition.height] {number} The height of the shape if it's a rectangle.
- * @param [definition.radius] {number} The radius of the shape if it's a circle.
- * @param [definition.offsetX] {number} The x offset of the collision shape from the owner entity's location.
- * @param [definition.offsetY] {number} The y offset of the collision shape from the owner entity's location.
- * @param [definition.regX] {number} The registration x of the collision shape with the owner entity's location if offsetX is not provided.
- * @param [definition.regY] {number} The registration y of the collision shape with the owner entity's location if offsetX is not provided.
- * @param collisionType {String} A string describing the collision type of this shape.
  */
 import AABB from './AABB.js';
 import Vector from './Vector.js';
@@ -58,6 +44,22 @@ export default (function () {
                 ((shape.type === 'circle') && circleRectCollision(shape, this))
             );
         },
+        /**
+         * @constructor
+         * @param owner {platypus.Entity} The entity that uses this shape.
+         * @param definition {Object} This is an object of key/value pairs describing the shape.
+         * @param definition.x {number} The x position of the shape. The x is always located in the center of the object.
+         * @param definition.y {number} The y position of the shape. The y is always located in the center of the object.
+         * @param [definition.type="rectangle"] {String} The type of shape this is. Currently this can be either "rectangle" or "circle".
+         * @param [definition.width] {number} The width of the shape if it's a rectangle.
+         * @param [definition.height] {number} The height of the shape if it's a rectangle.
+         * @param [definition.radius] {number} The radius of the shape if it's a circle.
+         * @param [definition.offsetX] {number} The x offset of the collision shape from the owner entity's location.
+         * @param [definition.offsetY] {number} The y offset of the collision shape from the owner entity's location.
+         * @param [definition.regX] {number} The registration x of the collision shape with the owner entity's location if offsetX is not provided.
+         * @param [definition.regY] {number} The registration y of the collision shape with the owner entity's location if offsetX is not provided.
+         * @param collisionType {String} A string describing the collision type of this shape.
+         */
         CollisionShape = function (owner, definition, collisionType) {
             var regX = definition.regX,
                 regY = definition.regY,

@@ -3,12 +3,6 @@
  *
  * @memberof platypus
  * @class Gamepad
- * @constructor
- * @param gamepad {number} The browser's gamepad object.
- * @param id {number} Id of gamepad.
- * @param deadzone {number} distance from axis `0` position to ignore.
- * @param height {number} The height of the AABB.
- * @return {platypus.Gamepad} Returns the new aabb object.
  */
 import Data from './Data.js';
 import Vector from './Vector.js';
@@ -17,6 +11,14 @@ import config from 'config';
 import recycle from 'recycle';
 
 const
+    /**
+     * @constructor
+     * @param gamepad {number} The browser's gamepad object.
+     * @param id {number} Id of gamepad.
+     * @param deadzone {number} distance from axis `0` position to ignore.
+     * @param height {number} The height of the AABB.
+     * @return {platypus.Gamepad} Returns the new aabb object.
+     */
     Gamepad = function (gamepad, onDown, onUp, onChange, id = '', deadzone = 0.1) {
         this.source = gamepad;
         this.deadzone = deadzone;

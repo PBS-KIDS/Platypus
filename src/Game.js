@@ -35,11 +35,6 @@
  *
  * @memberof platypus
  * @class Game
- * @constructor
- * @param definition {Object} Collection of configuration settings, typically from config.json.
- * @param options {Object} Options describing the display options, Springroll features, etc.
- * @param [onFinishedLoading] {Function} An optional function to run once the game has begun.
- * @return {platypus.Game} Returns the instantiated game.
  */
 /* global document, platypus, window */
 import {Application, CaptionPlayer, ScaleManager, TextRenderer} from 'springroll';
@@ -168,6 +163,13 @@ export default (function () {
         };
 
     class Game extends Messenger {
+        /**
+         * @constructor
+         * @param definition {Object} Collection of configuration settings, typically from config.json.
+         * @param options {Object} Options describing the display options, Springroll features, etc.
+         * @param [onFinishedLoading] {Function} An optional function to run once the game has begun.
+         * @return {platypus.Game} Returns the instantiated game.
+         */
         constructor (definition, options, onFinishedLoading) {
             const
                 displayOptions = options.display || {},

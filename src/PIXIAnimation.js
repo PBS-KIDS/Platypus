@@ -161,6 +161,9 @@ export default (function () {
                 "cacheId", cacheId
             );
         },
+        /**
+         * @constructor
+         */
         PIXIAnimation = function (spriteSheet, animation) {
             var FR = 60,
                 cacheId = getTexturesCacheId(spriteSheet),

@@ -26,17 +26,7 @@
  *
  * @memberof platypus
  * @class Entity
- * @constructor
  * @extends Messenger
- * @param [definition] {Object} Base definition for the entity.
- * @param [definition.id] {Object} This declares the type of entity and will be stored on the Entity as `entity.type` after instantiation.
- * @param [definition.components] {Object} This lists the components that should be attached to this entity.
- * @param [definition.properties] {Object} [definition.properties] This is a list of key/value pairs that are added directly to the Entity as `entity.key = value`.
- * @param [instanceDefinition] {Object} Specific instance definition including properties that override the base definition properties.
- * @param [instanceDefinition.properties] {Object} This is a list of key/value pairs that are added directly to the Entity as `entity.key = value`.
- * @param [callback] {Function} A function to run once all of the components on the Entity have been loaded. The first parameter is the entity itself.
- * @param [parent] {Entity} Presets the parent of the entity so that the parent entity is available during component instantiation. Overrides `parent` in properties definitions.
- * @return {Entity} Returns the new entity made up of the provided components.
 **/
 /* global platypus */
 import {arrayCache, greenSplice, union} from './utils/array.js';
@@ -70,6 +60,18 @@ export default (function () {
         entityIds = {};
 
     class Entity extends Messenger {
+        /**
+         * @constructor
+         * @param [definition] {Object} Base definition for the entity.
+         * @param [definition.id] {Object} This declares the type of entity and will be stored on the Entity as `entity.type` after instantiation.
+         * @param [definition.components] {Object} This lists the components that should be attached to this entity.
+         * @param [definition.properties] {Object} [definition.properties] This is a list of key/value pairs that are added directly to the Entity as `entity.key = value`.
+         * @param [instanceDefinition] {Object} Specific instance definition including properties that override the base definition properties.
+         * @param [instanceDefinition.properties] {Object} This is a list of key/value pairs that are added directly to the Entity as `entity.key = value`.
+         * @param [callback] {Function} A function to run once all of the components on the Entity have been loaded. The first parameter is the entity itself.
+         * @param [parent] {Entity} Presets the parent of the entity so that the parent entity is available during component instantiation. Overrides `parent` in properties definitions.
+         * @return {Entity} Returns the new entity made up of the provided components.
+         */
         constructor (definition, instanceDefinition, callback, parent) {
             var i                    = 0,
                 componentDefinition  = null,

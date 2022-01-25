@@ -3,8 +3,6 @@
  *
  * @memberof platypus
  * @class DataMap
- * @constructor
- * @return dataMap {platypus.DataMap} Returns the new DataMap object.
  * @uses Map
  */
 /* global window */
@@ -76,6 +74,10 @@ export default (function () {
                 value: null
             }
         },
+        /**
+         * @constructor
+         * @return {platypus.DataMap} Returns the new DataMap object.
+         */
         DataMap = function (first) {
             var i = arguments.length,
                 key = '',

@@ -19,6 +19,9 @@ export default (function () {
         };
 
     class Messenger {
+        /**
+         * @constructor
+         */
         constructor () {
             this._listeners = {};
             this._destroyed = false;

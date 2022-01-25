@@ -3,14 +3,18 @@
  *
  * @memberof platypus
  * @class Storage
- * @constructor
- * @return {Data} Returns the new Storage object.
  */
 /* global platypus, window */
 import DataMap from './DataMap.js';
 import {UserData} from 'springroll';
 
 export default class Storage {
+    /**
+     * @constructor
+     * @param {*} springroll 
+     * @param {*} options 
+     * @return {Data} Returns the new Storage object.
+     */
     constructor (springroll, options) {
         const
             gameId = options.name,

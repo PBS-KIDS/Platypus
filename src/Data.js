@@ -3,13 +3,17 @@
  *
  * @memberof platypus
  * @class Data
- * @constructor
- * @return {Data} Returns the new Data object.
  */
 import config from 'config';
 import recycle from 'recycle';
 
 export default (function () {
+    /**
+     * 
+     * @constructor
+     * @param {String|Object} first Can be an object of key/value pairs or the parameters can be an alternating list of keys and values.
+     * @return {Data} Returns the new Data object.
+     */
     var
         Data = function (first) {
             var i = arguments.length,

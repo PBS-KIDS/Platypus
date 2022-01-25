@@ -3,14 +3,16 @@
  *
  * @memberof platypus
  * @class CollisionDataContainer
- * @constructor
- * @return {platypus.CollisionDataContainer} Returns the new aabb object.
  */
 import {arrayCache} from './utils/array.js';
 import config from 'config';
 import recycle from 'recycle';
 
 export default (function () {
+    /**
+     * @constructor
+     * @return {platypus.CollisionDataContainer} Returns the new aabb object.
+     */
     var CollisionDataContainer = function () {
             if (!this.xData && !this.yData) {
                 this.xData = arrayCache.setUp();

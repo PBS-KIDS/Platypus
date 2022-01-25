@@ -3,8 +3,6 @@
  *
  * @memberof platypus
  * @class EntityLinker
- * @constructor
- * @return {EntityLinker} Returns the new EntityLinker object.
  */
 import {arrayCache, greenSplice} from './utils/array';
 import Data from './Data';
@@ -14,6 +12,10 @@ import recycle from 'recycle';
 
 export default (function () {
     var
+        /**
+         * @constructor
+         * @return {EntityLinker} Returns the new EntityLinker object.
+         */
         EntityLinker = function () {
             this.ids = this.ids || arrayCache.setUp();
             this.entities = this.entities || DataMap.setUp();

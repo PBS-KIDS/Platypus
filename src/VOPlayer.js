@@ -5,9 +5,6 @@
  *
  * @memberof platypus
  * @class VOPlayer
- * @constructor
- * @param {Game} game The game instance for which to play audio.
- * @param {assetManager} assetCache The Platypus assetManager used to load and unload VO clips.
  */
 /* global platypus */
 import {arrayCache, greenSlice, greenSplice} from './utils/array.js';
@@ -16,6 +13,11 @@ import Messenger from './Messenger.js';
 import Sound from 'pixi-sound';
 
 export default class VOPlayer extends Messenger {
+    /**
+     * @constructor
+     * @param {Game} game The game instance for which to play audio.
+     * @param {assetManager} assetCache The Platypus assetManager used to load and unload VO clips.
+     */
     constructor (game, assetCache) {
         super();
 
