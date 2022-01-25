@@ -57,7 +57,7 @@ export default createComponentClass(/** @lends XHR.prototype */{
         this.setProperties(definition);
     },
 
-    events: {// These are messages that this component listens for
+    events: /** @lends XHR.prototype */{// These are messages that this component listens for
         /**
          * On receiving this message, this component makes a request from the server using the provided information. Note that properties set here will reset the properties set by this component's JSON definition.
          *
