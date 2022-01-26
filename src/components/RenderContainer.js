@@ -633,8 +633,7 @@ export default (function () {
             /**
              * Remove this entity's container from the containing rendering container.
              *
-             * @memberof RenderContainer.prototype
-             * @method removeFromParentContainer
+             * @method platypus.RenderContainer#removeFromParentContainer
              */
             removeFromParentContainer: function () {
                 if (this.parentContainer) {
@@ -649,8 +648,7 @@ export default (function () {
             /**
              * Add this entity's container to a rendering container.
              *
-             * @memberof RenderContainer.prototype
-             * @method addToParentContainer
+             * @method platypus.RenderContainer#addToParentContainer
              * @param {Container} container Container to add this to.
              */
             addToParentContainer: function (container) {

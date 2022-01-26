@@ -1,10 +1,3 @@
-/**
- * This class defines a state object to use for entity states with helper methods. It includes recycle methods to encourage reuse.
- *
- * @memberof platypus
- * @class StateMap
- * @extends platypus.DataMap
- */
 import DataMap from './DataMap.js';
 import {arrayCache} from './utils/array.js';
 import config from 'config';
@@ -13,7 +6,11 @@ import recycle from 'recycle';
 
 export default (function () {
     /**
-     * @constructor
+     * This class defines a state object to use for entity states with helper methods. It includes recycle methods to encourage reuse.
+     *
+     * @memberof platypus
+     * @class StateMap
+     * @extends platypus.DataMap
      * @return stateMap {platypus.StateMap} Returns the new StateMap object.
      */
     var StateMap = function (first) {
@@ -48,7 +45,7 @@ export default (function () {
      *          green: false
      *      }
      *
-     * @method updateFromString
+     * @method platypus.StateMap#updateFromString
      * @param states {String} A comma-delimited list of true/false state values.
      * @chainable
      */
@@ -78,7 +75,7 @@ export default (function () {
     /**
      * Checks whether the provided state matches this state and updates this state to match.
      *
-     * @method update
+     * @method platypus.StateMap#update
      * @param state {platypus.StateMap} The state that this state should match.
      * @return {Boolean} Whether this state already matches the provided state.
      */
@@ -106,7 +103,7 @@ export default (function () {
     /**
      * Checks whether the provided state matches all equivalent keys on this state.
      *
-     * @method includes
+     * @method platypus.StateMap#includes
      * @param state {platypus.StateMap} The state that this state should match.
      * @return {Boolean} Whether this state matches the provided state.
      */
@@ -130,7 +127,7 @@ export default (function () {
     /**
      * Checks whether the provided state matches any equivalent keys on this state.
      *
-     * @method intersects
+     * @method platypus.StateMap#intersects
      * @param state {platypus.StateMap} The state that this state should intersect.
      * @return {Boolean} Whether this state intersects the provided state.
      */
@@ -154,19 +151,19 @@ export default (function () {
     /**
      * Returns StateMap from cache or creates a new one if none are available.
      *
-     * @method StateMap.setUp
-     * @return stateMap {platypus.StateMap} The instantiated StateMap.
+     * @method platypus.StateMap.setUp
+     * @return {platypus.StateMap} The instantiated StateMap.
      */
     /**
      * Returns StateMap back to the cache. Prefer the StateMap's recycle method since it recycles property objects as well.
      *
-     * @method StateMap.recycle
-     * @param stateMap {platypus.StateMap} The StateMap to be recycled.
+     * @method platypus.StateMap.recycle
+     * @param {platypus.StateMap} stateMap The StateMap to be recycled.
      */
     /**
      * Relinquishes StateMap properties and recycles it.
      *
-     * @method recycle
+     * @method platypus.StateMap#recycle
      */
     recycle.add(StateMap, 'StateMap', StateMap, function () {
         this.clear();

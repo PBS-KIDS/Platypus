@@ -7,14 +7,11 @@ import {UserData} from 'springroll';
  *
  * @memberof platypus
  * @class Storage
+ * @param {*} springroll 
+ * @param {*} options 
+ * @return {Data} Returns the new Storage object.
  */
-export default class Storage {
-    /**
-     * @constructor
-     * @param {*} springroll 
-     * @param {*} options 
-     * @return {Data} Returns the new Storage object.
-     */
+class Storage {
     constructor (springroll, options) {
         const
             gameId = options.name,
@@ -79,7 +76,6 @@ export default class Storage {
     /**
      * Adds a storage key to the game's storage.
      *
-     * @method addKey
      * @param {String} key The key to add.
      * @param {*} value The data to store at this defined key.
      */
@@ -101,7 +97,6 @@ export default class Storage {
     /**
      * Gets a value from storage for the provided storage key.
      *
-     * @method get
      * @param {String} key The key for the data to return
      * @return {*}
      */
@@ -116,7 +111,6 @@ export default class Storage {
     /**
      * Takes the current game storage and saves it to local storage or Springroll UserData
      *
-     * @method save
      */
     save () {
         const save = this.map.toJSON();
@@ -133,7 +127,6 @@ export default class Storage {
     /**
      * Updates a storage key's data. Creates the key if it does not exist.
      *
-     * @method set
      * @param {String} key The key to update.
      * @param {*} value The data to store at this key.
      */
@@ -145,4 +138,6 @@ export default class Storage {
             this[key] = value;
         }
     }
-}
+};
+
+export default Storage;

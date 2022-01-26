@@ -1,6 +1,3 @@
-/**
- * @memberof window
- */
 import {arrayCache} from './array.js';
 
 /**

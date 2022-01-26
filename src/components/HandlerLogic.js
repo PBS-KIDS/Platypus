@@ -92,6 +92,7 @@ export default (function () {
          * @listens platypus.Entity#child-entity-updated
          * @listens platypus.Entity#pause-logic
          * @listens platypus.Entity#unpause-logic
+         * @fires platypus.Entity#handle-ai
          * @fires platypus.Entity#handle-logic
          * @fires platypus.Entity#logic-paused
          * @fires platypus.Entity#logic-unpaused
@@ -288,6 +289,16 @@ export default (function () {
                         this.owner.triggerEvent('handle-logic', msg);
                     
                         if (this.owner.triggerEventOnChildren) {
+                            /**
+                             * AI components listen in order to perform their logic on each tick.
+                             *
+                             * @event platypus.Entity#handle-ai
+                             * @param tick.delta {Number} The time that has passed since the last tick as manipulated by the timeMultiplier.
+                             * @param tick.gameDelta {Number} The time that has passed since the last tick. Unmanipulated by timeMultiplier. Use for components that need to run on actual time.
+                             * @param tick.camera {null|platypus.AABB} The range of the logic camera area. This is typically larger than the visible camera. This value is `null` if `alwaysOn` is set to `true` on this component.
+                             * @param tick.entities {Array} This is a list of all the logically active entities.
+                             * @param tick.tick {Object} Tick object from "tick" event.
+                             */
                             this.owner.triggerEventOnChildren('handle-ai', msg);
                         }
 

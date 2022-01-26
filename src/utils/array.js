@@ -1,6 +1,3 @@
-/**
- * @memberof window
- */
 import config from 'config';
 import recycle from 'recycle';
 

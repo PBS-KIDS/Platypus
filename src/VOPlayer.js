@@ -10,11 +10,12 @@ import Sound from 'pixi-sound';
  * This class borrows heavily from SpringRoll v1 to match the original capabilities exposed for Platypus v1.
  *
  * @memberof platypus
+ * @class VOPlayer
  * @extends platypus.Messenger
  * @param {Game} game The game instance for which to play audio.
  * @param {assetManager} assetCache The Platypus assetManager used to load and unload VO clips.
  */
-export default class VOPlayer extends Messenger {
+class VOPlayer extends Messenger {
     constructor (game, assetCache) {
         super();
 
@@ -181,7 +182,6 @@ export default class VOPlayer extends Messenger {
 
     /**
      * Calculates the amount of time elapsed in the current playlist of audio/silence.
-     * @method getElapsed
      * @return {int} The elapsed time in milliseconds.
      */
     getElapsed () {
@@ -221,7 +221,6 @@ export default class VOPlayer extends Messenger {
 
     /**
      * Pauses the current VO, caption, or silence timer if the VOPlayer is playing.
-     * @method pause
      * @public
      */
     pause () {
@@ -239,7 +238,6 @@ export default class VOPlayer extends Messenger {
 
     /**
      * Resumes the current VO, caption, or silence timer if the VOPlayer was paused.
-     * @method resume
      * @public
      * @listens platypus.Game#tick
      */
@@ -265,7 +263,6 @@ export default class VOPlayer extends Messenger {
      * Plays a single audio alias, interrupting any current playback.
      * Alternatively, plays a list of audio files, timers, and/or functions.
      * Audio in the list will be preloaded to minimize pauses for loading.
-     * @method play
      * @public
      * @param {String|Array} idOrList The alias of the audio file to play or the
      * array of items to play/call in order.
@@ -306,7 +303,6 @@ export default class VOPlayer extends Messenger {
 
     /**
      * Callback for when audio/timer is finished to advance to the next item in the list.
-     * @method _onSoundFinished
      * @private
      */
     _onSoundFinished () {
@@ -390,7 +386,6 @@ export default class VOPlayer extends Messenger {
     /**
      * The update callback used for silence timers.
      * This method is bound to the VOPlayer instance.
-     * @method _updateSilence
      * @private
      * @param {int} elapsed The time elapsed since the previous frame, in milliseconds.
      */
@@ -405,7 +400,6 @@ export default class VOPlayer extends Messenger {
     /**
      * The update callback used for updating captions with active audio.
      * This method is bound to the VOPlayer instance.
-     * @method _syncCaptionToSound
      * @private
      * @param {int} elapsed The time elapsed since the previous frame, in milliseconds.
      */
@@ -417,7 +411,6 @@ export default class VOPlayer extends Messenger {
 
     /**
      * Plays the current audio item and begins preloading the next item.
-     * @method _playSound
      * @private
      */
     _playSound () {
@@ -489,7 +482,6 @@ export default class VOPlayer extends Messenger {
 
     /**
      * Stops playback of any audio/timer.
-     * @method stop
      * @public
      */
     stop () {
@@ -531,7 +523,6 @@ export default class VOPlayer extends Messenger {
     /**
      * Sets the volume of VO playback.
      *
-     * @method setVolume
      * @param {Number} volume
      */
     setVolume (volume) {
@@ -544,7 +535,6 @@ export default class VOPlayer extends Messenger {
     /**
      * Whether to mute captions.
      *
-     * @method setCaptionMute
      * @param {Boolean} muted
      */
     setCaptionMute (muted) {
@@ -556,7 +546,6 @@ export default class VOPlayer extends Messenger {
 
     /**
      * Unloads an audio track this VOPlayer has played.
-     * @method unloadSound
      * @param sound {string} Sound to unload.
      * @public
      */
@@ -571,7 +560,6 @@ export default class VOPlayer extends Messenger {
 
     /**
      * Cleans up this VOPlayer.
-     * @method destroy
      * @public
      */
     destroy () {
@@ -584,3 +572,5 @@ export default class VOPlayer extends Messenger {
         this._captions = null;
     }
 };
+
+export default VOPlayer;

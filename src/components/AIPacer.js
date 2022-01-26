@@ -30,6 +30,7 @@ export default (function () {
          * @memberof platypus.components
          * @uses platypus.Component
          * @constructs
+         * @listens platypus.Entity#handle-ai
          * @fires platypus.Entity#stop
          * @fires platypus.Entity#go-left
          * @fires platypus.Entity#go-right
@@ -42,11 +43,6 @@ export default (function () {
         },
         
         events: {
-            /**
-             * This AI listens for a step message triggered by its entity parent in order to perform its logic on each tick.
-             *
-             * @method 'handle-ai'
-             */
             "handle-ai": function () {
                 if (this.currentDirection !== this.lastDirection) {
                     this.lastDirection = this.currentDirection;

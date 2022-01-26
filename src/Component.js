@@ -1,18 +1,3 @@
-/**
- * This is the extendable Component class. Typically specific component classes should be created using `createComponentClass()`. This method accepts component definitions and creates component classes that can be used to create components by entities.  It adds properties and methods that are common to all components so that component definitions can focus on unique properties and methods.
- *
- * To create an extended component class, use the following syntax:
- *
- *      createComponentClass(componentDefinition, prototype);
- *
- *  * `componentDefinition` is list of key/value pairs that describe the component's behavior.
- *  * `prototype` is an optional prototype that this component extends.
- * See [component-template.js]("component-template"%20Component.html) for an example componentDefinition that can be sent into this component class factory.
- *
- * @memberof platypus
- * @class Component
- * @static
- */
 /*global platypus */
 import {arrayCache, greenSplice} from './utils/array.js';
 import Data from './Data.js';
@@ -21,6 +6,22 @@ export default (function () {
     var getAssetList = function () {
             return arrayCache.setUp();
         },
+
+        /**
+         * This is the extendable Component class. Typically specific component classes should be created using `createComponentClass()`. This method accepts component definitions and creates component classes that can be used to create components by entities.  It adds properties and methods that are common to all components so that component definitions can focus on unique properties and methods.
+         *
+         * To create an extended component class, use the following syntax:
+         *
+         *      createComponentClass(componentDefinition, prototype);
+         *
+         *  * `componentDefinition` is list of key/value pairs that describe the component's behavior.
+         *  * `prototype` is an optional prototype that this component extends.
+         * See [component-template.js]("component-template"%20Component.html) for an example componentDefinition that can be sent into this component class factory.
+         *
+         * @memberof platypus
+         * @class Component
+         * @static
+         */
         Component = function (type, owner) {
             this.type = type;
             this.owner = owner;
@@ -35,7 +36,7 @@ export default (function () {
     /**
      * Returns a string describing the component.
      *
-     * @method toString
+     * @method platypus.Component#toString
      * @return {String} Returns the component type as a string of the form "[Component ComponentType]".
      **/
     proto.toString = function () {
@@ -45,7 +46,7 @@ export default (function () {
     /**
      * Returns a JSON object describing the component.
      *
-     * @method toJSON
+     * @method platypus.Component#toJSON
      * @return {Object} Returns a JSON definition that can be used to recreate the component.
      **/
     proto.toJSON = null; // defined in factory.js
@@ -53,7 +54,7 @@ export default (function () {
     /**
      * This method cleans up listeners and methods that this component added to the entity. It should never be called by the component itself. Call this.owner.removeComponent(this) instead.
      *
-     * @method destroy
+     * @method platypus.Component#destroy
      * @private
      */
     proto.destroy = function () {
@@ -84,7 +85,7 @@ export default (function () {
     /**
      * This method removes multiple event listeners from the entity.
      *
-     * @method removeEventListeners
+     * @method platypus.Component#removeEventListeners
      * @param [listeners] {Array} The list of listeners to remove. If not supplied, all event listeners are removed.
      * @private
      */
@@ -111,7 +112,7 @@ export default (function () {
     /**
      * This method adds an event listener to the entity.
      *
-     * @method addEventListener
+     * @method platypus.Component#addEventListener
      * @param event {String} The event that this component should listen for.
      * @param callback {Function} The handler for the event.
      * @return handler {Function} A reference to the bound handler.
@@ -130,7 +131,7 @@ export default (function () {
     /**
      * This method adds a method to the entity.
      *
-     * @method addMethod
+     * @method platypus.Component#addMethod
      * @param name {String} The name of the method. For example, if name is "turnYellow", the method is accessible on the entity as `entity.turnYellow()`.
      * @param func {Function} The function describing the method.
      * @private
@@ -149,7 +150,7 @@ export default (function () {
     /**
      * This method removes an event listener from the entity.
      *
-     * @method removeEventListener
+     * @method platypus.Component#removeEventListener
      * @param event {String} The event for which to remove a listener.
      * @param callback {Function} The listener to remove. If not supplied, all event listeners for the provided event are removed.
      * @private
@@ -171,7 +172,7 @@ export default (function () {
     /**
      * This method removes a method from the entity.
      *
-     * @method removeMethod
+     * @method platypus.Component#removeMethod
      * @param name {String} The name of the method to be removed.
      * @private
      */
@@ -187,7 +188,7 @@ export default (function () {
     /**
      * This method can be overwritten to provide the list of assets this component requires. This method is invoked when the list of game scenes is created to determine assets for each scene.
      *
-     * @method getAssetList
+     * @method platypus.Component#getAssetList
      * @param definition {Object} The definition for the component.
      * @param properties {Object} The properties of the Entity.
      * @param defaultProperties {Object} The default properties of the Entity.

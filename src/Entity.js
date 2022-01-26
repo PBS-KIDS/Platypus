@@ -179,7 +179,6 @@ export default (function () {
         /**
         * Returns a string describing the entity.
         *
-        * @method toString
         * @return {String} Returns the entity type as a string of the form "[Entity entity-type]".
         **/
         toString () {
@@ -189,7 +188,6 @@ export default (function () {
         /**
         * Returns a JSON object describing the entity.
         *
-        * @method toJSON
         * @param includeComponents {Boolean} Whether the returned JSON should list components. Defaults to `false` to condense output since components are generally defined in `platypus.game.settings.entities`, but may be needed for custom-constructed entities not so defined.
         * @return {Object} Returns a JSON definition that can be used to recreate the entity.
         **/
@@ -225,7 +223,6 @@ export default (function () {
         /**
          * Attaches the provided component to the entity.
          *
-         * @method addComponent
          * @param {platypus.Component} component Must be an object that functions as a Component.
          * @return {platypus.Component} Returns the same object that was submitted.
          * @fires platypus.Entity#component-added
@@ -247,7 +244,6 @@ export default (function () {
         /**
          * Removes the mentioned component from the entity.
          *
-         * @method removeComponent
          * @param {Component} component Must be a [[Component]] attached to the entity.
          * @return {Component} Returns the same object that was submitted if removal was successful; otherwise returns false (the component was not found attached to the entity).
          * @fires platypus.Entity#component-removed
@@ -290,7 +286,6 @@ export default (function () {
         * This method sets one or more properties on the entity.
         *
         * @param {Object} properties A list of key/value pairs to set as properties on the entity.
-        * @method setProperty
         **/
         setProperty (properties) {
             var index = '';
@@ -305,7 +300,6 @@ export default (function () {
         /**
         * This method removes all components from the entity.
         *
-        * @method destroy
         **/
         destroy () {
             var components = this.components;
@@ -331,7 +325,6 @@ export default (function () {
         /**
          * Returns all of the assets required for this Entity. This method calls the corresponding method on all components to determine the list of assets.
          *
-         * @method getAssetList
          * @param definition {Object} The definition for the Entity.
          * @param properties {Object} Properties for this instance of the Entity.
          * @param data {Object} Layer data that affects asset list.

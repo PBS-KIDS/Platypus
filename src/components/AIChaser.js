@@ -46,6 +46,11 @@ export default (function () {
          * @constructs
          * @listens platypus.Entity#load
          * @fires platypus.Entity#chase
+         * @listens platypus.Entity#handle-ai
+         * @listens platypus.Entity#set-target
+         * @listens platypus.Entity#set-target-offset
+         * @listens platypus.Entity#start-chasing
+         * @listens platypus.Entity#stop-chasing
          */
         initialize: function () {
             this.target = this.owner.target || null;
@@ -68,11 +73,6 @@ export default (function () {
                 }).vector;
             },
         
-            /**
-             * This AI listens for a step message triggered by its entity parent in order to perform its logic on each tick.
-             *
-             * @method 'handle-ai'
-             */
             "handle-ai": function () {
                 var v = null,
                     m = 0,

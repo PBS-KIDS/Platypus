@@ -1,16 +1,13 @@
-/**
- * CollisionDataContainer holds lists of CollisionData passed to entities during collisions with other entities. This class is primarily used by the ["HandlerCollision"]("HandlerCollision"%20Component.html) Component to trigger messages on child entities as collisions occur.
- *
- * @memberof platypus
- * @class CollisionDataContainer
- */
 import {arrayCache} from './utils/array.js';
 import config from 'config';
 import recycle from 'recycle';
 
 export default (function () {
     /**
-     * @constructor
+     * CollisionDataContainer holds lists of CollisionData passed to entities during collisions with other entities. This class is primarily used by the ["HandlerCollision"]("HandlerCollision"%20Component.html) Component to trigger messages on child entities as collisions occur.
+     *
+     * @memberof platypus
+     * @class CollisionDataContainer
      * @return {platypus.CollisionDataContainer} Returns the new aabb object.
      */
     var CollisionDataContainer = function () {
@@ -28,7 +25,7 @@ export default (function () {
     /**
      * Adds a CollisionData object to the container's X-axis if the movement distance is less than or equal to collision data collected so far.
      *
-     * @method tryToAddX
+     * @method platypus.CollisionDataContainer#tryToAddX
      * @param collisionData {platypus.CollisionData} The collision data to add.
      * @return {Boolean} Whether the collision data was added.
      */
@@ -47,7 +44,7 @@ export default (function () {
     /**
      * Adds a CollisionData object to the container's Y-axis if the movement distance is less than or equal to collision data collected so far.
      *
-     * @method tryToAddY
+     * @method platypus.CollisionDataContainer#tryToAddY
      * @param collisionData {platypus.CollisionData} The collision data to add.
      * @return {Boolean} Whether the collision data was added.
      */
@@ -66,7 +63,7 @@ export default (function () {
     /**
      * Resets the X and Y axes.
      *
-     * @method reset
+     * @method platypus.CollisionDataContainer#reset
      */
     proto.reset = function () {
         this.resetX(Infinity);
@@ -77,7 +74,7 @@ export default (function () {
      * Resets the X axis.
      *
      * @param delta {Number} The delta value of the X-axis.
-     * @method resetX
+     * @method platypus.CollisionDataContainer#resetX
      */
     proto.resetX = function (delta) {
         var xData = this.xData,
@@ -94,7 +91,7 @@ export default (function () {
      * Resets the Y axis.
      *
      * @param delta {Number} The delta value of the Y-axis.
-     * @method resetY
+     * @method platypus.CollisionDataContainer#resetY
      */
     proto.resetY = function (delta) {
         var yData = this.yData,
@@ -110,19 +107,19 @@ export default (function () {
     /**
      * Returns an CollisionDataContainer from cache or creates a new one if none are available.
      *
-     * @method CollisionDataContainer.setUp
+     * @method platypus.CollisionDataContainer.setUp
      * @return {platypus.CollisionDataContainer} The instantiated CollisionDataContainer.
      */
     /**
      * Returns a CollisionDataContainer back to the cache.
      *
-     * @method CollisionDataContainer.recycle
+     * @method platypus.CollisionDataContainer.recycle
      * @param CollisionDataContainer {platypus.CollisionDataContainer} The CollisionDataContainer to be recycled.
      */
     /**
      * Relinquishes properties of the CollisionDataContainer and recycles it.
      *
-     * @method recycle
+     * @method platypus.CollisionDataContainer#recycle
      */
     recycle.add(CollisionDataContainer, 'CollisionDataContainer', CollisionDataContainer, null, true, config.dev);
 

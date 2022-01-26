@@ -100,7 +100,7 @@ const
 /**
  * Updates the state of the action by checking the state of the Entity and whether any inputs are active.
  *
- * @method update
+ * @method platypus.ActionState#update
  * @param state {Object} The Entity's `state` property to compare against the ActionState's valid state.
  * @return {Boolean} Whether the ActionState is triggered, pressed, or released.
  */
@@ -141,7 +141,7 @@ proto.update = function (state) {
  *           pressed:  0 0 0 0  0 1 0 1  0 0 0 0  0 1 0 1
  *          released:  0 0 0 0  0 0 1 0  0 0 1 1  0 0 1 0
  *
- * @method resolve
+ * @method platypus.ActionState#resolve
  */
 proto.resolve = function () {
     this.trigger(this.event, this.stateSummary);
@@ -150,19 +150,19 @@ proto.resolve = function () {
 /**
  * Returns an ActionState from cache or creates a new one if none are available.
  *
- * @method ActionState.setUp
+ * @method platypus.ActionState.setUp
  * @return {platypus.ActionState} The instantiated ActionState.
  */
 /**
  * Returns an ActionState back to the cache. Prefer the ActionState's recycle method since it recycles property objects as well.
  *
- * @method ActionState.recycle
+ * @method platypus.ActionState.recycle
  * @param {platypus.ActionState} actionState The ActionState to be recycled.
  */
 /**
  * Relinquishes properties of the ActionState and recycles it.
  *
- * @method recycle
+ * @method platypus.ActionState#recycle
  */
 recycle.add(ActionState, 'ActionState', ActionState, function () {
     this.states.recycle();

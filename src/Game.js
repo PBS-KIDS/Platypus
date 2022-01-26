@@ -426,10 +426,11 @@ export default (function () {
         /**
          * This method causes the game to tick once.
          *
-         * @method tick
          * @param ticker {PIXI.Ticker} The ticker being used to set the game tick.
          * @param tickMessage {Object} Event tracking tick data.
          * @param deltaTime {number} The time elapsed since the last tick.
+         * @fires platypus.Game#tick
+         * @fires platypus.Entity#tick
          **/
         tick (ticker, tickMessage, deltaTime) {
             const loading = this.loading;
@@ -451,12 +452,20 @@ export default (function () {
             /**
              * This event is triggered on the game as well as each layer currently loaded.
              *
-             * @method tick
+             * @event platypus.Game#tick
              * @param tickMessage {Object} Event tracking tick data. This object is re-used for subsequent ticks.
              * @param tickMessage.delta {Number} Time in MS passed since last tick.
              * @param tickMessage.elapsed {Number} Time in MS passed since game load.
-             **/
+             */
             this.triggerEvent('tick', tickMessage);
+            /**
+             * This event is triggered on the game as well as each layer currently loaded.
+             *
+             * @event platypus.Entity#tick
+             * @param tickMessage {Object} Event tracking tick data. This object is re-used for subsequent ticks.
+             * @param tickMessage.delta {Number} Time in MS passed since last tick.
+             * @param tickMessage.elapsed {Number} Time in MS passed since game load.
+             */
             this.triggerOnChildren('tick', tickMessage);
             this.renderer.render(this.stage);
         }
@@ -464,7 +473,6 @@ export default (function () {
         /**
          * This method is used by external objects to trigger messages on the layers as well as internal entities broadcasting messages across the scope of the scene.
          *
-         * @method triggerOnChildren
          * @param {String} eventId This is the message to process.
          * @param {*} event This is a message object or other value to pass along to component functions.
          **/
@@ -483,7 +491,6 @@ export default (function () {
          *
          * If an array of layers is specified, all layers must finish loading before any receive a completion event.
          *
-         * @method load
          * @param layerId {Array|String} The layer(s) to load.
          * @param data {Object} A list of key/value pairs describing options or settings for the loading scene.
          * @param isScene {Boolean} Whether the layers from a previous scene should be replaced by these layers.
@@ -681,7 +688,6 @@ export default (function () {
         /**
          * Loads a scene.
          *
-         * @method loadScene
          * @param layersOrId {Array|Object|String} The list of layers, an object with a `layers` Array property, or scene id to load.
          * @param data {Object} A list of key/value pairs describing options or settings for the loading scene.
          * @param progressIdOrFunction {String|Function} Whether to report progress. A string sets the id of progress events whereas a function is called directly with progress.
@@ -713,7 +719,6 @@ export default (function () {
         /**
          * Unloads a layer.
          *
-         * @method unload
          * @param layer {String|Object} The layer to unload.
         **/
         unload (layer) {
@@ -740,7 +745,6 @@ export default (function () {
         /**
          * This method will return the first entity it finds with a matching id.
          *
-         * @method getEntityById
          * @param {string} id The entity id to find.
          * @return {Entity} Returns the entity that matches the specified entity id.
          **/
@@ -765,7 +769,6 @@ export default (function () {
         /**
          * This method will return all game entities that match the provided type.
          *
-         * @method getEntitiesByType
          * @param {String} type The entity type to find.
          * @return entities {Array} Returns the entities that match the specified entity type.
          **/
@@ -790,7 +793,6 @@ export default (function () {
         /**
         * This method destroys the game.
         *
-        * @method destroy
         **/
         destroy () {
             const layers = this.layers;

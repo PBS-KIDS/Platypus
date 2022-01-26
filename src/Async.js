@@ -1,9 +1,3 @@
-/**
- * This class defines an asynchronous set up wherein multiple calls can be made and a final function will be run once the calls are completed. Something like `Promise.all` but better for avoiding garbage collection.
- *
- * @memberof platypus
- * @class Async
- */
 /*global clearTimeout, setTimeout */
 import config from 'config';
 import recycle from 'recycle';
@@ -22,7 +16,10 @@ export default (function () {
             this.recycle();
         },
         /**
-         * @constructor
+         * This class defines an asynchronous set up wherein multiple calls can be made and a final function will be run once the calls are completed. Something like `Promise.all` but better for avoiding garbage collection.
+         *
+         * @memberof platypus
+         * @class Async
          * @param functions {Array} An array of functions where each function accepts a `callback` parameter and runs `callback()` on completion to notify the completion of the call.
          * @param callback {Function} The function to run once the list of functions has finished.
          * @return {platypus.Async} Returns the new Async object.
@@ -50,7 +47,7 @@ export default (function () {
     /**
      * Attempts to resolve the async call immediately if possible.
      *
-     * @method attemptResolution
+     * @method platypus.Async#attemptResolution
      * @return {Boolean} Returns `true` if async is done, `false` if not.
      */
     Async.prototype.attemptResolution = function () {
@@ -66,19 +63,19 @@ export default (function () {
     /**
      * Returns an Async from cache or creates a new one if none are available.
      *
-     * @method Async.setUp
+     * @method platypus.Async.setUp
      * @return {platypus.Async} The instantiated Async.
      */
     /**
      * Returns an Async back to the cache.
      *
-     * @method Async.recycle
+     * @method platypus.Async.recycle
      * @param async {platypus.Async} The Async to be recycled.
      */
     /**
      * Relinquishes properties of the Async and recycles it.
      *
-     * @method recycle
+     * @method platypus.Async#recycle
      */
     recycle.add(Async, 'Async', Async, function () {
         this.increment = 0;

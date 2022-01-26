@@ -19,7 +19,6 @@ export default (function () {
      */
     class Messenger {
         /**
-         * @constructor
          */
         constructor () {
             this._listeners = {};
@@ -30,7 +29,6 @@ export default (function () {
         /**
          * Add an event listener. The parameters for the listener functions depend on the event.
          *
-         * @method on
          * @param name {String} The type of event.
          * @param callback {Function} The callback function when event is triggered.
          */
@@ -47,7 +45,6 @@ export default (function () {
         /**
          * Remove the event listener
          *
-         * @method off
          * @param name {String} The type of event; if no name is specifed remove all listeners.
          * @param callback {Function} The listener function.
          */
@@ -77,7 +74,6 @@ export default (function () {
         /**
          * Returns a string describing the Messenger as "[Messenger object]".
          *
-         * @method toString
          * @return String
          */
         toString () {
@@ -87,7 +83,6 @@ export default (function () {
         /**
          * This method is used by both internal components and external entities to trigger messages. When triggered, Messenger checks through bound handlers to run as appropriate. This handles multiple event structures: "", [], and {}
          *
-         * @method trigger
          * @param event {String|Array|Object} This is the message(s) to process. This can be a string, an object containing an "event" property (and optionally a "message" property, overriding the value below), or an array of the same.
          * @param value {*} This is a message object or other value to pass along to event handler.
          * @param debug {boolean} This flags whether to output message contents and subscriber information to the console during game development. A "value" object parameter (above) will also set this flag if value.debug is set to true.
@@ -137,7 +132,6 @@ export default (function () {
         /**
          * This method is used by both internal components and external entities to trigger messages on this entity. When triggered, entity checks through bound handlers to run as appropriate. This method is identical to Spring Roll's [EventDispatcher.trigger](http://springroll.io/SpringRoll/docs/classes/springroll.EventDispatcher.html#method_trigger), but uses alternative Array methods to alleviate excessive GC.
          *
-         * @method triggerEvent
          * @param event {String} This is the message to process.
          * @param [value] {*} This is a message object or other value to pass along to event handler.
          * @param [value.debug] {boolean} This flags whether to output message contents and subscriber information to the console during game development.
@@ -181,7 +175,6 @@ export default (function () {
         /**
          * This method returns all the messages that this entity is concerned about.
          *
-         * @method getMessageIds
          * @return {Array} An array of strings listing all the messages for which this Messenger has handlers.
          */
         getMessageIds () {
@@ -191,7 +184,6 @@ export default (function () {
         /**
          * This method relinguishes Messenger properties
          *
-         * @method destroy
          */
         destroy () {
             arrayCache.recycle(this.loopCheck);
@@ -214,7 +206,6 @@ export default (function () {
         /**
          * Adds Messenger functionality to a Class.
          *
-         * @method Messenger.mixin
          * @param {Class|Function} ClassObject The class to add Messenger behavior to.
          */
         static mixin (ClassObject) {
@@ -239,7 +230,6 @@ export default (function () {
         /**
          * Call this method in an Object's instantiation if `Messenger.mixin` has been called on its Class.
          *
-         * @method Messenger.mixin
          * @param {Object} object The object for which Messenger should be instantiated.
          */
         static initialize (object) {

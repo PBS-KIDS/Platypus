@@ -1,16 +1,13 @@
-/**
- * CollisionData holds collision data passed to entities during collisions with other entities. This class is primarily used by the ["HandlerCollision"]("HandlerCollision"%20Component.html) Component to trigger messages on child entities as collision occur.
- *
- * @memberof platypus
- * @class CollisionData
- */
 import Vector from './Vector.js';
 import config from 'config';
 import recycle from 'recycle';
 
 export default (function () {
     /**
-     * @constructor
+     * CollisionData holds collision data passed to entities during collisions with other entities. This class is primarily used by the ["HandlerCollision"]("HandlerCollision"%20Component.html) Component to trigger messages on child entities as collision occur.
+     *
+     * @memberof platypus
+     * @class CollisionData
      * @param occurredOrData {Boolean|CollisionData} Whether this represents an actual collision between two shapes. If a CollisionData instance is provided, the instance's full set of values are copied.
      * @param direction {Number} 1 or -1 to define the direction of the collision.
      * @param position {Number} A positive number describing position along the line of collision direction.
@@ -37,7 +34,7 @@ export default (function () {
     /**
      * Sets all of the properties of the CollisionData.
      *
-     * @method set
+     * @method platypus.CollisionData#set
      * @param occurred {Boolean} Whether this represents an actual collision between two shapes.
      * @param direction {Number} 1 or -1 to define the direction of the collision.
      * @param position {Number} A positive number describing position along the line of collision direction.
@@ -63,7 +60,7 @@ export default (function () {
     /**
      * Sets all of the properties of the CollisionData to match those of the provided CollisionData object.
      *
-     * @method copy
+     * @method platypus.CollisionData#copy
      * @param dataToCopy {CollisionData} The object values to copy.
      */
     proto.copy = function (dataToCopy) {
@@ -81,19 +78,19 @@ export default (function () {
     /**
      * Returns an collisionData from cache or creates a new one if none are available.
      *
-     * @method CollisionData.setUp
+     * @method platypus.CollisionData.setUp
      * @return {platypus.CollisionData} The instantiated CollisionData.
      */
     /**
      * Returns a collisionData back to the cache.
      *
-     * @method CollisionData.recycle
+     * @method platypus.CollisionData.recycle
      * @param collisionData {platypus.CollisionData} The collisionData to be recycled.
      */
     /**
      * Relinquishes properties of the collisionData and recycles it.
      *
-     * @method recycle
+     * @method platypus.CollisionData#recycle
      */
     recycle.add(CollisionData, 'CollisionData', CollisionData, null, true, config.dev);
     

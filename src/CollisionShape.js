@@ -1,9 +1,3 @@
-/**
- * This class defines a collision shape, which defines the 'space' an entity occupies in the collision system. Currently only rectangle and circle shapes can be created. Collision shapes include an axis-aligned bounding box (AABB) that tightly wraps the shape. The AABB is used for initial collision checks.
- *
- * @memberof platypus
- * @class CollisionShape
- */
 import AABB from './AABB.js';
 import Vector from './Vector.js';
 import config from 'config';
@@ -45,7 +39,10 @@ export default (function () {
             );
         },
         /**
-         * @constructor
+         * This class defines a collision shape, which defines the 'space' an entity occupies in the collision system. Currently only rectangle and circle shapes can be created. Collision shapes include an axis-aligned bounding box (AABB) that tightly wraps the shape. The AABB is used for initial collision checks.
+         *
+         * @memberof platypus
+         * @class CollisionShape
          * @param owner {platypus.Entity} The entity that uses this shape.
          * @param definition {Object} This is an object of key/value pairs describing the shape.
          * @param definition.x {number} The x position of the shape. The x is always located in the center of the object.
@@ -85,7 +82,7 @@ export default (function () {
             /**
              * Determines whether shapes collide.
              *
-             * @method collides
+             * @method platypus.CollisionShape#collides
              * @param shape {platypus.CollisionShape} The shape to check against for collision.
              * @return {Boolean} Whether the shapes collide.
              */
@@ -121,7 +118,7 @@ export default (function () {
     /**
      * Updates the shape to match another shape.
      *
-     * @method updateAll
+     * @method platypus.CollisionShape#updateAll
      * @param updateAll {platypus.CollisionShape} The shape to copy into this one.
      */
     proto.updateAll = function (shape) {
@@ -149,7 +146,7 @@ export default (function () {
     /**
      * Updates the location of the shape and AABB. The position you send should be that of the owner, the offset of the shape is added inside the function.
      *
-     * @method update
+     * @method platypus.CollisionShape#update
      * @param ownerX {number} The x position of the owner.
      * @param ownerY {number} The y position of the owner.
      */
@@ -164,7 +161,7 @@ export default (function () {
     /**
      * Move the shape's x position.
      *
-     * @method moveX
+     * @method platypus.CollisionShape#moveX
      * @param x {number} The x position to which the shape should be moved.
      */
     proto.moveX = function (x) {
@@ -175,7 +172,7 @@ export default (function () {
     /**
      * Move the shape's y position.
      *
-     * @method moveY
+     * @method platypus.CollisionShape#moveY
      * @param y {number} The y position to which the shape should be moved.
      */
     proto.moveY = function (y) {
@@ -186,7 +183,7 @@ export default (function () {
     /**
      * Move the shape's x and y position.
      *
-     * @method moveXY
+     * @method platypus.CollisionShape#moveXY
      * @param x {number} The x position to which the shape should be moved.
      * @param y {number} The y position to which the shape should be moved.
      */
@@ -199,7 +196,7 @@ export default (function () {
     /**
      * Returns the axis-aligned bounding box of the shape.
      *
-     * @method getAABB
+     * @method platypus.CollisionShape#getAABB
      * @return {platypus.AABB} The AABB of the shape.
      */
     proto.getAABB = function () {
@@ -209,7 +206,7 @@ export default (function () {
     /**
      * Set the shape's position as if the entity's x position is in a certain location.
      *
-     * @method setXWithEntityX
+     * @method platypus.CollisionShape#setXWithEntityX
      * @param entityX {number} The x position of the entity.
      */
     proto.setXWithEntityX = function (entityX) {
@@ -220,7 +217,7 @@ export default (function () {
     /**
      * Set the shape's position as if the entity's y position is in a certain location.
      *
-     * @method setYWithEntityY
+     * @method platypus.CollisionShape#setYWithEntityY
      * @param entityY {number} The y position of the entity.
      */
     proto.setYWithEntityY = function (entityY) {
@@ -231,7 +228,7 @@ export default (function () {
     /**
      * Transform the shape using a matrix transformation.
      *
-     * @method multiply
+     * @method platypus.CollisionShape#multiply
      * @param matrix {Array} A matrix used to transform the shape.
      */
     proto.multiply = function (m) {
@@ -254,7 +251,7 @@ export default (function () {
     /**
      * Expresses whether this shape contains the given point.
      *
-     * @method containsPoint
+     * @method platypus.CollisionShape#containsPoint
      * @param x {number} The x-axis value.
      * @param y {number} The y-axis value.
      * @return {boolean} Returns `true` if this shape contains the point.
@@ -271,7 +268,7 @@ export default (function () {
     /**
     * Returns a JSON object describing the collision shape.
     *
-    * @method toJSON
+    * @method platypus.CollisionShape#toJSON
     * @return {Object} Returns a JSON definition that can be used to recreate the collision shape.
     **/
     proto.toJSON = function () {
@@ -305,19 +302,19 @@ export default (function () {
     /**
      * Returns an CollisionShape from cache or creates a new one if none are available.
      *
-     * @method CollisionShape.setUp
+     * @method platypus.CollisionShape.setUp
      * @return {platypus.CollisionShape} The instantiated CollisionShape.
      */
     /**
      * Returns a CollisionShape back to the cache.
      *
-     * @method CollisionShape.recycle
+     * @method platypus.CollisionShape.recycle
      * @param {platypus.CollisionShape} The CollisionShape to be recycled.
      */
     /**
      * Relinquishes properties of the CollisionShape and recycles it.
      *
-     * @method recycle
+     * @method platypus.CollisionShape#recycle
      */
     recycle.add(CollisionShape, 'CollisionShape', CollisionShape, null, true, config.dev);
     

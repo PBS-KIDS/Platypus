@@ -411,15 +411,13 @@ proto.getIntersectionArea = function (aabb) {
 /**
  * Returns an AABB from cache or creates a new one if none are available.
  *
- * @memberof platypus.AABB
- * @method setUp
+ * @method platypus.AABB.setUp
  * @return {platypus.AABB} The instantiated AABB.
  */
 /**
  * Returns a AABB back to the cache.
  *
- * @memberof platypus.AABB
- * @method recycle
+ * @method platypus.AABB.recycle
  * @param {platypus.AABB} aabb The AABB to be recycled.
  */
 /**

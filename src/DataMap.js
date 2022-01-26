@@ -1,10 +1,3 @@
-/**
- * This class defines a generic iterable data object. It behaves similarly to Map but maintains a list of keys as an Array. It includes recycle methods to encourage reuse.
- *
- * @memberof platypus
- * @class DataMap
- * @uses Map
- */
 /* global window */
 import './polyfills/Map.js';
 import {arrayCache, greenSplice} from './utils/array.js';
@@ -74,8 +67,13 @@ export default (function () {
                 value: null
             }
         },
+
         /**
-         * @constructor
+         * This class defines a generic iterable data object. It behaves similarly to Map but maintains a list of keys as an Array. It includes recycle methods to encourage reuse.
+         *
+         * @memberof platypus
+         * @class DataMap
+         * @uses Map
          * @return {platypus.DataMap} Returns the new DataMap object.
          */
         DataMap = function (first) {
@@ -101,7 +99,7 @@ export default (function () {
                 /**
                  * Returns the value of the provided key.
                  *
-                 * @method get
+                 * @method platypus.DataMap#get
                  * @param key {String} The key to lookup.
                  * @return value {any} The value of the provded key.
                  */
@@ -110,7 +108,7 @@ export default (function () {
                 /**
                  * Determines whether the provided key is available on this DataMap.
                  *
-                 * @method has
+                 * @method platypus.DataMap#has
                  * @param key {String} The key to lookup.
                  * @return value {Boolean} Whether the key is listed in this DataMap.
                  */
@@ -119,7 +117,7 @@ export default (function () {
                 /**
                  * Sets a value to a key in the DataMap.
                  *
-                 * @method set
+                 * @method platypus.DataMap#set
                  * @param key {String} The key to associate with the provided value.
                  * @param value {any} The value to be stored by the DataMap.
                  * @return value {any} The value passed in is returned for chaining.
@@ -129,7 +127,7 @@ export default (function () {
                 /**
                  * Deletes a key (and value) from the DataMap.
                  *
-                 * @method delete
+                 * @method platypus.DataMap#delete
                  * @param key {String} The key to delete from the DataMap.
                  * @return value {any} The value of the key is returned.
                  */
@@ -138,14 +136,14 @@ export default (function () {
                 /**
                  * Clears out of keys (and values) from the DataMap.
                  *
-                 * @method clear
+                 * @method platypus.DataMap#clear
                  */
                 mm.clear.value = mapClear.bind(map, keys);
                             
                 /**
                  * Returns a JSON object describing the component.
                  *
-                 * @method toJSON
+                 * @method platypus.DataMap#toJSON
                  * @return {Object} Returns a JSON definition that can be used to recreate the component.
                  **/
                 mm.toJSON.value = mapToJSON.bind(map, keys);
@@ -183,19 +181,19 @@ export default (function () {
     /**
      * Returns DataMap from cache or creates a new one if none are available.
      *
-     * @method DataMap.setUp
+     * @method platypus.DataMap.setUp
      * @return dataMap {platypus.DataMap} The instantiated DataMap.
      */
     /**
      * Returns DataMap back to the cache. Prefer the DataMap's recycle method since it recycles property objects as well.
      *
-     * @method DataMap.recycle
+     * @method platypus.DataMap.recycle
      * @param dataMap {platypus.DataMap} The DataMap to be recycled.
      */
     /**
      * Relinquishes DataMap properties and recycles it.
      *
-     * @method recycle
+     * @method platypus.DataMap#recycle
      */
     recycle.add(DataMap, 'DataMap', DataMap, function () {
         this.clear();

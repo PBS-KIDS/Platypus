@@ -149,21 +149,21 @@ proto.update = function (gamepad) {
 };
     
 /**
- * Returns an AABB from cache or creates a new one if none are available.
+ * Returns an Gamepad from cache or creates a new one if none are available.
  *
- * @method AABB.setUp
- * @return {platypus.AABB} The instantiated AABB.
+ * @method platypus.Gamepad.setUp
+ * @return {platypus.Gamepad} The instantiated Gamepad.
  */
 /**
- * Returns a AABB back to the cache.
+ * Returns a Gamepad back to the cache.
  *
- * @method AABB.recycle
- * @param aabb {platypus.AABB} The AABB to be recycled.
+ * @method platypus.Gamepad.recycle
+ * @param {platypus.Gamepad} gamepad The Gamepad to be recycled.
  */
 /**
- * Relinquishes properties of the AABB and recycles it.
+ * Relinquishes properties of the Gamepad and recycles it.
  *
- * @method recycle
+ * @method platypus.Gamepad#recycle
  */
 recycle.add(Gamepad, 'Gamepad', Gamepad, function () {
     for (let i = 0; i < this.axes.length; i++) {

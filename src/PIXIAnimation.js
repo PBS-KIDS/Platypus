@@ -1,8 +1,3 @@
-/**
- * This class plays animation sequences of frames and mimics the syntax required for creating CreateJS Sprites, allowing CreateJS Sprite Sheet definitions to be used with PixiJS.
- *
- * @class PIXIAnimation
- */
 /*global platypus */
 import {AnimatedSprite, BaseTexture, Container, Point, Rectangle, Sprite, Texture} from 'pixi.js';
 import {arrayCache, greenSlice} from './utils/array.js';
@@ -162,7 +157,11 @@ export default (function () {
             );
         },
         /**
-         * @constructor
+         * This class plays animation sequences of frames and mimics the syntax required for creating CreateJS Sprites, allowing CreateJS Sprite Sheet definitions to be used with PixiJS.
+         *
+         * @class PIXIAnimation
+         * @param {Object} spriteSheet JSON sprite sheet definition.
+         * @param {string} animation The name of the animation to start playing.
          */
         PIXIAnimation = function (spriteSheet, animation) {
             var FR = 60,
@@ -286,7 +285,7 @@ export default (function () {
     /**
     * Stops the PIXIAnimation
     *
-    * @method stop
+    * @method platypus.PIXIAnimation#stop
     */
     prototype.stop = function () {
         this.paused = true;
@@ -295,7 +294,7 @@ export default (function () {
     /**
     * Plays the PIXIAnimation
     *
-    * @method play
+    * @method platypus.PIXIAnimation#play
     */
     prototype.play = function () {
         this.paused = false;
@@ -304,7 +303,7 @@ export default (function () {
     /**
     * Stops the PIXIAnimation and goes to a specific frame
     *
-    * @method gotoAndStop
+    * @method platypus.PIXIAnimation#gotoAndStop
     * @param animation {number} frame index to stop at
     */
     prototype.gotoAndStop = function (animation) {
@@ -324,7 +323,7 @@ export default (function () {
     /**
     * Goes to a specific frame and begins playing the PIXIAnimation
     *
-    * @method gotoAndPlay
+    * @method platypus.PIXIAnimation#gotoAndPlay
     * @param animation {string} The animation to begin playing.
     * @param [loop = true] {Boolean} Whether this animation should loop.
     * @param [restart = true] {Boolean} Whether to restart the animation if it's currently playing.
@@ -355,7 +354,7 @@ export default (function () {
     /**
     * Returns whether a particular animation is available.
     *
-    * @method has
+    * @method platypus.PIXIAnimation#has
     * @param animation {string} The animation to check.
     */
     prototype.has = function (animation) {
@@ -365,7 +364,7 @@ export default (function () {
     /**
      * Stops the PIXIAnimation and destroys it
      *
-     * @method destroy
+     * @method platypus.PIXIAnimation#destroy
      */
     prototype.destroy = function () {
         var key = '';
@@ -402,7 +401,7 @@ export default (function () {
     /**
      * This method formats a provided value into a valid PIXIAnimation Sprite Sheet. This includes accepting the EaselJS spec, strings mapping to Platypus sprite sheets, or arrays of either.
      *
-     * @method PIXIAnimation.formatSpriteSheet
+     * @method platypus.PIXIAnimation.formatSpriteSheet
      * @param spriteSheet {String|Array|Object} The value to cast to a valid Sprite Sheet.
      * @return {Object}
      */

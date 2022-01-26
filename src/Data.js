@@ -1,16 +1,12 @@
-/**
- * This class defines a generic data object to use for messaging. It includes recycle methods to encourage reuse.
- *
- * @memberof platypus
- * @class Data
- */
 import config from 'config';
 import recycle from 'recycle';
 
 export default (function () {
     /**
-     * 
-     * @constructor
+     * This class defines a generic data object to use for messaging. It includes recycle methods to encourage reuse.
+     *
+     * @memberof platypus
+     * @class Data
      * @param {String|Object} first Can be an object of key/value pairs or the parameters can be an alternating list of keys and values.
      * @return {Data} Returns the new Data object.
      */
@@ -42,19 +38,19 @@ export default (function () {
     /**
      * Returns Data from cache or creates a new one if none are available.
      *
-     * @method Data.setUp
+     * @method platypus.Data.setUp
      * @return {platypus.Data} The instantiated Data.
      */
     /**
      * Returns Data back to the cache. Prefer the Data's recycle method since it recycles property objects as well.
      *
-     * @method Data.recycle
+     * @method platypus.Data.recycle
      * @param {platypus.Data} The Data to be recycled.
      */
     /**
      * Relinquishes Data properties and recycles it.
      *
-     * @method recycle
+     * @method platypus.Data#recycle
      */
     recycle.add(Data, 'Data', Data, function () {
         var key = '';

@@ -1,17 +1,14 @@
-/**
- * This component plays sfx audio and manages Springroll volume changes.
- *
- * @memberof platypus
- * @class SFXPlayer
- */
 /* global platypus */
 import {arrayCache, greenSplice} from './utils/array.js';
 import Sound from 'pixi-sound';
 
-export default class SFXPlayer {
-    /**
-     * @constructor
-     */
+/**
+ * This class plays sfx audio and manages Springroll volume changes.
+ *
+ * @memberof platypus
+ * @class SFXPlayer
+ */
+ export default class SFXPlayer {
     constructor () {
         this.volume = 1;
         this.player = Sound;
@@ -84,7 +81,6 @@ export default class SFXPlayer {
 
     /**
      * Cleans up this SFXPlayer.
-     * @method destroy
      * @public
      */
     destroy () {

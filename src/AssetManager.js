@@ -33,9 +33,6 @@ const
     };
 
 export default class AssetManager {
-    /**
-     * @constructor
-     */
     constructor () {
         this.assets = DataMap.setUp();
         this.counts = Data.setUp();
@@ -44,7 +41,7 @@ export default class AssetManager {
     /**
      * This method removes an asset from memory if it's the last needed instance of the asset.
      *
-     * @method delete
+     * @method platypus.AssetManager#delete
      * @param {*} id
      * @return {Boolean} Returns `true` if asset was removed from asset cache.
      */
@@ -73,7 +70,7 @@ export default class AssetManager {
     /**
      * Returns a loaded instance of a given asset.
      *
-     * @method get
+     * @method platypus.AssetManager#get
      * @param {*} id
      * @return {Object} Returns the asset if defined.
      */
@@ -84,7 +81,7 @@ export default class AssetManager {
     /**
      * Returns id for given path.
      *
-     * @method getFileId
+     * @method platypus.AssetManager#getFileId
      * @param {*} path
      * @return {String} Returns id generated from path.
      */
@@ -97,7 +94,7 @@ export default class AssetManager {
     /**
      * Returns whether a given asset is currently loaded by the AssetManager.
      *
-     * @method has
+     * @method platypus.AssetManager#has
      * @param {*} id
      * @return {Object} Returns `true` if the asset is loaded and `false` if not.
      */
@@ -108,7 +105,7 @@ export default class AssetManager {
     /**
      * Sets a mapping between an id and a loaded asset. If the mapping already exists, simply increment the count for a given id.
      *
-     * @method set
+     * @method platypus.AssetManager#set
      * @param {*} id
      * @param {*} value The loaded asset.
      * @param {Number} count The number of assets needed.
@@ -129,7 +126,7 @@ export default class AssetManager {
     /**
      * Loads a list of assets.
      *
-     * @method load
+     * @method platypus.AssetManager#load
      * @param {Array} list A list of assets to load.
      * @param {Function} one This function is called as each asset is loaded.
      * @param {Function} all This function is called once all assets in the list are loaded.
@@ -198,7 +195,7 @@ export default class AssetManager {
     /**
      * Unloads a list of assets. This is identical to passing each item in the list to `.delete()`.
      *
-     * @method unload
+     * @method platypus.AssetManager#unload
      * @param {Array} list A list of assets to unload.
      */
     unload (list) {

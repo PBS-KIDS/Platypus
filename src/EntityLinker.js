@@ -1,9 +1,3 @@
-/**
- * This class defines a linker for TiledLoader to connect entity pointer properties as soon as both entities are created.
- *
- * @memberof platypus
- * @class EntityLinker
- */
 import {arrayCache, greenSplice} from './utils/array';
 import Data from './Data';
 import DataMap from './DataMap';
@@ -13,7 +7,10 @@ import recycle from 'recycle';
 export default (function () {
     var
         /**
-         * @constructor
+         * This class defines a linker for TiledLoader to connect entity pointer properties as soon as both entities are created.
+         *
+         * @memberof platypus
+         * @class EntityLinker
          * @return {EntityLinker} Returns the new EntityLinker object.
          */
         EntityLinker = function () {
@@ -84,19 +81,19 @@ export default (function () {
     /**
      * Returns EntityLinker from cache or creates a new one if none are available.
      *
-     * @method EntityLinker.setUp
+     * @method platypus.EntityLinker.setUp
      * @return {platypus.EntityLinker} The instantiated EntityLinker.
      */
     /**
      * Returns EntityLinker back to the cache. Prefer the EntityLinker's recycle method since it recycles property objects as well.
      *
-     * @method EntityLinker.recycle
+     * @method platypus.EntityLinker.recycle
      * @param {platypus.EntityLinker} The EntityLinker to be recycled.
      */
     /**
      * Relinquishes EntityLinker properties and recycles it.
      *
-     * @method recycle
+     * @method platypus.EntityLinker#recycle
      */
     recycle.add(EntityLinker, 'EntityLinker', EntityLinker, function () {
         const
