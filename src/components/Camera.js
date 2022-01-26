@@ -53,7 +53,7 @@ export default (function () {
             return event.clientY;
         };
     
-    return createComponentClass(/** @lends Camera.prototype */{
+    return createComponentClass(/** @lends platypus.Camera.prototype */{
         id: 'Camera',
         properties: {
             /**
@@ -1017,7 +1017,7 @@ export default (function () {
             }
         },
 
-        publicMethods: /** @lends TiledLoader.prototype */{
+        publicMethods: /** @lends platypus.Camera.prototype */{
             /**
              * Returns whether a particular display object intersects the camera's viewport on the canvas.
              *
