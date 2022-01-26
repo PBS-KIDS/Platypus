@@ -34,7 +34,7 @@ const
         /**
          * Triggered on owner and child entities on each tick to handle whatever they need to regarding controls.
          *
-         * @event 'handle-controller'
+         * @event platypus.Entity#handle-controller
          * @param tick {Object} An object containing tick data.
          */
         this.triggerOnAll('handle-controller', tick);
@@ -43,7 +43,7 @@ const
         /**
          *  Triggered on owner and child entities when a key goes from up to down.
          *
-         * @event '[event.code]:down'
+         * @event platypus.Entity#[event.code]:down
          * @param event {DOMEvent} The DOM event that triggered the keydown event.
          */
         this.triggerControlAction(event.code, 'down', event);
@@ -54,7 +54,7 @@ const
         /**
          * Triggered on owner and child entities when a key goes from down to up.
          *
-         * @event '[event.code]:up'
+         * @event platypus.Entity#[event.code]:up
          * @param event {DOMEvent} The DOM event that triggered the keyup event.
          */
         this.triggerControlAction(event.code, 'up', event);
@@ -65,7 +65,7 @@ const
         /**
          * Triggered on owner and child entities when an axis changes.
          *
-         * @event '[event.code]:change'
+         * @event platypus.Entity#[event.code]:change
          * @param event {DOMEvent} The event that triggered the change event.
          */
         this.triggerControlAction(event.code, 'change', event);
@@ -135,6 +135,11 @@ export default createComponentClass(/** @lends HandlerController.prototype */{
      * @uses platypus.Component
      * @constructs
      * @listens platypus.Entity#handle-logic
+     * @fires platypus.Entity#handle-controller
+     * @fires platypus.Entity#[event.code]:down
+     * @fires platypus.Entity#[event.code]:up
+     * @fires platypus.Entity#[event.code]:change
+     * @fires platypus.Entity#input-precedence-updated
      */
     initialize: function () {
         if (platypus.game.settings.debug) { // If this is a test build, leave in the browser key combinations so debug tools can be opened as expected.
@@ -166,7 +171,7 @@ export default createComponentClass(/** @lends HandlerController.prototype */{
             /**
              * Triggered on owner and child entities when player uses a new imput method. (For example, going from mouse to keyboard or keyboard to gamepad.)
              *
-             * @event 'input-precedence-updated'
+             * @event platypus.Entity#input-precedence-updated
              * @param inputs {Array} A list of input methods, ordered by precedence with index 0 being the most recent input method.
              */
             this.triggerOnAll('input-precedence-updated', inputs);

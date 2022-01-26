@@ -48,6 +48,7 @@ export default (function () {
              * @extends platypus.Messenger
              * @uses platypus.Component
              * @constructs
+             * @listens platypus.Entity#child-entity-updated
              * @listens platypus.Entity#handle-logic
              */
             initialize: (function () {
@@ -118,12 +119,6 @@ export default (function () {
                     this.removeEntity(entity);
                 },
                 
-                /**
-                 * On receiving this message, the provided entity will be updated in the list of child entities to reflect changes in its listeners.
-                 *
-                 * @method 'child-entity-updated'
-                 * @param entity {platypus.Entity} The entity to remove.
-                 */
                 "child-entity-updated": function (entity) {
                     this.updateChildEventListeners(entity);
                 },

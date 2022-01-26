@@ -89,6 +89,7 @@ export default (function () {
          * @constructs
          * @param {*} definition 
          * @listens platypus.Entity#camera-update
+         * @listens platypus.Entity#child-entity-updated
          * @listens platypus.Entity#pause-logic
          * @listens platypus.Entity#unpause-logic
          * @fires platypus.Entity#handle-logic
@@ -126,12 +127,6 @@ export default (function () {
         },
         
         events: {
-            /**
-             * Called when an entity has been updated and should be considered for adding to or removing from the handler.
-             *
-             * @method 'child-entity-updated'
-             * @param entity {platypus.Entity} The entity that is being considered.
-             */
             "child-entity-updated": function (entity) {
                 var j = this.entities.indexOf(entity),
                     logical = entity.getMessageIds().some(hasLogic);

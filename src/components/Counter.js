@@ -24,6 +24,7 @@ export default (function () {
          * @uses platypus.Component
          * @constructs
          * @listens platypus.Entity#handle-logic
+         * @fires platypus.Entity#update-content
          */
         initialize: function () {
             this.count = 0;
@@ -59,7 +60,7 @@ export default (function () {
                     /**
                      * A call used to notify other components that the count or total has changed.
                      *
-                     * @event 'update-content'
+                     * @event platypus.Entity#update-content
                      * @param update.text {string} String describing the current count.
                      */
                     this.owner.triggerEvent('update-content', msg);

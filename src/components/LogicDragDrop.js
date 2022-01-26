@@ -39,7 +39,11 @@ export default createComponentClass(/** @lends LogicDragDrop.prototype */{
      * @listens platypus.Entity#component-added
      * @listens platypus.Entity#handle-logic
      * @listens platypus.Entity#handle-post-collision-logic
+     * @listens platypus.Entity#pointerdown
+     * @listens platypus.Entity#pointermove
      * @listens platypus.Entity#prepare-logic
+     * @listens platypus.Entity#pressmove
+     * @listens platypus.Entity#pressup
      */
     initialize: function () {
         this.aabb = AABB.setUp();
@@ -105,12 +109,6 @@ export default createComponentClass(/** @lends LogicDragDrop.prototype */{
             this.hitSomething = false;
         },
 
-        /**
-         * The pointerdown event fires when we're grabbing the object. Starts the drag.
-         *
-         * @method 'pointerdown'
-         * @param eventData {platypus.Data} The event data.
-         */
         "pointerdown": function (eventData) {
             if (this.sticking) {
                 this.sticking = false;
@@ -137,12 +135,6 @@ export default createComponentClass(/** @lends LogicDragDrop.prototype */{
             eventData.pixiEvent.stopPropagation();
         },
 
-        /**
-         * The pressup event fires when we're trying to drop the object.
-         *
-         * @method 'pressup'
-         * @param eventData {platypus.Data} The event data.
-         */
         "pressup": function (eventData) {
             if (!this.sticking) {
                 this.release();
@@ -151,12 +143,6 @@ export default createComponentClass(/** @lends LogicDragDrop.prototype */{
             eventData.pixiEvent.stopPropagation();
         },
 
-        /**
-         * The pointermove event tells us when we're dragging a "stickyClick" object.
-         *
-         * @method 'pointermove'
-         * @param eventData {platypus.Data} The event data.
-         */
         "pointermove": function (eventData) {
             if (this.sticking) {
                 this.nextX = eventData.x - this.grabOffsetX;
@@ -167,12 +153,6 @@ export default createComponentClass(/** @lends LogicDragDrop.prototype */{
             }
         },
 
-        /**
-         * The pressmove event tells us when we're dragging the object.
-         *
-         * @method 'pressmove'
-         * @param eventData {platypus.Data} The event data.
-         */
         "pressmove": function (eventData) {
             this.nextX = eventData.x - this.grabOffsetX;
             this.nextY = eventData.y - this.grabOffsetY;

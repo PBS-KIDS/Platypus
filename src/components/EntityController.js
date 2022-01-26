@@ -111,6 +111,38 @@ export default (function () {
          * @memberof platypus.components
          * @uses platypus.Component
          * @constructs
+         * @listens platypus.Entity#[event.code]:down
+         * @listens platypus.Entity#[event.code]:up
+         * @listens platypus.Entity#handle-controller
+         * @listens platypus.Entity#pointerdown
+         * @listens platypus.Entity#pressmove
+         * @listens platypus.Entity#pressup
+         * @fires platypus.Entity#[active-state]
+         * @fires platypus.Entity#joystick:down
+         * @fires platypus.Entity#joystick:up
+         * @fires platypus.Entity#mouse:mouse-left:down
+         * @fires platypus.Entity#mouse:mouse-middle:down
+         * @fires platypus.Entity#mouse:mouse-right:down
+         * @fires platypus.Entity#mouse:mouse-left:up
+         * @fires platypus.Entity#mouse:mouse-middle:up
+         * @fires platypus.Entity#mouse:mouse-right:up
+         * @fires platypus.Entity#north
+         * @fires platypus.Entity#north-northeast
+         * @fires platypus.Entity#northeast
+         * @fires platypus.Entity#east-northeast
+         * @fires platypus.Entity#east
+         * @fires platypus.Entity#east-southeast
+         * @fires platypus.Entity#southeast
+         * @fires platypus.Entity#south-southeast
+         * @fires platypus.Entity#south
+         * @fires platypus.Entity#south-southwest
+         * @fires platypus.Entity#southwest
+         * @fires platypus.Entity#west-southwest
+         * @fires platypus.Entity#west
+         * @fires platypus.Entity#west-northwest
+         * @fires platypus.Entity#northwest
+         * @fires platypus.Entity#north-northwest
+         * @fires platypus.Entity#joystick-orientation
          * @fires platypus.Entity#stop
          */
         initialize: function (definition) {
@@ -142,11 +174,6 @@ export default (function () {
         },
         
         events: {
-            /**
-             * On each `handle-controller` message, this component checks its list of actions and if any of their states are currently true or were true on the last call, that action message is triggered.
-             *
-             * @method 'handle-controller'
-             */
             "handle-controller": function () {
                 var actions = this.actions,
                     keys = actions.keys,
@@ -170,30 +197,24 @@ export default (function () {
                 arrayCache.recycle(resolution);
             },
             
-            /**
-             * This message triggers a new message on the entity that includes what button on the mouse was pressed: "mouse:left-button:down", "mouse:middle-button:down", or "mouse:right-button:down".
-             *
-             * @method 'pointerdown'
-             * @param value.event {Event} This event object is passed along with the new message.
-             */
             "pointerdown": function (value) {
                 if (value.pixiEvent.data.pointerType === 'mouse') {
                     /**
                      * This component triggers the state of mouse inputs on the entity if a render component of the entity accepts mouse input.
                      *
-                     * @event 'mouse:mouse-left:down'
+                     * @event platypus.Entity#mouse:mouse-left:down
                      * @param message {Event} The original mouse event object is passed along with the control message.
                      */
                     /**
                      * This component triggers the state of mouse inputs on the entity if a render component of the entity accepts mouse input (for example [[Render-Animation]]).
                      *
-                     * @event 'mouse:mouse-middle:down'
+                     * @event platypus.Entity#mouse:mouse-middle:down
                      * @param message {Event} The original mouse event object is passed along with the control message.
                      */
                     /**
                      * This component triggers the state of mouse inputs on the entity if a render component of the entity accepts mouse input (for example [[Render-Animation]]).
                      *
-                     * @event 'mouse:mouse-right:down'
+                     * @event platypus.Entity#mouse:mouse-right:down
                      * @param message {Event} The original mouse event object is passed along with the control message.
                      */
                     this.owner.triggerEvent('mouse:' + mouseMap[value.event.button || 0] + ':down', value.event);
@@ -203,7 +224,7 @@ export default (function () {
                     /**
                      * This event is triggered when there is an active touch in the joystick area.
                      *
-                     * @event 'joystick:down'
+                     * @event platypus.Entity#joystick:down
                      * @param message {Event} The original pointer event object is passed along with the control message.
                      */
                     this.owner.triggerEvent('joystick:down', value.event);
@@ -211,12 +232,6 @@ export default (function () {
                 }
             },
             
-            /**
-             * This message triggers a new message on the entity that includes what button on the mouse was released: "mouse:left-button:up", "mouse:middle-button:up", or "mouse:right-button:up".
-             *
-             * @method 'pressup'
-             * @param value.event {Event} This event object is passed along with the new message.
-             */
             "pressup": function (value) {
                 var owner = this.owner;
 
@@ -224,19 +239,19 @@ export default (function () {
                     /**
                      * This component triggers the state of mouse inputs on the entity if a render component of the entity accepts mouse input (for example [[Render-Animation]]).
                      *
-                     * @event 'mouse:mouse-left:up'
+                     * @event platypus.Entity#mouse:mouse-left:up
                      * @param message {Event} The original mouse event object is passed along with the control message.
                      */
                     /**
                      * This component triggers the state of mouse inputs on the entity if a render component of the entity accepts mouse input (for example [[Render-Animation]]).
                      *
-                     * @event 'mouse:mouse-middle:up'
+                     * @event platypus.Entity#mouse:mouse-middle:up
                      * @param message {Event} The original mouse event object is passed along with the control message.
                      */
                     /**
                      * This component triggers the state of mouse inputs on the entity if a render component of the entity accepts mouse input (for example [[Render-Animation]]).
                      *
-                     * @event 'mouse:mouse-right:up'
+                     * @event platypus.Entity#mouse:mouse-right:up
                      * @param message {Event} The original mouse event object is passed along with the control message.
                      */
                     owner.triggerEvent('mouse:' + mouseMap[value.event.button || 0] + ':up', value.event);
@@ -246,7 +261,7 @@ export default (function () {
                     /**
                      * This event is triggered when there is an active touch is released from the joystick area.
                      *
-                     * @event 'joystick:up'
+                     * @event platypus.Entity#joystick:up
                      * @param message {Event} The original pointer event object is passed along with the control message.
                      */
                     owner.triggerEvent('joystick:up', value.event);
@@ -255,12 +270,6 @@ export default (function () {
                 }
             },
             
-            /**
-             * Updates joystick input if joystick is enabled.
-             *
-             * @method 'pressmove'
-             * @param value {platypus.Data} This event object is passed along with the joystick messages.
-             */
             "pressmove": function (value) {
                 if (this.joystick) {
                     this.handleJoy(value);
@@ -316,97 +325,97 @@ export default (function () {
                     /**
                      * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due north.
                      *
-                     * @event 'north'
+                     * @event platypus.Entity#north
                      * @param message {Event} The original pointer event object is passed along with the control message.
                      */
                     /**
                      * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due north-northeast.
                      *
-                     * @event 'north-northeast'
+                     * @event platypus.Entity#north-northeast
                      * @param message {Event} The original pointer event object is passed along with the control message.
                      */
                     /**
                      * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due northeast.
                      *
-                     * @event 'northeast'
+                     * @event platypus.Entity#northeast
                      * @param message {Event} The original pointer event object is passed along with the control message.
                      */
                     /**
                      * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due east-northeast.
                      *
-                     * @event 'east-northeast'
+                     * @event platypus.Entity#east-northeast
                      * @param message {Event} The original pointer event object is passed along with the control message.
                      */
                     /**
                      * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due east.
                      *
-                     * @event 'east'
+                     * @event platypus.Entity#east
                      * @param message {Event} The original pointer event object is passed along with the control message.
                      */
                     /**
                      * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due east-southeast.
                      *
-                     * @event 'east-southeast'
+                     * @event platypus.Entity#east-southeast
                      * @param message {Event} The original pointer event object is passed along with the control message.
                      */
                     /**
                      * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due southeast.
                      *
-                     * @event 'southeast'
+                     * @event platypus.Entity#southeast
                      * @param message {Event} The original pointer event object is passed along with the control message.
                      */
                     /**
                      * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due south-southeast.
                      *
-                     * @event 'south-southeast'
+                     * @event platypus.Entity#south-southeast
                      * @param message {Event} The original pointer event object is passed along with the control message.
                      */
                     /**
                      * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due south.
                      *
-                     * @event 'south'
+                     * @event platypus.Entity#south
                      * @param message {Event} The original pointer event object is passed along with the control message.
                      */
                     /**
                      * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due south-southwest.
                      *
-                     * @event 'south-southwest'
+                     * @event platypus.Entity#south-southwest
                      * @param message {Event} The original pointer event object is passed along with the control message.
                      */
                     /**
                      * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due southwest.
                      *
-                     * @event 'southwest'
+                     * @event platypus.Entity#southwest
                      * @param message {Event} The original pointer event object is passed along with the control message.
                      */
                     /**
                      * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due west-southwest.
                      *
-                     * @event 'west-southwest'
+                     * @event platypus.Entity#west-southwest
                      * @param message {Event} The original pointer event object is passed along with the control message.
                      */
                     /**
                      * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due west.
                      *
-                     * @event 'west'
+                     * @event platypus.Entity#west
                      * @param message {Event} The original pointer event object is passed along with the control message.
                      */
                     /**
                      * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due west-northwest.
                      *
-                     * @event 'west-northwest'
+                     * @event platypus.Entity#west-northwest
                      * @param message {Event} The original pointer event object is passed along with the control message.
                      */
                     /**
                      * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due northwest.
                      *
-                     * @event 'northwest'
+                     * @event platypus.Entity#northwest
                      * @param message {Event} The original pointer event object is passed along with the control message.
                      */
                     /**
                      * If the soft joystick is enabled on this component, it will broadcast this directional message if the joystick is dragged due north-northwest.
                      *
-                     * @event 'north-northwest'
+                     * @event platypus.Entity#north-northwest
                      * @param message {Event} The original pointer event object is passed along with the control message.
                      */
                     owner.triggerEvent(direction, event);
@@ -414,7 +423,7 @@ export default (function () {
                     /**
                      * If the soft joystick is enabled on this component, this message will trigger to provide the current orientation of the joystick.
                      *
-                     * @event 'joystick-orientation'
+                     * @event platypus.Entity#joystick-orientation
                      * @param orientation (number) - A number in radians representing the orientation of the joystick.
                      */
                     owner.triggerEvent("joystick-orientation", orientation);
@@ -440,7 +449,7 @@ export default (function () {
                         /**
                          * Broadcasts active states using the JSON-defined message on each `handle-controller` message. Active states include `pressed` being true or `released` being true. If both of these states are false, the message is not broadcasted.
                          *
-                         * @event '*'
+                         * @event platypus.Entity#[active-state]
                          * @param message.pressed {Boolean} Whether the current input is active.
                          * @param message.released {Boolean} Whether the current input was active last tick but is no longer active.
                          * @param message.triggered {Boolean} Whether the current input is active but was not active last tick.

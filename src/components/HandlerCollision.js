@@ -46,6 +46,7 @@ export default (function () {
          * @constructs
          * @listens platypus.Entity#add-collision-entity
          * @listens platypus.Entity#check-collision-group
+         * @listens platypus.Entity#child-entity-updated
          * @listens platypus.Entity#remove-collision-entity
          * @fires platypus.Entity#hit-by-*
          * @fires platypus.Entity#relocate-entity
@@ -100,12 +101,6 @@ export default (function () {
                 this.removeCollisionEntity(entity);
             },
             
-            /**
-             * On receiving this message, the component looks for the entity in its collision group and updates it.
-             *
-             * @method 'child-entity-updated'
-             * @param message {platypus.Entity} The entity to be updated.
-             */
             "child-entity-updated": function (entity) {
                 this.removeCollisionEntity(entity);
                 this.addCollisionEntity(entity);

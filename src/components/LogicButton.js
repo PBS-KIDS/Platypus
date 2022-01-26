@@ -127,6 +127,13 @@ export default (function () {
          * @constructs
          * @listens platypus.Entity#camera-update
          * @listens platypus.Entity#handle-logic
+         * @listens platypus.Entity#pointerdown
+         * @listens platypus.Entity#pointerout
+         * @listens platypus.Entity#pointerover
+         * @listens platypus.Entity#pressup
+         * @fires platypus.Entity#pressed
+         * @fires platypus.Entity#cancelled
+         * @fires platypus.Entity#released
          */
         initialize: function () {
             var state = this.owner.state;
@@ -169,11 +176,6 @@ export default (function () {
                 this.updatePosition(this.aabb);
             },
 
-            /**
-             * Triggers events per the component's definition when a press is made.
-             *
-             * @method 'pointerdown'
-             */
             "pointerdown": function (eventData) {
                 if (!this.state.get('disabled')) {
                     if (this.toggle) {
@@ -186,7 +188,7 @@ export default (function () {
                         /**
                          * This event is triggered when the button is pressed to mimic keypress events. If the button is a toggle button, this only occurs on up-to-down.
                          *
-                         * @event 'pressed'
+                         * @event platypus.Entity#pressed
                          * @param buttonState {platypus.Data} The state of the button
                          * @param buttonState.pressed {Boolean} This is `true` for the 'pressed' event.
                          * @param buttonState.released {Boolean} This is `false` for the 'pressed' event.
@@ -206,11 +208,6 @@ export default (function () {
                 }
             },
 
-            /**
-             * Triggers events per the component's definition when a press is released.
-             *
-             * @method 'pressup'
-             */
             "pressup": function (eventData) {
                 var state = this.state;
 
@@ -223,7 +220,7 @@ export default (function () {
                         /**
                          * This event is triggered when the button is pressed and the mouse/touch is dragged off-target before release.
                          *
-                         * @event 'cancelled'
+                         * @event platypus.Entity#cancelled
                          * @param buttonState {platypus.Data} The state of the button
                          * @param buttonState.pressed {Boolean} This is `false` for the 'cancelled' event.
                          * @param buttonState.released {Boolean} This is `true` for the 'cancelled' event.
@@ -247,7 +244,7 @@ export default (function () {
                         /**
                          * This event is triggered when the button is released, or on the down-to-up change for toggle buttons.
                          *
-                         * @event 'released'
+                         * @event platypus.Entity#released
                          * @param buttonState {platypus.Data} The state of the button
                          * @param buttonState.pressed {Boolean} This is `false` for the 'released' event.
                          * @param buttonState.released {Boolean} This is `true` for the 'released' event.
@@ -272,11 +269,6 @@ export default (function () {
                 this.readyToToggle = false;
             },
 
-            /**
-             * If a press moves over the button, it's not cancelled.
-             *
-             * @method 'pointerover'
-             */
             "pointerover": function () {
                 if (this.onHover) {
                     this.owner.trigger(this.onHover);
@@ -286,11 +278,6 @@ export default (function () {
                 }
             },
 
-            /**
-             * If a press moves off of the button, it's cancelled.
-             *
-             * @method 'pointerout'
-             */
             "pointerout": function () {
                 if (this.state.get('pressed')) {
                     this.cancelled = true;

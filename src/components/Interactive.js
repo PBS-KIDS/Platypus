@@ -94,6 +94,16 @@ export default createComponentClass(/** @lends Interactive.prototype */{
      * @uses platypus.Component
      * @constructs
      * @listens platypus.Entity#camera-update
+     * @fires platypus.Entity#pressmove
+     * @fires platypus.Entity#pressup
+     * @fires platypus.Entity#pointerdown
+     * @fires platypus.Entity#pointermove
+     * @fires platypus.Entity#pointertap
+     * @fires platypus.Entity#pointerout
+     * @fires platypus.Entity#pointerover
+     * @fires platypus.Entity#pointerup
+     * @fires platypus.Entity#pointerupoutside
+     * @fires platypus.Entity#pointercancel
      */
     initialize: function () {
         this.pressed = false;
@@ -171,7 +181,7 @@ export default createComponentClass(/** @lends Interactive.prototype */{
                 /**
                  * This event is triggered on press move (drag).
                  *
-                 * @event 'pressmove'
+                 * @event platypus.Entity#pressmove
                  * @param event {DOMEvent} The original DOM pointer event.
                  * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
                  * @param x {Number} The x coordinate in world units.
@@ -193,7 +203,7 @@ export default createComponentClass(/** @lends Interactive.prototype */{
                 /**
                  * This event is triggered on press up.
                  *
-                 * @event 'pressup'
+                 * @event platypus.Entity#pressup
                  * @param event {DOMEvent} The original DOM pointer event.
                  * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
                  * @param x {Number} The x coordinate in world units.
@@ -303,7 +313,7 @@ export default createComponentClass(/** @lends Interactive.prototype */{
                     /**
                      * This event is triggered on pointer down.
                      *
-                     * @event 'pointerdown'
+                     * @event platypus.Entity#pointerdown
                      * @param event {DOMEvent} The original DOM pointer event.
                      * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
                      * @param x {Number} The x coordinate in world units.
@@ -317,7 +327,7 @@ export default createComponentClass(/** @lends Interactive.prototype */{
                     /**
                      * This event is triggered on pointer move.
                      *
-                     * @event 'pointermove'
+                     * @event platypus.Entity#pointermove
                      * @param event {DOMEvent} The original DOM pointer event.
                      * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
                      * @param x {Number} The x coordinate in world units.
@@ -331,7 +341,7 @@ export default createComponentClass(/** @lends Interactive.prototype */{
                     /**
                      * This event is triggered on pointer tap.
                      *
-                     * @event 'pointertap'
+                     * @event platypus.Entity#pointertap
                      * @param event {DOMEvent} The original DOM pointer event.
                      * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
                      * @param x {Number} The x coordinate in world units.
@@ -345,7 +355,7 @@ export default createComponentClass(/** @lends Interactive.prototype */{
                     /**
                      * This event is triggered on pointer out.
                      *
-                     * @event 'pointerout'
+                     * @event platypus.Entity#pointerout
                      * @param event {DOMEvent} The original DOM pointer event.
                      * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
                      * @param x {Number} The x coordinate in world units.
@@ -358,7 +368,7 @@ export default createComponentClass(/** @lends Interactive.prototype */{
                     /**
                      * This event is triggered on pointer over.
                      *
-                     * @event 'pointerover'
+                     * @event platypus.Entity#pointerover
                      * @param event {DOMEvent} The original DOM pointer event.
                      * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
                      * @param x {Number} The x coordinate in world units.
@@ -388,7 +398,7 @@ export default createComponentClass(/** @lends Interactive.prototype */{
                     /**
                      * This event is triggered on pointer up.
                      *
-                     * @event 'pointerup'
+                     * @event platypus.Entity#pointerup
                      * @param event {DOMEvent} The original DOM pointer event.
                      * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
                      * @param x {Number} The x coordinate in world units.
@@ -423,7 +433,7 @@ export default createComponentClass(/** @lends Interactive.prototype */{
                     /**
                      * This event is triggered on pointer up outside.
                      *
-                     * @event 'pointerupoutside'
+                     * @event platypus.Entity#pointerupoutside
                      * @param event {DOMEvent} The original DOM pointer event.
                      * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
                      * @param x {Number} The x coordinate in world units.
@@ -458,7 +468,7 @@ export default createComponentClass(/** @lends Interactive.prototype */{
                     /**
                      * This event is triggered on pointer cancel.
                      *
-                     * @event 'pointercancel'
+                     * @event platypus.Entity#pointercancel
                      * @param event {DOMEvent} The original DOM pointer event.
                      * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
                      * @param x {Number} The x coordinate in world units.

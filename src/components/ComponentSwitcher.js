@@ -52,6 +52,8 @@ export default (function () {
          * @uses platypus.Component
          * @constructs
          * @listens platypus.Entity#prepare-logic
+         * @fires platypus.Entity#child-entity-updated
+         * @fires platypus.Entity#add-remove-component-complete
          */
         initialize: function () {
             var event = '';
@@ -125,7 +127,7 @@ export default (function () {
                 /**
                 * This message is triggered on the parent when the entity's components change.
                 *
-                * @event 'child-entity-updated'
+                * @event platypus.Entity#child-entity-updated
                 * @param entity {platypus.Entity} This is the entity itself.
                 */
                 owner.parent.triggerEvent('child-entity-updated', owner);
@@ -133,7 +135,7 @@ export default (function () {
                 /**
                 * This message is triggered on the entity itself when its components change.
                 *
-                * @event 'add-remove-component-complete'
+                * @event platypus.Entity#add-remove-component-complete
                 */
                 owner.triggerEvent('add-remove-component-complete');
             },
