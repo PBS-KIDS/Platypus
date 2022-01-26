@@ -1039,6 +1039,7 @@ export default (function () {
             /**
              * Returns a world coordinate corresponding to a provided window coordinate.
              *
+             * @memberof Camera.prototype
              * @method windowToWorld
              * @param windowVector {platypus.Vector} A vector describing a window position.
              * @param withOffset {Boolean} Whether to provide a world position relative to the camera's location.
@@ -1062,6 +1063,7 @@ export default (function () {
             /**
              * Returns a window coordinate corresponding to a provided world coordinate.
              *
+             * @memberof Camera.prototype
              * @method worldToWindow
              * @param worldVector {platypus.Vector} A vector describing a world position.
              * @param withOffset {Boolean} Whether to provide a window position relative to the camera's location.

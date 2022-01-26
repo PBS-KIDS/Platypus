@@ -488,6 +488,7 @@ export default createComponentClass(/** @lends LevelBuilder.prototype */{
         /**
          * Accepts a list of levels to be merged and returns a level definition with the references combined.
          *
+         * @memberof LevelBuilder.prototype
          * @param {Array} levels
          * @return {Object}
          */

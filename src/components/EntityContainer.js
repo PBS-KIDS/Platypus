@@ -21,464 +21,469 @@ import Entity from '../Entity.js';
 import Messenger from '../Messenger.js';
 import createComponentClass from '../factory.js';
 
-export default (function () {
-    var childBroadcast = function (event) {
-            return function (value, debug) {
-                this.triggerOnChildren(event, value, debug);
-            };
+const
+    childBroadcast = function (event) {
+        return function (value, debug) {
+            this.triggerOnChildren(event, value, debug);
+        };
+    },
+    EntityContainer = createComponentClass(/** @lends EntityContainer.prototype */{
+        id: 'EntityContainer',
+        
+        properties: {
+            /**
+             * An Array listing messages that are triggered on the entity and should be triggered on the children as well.
+             *
+             * @property childEvents
+             * @type Array
+             * @default []
+             */
+            childEvents: []
         },
-        EntityContainer = createComponentClass(/** @lends EntityContainer.prototype */{
-            id: 'EntityContainer',
-            
-            properties: {
-                /**
-                 * An Array listing messages that are triggered on the entity and should be triggered on the children as well.
-                 *
-                 * @property childEvents
-                 * @type Array
-                 * @default []
-                 */
-                childEvents: []
+        
+        /**
+         * This component allows the entity to contain child entities. It will add several methods to the entity to manage adding and removing entities.
+         *
+         * @memberof platypus.components
+         * @extends platypus.Messenger
+         * @uses platypus.Component
+         * @constructs
+         * @listens platypus.Entity#child-entity-updated
+         * @listens platypus.Entity#handle-logic
+         */
+        initialize: (function () {
+            var
+                entityInit = function (entityDefinition, callback) {
+                    this.addEntity(entityDefinition, callback);
+                };
+
+            return function (definition, callback) {
+                var i = 0,
+                    entities = null,
+                    events = this.childEvents,
+                    entityInits = null;
+        
+                Messenger.initialize(this);
+
+                this.newAdds = arrayCache.setUp();
+
+                //saving list of entities for load message
+                if (definition.entities && this.owner.entities) { //combine component list and entity list into one if they both exist.
+                    entities = definition.entities.concat(this.owner.entities);
+                } else {
+                    entities = definition.entities || this.owner.entities || null;
+                }
+
+                this.owner.entities = this.entities = arrayCache.setUp();
+                
+                this.childEvents = arrayCache.setUp();
+                for (i = 0; i < events.length; i++) {
+                    this.addNewPublicEvent(events[i]);
+                }
+                this.addNewPrivateEvent('peer-entity-added');
+                this.addNewPrivateEvent('peer-entity-removed');
+
+                if (entities) {
+                    entityInits = arrayCache.setUp();
+                    for (i = 0; i < entities.length; i++) {
+                        entityInits.push(entityInit.bind(this, entities[i]));
+                    }
+                    Async.setUp(entityInits, callback);
+                    arrayCache.recycle(entityInits);
+                    return true; // notifies owner that this component is asynchronous.
+                } else {
+                    return false;
+                }
+            };
+        } ()),
+        
+        events: {
+            /**
+             * This message will added the given entity to this component's list of entities.
+             *
+             * @method 'add-entity'
+             * @param entity {platypus.Entity} This is the entity to be added as a child.
+             * @param [callback] {Function} A function to run once all of the components on the Entity have been loaded.
+             */
+            "add-entity": function (entity, callback) {
+                this.addEntity(entity, callback);
             },
             
             /**
-             * This component allows the entity to contain child entities. It will add several methods to the entity to manage adding and removing entities.
+             * On receiving this message, the provided entity will be removed from the list of child entities.
              *
-             * @memberof platypus.components
-             * @extends platypus.Messenger
-             * @uses platypus.Component
-             * @constructs
-             * @listens platypus.Entity#child-entity-updated
-             * @listens platypus.Entity#handle-logic
+             * @method 'remove-entity'
+             * @param entity {platypus.Entity} The entity to remove.
              */
-            initialize: (function () {
-                var
-                    entityInit = function (entityDefinition, callback) {
-                        this.addEntity(entityDefinition, callback);
-                    };
-
-                return function (definition, callback) {
-                    var i = 0,
-                        entities = null,
-                        events = this.childEvents,
-                        entityInits = null;
+            "remove-entity": function (entity) {
+                this.removeEntity(entity);
+            },
             
-                    Messenger.initialize(this);
+            "child-entity-updated": function (entity) {
+                this.updateChildEventListeners(entity);
+            },
 
-                    this.newAdds = arrayCache.setUp();
+            "handle-logic": function () {
+                var adding = null,
+                    adds = this.newAdds,
+                    l = adds.length,
+                    i = 0,
+                    removals = null;
 
-                    //saving list of entities for load message
-                    if (definition.entities && this.owner.entities) { //combine component list and entity list into one if they both exist.
-                        entities = definition.entities.concat(this.owner.entities);
-                    } else {
-                        entities = definition.entities || this.owner.entities || null;
-                    }
+                if (l) {
+                    removals = arrayCache.setUp();
 
-                    this.owner.entities = this.entities = arrayCache.setUp();
-                    
-                    this.childEvents = arrayCache.setUp();
-                    for (i = 0; i < events.length; i++) {
-                        this.addNewPublicEvent(events[i]);
-                    }
-                    this.addNewPrivateEvent('peer-entity-added');
-                    this.addNewPrivateEvent('peer-entity-removed');
-
-                    if (entities) {
-                        entityInits = arrayCache.setUp();
-                        for (i = 0; i < entities.length; i++) {
-                            entityInits.push(entityInit.bind(this, entities[i]));
+                    //must go in order so entities are added in the expected order.
+                    for (i = 0; i < l; i++) {
+                        adding = adds[i];
+                        if (adding.destroyed || !adding.loadingComponents || adding.loadingComponents.attemptResolution()) {
+                            removals.push(i);
                         }
-                        Async.setUp(entityInits, callback);
-                        arrayCache.recycle(entityInits);
-                        return true; // notifies owner that this component is asynchronous.
-                    } else {
+                    }
+
+                    i = removals.length;
+                    while (i--) {
+                        greenSplice(adds, removals[i]);
+                    }
+
+                    arrayCache.recycle(removals);
+                }
+            }
+        },
+        
+        methods: {
+            addNewPublicEvent: function (event) {
+                var i = 0;
+                
+                this.addNewPrivateEvent(event);
+                
+                for (i = 0; i < this.childEvents.length; i++) {
+                    if (this.childEvents[i] === event) {
                         return false;
                     }
-                };
-            } ()),
+                }
+                this.childEvents.push(event);
+                /**
+                 * Listens for specified messages and on receiving them, re-triggers them on child entities.
+                 *
+                 * @method '*'
+                 * @param message {Object} Accepts a message object that it will include in the new message to be triggered.
+                 */
+                this.addEventListener(event, childBroadcast(event));
+                
+                return true;
+            },
             
-            events: {
-                /**
-                 * This message will added the given entity to this component's list of entities.
-                 *
-                 * @method 'add-entity'
-                 * @param entity {platypus.Entity} This is the entity to be added as a child.
-                 * @param [callback] {Function} A function to run once all of the components on the Entity have been loaded.
-                 */
-                "add-entity": function (entity, callback) {
-                    this.addEntity(entity, callback);
-                },
+            addNewPrivateEvent: function (event) {
+                var x = 0,
+                    y = 0;
                 
-                /**
-                 * On receiving this message, the provided entity will be removed from the list of child entities.
-                 *
-                 * @method 'remove-entity'
-                 * @param entity {platypus.Entity} The entity to remove.
-                 */
-                "remove-entity": function (entity) {
-                    this.removeEntity(entity);
-                },
+                if (this._listeners[event]) {
+                    return false; // event is already added.
+                }
+
+                this._listeners[event] = arrayCache.setUp(); //to signify it's been added even if not used
                 
-                "child-entity-updated": function (entity) {
-                    this.updateChildEventListeners(entity);
-                },
-
-                "handle-logic": function () {
-                    var adding = null,
-                        adds = this.newAdds,
-                        l = adds.length,
-                        i = 0,
-                        removals = null;
-
-                    if (l) {
-                        removals = arrayCache.setUp();
-
-                        //must go in order so entities are added in the expected order.
-                        for (i = 0; i < l; i++) {
-                            adding = adds[i];
-                            if (adding.destroyed || !adding.loadingComponents || adding.loadingComponents.attemptResolution()) {
-                                removals.push(i);
-                            }
+                //Listen for message on children
+                for (x = 0; x < this.entities.length; x++) {
+                    if (this.entities[x]._listeners[event]) {
+                        for (y = 0; y < this.entities[x]._listeners[event].length; y++) {
+                            this.addChildEventListener(this.entities[x], event, this.entities[x]._listeners[event][y]);
                         }
-
-                        i = removals.length;
-                        while (i--) {
-                            greenSplice(adds, removals[i]);
+                    }
+                }
+                
+                return true;
+            },
+            
+            updateChildEventListeners: function (entity) {
+                this.removeChildEventListeners(entity);
+                this.addChildEventListeners(entity);
+            },
+            
+            addChildEventListeners: function (entity) {
+                var y     = 0,
+                    event = '';
+                
+                for (event in this._listeners) {
+                    if (this._listeners.hasOwnProperty(event) && entity._listeners[event]) {
+                        for (y = 0; y < entity._listeners[event].length; y++) {
+                            this.addChildEventListener(entity, event, entity._listeners[event][y]);
                         }
-
-                        arrayCache.recycle(removals);
                     }
                 }
             },
             
-            methods: {
-                addNewPublicEvent: function (event) {
-                    var i = 0;
-                    
-                    this.addNewPrivateEvent(event);
-                    
-                    for (i = 0; i < this.childEvents.length; i++) {
-                        if (this.childEvents[i] === event) {
-                            return false;
-                        }
-                    }
-                    this.childEvents.push(event);
-                    /**
-                     * Listens for specified messages and on receiving them, re-triggers them on child entities.
-                     *
-                     * @method '*'
-                     * @param message {Object} Accepts a message object that it will include in the new message to be triggered.
-                     */
-                    this.addEventListener(event, childBroadcast(event));
-                    
-                    return true;
-                },
+            removeChildEventListeners: function (entity) {
+                var i        = 0,
+                    events   = null,
+                    messages = null;
                 
-                addNewPrivateEvent: function (event) {
-                    var x = 0,
-                        y = 0;
-                    
-                    if (this._listeners[event]) {
-                        return false; // event is already added.
-                    }
+                if (entity.containerListener) {
+                    events   = entity.containerListener.events;
+                    messages = entity.containerListener.messages;
 
-                    this._listeners[event] = arrayCache.setUp(); //to signify it's been added even if not used
-                    
-                    //Listen for message on children
-                    for (x = 0; x < this.entities.length; x++) {
-                        if (this.entities[x]._listeners[event]) {
-                            for (y = 0; y < this.entities[x]._listeners[event].length; y++) {
-                                this.addChildEventListener(this.entities[x], event, this.entities[x]._listeners[event][y]);
-                            }
-                        }
-                    }
-                    
-                    return true;
-                },
-                
-                updateChildEventListeners: function (entity) {
-                    this.removeChildEventListeners(entity);
-                    this.addChildEventListeners(entity);
-                },
-                
-                addChildEventListeners: function (entity) {
-                    var y     = 0,
-                        event = '';
-                    
-                    for (event in this._listeners) {
-                        if (this._listeners.hasOwnProperty(event) && entity._listeners[event]) {
-                            for (y = 0; y < entity._listeners[event].length; y++) {
-                                this.addChildEventListener(entity, event, entity._listeners[event][y]);
-                            }
-                        }
-                    }
-                },
-                
-                removeChildEventListeners: function (entity) {
-                    var i        = 0,
-                        events   = null,
-                        messages = null;
-                    
-                    if (entity.containerListener) {
-                        events   = entity.containerListener.events;
-                        messages = entity.containerListener.messages;
-
-                        for (i = 0; i < events.length; i++) {
-                            this.removeChildEventListener(entity, events[i], messages[i]);
-                        }
-                        arrayCache.recycle(events);
-                        arrayCache.recycle(messages);
-                        entity.containerListener.recycle();
-                        entity.containerListener = null;
-                    }
-                },
-                
-                addChildEventListener: function (entity, event, callback) {
-                    if (!entity.containerListener) {
-                        entity.containerListener = Data.setUp(
-                            "events", arrayCache.setUp(),
-                            "messages", arrayCache.setUp()
-                        );
-                    }
-                    entity.containerListener.events.push(event);
-                    entity.containerListener.messages.push(callback);
-                    this.on(event, callback, callback._priority || 0);
-                },
-                
-                removeChildEventListener: function (entity, event, callback) {
-                    var i        = 0,
-                        events   = entity.containerListener.events,
-                        messages = entity.containerListener.messages;
-                    
                     for (i = 0; i < events.length; i++) {
-                        if ((events[i] === event) && (!callback || (messages[i] === callback))) {
-                            this.off(event, messages[i]);
-                        }
+                        this.removeChildEventListener(entity, events[i], messages[i]);
                     }
-                },
-
-                destroy: function () {
-                    var entities = greenSlice(this.entities), // Make a copy to handle entities being destroyed while processing list.
-                        i = entities.length,
-                        entity = null;
-                    
-                    while (i--) {
-                        entity = entities[i];
-                        this.removeChildEventListeners(entity);
-                        entity.destroy();
-                    }
-                    
-                    arrayCache.recycle(entities);
-                    arrayCache.recycle(this.entities);
-                    this.owner.entities = null;
-                    arrayCache.recycle(this.childEvents);
-                    this.childEvents = null;
-                    arrayCache.recycle(this.newAdds);
-                    this.newAdds = null;
+                    arrayCache.recycle(events);
+                    arrayCache.recycle(messages);
+                    entity.containerListener.recycle();
+                    entity.containerListener = null;
                 }
             },
             
-            publicMethods: {
-                /**
-                 * Gets an entity in this layer by its Id. Returns `null` if not found.
-                 *
-                 * @method getEntityById
-                 * @param {String} id
-                 * @return {Entity}
-                 */
-                getEntityById: function (id) {
-                    var i         = 0,
-                        selection = null;
-                    
-                    for (i = 0; i < this.entities.length; i++) {
-                        if (this.entities[i].id === id) {
-                            return this.entities[i];
-                        }
-                        if (this.entities[i].getEntityById) {
-                            selection = this.entities[i].getEntityById(id);
-                            if (selection) {
-                                return selection;
-                            }
-                        }
-                    }
-                    return null;
-                },
-
-                /**
-                 * Returns a list of entities of the requested type.
-                 *
-                 * @method getEntitiesByType
-                 * @param {String} type
-                 * @return {Array}
-                 */
-                getEntitiesByType: function (type) {
-                    var i         = 0,
-                        selection = null,
-                        entities  = arrayCache.setUp();
-                    
-                    for (i = 0; i < this.entities.length; i++) {
-                        if (this.entities[i].type === type) {
-                            entities.push(this.entities[i]);
-                        }
-                        if (this.entities[i].getEntitiesByType) {
-                            selection = this.entities[i].getEntitiesByType(type);
-                            union(entities, selection);
-                            arrayCache.recycle(selection);
-                        }
-                    }
-                    return entities;
-                },
-
-                /**
-                 * This method adds an entity to the owner's group. If an entity definition or a reference to an entity definition is provided, the entity is created and then added to the owner's group.
-                 *
-                 * @method addEntity
-                 * @param newEntity {platypus.Entity|Object|String} Specifies the entity to add. If an object with a "type" property is provided or a String is provided, this component looks up the entity definition to create the entity.
-                 * @param [newEntity.type] {String} If an object with a "type" property is provided, this component looks up the entity definition to create the entity.
-                 * @param [newEntity.properties] {Object} A list of key/value pairs that sets the initial properties on the new entity.
-                 * @param [callback] {Function} A function to run once all of the components on the Entity have been loaded.
-                 * @return {platypus.Entity} The entity that was just added.
-                 */
-                addEntity: (function () {
-                    var
-                        whenReady = function (callback, entity) {
-                            var owner = this.owner,
-                                entities = this.entities,
-                                i = entities.length;
-
-                            entity.triggerEvent('adopted', entity);
-                            
-                            while (i--) {
-                                if (!entity.triggerEvent('peer-entity-added', entities[i])) {
-                                    break;
-                                }
-                            }
-                            this.triggerEventOnChildren('peer-entity-added', entity);
-
-                            this.addChildEventListeners(entity);
-                            entities.push(entity);
-                            owner.triggerEvent('child-entity-added', entity);
-
-                            if (callback) {
-                                callback(entity);
-                            }
-                        };
-
-                    return function (newEntity, callback) {
-                        var entity = null,
-                            owner = this.owner;
-                        
-                        if (newEntity instanceof Entity) {
-                            entity = newEntity;
-                            entity.parent = owner;
-                            whenReady.call(this, callback, entity);
-                        } else {
-                            if (typeof newEntity === 'string') {
-                                entity = new Entity(platypus.game.settings.entities[newEntity], null, whenReady.bind(this, callback), owner);
-                            } else if (newEntity.id) {
-                                entity = new Entity(newEntity, null, whenReady.bind(this, callback), owner);
-                            } else {
-                                entity = new Entity(platypus.game.settings.entities[newEntity.type], newEntity, whenReady.bind(this, callback), owner);
-                            }
-                            this.owner.triggerEvent('entity-created', entity);
-                        }
-
-                        this.newAdds.push(entity);
-
-                        return entity;
-                    };
-                }()),
-                
-                /**
-                 * Removes the provided entity from the layer and destroys it. Returns `false` if the entity is not found in the layer.
-                 *
-                 * @method removeEntity
-                 * @param {Entity} entity
-                 * @return {Entity}
-                 */
-                removeEntity: function (entity) {
-                    var i = this.entities.indexOf(entity);
-
-                    if (i >= 0) {
-                        this.removeChildEventListeners(entity);
-                        greenSplice(this.entities, i);
-                        this.triggerEventOnChildren('peer-entity-removed', entity);
-                        this.owner.triggerEvent('child-entity-removed', entity);
-                        entity.destroy();
-                        entity.parent = null;
-                        return entity;
-                    }
-                    return false;
-                },
-                
-                /**
-                 * Triggers a single event on the child entities in the layer.
-                 *
-                 * @method triggerEventOnChildren
-                 * @param {*} event
-                 * @param {*} message
-                 * @param {*} debug
-                 */
-                triggerEventOnChildren: function (event, message, debug) {
-                    if (this.destroyed) {
-                        return 0;
-                    }
-                    
-                    if (!this._listeners[event]) {
-                        this.addNewPrivateEvent(event);
-                    }
-                    return this.triggerEvent(event, message, debug);
-                },
-
-                /**
-                 * Triggers one or more events on the child entities in the layer. This is unique from `triggerEventOnChildren` in that it also accepts an `Array` to send multiple events.
-                 *
-                 * @method triggerOnChildren
-                 * @param {*} event
-                 * @param {*} message
-                 * @param {*} debug
-                 */
-                triggerOnChildren: function (event) {
-                    if (this.destroyed) {
-                        return 0;
-                    }
-                    
-                    if (!this._listeners[event]) {
-                        this.addNewPrivateEvent(event);
-                    }
-                    return this.trigger.apply(this, arguments);
+            addChildEventListener: function (entity, event, callback) {
+                if (!entity.containerListener) {
+                    entity.containerListener = Data.setUp(
+                        "events", arrayCache.setUp(),
+                        "messages", arrayCache.setUp()
+                    );
                 }
+                entity.containerListener.events.push(event);
+                entity.containerListener.messages.push(callback);
+                this.on(event, callback, callback._priority || 0);
             },
             
-            getAssetList: function (def, props, defaultProps, data) {
-                var i = 0,
-                    assets = arrayCache.setUp(),
-                    entities = arrayCache.setUp(),
-                    arr = null;
+            removeChildEventListener: function (entity, event, callback) {
+                var i        = 0,
+                    events   = entity.containerListener.events,
+                    messages = entity.containerListener.messages;
                 
-                if (def.entities) {
-                    union(entities, def.entities);
+                for (i = 0; i < events.length; i++) {
+                    if ((events[i] === event) && (!callback || (messages[i] === callback))) {
+                        this.off(event, messages[i]);
+                    }
                 }
-                
-                if (props && props.entities) {
-                    union(entities, props.entities);
-                } else if (defaultProps && defaultProps.entities) {
-                    union(entities, defaultProps.entities);
-                }
+            },
 
-                for (i = 0; i < entities.length; i++) {
-                    arr = Entity.getAssetList(entities[i], null, data);
-                    union(assets, arr);
-                    arrayCache.recycle(arr);
+            destroy: function () {
+                var entities = greenSlice(this.entities), // Make a copy to handle entities being destroyed while processing list.
+                    i = entities.length,
+                    entity = null;
+                
+                while (i--) {
+                    entity = entities[i];
+                    this.removeChildEventListeners(entity);
+                    entity.destroy();
                 }
                 
                 arrayCache.recycle(entities);
-                
-                return assets;
+                arrayCache.recycle(this.entities);
+                this.owner.entities = null;
+                arrayCache.recycle(this.childEvents);
+                this.childEvents = null;
+                arrayCache.recycle(this.newAdds);
+                this.newAdds = null;
             }
-        });
-    
-    Messenger.mixin(EntityContainer);
+        },
+        
+        publicMethods: {
+            /**
+             * Gets an entity in this layer by its Id. Returns `null` if not found.
+             *
+             * @memberof EntityContainer.prototype
+             * @method getEntityById
+             * @param {String} id
+             * @return {Entity}
+             */
+            getEntityById: function (id) {
+                var i         = 0,
+                    selection = null;
+                
+                for (i = 0; i < this.entities.length; i++) {
+                    if (this.entities[i].id === id) {
+                        return this.entities[i];
+                    }
+                    if (this.entities[i].getEntityById) {
+                        selection = this.entities[i].getEntityById(id);
+                        if (selection) {
+                            return selection;
+                        }
+                    }
+                }
+                return null;
+            },
 
-    return EntityContainer;
-}());
+            /**
+             * Returns a list of entities of the requested type.
+             *
+             * @memberof EntityContainer.prototype
+             * @method getEntitiesByType
+             * @param {String} type
+             * @return {Array}
+             */
+            getEntitiesByType: function (type) {
+                var i         = 0,
+                    selection = null,
+                    entities  = arrayCache.setUp();
+                
+                for (i = 0; i < this.entities.length; i++) {
+                    if (this.entities[i].type === type) {
+                        entities.push(this.entities[i]);
+                    }
+                    if (this.entities[i].getEntitiesByType) {
+                        selection = this.entities[i].getEntitiesByType(type);
+                        union(entities, selection);
+                        arrayCache.recycle(selection);
+                    }
+                }
+                return entities;
+            },
+
+            /**
+             * This method adds an entity to the owner's group. If an entity definition or a reference to an entity definition is provided, the entity is created and then added to the owner's group.
+             *
+             * @memberof EntityContainer.prototype
+             * @method addEntity
+             * @param newEntity {platypus.Entity|Object|String} Specifies the entity to add. If an object with a "type" property is provided or a String is provided, this component looks up the entity definition to create the entity.
+             * @param [newEntity.type] {String} If an object with a "type" property is provided, this component looks up the entity definition to create the entity.
+             * @param [newEntity.properties] {Object} A list of key/value pairs that sets the initial properties on the new entity.
+             * @param [callback] {Function} A function to run once all of the components on the Entity have been loaded.
+             * @return {platypus.Entity} The entity that was just added.
+             */
+            addEntity: (function () {
+                var
+                    whenReady = function (callback, entity) {
+                        var owner = this.owner,
+                            entities = this.entities,
+                            i = entities.length;
+
+                        entity.triggerEvent('adopted', entity);
+                        
+                        while (i--) {
+                            if (!entity.triggerEvent('peer-entity-added', entities[i])) {
+                                break;
+                            }
+                        }
+                        this.triggerEventOnChildren('peer-entity-added', entity);
+
+                        this.addChildEventListeners(entity);
+                        entities.push(entity);
+                        owner.triggerEvent('child-entity-added', entity);
+
+                        if (callback) {
+                            callback(entity);
+                        }
+                    };
+
+                return function (newEntity, callback) {
+                    var entity = null,
+                        owner = this.owner;
+                    
+                    if (newEntity instanceof Entity) {
+                        entity = newEntity;
+                        entity.parent = owner;
+                        whenReady.call(this, callback, entity);
+                    } else {
+                        if (typeof newEntity === 'string') {
+                            entity = new Entity(platypus.game.settings.entities[newEntity], null, whenReady.bind(this, callback), owner);
+                        } else if (newEntity.id) {
+                            entity = new Entity(newEntity, null, whenReady.bind(this, callback), owner);
+                        } else {
+                            entity = new Entity(platypus.game.settings.entities[newEntity.type], newEntity, whenReady.bind(this, callback), owner);
+                        }
+                        this.owner.triggerEvent('entity-created', entity);
+                    }
+
+                    this.newAdds.push(entity);
+
+                    return entity;
+                };
+            }()),
+            
+            /**
+             * Removes the provided entity from the layer and destroys it. Returns `false` if the entity is not found in the layer.
+             *
+             * @memberof EntityContainer.prototype
+             * @method removeEntity
+             * @param {Entity} entity
+             * @return {Entity}
+             */
+            removeEntity: function (entity) {
+                var i = this.entities.indexOf(entity);
+
+                if (i >= 0) {
+                    this.removeChildEventListeners(entity);
+                    greenSplice(this.entities, i);
+                    this.triggerEventOnChildren('peer-entity-removed', entity);
+                    this.owner.triggerEvent('child-entity-removed', entity);
+                    entity.destroy();
+                    entity.parent = null;
+                    return entity;
+                }
+                return false;
+            },
+            
+            /**
+             * Triggers a single event on the child entities in the layer.
+             *
+             * @memberof EntityContainer.prototype
+             * @method triggerEventOnChildren
+             * @param {*} event
+             * @param {*} message
+             * @param {*} debug
+             */
+            triggerEventOnChildren: function (event, message, debug) {
+                if (this.destroyed) {
+                    return 0;
+                }
+                
+                if (!this._listeners[event]) {
+                    this.addNewPrivateEvent(event);
+                }
+                return this.triggerEvent(event, message, debug);
+            },
+
+            /**
+             * Triggers one or more events on the child entities in the layer. This is unique from `triggerEventOnChildren` in that it also accepts an `Array` to send multiple events.
+             *
+             * @memberof EntityContainer.prototype
+             * @method triggerOnChildren
+             * @param {*} event
+             * @param {*} message
+             * @param {*} debug
+             */
+            triggerOnChildren: function (event) {
+                if (this.destroyed) {
+                    return 0;
+                }
+                
+                if (!this._listeners[event]) {
+                    this.addNewPrivateEvent(event);
+                }
+                return this.trigger.apply(this, arguments);
+            }
+        },
+        
+        getAssetList: function (def, props, defaultProps, data) {
+            var i = 0,
+                assets = arrayCache.setUp(),
+                entities = arrayCache.setUp(),
+                arr = null;
+            
+            if (def.entities) {
+                union(entities, def.entities);
+            }
+            
+            if (props && props.entities) {
+                union(entities, props.entities);
+            } else if (defaultProps && defaultProps.entities) {
+                union(entities, defaultProps.entities);
+            }
+
+            for (i = 0; i < entities.length; i++) {
+                arr = Entity.getAssetList(entities[i], null, data);
+                union(assets, arr);
+                arrayCache.recycle(arr);
+            }
+            
+            arrayCache.recycle(entities);
+            
+            return assets;
+        }
+    });
+
+Messenger.mixin(EntityContainer);
+
+export default EntityContainer;

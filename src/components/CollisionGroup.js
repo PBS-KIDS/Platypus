@@ -426,6 +426,7 @@ export default (function () {
             /**
              * Gets the bounding box of the group of entities.
              *
+             * @memberof CollisionGroup.prototype
              * @method getCollisionGroupAABB
              * @return platypus.AABB
              */
@@ -436,6 +437,7 @@ export default (function () {
             /**
              * Gets a list of all the entities in the world.
              *
+             * @memberof CollisionGroup.prototype
              * @method getWorldEntities
              * @return Array
              */
@@ -446,6 +448,7 @@ export default (function () {
             /**
              * Gets the collision entity representing the world's terrain.
              *
+             * @memberof CollisionGroup.prototype
              * @method getWorldTerrain
              * @return platypus.Entity
              */

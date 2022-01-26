@@ -633,6 +633,7 @@ export default (function () {
             /**
              * Remove this entity's container from the containing rendering container.
              *
+             * @memberof RenderContainer.prototype
              * @method removeFromParentContainer
              */
             removeFromParentContainer: function () {
@@ -648,6 +649,7 @@ export default (function () {
             /**
              * Add this entity's container to a rendering container.
              *
+             * @memberof RenderContainer.prototype
              * @method addToParentContainer
              * @param {Container} container Container to add this to.
              */
