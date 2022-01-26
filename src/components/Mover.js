@@ -552,7 +552,7 @@ export default createComponentClass(/** @lends Mover.prototype */{
         /**
          * This method adds a mover to the entity in the form of a ["Motion"]("Motion"%20Component.html) component definition.
          *
-         * @method platypus.Mover#addMover
+         * @method platypus.components.Mover#addMover
          * @param mover {Object} For motion definition properties, see the ["Motion"]("Motion"%20Component.html) component.
          * @return motion {Motion}
          */
@@ -565,7 +565,7 @@ export default createComponentClass(/** @lends Mover.prototype */{
         /**
          * This method removes a mover from the entity.
          *
-         * @method platypus.Mover#removeMover
+         * @method platypus.components.Mover#removeMover
          * @param motion {Motion}
          */
         removeMover: function (m) {

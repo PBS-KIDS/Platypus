@@ -1021,7 +1021,7 @@ export default (function () {
             /**
              * Returns whether a particular display object intersects the camera's viewport on the canvas.
              *
-             * @method platypus.Camera#isOnCanvas
+             * @method platypus.components.Camera#isOnCanvas
              * @param bounds {PIXI.Rectangle|Object} The bounds of the display object.
              * @param bounds.height {Number} The height of the display object.
              * @param bounds.width {Number} The width of the display object.
@@ -1038,7 +1038,7 @@ export default (function () {
             /**
              * Returns a world coordinate corresponding to a provided window coordinate.
              *
-             * @method platypus.Camera#windowToWorld
+             * @method platypus.components.Camera#windowToWorld
              * @param windowVector {platypus.Vector} A vector describing a window position.
              * @param withOffset {Boolean} Whether to provide a world position relative to the camera's location.
              * @param vector {platypus.Vector} If provided, this is used as the return vector.
@@ -1061,7 +1061,7 @@ export default (function () {
             /**
              * Returns a window coordinate corresponding to a provided world coordinate.
              *
-             * @method platypus.Camera#worldToWindow
+             * @method platypus.components.Camera#worldToWindow
              * @param worldVector {platypus.Vector} A vector describing a world position.
              * @param withOffset {Boolean} Whether to provide a window position relative to the camera's location.
              * @param vector {platypus.Vector} If provided, this is used as the return vector.

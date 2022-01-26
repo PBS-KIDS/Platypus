@@ -282,7 +282,7 @@ const
             /**
              * Gets an entity in this layer by its Id. Returns `null` if not found.
              *
-             * @method platypus.EntityContainer#getEntityById
+             * @method platypus.components.EntityContainer#getEntityById
              * @param {String} id
              * @return {Entity}
              */
@@ -307,7 +307,7 @@ const
             /**
              * Returns a list of entities of the requested type.
              *
-             * @method platypus.EntityContainer#getEntitiesByType
+             * @method platypus.components.EntityContainer#getEntitiesByType
              * @param {String} type
              * @return {Array}
              */
@@ -332,7 +332,7 @@ const
             /**
              * This method adds an entity to the owner's group. If an entity definition or a reference to an entity definition is provided, the entity is created and then added to the owner's group.
              *
-             * @method platypus.EntityContainer#addEntity
+             * @method platypus.components.EntityContainer#addEntity
              * @param newEntity {platypus.Entity|Object|String} Specifies the entity to add. If an object with a "type" property is provided or a String is provided, this component looks up the entity definition to create the entity.
              * @param [newEntity.type] {String} If an object with a "type" property is provided, this component looks up the entity definition to create the entity.
              * @param [newEntity.properties] {Object} A list of key/value pairs that sets the initial properties on the new entity.
@@ -392,7 +392,7 @@ const
             /**
              * Removes the provided entity from the layer and destroys it. Returns `false` if the entity is not found in the layer.
              *
-             * @method platypus.EntityContainer#removeEntity
+             * @method platypus.components.EntityContainer#removeEntity
              * @param {Entity} entity
              * @return {Entity}
              */
@@ -414,7 +414,7 @@ const
             /**
              * Triggers a single event on the child entities in the layer.
              *
-             * @method platypus.EntityContainer#triggerEventOnChildren
+             * @method platypus.components.EntityContainer#triggerEventOnChildren
              * @param {*} event
              * @param {*} message
              * @param {*} debug
@@ -433,7 +433,7 @@ const
             /**
              * Triggers one or more events on the child entities in the layer. This is unique from `triggerEventOnChildren` in that it also accepts an `Array` to send multiple events.
              *
-             * @method platypus.EntityContainer#triggerOnChildren
+             * @method platypus.components.EntityContainer#triggerOnChildren
              * @param {*} event
              * @param {*} message
              * @param {*} debug

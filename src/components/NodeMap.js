@@ -219,7 +219,7 @@ export default (function () {
             /**
              * Gets a node by node id.
              *
-             * @method platypus.NodeMap#getNode
+             * @method platypus.components.NodeMap#getNode
              * @param id {String|Array|Node} This id of the node to retrieve. If an array or more than one parameter is supplied, values are concatenated with "|" to create a single string id. Supplying a node returns the same node (useful for processing a mixed list of nodes and node ids).
              */
             getNode: function () {
@@ -247,7 +247,7 @@ export default (function () {
             /**
              * Finds the closest node to a given point, with respect to any inclusion or exclusion lists.
              *
-             * @method platypus.NodeMap#getClosestNode
+             * @method platypus.components.NodeMap#getClosestNode
              * @param point {platypus.Vector} A location for which a closest node is being found.
              * @param [including] {Array} A list of nodes to include in the search. If not set, the entire map is searched.
              * @param [excluding] {Array} A list of nodes to exclude from the search.

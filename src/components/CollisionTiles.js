@@ -442,7 +442,7 @@ export default (function () {
             /**
              * Returns the axis-aligned bounding box of the entire map.
              *
-             * @method platypus.CollisionTiles#getAABB
+             * @method platypus.components.CollisionTiles#getAABB
              * @return aabb {platypus.AABB} The returned object provides the top, left, width, and height of the collision map.
              */
             getAABB: function () {
@@ -452,7 +452,7 @@ export default (function () {
             /**
              * Confirms whether a particular map grid coordinate contains a tile.
              *
-             * @method platypus.CollisionTiles#isTile
+             * @method platypus.components.CollisionTiles#isTile
              * @param x {number} Integer specifying the column of tiles in the collision map to check.
              * @param y {number} Integer specifying the row of tiles in the collision map to check.
              * @return {boolean} Returns `true` if the coordinate contains a collision tile, `false` if it does not.
@@ -464,7 +464,7 @@ export default (function () {
             /**
              * Returns all the collision tiles within the provided axis-aligned bounding box as an array of shapes.
              *
-             * @method platypus.CollisionTiles#getTileShapes
+             * @method platypus.components.CollisionTiles#getTileShapes
              * @param aabb {platypus.AABB} The axis-aligned bounding box for which tiles should be returned.
              * @param prevAABB {platypus.AABB} The axis-aligned bounding box for a previous location to test for jump-through tiles.
              * @param [collisionType] {String} The type of collision to check for. If not specified, "tiles" is used. (Since 0.8.3)
@@ -499,7 +499,7 @@ export default (function () {
             /**
              * Performs a transform of a subset of the collision tile grid.
              *
-             * @method platypus.CollisionTiles#transform
+             * @method platypus.components.CollisionTiles#transform
              * @param [transform] {Object} A list of key/value pairs describing the transform.
              * @param [transform.type="horizontal"] {String} The type of transform; one of the following: "horizontal", "vertical", "diagonal", "diagonal-inverse", "rotate-90", "rotate-180", "rotate-270". Height and width should match for diagonal flips and 90 degree rotations.
              * @param [transform.left=0] {number} Grid coordinate for the left side of the bounding box.
@@ -525,7 +525,7 @@ export default (function () {
             /**
              * Performs a translation of a subset of the collision tile grid.
              *
-             * @method platypus.CollisionTiles#translate
+             * @method platypus.components.CollisionTiles#translate
              * @param [translate] {Object} A list of key/value pairs describing the translation.
              * @param [translate.dx=0] {number} Movement in columns.
              * @param [translate.dy=0] {number} Movement in rows.
@@ -549,7 +549,7 @@ export default (function () {
             /**
              * Gets a subset of the collision tile grid as a 2D array.
              *
-             * @method platypus.CollisionTiles#getCollisionMatrix
+             * @method platypus.components.CollisionTiles#getCollisionMatrix
              * @param originX {number} Grid coordinate for the left side of the bounding box.
              * @param originY {number} Grid coordinate for the top of the bounding box.
              * @param width {number} Cell width of the bounding box.
@@ -563,7 +563,7 @@ export default (function () {
             /**
              * Sets a subset of the collision tile grid.
              *
-             * @method platypus.CollisionTiles#setCollisionMatrix
+             * @method platypus.components.CollisionTiles#setCollisionMatrix
              * @param sourceArray {Array} A 2D array describing the collision tiles to insert into the collision tile grid.
              * @param originX {number} Grid coordinate for the left side of the bounding box.
              * @param originY {number} Grid coordinate for the top of the bounding box.

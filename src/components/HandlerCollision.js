@@ -1153,7 +1153,7 @@ export default createComponentClass(/** @lends HandlerCollision.prototype */{
         /**
          * This method returns an object containing world entities.
          *
-         * @method platypus.HandlerCollision#getWorldEntities
+         * @method platypus.components.HandlerCollision#getWorldEntities
          * @return {Array} A list of all world collision entities.
          */
         getWorldEntities: function () {
@@ -1163,7 +1163,7 @@ export default createComponentClass(/** @lends HandlerCollision.prototype */{
         /**
          * This method returns an entity representing the collision map of the world.
          *
-         * @method platypus.HandlerCollision#getWorldTerrain
+         * @method platypus.components.HandlerCollision#getWorldTerrain
          * @return {Entity} - An entity describing the collision map of the world. This entity typically includes a `CollisionTiles` component.
          */
         getWorldTerrain: function () {
@@ -1173,7 +1173,7 @@ export default createComponentClass(/** @lends HandlerCollision.prototype */{
         /**
          * This method returns a list of collision objects describing soft collisions between an entity and a list of other entities.
          *
-         * @method platypus.HandlerCollision#getEntityCollisions
+         * @method platypus.components.HandlerCollision#getEntityCollisions
          * @param entity {Entity} The entity to test against the world.
          * @return collisions {Array} This is a list of collision objects describing the soft collisions.
          */
@@ -1190,7 +1190,7 @@ export default createComponentClass(/** @lends HandlerCollision.prototype */{
         /**
          * This method returns a list of collision objects describing collisions between a shape and a list of other entities.
          *
-         * @method platypus.HandlerCollision#getShapeCollisions
+         * @method platypus.components.HandlerCollision#getShapeCollisions
          * @param shape {CollisionShape} The shape to check for collisions.
          * @param collisionTypes {String[]} The collision types to check against.
          * @return collisions {Array} This is a list of collision objects describing the soft collisions.
@@ -1208,7 +1208,7 @@ export default createComponentClass(/** @lends HandlerCollision.prototype */{
         /**
          * This method returns a list of collision objects describing collisions between a point and a list of other entities.
          *
-         * @method platypus.HandlerCollision#getPointCollisions
+         * @method platypus.components.HandlerCollision#getPointCollisions
          * @param x {number} The x-axis value.
          * @param y {number} The y-axis value.
          * @param collisionTypes {String[]} The collision types to check against.
