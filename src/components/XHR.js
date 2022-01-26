@@ -53,6 +53,7 @@ export default createComponentClass(/** @lends XHR.prototype */{
      * @constructs
      * @param {*} definition 
      * @listens platypus.Entity#request
+     * @fires platypus.Entity#response
      */
     initialize: function (definition) {
         this.setProperties(definition);
@@ -111,7 +112,7 @@ export default createComponentClass(/** @lends XHR.prototype */{
                     /**
                      * This message is triggered on receiving a response from the server (if "onload" is not set by the original "request" message).
                      *
-                     * @event 'response'
+                     * @event platypus.Entity#response
                      * @param message {String} The message contains the responseText returned by the server.
                      */
                     this.owner.triggerEvent('response', this.responseText);

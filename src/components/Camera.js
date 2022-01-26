@@ -183,14 +183,19 @@ export default (function () {
              */
             "z": 0
         },
+        
         /**
          * This component controls the game camera deciding where and how it should move. The camera also broadcasts messages when the window resizes or its orientation changes.
          *
          * @memberof platypus.components
          * @uses platypus.Component
          * @constructs
-         * @listens platypus.Entity#load
+         * @listens platypus.Entity#child-entity-updated
          * @listens platypus.Entity#follow
+         * @listens platypus.Entity#load
+         * @listens platypus.Entity#pointerdown
+         * @listens platypus.Entity#pressmove
+         * @listens platypus.Entity#pressup
          * @fires platypus.Entity#camera-loaded
          * @fires platypus.Entity#camera-update
          */
@@ -332,12 +337,6 @@ export default (function () {
                 }
             },
 
-            /**
-             * Triggers "camera-update" on newly changed entities.
-             *
-             * @method 'child-entity-updated'
-             * @param entity {platypus.Entity} Expects an entity as the message object to determine whether to trigger `camera-update` on it.
-             **/
             "child-entity-updated": function (entity) {
                 this.viewportUpdate = true;
                 
@@ -371,12 +370,6 @@ export default (function () {
                 this.updateMovementMethods();
             },
             
-            /**
-             * If mouse dragging should cause the camera to move, this listens for the beginning of the drag motion.
-             *
-             * @method 'pointerdown'
-             * @param event {Object} The pointer event.
-             **/
             "pointerdown": function (event) {
                 var worldVP = this.worldCamera.viewport;
 
@@ -394,12 +387,6 @@ export default (function () {
                 }
             },
             
-            /**
-             * If mouse dragging should cause the camera to move, this listens the drag motion.
-             *
-             * @method 'pressmove'
-             * @param event {Object} The pointer event.
-             **/
             "pressmove": function (event) {
                 if (this.mouse) {
                     if (this.move(this.mouseWorldOrigin.x + ((this.mouse.x - getClientX(event.event)) * DPR) / this.world.transform.worldTransform.a, this.mouseWorldOrigin.y + ((this.mouse.y - getClientY(event.event)) * DPR) / this.world.transform.worldTransform.d)) {
@@ -410,12 +397,6 @@ export default (function () {
                 }
             },
 
-            /**
-             * If mouse dragging should cause the camera to move, this listens for the end of the drag motion.
-             *
-             * @method 'pressup'
-             * @param event {Object} The pointer event.
-             **/
             "pressup": function (event) {
                 if (this.mouse) {
                     this.mouse = null;
