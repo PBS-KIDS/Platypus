@@ -432,14 +432,14 @@ export default (function () {
      * Returns an AABB from cache or creates a new one if none are available.
      *
      * @memberof platypus.AABB
-     * @method AABB.setUp
+     * @method setUp
      * @return {platypus.AABB} The instantiated AABB.
      */
     /**
      * Returns a AABB back to the cache.
      *
      * @memberof platypus.AABB
-     * @method AABB.recycle
+     * @method recycle
      * @param {platypus.AABB} aabb The AABB to be recycled.
      */
     /**

@@ -1,18 +1,14 @@
-/**
- * This class defines a multi-dimensional vector object and a variety of methods for manipulating the vector.
- *
- * @memberof platypus
- * @class Vector
- */
-/*global platypus */
+/* global platypus */
 import {arrayCache, greenSlice} from './utils/array.js';
 import config from 'config';
 import recycle from 'recycle';
 
-/** @lends Vector.prototype */
 export default (function () {
     /**
-     * @constructs
+     * This class defines a multi-dimensional vector object and a variety of methods for manipulating the vector.
+     *
+     * @memberof platypus
+     * @class Vector
      * @param {number|Array|Vector} x The x coordinate or an array or Vector describing the whole vector.
      * @param {number} [y] The y coordinate.
      * @param {number} [z] The z coordinate.
@@ -32,6 +28,7 @@ export default (function () {
     /**
      * The x component of the vector.
      *
+     * @memberof platypus.Vector.prototype
      * @property x
      * @type number
      * @default 0
@@ -48,6 +45,7 @@ export default (function () {
     /**
      * The y component of the vector.
      *
+     * @memberof platypus.Vector.prototype
      * @property y
      * @type number
      * @default 0
@@ -64,6 +62,7 @@ export default (function () {
     /**
      * The z component of the vector.
      *
+     * @memberof platypus.Vector.prototype
      * @property z
      * @type number
      * @default 0
@@ -80,6 +79,7 @@ export default (function () {
     /**
      * Returns a string describing the vector in the format of "[x, y, z]".
      *
+     * @memberof platypus.Vector.prototype
      * @method toString
      * @return {String}
      */
@@ -90,6 +90,7 @@ export default (function () {
     /**
      * Sets the coordinates of the vector.
      *
+     * @memberof platypus.Vector.prototype
      * @method set
      * @param x {number|Array|Vector} The x coordinate or an array or Vector describing the whole vector.
      * @param [y] {number} The y coordinate, or if x is an array/Vector this is the number of elements to copy from the array/Vector.
@@ -111,6 +112,7 @@ export default (function () {
     /**
      * Sets the coordinates of the vector.
      *
+     * @memberof platypus.Vector.prototype
      * @method setXYZ
      * @param x {number} The x coordinate.
      * @param [y] {number} The y coordinate.
@@ -130,6 +132,7 @@ export default (function () {
     /**
      * Sets the coordinates of the vector.
      *
+     * @memberof platypus.Vector.prototype
      * @method setVector
      * @param vector {Vector} The Vector to copy.
      * @param [dimensions] {number} The number of elements to copy from the Vector.
@@ -142,6 +145,7 @@ export default (function () {
     /**
      * Sets the coordinates of the vector.
      *
+     * @memberof platypus.Vector.prototype
      * @method setArray
      * @param arr {Array} The array to copy.
      * @param [dimensions] {number} The number of elements to copy from the Array.
@@ -161,6 +165,7 @@ export default (function () {
     /**
      * Determines whether two vectors are equal.
      *
+     * @memberof platypus.Vector.prototype
      * @method equals
      * @param x {number|Array|Vector} The x coordinate or an array or Vector to check against.
      * @param [y] {number} The y coordinate, or if x is an array/Vector this is the number of dimensions to check from the array/Vector.
@@ -197,6 +202,7 @@ export default (function () {
     /**
      * Returns the magnitude of the vector.
      *
+     * @memberof platypus.Vector.prototype
      * @method magnitude
      * @param [dimensions] {number} The dimensions to include. Defaults to all dimensions.
      * @return {number} The magnitude of the vector.
@@ -208,6 +214,7 @@ export default (function () {
     /**
      * Returns the magnitude squared of the vector. This is slightly faster than finding the magnitude.
      *
+     * @memberof platypus.Vector.prototype
      * @method magnitudeSquared
      * @param [dimensions] {number} The dimensions to include. Defaults to all dimensions.
      * @return {number} The magnitude squared of the vector.
@@ -228,6 +235,8 @@ export default (function () {
     /**
      * Returns the direction of the vector from the z-axis
      *
+     * @memberof platypus.Vector.prototype
+     * @method getAngle
      * @return {number} The direction of the vector in radians.
      */
     proto.getAngle = function () {
@@ -246,6 +255,7 @@ export default (function () {
     /**
      * Returns a normalized copy of the vector.
      *
+     * @memberof platypus.Vector.prototype
      * @method getUnit
      * @return {platypus.Vector} A normalized vector in the same direction as this vector.
      */
@@ -256,6 +266,7 @@ export default (function () {
     /**
      * Returns a copy of the Vector inverted.
      *
+     * @memberof platypus.Vector.prototype
      * @method getInverse
      * @return {platypus.Vector}
      */
@@ -266,6 +277,7 @@ export default (function () {
     /**
      * Normalizes the vector.
      *
+     * @memberof platypus.Vector.prototype
      * @method normalize
      * @chainable
      */
@@ -283,6 +295,7 @@ export default (function () {
     /**
      * Crosses this vector with the parameter vector.
      *
+     * @memberof platypus.Vector.prototype
      * @method cross
      * @param vector {platypus.Vector} The vector to cross this vector with.
      * @chainable
@@ -308,6 +321,7 @@ export default (function () {
     /**
      * Crosses this vector with the parameter vector and returns the cross product.
      *
+     * @memberof platypus.Vector.prototype
      * @method getCrossProduct
      * @param vector {platypus.Vector} The vector to cross this vector with.
      * @return {platypus.Vector} The cross product.
@@ -319,6 +333,7 @@ export default (function () {
     /**
      * Rotates the vector by the given amount.
      *
+     * @memberof platypus.Vector.prototype
      * @method rotate
      * @param angle {number} The amount to rotate the vector in radians.
      * @param [axis="z"] {String|Vector} A vector describing the axis around which the rotation should occur or 'x', 'y', or 'z'.
@@ -368,6 +383,7 @@ export default (function () {
     /**
      * Rotates the vector position around a given point on the cartesian plane.
      *
+     * @memberof platypus.Vector.prototype
      * @method rotateAbout
      * @param point {Vector} A vector describing the point around which the rotation should occur.
      * @param angle {number} The amount to rotate the vector in radians.
@@ -388,6 +404,7 @@ export default (function () {
     /**
      * Scales the vector by the given factor or performs a transform if a matrix is provided.
      *
+     * @memberof platypus.Vector.prototype
      * @method multiply
      * @param multiplier {number|Array} The factor to scale by or a 2D array describing a multiplication matrix.
      * @param limit {number} For scaling, determines which coordinates are affected.
@@ -426,6 +443,7 @@ export default (function () {
     /**
      * Adds the given components to this vector.
      *
+     * @memberof platypus.Vector.prototype
      * @method add
      * @param x {number|Array|Vector} The x component to add, or an array or vector describing the whole addition.
      * @param [y] {number} The y component to add or the limit if the first parameter is a vector or array.
@@ -459,6 +477,7 @@ export default (function () {
     /**
      * Adds the given vector to this vector.
      *
+     * @memberof platypus.Vector.prototype
      * @method addVector
      * @param otherVector {platypus.Vector} The vector to add.
      * @chainable
@@ -470,6 +489,7 @@ export default (function () {
     /**
      * Subtracts the given vector from this vector.
      *
+     * @memberof platypus.Vector.prototype
      * @method subtractVector
      * @param otherVector {platypus.Vector} The vector to subtract.
      * @chainable
@@ -486,6 +506,7 @@ export default (function () {
     /**
      * Returns the perpendicular vector.
      *
+     * @memberof platypus.Vector.prototype
      * @method perpendicular
      * @param opposite {Boolean} Whether to negate the perpendicular vector.
      * @chainable
@@ -509,6 +530,7 @@ export default (function () {
     /**
      * Scales the vector by the given factor.
      *
+     * @memberof platypus.Vector.prototype
      * @method multiply
      * @param factor {number} The factor to scale by.
      * @param limit {number} Determines which coordinates are affected. Defaults to all coordinates.
@@ -521,6 +543,7 @@ export default (function () {
     /**
      * Finds the dot product of the two vectors.
      *
+     * @memberof platypus.Vector.prototype
      * @method dot
      * @param otherVector {platypus.Vector} The other vector.
      * @param limit {number} The number of vector indexes to include in the dot product.
@@ -544,6 +567,7 @@ export default (function () {
     /**
      * Finds the shortest angle between the two vectors.
      *
+     * @memberof platypus.Vector.prototype
      * @method angleTo
      * @param otherVector {platypus.Vector} The other vector.
      * @return {number} The angle between this vector and the received vector.
@@ -569,6 +593,7 @@ export default (function () {
     /**
      * Finds the shortest signed angle between the two vectors.
      *
+     * @memberof platypus.Vector.prototype
      * @method signedAngleTo
      * @param otherVector {platypus.Vector} The other vector.
      * @param normal {platypus.Vector} A normal vector determining the resultant sign of the angle between two vectors.
@@ -598,6 +623,7 @@ export default (function () {
     /**
      * Find the scalar value of projecting this vector onto the parameter vector or onto a vector at the specified angle away.
      *
+     * @memberof platypus.Vector.prototype
      * @method scalerProjection
      * @param vectorOrAngle {Vector|number} The other vector or the angle between the vectors.
      * @return {number} The magnitude of the projection.
@@ -619,6 +645,7 @@ export default (function () {
     /**
      * Returns a copy of this vector.
      *
+     * @memberof platypus.Vector.prototype
      * @method copy
      * @return {platypus.Vector} A copy of this vector.
      */
@@ -629,7 +656,7 @@ export default (function () {
     /**
      * Adds properties to an object that describe the coordinates of a vector.
      *
-     * @method Vector.assign
+     * @method platypus.Vector.assign
      * @param object {Object} Object on which the coordinates and vector will be added.
      * @param propertyName {String} A string describing the property name where the vector is accessable.
      * @param [coordinateName*] {String} One or more parameters describing coordinate values on the object.
@@ -687,19 +714,19 @@ export default (function () {
     /**
      * Returns a Vector from cache or creates a new one if none are available.
      *
-     * @method Vector.setUp
+     * @method platypus.Vector.setUp
      * @return {platypus.Vector} The instantiated Vector.
      */
     /**
      * Returns a Vector back to the cache. Prefer the Vector's recycle method since it recycles property objects as well.
      *
-     * @method Vector.recycle
+     * @method platypus.Vector.recycle
      * @param {platypus.Vector} vector The Vector to be recycled.
      */
     /**
      * Relinquishes properties of the vector and recycles it.
      *
-     * @method recycle
+     * @method platypus.Vector#recycle
      */
     recycle.add(Vector, 'Vector', Vector, function () {
         this.matrix.length = 0;
