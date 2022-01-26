@@ -80,7 +80,7 @@ export default (function () {
             /**
              * Once finished loading the map, this message is triggered on the entity to notify other components of completion.
              *
-             * @event 'world-loaded'
+             * @event platypus.Entity#world-loaded
              * @param message {platypus.Data} World data.
              * @param message.level {Object} The Tiled level data used to load the level.
              * @param message.width {number} The width of the world in world units.
@@ -677,6 +677,9 @@ export default (function () {
          * @constructs
          * @listens platypus.Entity#camera-update
          * @listens platypus.Entity#layer-loaded
+         * @listens platypus.Entity#load-level
+         * @fires platypus.Entity#world-loaded
+         * @fires platypus.Entity#level-loading-progress
          */
         initialize: function () {
             this.assetCache = platypus.assetCache;
@@ -696,15 +699,6 @@ export default (function () {
                 }
             },
 
-            /**
-             * If `manuallyLoad` is set, the component will wait for this message before loading the Tiled map JSON definition.
-             *
-             * @method 'load-level'
-             * @param levelData {Object}
-             * @param levelData.level {String|Object} The level to load.
-             * @param [levelData.persistentData] {Object} Information passed from the last scene.
-             * @param callback {Function} The function to call once the level is loaded.
-             */
             "load-level": function (levelData, callback) {
                 this.loadLevel(levelData, callback);
             }
@@ -1403,7 +1397,7 @@ export default (function () {
                 /**
                  * As a level is loaded, this event is triggered to show progress.
                  *
-                 * @event 'level-loading-progress'
+                 * @event platypus.Entity#level-loading-progress
                  * @param message {platypus.Data} Contains progress data.
                  * @param message.count {Number} The number of loaded entities.
                  * @param message.progress {Number} A fraction of count / total.

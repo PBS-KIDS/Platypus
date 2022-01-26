@@ -197,6 +197,7 @@ export default (function () {
          * @listens platypus.Entity#pressmove
          * @listens platypus.Entity#pressup
          * @listens platypus.Entity#render-world
+         * @listens platypus.Entity#world-loaded
          * @fires platypus.Entity#camera-loaded
          * @fires platypus.Entity#camera-update
          */
@@ -339,15 +340,6 @@ export default (function () {
                 }
             },
 
-            /**
-             * On receiving this message, the camera updates its world location and size as necessary. An example of this message is triggered by the [TiledLoader](platypus.components.TiledLoader.html) component.
-             *
-             * @method 'world-loaded'
-             * @param message {Object}
-             * @param [message.width] {number} The width of the loaded world.
-             * @param [message.height] {number} The height of the loaded world.
-             * @param [message.camera] {platypus.Entity} An entity that the camera should follow in the loaded world.
-             **/
             "world-loaded": function (values) {
                 var msg = this.message;
                 
@@ -1025,7 +1017,7 @@ export default (function () {
             }
         },
 
-        publicMethods: {
+        publicMethods: /** @lends TiledLoader.prototype */{
             /**
              * Returns whether a particular display object intersects the camera's viewport on the canvas.
              *

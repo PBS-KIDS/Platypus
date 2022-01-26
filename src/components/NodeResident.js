@@ -151,6 +151,7 @@ export default (function () {
          * @uses platypus.Component
          * @constructs
          * @listens platypus.Entity#handle-logic
+         * @fires platypus.Entity#in-location
          */
         initialize: function (definition) {
             const
@@ -212,7 +213,7 @@ export default (function () {
                     /**
                      * This event is triggered if the entity is placed on the map but not assigned a node. It is moved to the nearest node and "in-location" is triggered.
                      *
-                     * @event 'in-location'
+                     * @event platypus.Entity#in-location
                      * @param entity {platypus.Entity} The entity that is in location.
                      */
                     this.owner.triggerEvent('in-location', this.owner);
