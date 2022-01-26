@@ -26,7 +26,7 @@ export default (function () {
     /**
      * Sets all of the properties of the AABB.
      *
-     * @method setAll
+     * @memberof AABB.prototype
      * @param x {number} The x position of the AABB. The x is always located in the center of the object.
      * @param y {number} The y position of the AABB. The y is always located in the center of the object.
      * @param width {number} The width of the AABB.
@@ -44,7 +44,7 @@ export default (function () {
     /**
      * Sets bounds of the AABB.
      *
-     * @method setBounds
+     * @memberof AABB.prototype
      * @param left {number} The left side of the AABB.
      * @param top {number} The top side of the AABB.
      * @param right {number} The right side of the AABB.
@@ -62,7 +62,7 @@ export default (function () {
     /**
      * Sets the AABB values to those of the provided AABB.
      *
-     * @method set
+     * @memberof AABB.prototype
      * @param aabb {platypus.AABB} The AABB to copy values.
      * @chainable
      */
@@ -161,7 +161,7 @@ export default (function () {
     /**
      * Returns a string listing AABB dimensions.
      *
-     * @method toString
+     * @memberof AABB.prototype
      * @return String
      */
     proto.toString = function () {
@@ -171,7 +171,7 @@ export default (function () {
     /**
      * Resets all the values in the AABB so that the AABB can be reused.
      *
-     * @method reset
+     * @memberof AABB.prototype
      * @chainable
      */
     proto.reset = function () {
@@ -182,7 +182,7 @@ export default (function () {
     /**
      * Resizes the AABB.
      *
-     * @method resize
+     * @memberof AABB.prototype
      * @param width {number} The new width of the AABB
      * @param height {number} The new height of the AABB
      * @chainable
@@ -215,7 +215,7 @@ export default (function () {
     /**
      * Changes the size and position of the bounding box so that it contains the current area and the area described in the incoming AABB.
      *
-     * @method include
+     * @memberof AABB.prototype
      * @param aabb {platypus.AABB} The AABB whose area will be included in the area of the current AABB.
      * @chainable
      */
@@ -250,7 +250,7 @@ export default (function () {
     /**
      * Moves the AABB to the specified location.
      *
-     * @method move
+     * @memberof AABB.prototype
      * @param x {number} The new x position of the AABB.
      * @param y {number} The new y position of the AABB.
      * @chainable
@@ -264,7 +264,7 @@ export default (function () {
     /**
      * Moves the AABB to the specified location.
      *
-     * @method moveX
+     * @memberof AABB.prototype
      * @param x {number} The new x position of the AABB.
      * @chainable
      */
@@ -278,7 +278,7 @@ export default (function () {
     /**
      * Moves the AABB to the specified location.
      *
-     * @method moveY
+     * @memberof AABB.prototype
      * @param y {number} The new y position of the AABB.
      * @chainable
      */
@@ -292,7 +292,7 @@ export default (function () {
     /**
      * Moves the AABB to the specified location.
      *
-     * @method moveXBy
+     * @memberof AABB.prototype
      * @param deltaX {number} The change in x position of the AABB.
      * @chainable
      */
@@ -303,7 +303,7 @@ export default (function () {
     /**
      * Moves the AABB to the specified location.
      *
-     * @method moveYBy
+     * @memberof AABB.prototype
      * @param deltaY {number} The change in y position of the AABB.
      * @chainable
      */
@@ -314,7 +314,7 @@ export default (function () {
     /**
      * Expresses whether this AABB matches the provided AABB.
      *
-     * @method equals
+     * @memberof AABB.prototype
      * @param aabb {platypus.AABB} The AABB to check against.
      * @return {Boolean} Returns `true` if the AABB's match.
      */
@@ -325,7 +325,7 @@ export default (function () {
     /**
      * Expresses whether this AABB contains the given AABB.
      *
-     * @method contains
+     * @memberof AABB.prototype
      * @param aabb {platypus.AABB} The AABB to check against
      * @return {boolean} Returns `true` if this AABB contains the other AABB.
      */
@@ -336,7 +336,7 @@ export default (function () {
     /**
      * Expresses whether this AABB contains the given point.
      *
-     * @method containsVector
+     * @memberof AABB.prototype
      * @param vector {platypus.Vector} The vector to check.
      * @return {boolean} Returns `true` if this AABB contains the vector.
      */
@@ -347,7 +347,7 @@ export default (function () {
     /**
      * Expresses whether this AABB contains the given point.
      *
-     * @method containsPoint
+     * @memberof AABB.prototype
      * @param x {number} The x-axis value.
      * @param y {number} The y-axis value.
      * @return {boolean} Returns `true` if this AABB contains the point.
@@ -359,7 +359,7 @@ export default (function () {
     /**
      * Expresses whether this AABB collides with the given AABB. This is similar to `intersects` but returns true for overlapping only, not touching edges.
      *
-     * @method collides
+     * @memberof AABB.prototype
      * @param aabb {platypus.AABB} The AABB to check against
      * @return {boolean} Returns `true` if this AABB collides with the other AABB.
      */
@@ -370,7 +370,7 @@ export default (function () {
     /**
      * Expresses whether this AABB collides with the given point. This is an exclusive version of containsPoint.
      *
-     * @method collidesPoint
+     * @memberof AABB.prototype
      * @param x {number} The x-axis value.
      * @param y {number} The y-axis value.
      * @return {boolean} Returns `true` if this AABB collides with the point.
@@ -382,7 +382,7 @@ export default (function () {
     /**
      * Expresses whether this AABB intersects the given AABB. This is similar to `collides` but returns true for overlapping or touching edges.
      *
-     * @method intersects
+     * @memberof AABB.prototype
      * @param aabb {platypus.AABB} The AABB to check against
      * @return {boolean} Returns `true` if this AABB intersects the other AABB.
      */
@@ -393,7 +393,7 @@ export default (function () {
     /**
      * Returns the area of the intersection. If the AABB's do not intersect, `0` is returned.
      *
-     * @method getIntersectionArea
+     * @memberof AABB.prototype
      * @param aabb {AABB} The AABB this AABB intersects with.
      * @return {Number} Returns the area of the intersected AABB's.
      */
@@ -418,11 +418,12 @@ export default (function () {
      * Returns a AABB back to the cache.
      *
      * @method AABB.recycle
-     * @param aabb {platypus.AABB} The AABB to be recycled.
+     * @param {platypus.AABB} aabb The AABB to be recycled.
      */
     /**
      * Relinquishes properties of the AABB and recycles it.
      *
+     * @memberof AABB.prototype
      * @method recycle
      */
     recycle.add(AABB, 'AABB', AABB, null, true, config.dev);

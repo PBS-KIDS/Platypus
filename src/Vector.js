@@ -694,7 +694,7 @@ export default (function () {
      * Returns a Vector back to the cache. Prefer the Vector's recycle method since it recycles property objects as well.
      *
      * @method Vector.recycle
-     * @param {platypus.Vector} The Vector to be recycled.
+     * @param {platypus.Vector} vector The Vector to be recycled.
      */
     /**
      * Relinquishes properties of the vector and recycles it.
