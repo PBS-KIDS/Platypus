@@ -12,7 +12,7 @@ export default (function () {
             }
         };
 
-    return createComponentClass(/** @lends LogicAttachment.prototype */{
+    return createComponentClass(/** @lends platypus.components.LogicAttachment.prototype */{
 
         id: 'LogicAttachment',
 

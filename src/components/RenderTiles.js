@@ -115,7 +115,7 @@ export default (function () {
 
     recycle.add(Template, 'Template', Template, null, true, config.dev);
 
-    return createComponentClass(/** @lends RenderTiles.prototype */{
+    return createComponentClass(/** @lends platypus.components.RenderTiles.prototype */{
 
         id: 'RenderTiles',
 

@@ -1,7 +1,7 @@
 import createComponentClass from '../factory.js';
 
 export default (function () {
-    return createComponentClass(/** @lends LogicWindUpRacer.prototype */{
+    return createComponentClass(/** @lends platypus.components.LogicWindUpRacer.prototype */{
         
         id: 'LogicWindUpRacer',
         

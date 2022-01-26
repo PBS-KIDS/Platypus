@@ -53,7 +53,7 @@ export default (function () {
             return event.clientY;
         };
     
-    return createComponentClass(/** @lends Camera.prototype */{
+    return createComponentClass(/** @lends platypus.components.Camera.prototype */{
         id: 'Camera',
         properties: {
             /**

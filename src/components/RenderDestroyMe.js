@@ -1,7 +1,7 @@
 import {arrayCache, greenSlice} from '../utils/array.js';
 import createComponentClass from '../factory.js';
 
-export default createComponentClass(/** @lends RenderDestroyMe.prototype */{
+export default createComponentClass(/** @lends platypus.components.RenderDestroyMe.prototype */{
     id: 'RenderDestroyMe',
     
     properties: {

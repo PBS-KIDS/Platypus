@@ -26,7 +26,7 @@ export default (function () {
             }
         };
     
-    return createComponentClass(/** @lends RenderText.prototype */{
+    return createComponentClass(/** @lends platypus.components.RenderText.prototype */{
         
         id: 'RenderText',
         

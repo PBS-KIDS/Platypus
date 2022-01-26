@@ -145,7 +145,7 @@ const
         }
     };
 
-export default createComponentClass(/** @lends AudioSFX.prototype */{
+export default createComponentClass(/** @lends platypus.components.AudioSFX.prototype */{
     id: 'AudioSFX',
     
     properties: {

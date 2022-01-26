@@ -12,7 +12,7 @@ const
         }
     };
 
-export default createComponentClass(/** @lends RelayLinker.prototype */{
+export default createComponentClass(/** @lends platypus.components.RelayLinker.prototype */{
     id: 'RelayLinker',
 
     properties: {

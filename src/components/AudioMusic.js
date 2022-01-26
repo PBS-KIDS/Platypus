@@ -14,7 +14,7 @@ const
     Tween = TweenJS.Tween,
     tracks = {}; // List of actively-playing tracks.
 
-export default createComponentClass(/** @lends AudioMusic.prototype */{
+export default createComponentClass(/** @lends platypus.components.AudioMusic.prototype */{
     id: 'AudioMusic',
     
     properties: {

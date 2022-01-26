@@ -10,7 +10,7 @@ import Data from '../Data.js';
 import createComponentClass from '../factory.js';
 
 export default (function () {
-    return createComponentClass(/** @lends SceneChanger.prototype */{
+    return createComponentClass(/** @lends platypus.components.SceneChanger.prototype */{
         id: 'SceneChanger',
         
         properties: {

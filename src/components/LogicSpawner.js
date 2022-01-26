@@ -24,7 +24,7 @@ import {arrayCache} from '../utils/array.js';
 import createComponentClass from '../factory.js';
 
 export default (function () {
-    return createComponentClass(/** @lends LogicSpawner.prototype */{
+    return createComponentClass(/** @lends platypus.components.LogicSpawner.prototype */{
         
         id: 'LogicSpawner',
         

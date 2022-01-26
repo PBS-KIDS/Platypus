@@ -12,7 +12,7 @@ const
         }
     };
 
-export default createComponentClass(/** @lends CollisionFilter.prototype */{
+export default createComponentClass(/** @lends platypus.components.CollisionFilter.prototype */{
     id: 'CollisionFilter',
     
     properties: {

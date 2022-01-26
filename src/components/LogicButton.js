@@ -3,7 +3,7 @@ import Data from '../Data.js';
 import createComponentClass from '../factory.js';
 
 export default (function () {
-    return createComponentClass(/** @lends LogicButton.prototype */{
+    return createComponentClass(/** @lends platypus.components.LogicButton.prototype */{
 
         id: 'LogicButton',
 

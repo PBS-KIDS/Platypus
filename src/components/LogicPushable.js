@@ -18,7 +18,7 @@ export default (function () {
         return (direction / Math.abs(direction)) * magnitude;
     };
     
-    return createComponentClass(/** @lends LogicPushable.prototype */{
+    return createComponentClass(/** @lends platypus.components.LogicPushable.prototype */{
         id: 'LogicPushable',
 
         /**

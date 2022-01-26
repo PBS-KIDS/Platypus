@@ -10,7 +10,7 @@ import {arrayCache, greenSlice, greenSplice, union} from '../utils/array.js';
 import createComponentClass from '../factory.js';
 
 export default (function () {
-    return createComponentClass(/** @lends RelayFamily.prototype */{
+    return createComponentClass(/** @lends platypus.components.RelayFamily.prototype */{
         id: 'RelayFamily',
         
         properties: {

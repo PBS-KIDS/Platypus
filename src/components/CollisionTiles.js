@@ -228,7 +228,7 @@ export default (function () {
             }
         };
 
-    return createComponentClass(/** @lends CollisionTiles.prototype */{
+    return createComponentClass(/** @lends platypus.components.CollisionTiles.prototype */{
         id: 'CollisionTiles',
         
         properties: {

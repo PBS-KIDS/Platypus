@@ -82,7 +82,7 @@ export default (function () {
             return m;
         };
     
-    return createComponentClass(/** @lends Orientation.prototype */{
+    return createComponentClass(/** @lends platypus.components.Orientation.prototype */{
         id: 'Orientation',
         publicProperties: {
             /**

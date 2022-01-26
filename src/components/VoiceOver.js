@@ -103,7 +103,7 @@ export default (function () {
             }
         };
 
-    return createComponentClass(/** @lends VoiceOver.prototype */{
+    return createComponentClass(/** @lends platypus.components.VoiceOver.prototype */{
         id: 'VoiceOver',
         
         properties: {

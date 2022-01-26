@@ -11,7 +11,7 @@ import Vector from '../Vector.js';
 import createComponentClass from '../factory.js';
 
 export default (function () {
-    return createComponentClass(/** @lends LogicTeleportee.prototype */{
+    return createComponentClass(/** @lends platypus.components.LogicTeleportee.prototype */{
         id: 'LogicTeleportee',
         
         /**

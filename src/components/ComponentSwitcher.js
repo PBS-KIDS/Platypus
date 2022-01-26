@@ -8,7 +8,7 @@ export default (function () {
             this.switches.push(event);
         };
     
-    return createComponentClass(/** @lends ComponentSwitcher.prototype */{
+    return createComponentClass(/** @lends platypus.components.ComponentSwitcher.prototype */{
         id: 'ComponentSwitcher',
         
         properties: {

@@ -13,7 +13,7 @@ export default (function () {
         platypus.game.triggerOnChildren.apply(platypus.game, arguments);
     };
 
-    return createComponentClass(/** @lends RelayGame.prototype */{
+    return createComponentClass(/** @lends platypus.components.RelayGame.prototype */{
         id: 'RelayGame',
         
         properties: {

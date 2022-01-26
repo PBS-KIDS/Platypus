@@ -1,7 +1,7 @@
 import createComponentClass from '../factory.js';
 
 export default (function () {
-    return createComponentClass(/** @lends LogicDestroyMe.prototype */{
+    return createComponentClass(/** @lends platypus.components.LogicDestroyMe.prototype */{
         id: 'LogicDestroyMe',
         
         properties: {

@@ -31,7 +31,7 @@ export default (function () {
             }
         };
     
-    return createComponentClass(/** @lends LogicDirectionalMovement.prototype */{
+    return createComponentClass(/** @lends platypus.components.LogicDirectionalMovement.prototype */{
         id: 'LogicDirectionalMovement',
         
         properties: {

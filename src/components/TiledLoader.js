@@ -532,7 +532,7 @@ export default (function () {
             return tilesets;
         };
 
-    return createComponentClass(/** @lends TiledLoader.prototype */{
+    return createComponentClass(/** @lends platypus.components.TiledLoader.prototype */{
         id: 'TiledLoader',
 
         properties: {

@@ -1,7 +1,7 @@
 /* global platypus */
 import createComponentClass from '../factory.js';
 
-export default createComponentClass(/** @lends LogicCarrier.prototype */{
+export default createComponentClass(/** @lends platypus.components.LogicCarrier.prototype */{
     
     id: 'LogicCarrier',
     

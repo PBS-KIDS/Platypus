@@ -63,7 +63,7 @@ export default (function () {
             };
         }());
     
-    return createComponentClass(/** @lends RenderContainer.prototype */{
+    return createComponentClass(/** @lends platypus.components.RenderContainer.prototype */{
         
         id: 'RenderContainer',
         

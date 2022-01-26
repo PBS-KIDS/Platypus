@@ -118,7 +118,7 @@ export default (function () {
             return true;
         };
 
-    return createComponentClass(/** @lends NodeResident.prototype */{
+    return createComponentClass(/** @lends platypus.components.NodeResident.prototype */{
         
         id: 'NodeResident',
 

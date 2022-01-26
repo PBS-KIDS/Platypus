@@ -5,7 +5,7 @@ import Vector from '../Vector.js';
 import createComponentClass from '../factory.js';
 
 export default (function () {
-    return createComponentClass(/** @lends CollisionGroup.prototype */{
+    return createComponentClass(/** @lends platypus.components.CollisionGroup.prototype */{
         id: 'CollisionGroup',
         
         /**

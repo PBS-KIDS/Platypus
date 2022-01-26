@@ -38,7 +38,7 @@ export default (function () {
             });
         };
     
-    return createComponentClass(/** @lends RenderSpine.prototype */{
+    return createComponentClass(/** @lends platypus.components.RenderSpine.prototype */{
 
         id: 'RenderSpine',
 

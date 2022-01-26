@@ -302,7 +302,7 @@ const
         return arr;
     };
 
-export default createComponentClass(/** @lends LevelBuilder.prototype */{
+export default createComponentClass(/** @lends platypus.components.LevelBuilder.prototype */{
     id: 'LevelBuilder',
     
     properties: {

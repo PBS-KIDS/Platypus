@@ -271,7 +271,7 @@ const
         }
     };
 
-export default createComponentClass(/** @lends CollisionBasic.prototype */{
+export default createComponentClass(/** @lends platypus.components.CollisionBasic.prototype */{
         
     id: 'CollisionBasic',
 

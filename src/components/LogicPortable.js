@@ -1,7 +1,7 @@
 import createComponentClass from '../factory.js';
 
 export default (function () {
-    return createComponentClass(/** @lends LogicPortable.prototype */{
+    return createComponentClass(/** @lends platypus.components.LogicPortable.prototype */{
         id: 'LogicPortable',
         properties: {
             /**
@@ -32,7 +32,7 @@ export default (function () {
                 entity: this.owner
             };
         },
-        
+
         events: {
             "handle-logic": function () {
                 var msg = this.message;

@@ -18,7 +18,7 @@ export default (function () {
         }
     };
     
-    return createComponentClass(/** @lends RelayParent.prototype */{
+    return createComponentClass(/** @lends platypus.components.RelayParent.prototype */{
         id: 'RelayParent',
         
         properties: {

@@ -45,7 +45,7 @@ export default (function () {
             }
         };
 
-    return createComponentClass(/** @lends EntityController.prototype */{
+    return createComponentClass(/** @lends platypus.components.EntityController.prototype */{
         id: 'EntityController',
         
         properties: {

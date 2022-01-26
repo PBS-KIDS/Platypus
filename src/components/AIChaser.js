@@ -3,7 +3,7 @@ import Vector from '../Vector.js';
 import createComponentClass from '../factory.js';
 
 export default (function () {
-    return createComponentClass(/** @lends AIChaser.prototype */{
+    return createComponentClass(/** @lends platypus.components.AIChaser.prototype */{
         
         id: 'AIChaser',
         

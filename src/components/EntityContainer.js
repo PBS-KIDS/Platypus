@@ -27,7 +27,7 @@ const
             this.triggerOnChildren(event, value, debug);
         };
     },
-    EntityContainer = createComponentClass(/** @lends EntityContainer.prototype */{
+    EntityContainer = createComponentClass(/** @lends platypus.components.EntityContainer.prototype */{
         id: 'EntityContainer',
         
         properties: {

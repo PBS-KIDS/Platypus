@@ -26,7 +26,7 @@ export default (function () {
         };
     };
 
-    return createComponentClass(/** @lends RandomEvents.prototype */{
+    return createComponentClass(/** @lends platypus.components.RandomEvents.prototype */{
         id: 'RandomEvents',
         
         initialize: function (definition) {

@@ -6,7 +6,7 @@ import RenderAnimator from './RenderAnimator.js';
 import RenderContainer from './RenderContainer.js';
 import createComponentClass from '../factory.js';
 
-export default createComponentClass(/** @lends RenderSprite.prototype */{
+export default createComponentClass(/** @lends platypus.components.RenderSprite.prototype */{
     
     id: 'RenderSprite',
     

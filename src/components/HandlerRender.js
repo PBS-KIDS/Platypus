@@ -5,7 +5,7 @@ import Interactive from './Interactive.js';
 import createComponentClass from '../factory.js';
 
 export default (function () {
-    return createComponentClass(/** @lends HandlerRender.prototype */{
+    return createComponentClass(/** @lends platypus.components.HandlerRender.prototype */{
 
         id: "HandlerRender",
 

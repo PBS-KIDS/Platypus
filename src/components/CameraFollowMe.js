@@ -2,7 +2,7 @@ import Data from '../Data.js';
 import createComponentClass from '../factory.js';
 
 export default (function () {
-    return createComponentClass(/** @lends CameraFollowMe.prototype */{
+    return createComponentClass(/** @lends platypus.components.CameraFollowMe.prototype */{
         id: 'CameraFollowMe',
         
         properties: {

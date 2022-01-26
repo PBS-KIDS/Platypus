@@ -65,7 +65,7 @@ const
         }
     };
 
-export default createComponentClass(/** @lends Motion.prototype */{
+export default createComponentClass(/** @lends platypus.components.Motion.prototype */{
     
     id: 'Motion',
 

@@ -30,7 +30,7 @@ export default (function () {
             return (item === 'handle-logic' || item === 'handle-post-collision-logic' || item === 'prepare-logic' || item === 'state-changed' || item === 'handle-movement');
         };
 
-    return createComponentClass(/** @lends HandlerLogic.prototype */{
+    return createComponentClass(/** @lends platypus.components.HandlerLogic.prototype */{
         id: "HandlerLogic",
         properties: {
             /**

@@ -11,7 +11,7 @@ export default (function () {
             return m * sin(a);
         };
     
-    return createComponentClass(/** @lends LogicRotationalMovement.prototype */{
+    return createComponentClass(/** @lends platypus.components.LogicRotationalMovement.prototype */{
         id: 'LogicRotationalMovement',
 
         properties: {

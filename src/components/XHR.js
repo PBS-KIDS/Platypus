@@ -4,7 +4,7 @@ import createComponentClass from '../factory.js';
 const
     XMLHttpRequest = window.XMLHttpRequest;
 
-export default createComponentClass(/** @lends XHR.prototype */{
+export default createComponentClass(/** @lends platypus.components.XHR.prototype */{
     id: 'XHR',
     
     properties: {

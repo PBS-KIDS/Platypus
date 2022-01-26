@@ -74,7 +74,7 @@ export default (function () {
             arrayCache.recycle(soundList);
         };
     
-    return createComponentClass(/** @lends AudioVO.prototype */{
+    return createComponentClass(/** @lends platypus.components.AudioVO.prototype */{
         id: 'AudioVO',
         
         properties: {

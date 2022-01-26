@@ -2,7 +2,7 @@ import Data from '../Data.js';
 import createComponentClass from '../factory.js';
 
 export default (function () {
-    return createComponentClass(/** @lends Counter.prototype */{
+    return createComponentClass(/** @lends platypus.components.Counter.prototype */{
 
         id: 'Counter',
 

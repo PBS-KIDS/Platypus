@@ -19,7 +19,7 @@
 import createComponentClass from '../factory.js';
 
 export default (function () {
-    return createComponentClass(/** @lends LogicPacingPlatform.prototype */{
+    return createComponentClass(/** @lends platypus.components.LogicPacingPlatform.prototype */{
         
         id: 'LogicPacingPlatform',
         

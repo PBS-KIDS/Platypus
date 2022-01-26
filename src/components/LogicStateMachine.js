@@ -138,7 +138,7 @@ export default (function () {
         }
     };
 
-    return createComponentClass(/** @lends LogicStateMachine.prototype */{
+    return createComponentClass(/** @lends platypus.components.LogicStateMachine.prototype */{
         id: 'LogicStateMachine',
         
         properties: {

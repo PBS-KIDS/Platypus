@@ -53,7 +53,7 @@ var tempVector = Vector.setUp(),
         }
     };
     
-export default createComponentClass(/** @lends Mover.prototype */{
+export default createComponentClass(/** @lends platypus.components.Mover.prototype */{
     
     id: 'Mover',
 

@@ -3,7 +3,7 @@ import Vector from '../Vector.js';
 import createComponentClass from '../factory.js';
 
 export default (function () {
-    return createComponentClass(/** @lends LogicImpactLaunch.prototype */{
+    return createComponentClass(/** @lends platypus.components.LogicImpactLaunch.prototype */{
         id: 'LogicImpactLaunch',
         
         properties: {

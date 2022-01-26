@@ -2,7 +2,7 @@
 import {Container, Graphics, Point} from 'pixi.js';
 import createComponentClass from '../factory.js';
 
-export default createComponentClass(/** @lends RenderProgress.prototype */{
+export default createComponentClass(/** @lends platypus.components.RenderProgress.prototype */{
     
     id: 'RenderProgress',
     

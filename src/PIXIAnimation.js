@@ -159,6 +159,7 @@ export default (function () {
         /**
          * This class plays animation sequences of frames and mimics the syntax required for creating CreateJS Sprites, allowing CreateJS Sprite Sheet definitions to be used with PixiJS.
          *
+         * @memberof platypus
          * @class PIXIAnimation
          * @param {Object} spriteSheet JSON sprite sheet definition.
          * @param {string} animation The name of the animation to start playing.

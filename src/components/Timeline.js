@@ -37,7 +37,7 @@ export default (function () {
             }
         };
     
-    return createComponentClass(/** @lends Timeline.prototype */{
+    return createComponentClass(/** @lends platypus.components.Timeline.prototype */{
         
         id: 'Timeline',
         

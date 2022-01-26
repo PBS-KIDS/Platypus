@@ -56,7 +56,7 @@ export default (function () {
             }
         };
     
-    return createComponentClass(/** @lends RenderDebug.prototype */{
+    return createComponentClass(/** @lends platypus.components.RenderDebug.prototype */{
         
         id: 'RenderDebug',
 

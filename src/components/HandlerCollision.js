@@ -28,7 +28,7 @@ const
         return a.collisionGroup.getAllEntities() - b.collisionGroup.getAllEntities();
     };
 
-export default createComponentClass(/** @lends HandlerCollision.prototype */{
+export default createComponentClass(/** @lends platypus.components.HandlerCollision.prototype */{
     id: 'HandlerCollision',
     
     properties: {

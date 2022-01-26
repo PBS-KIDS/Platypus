@@ -18,7 +18,7 @@ import Vector from '../Vector.js';
 import {arrayCache} from '../utils/array.js';
 import createComponentClass from '../factory.js';
 
-export default createComponentClass(/** @lends LogicRebounder.prototype */{
+export default createComponentClass(/** @lends platypus.components.LogicRebounder.prototype */{
     id: 'LogicRebounder',
     
     /**

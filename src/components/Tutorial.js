@@ -90,7 +90,7 @@ export default (function () {
             }
         };
 
-    return createComponentClass(/** @lends Tutorial.prototype */{
+    return createComponentClass(/** @lends platypus.components.Tutorial.prototype */{
         
         id: 'Tutorial',
         

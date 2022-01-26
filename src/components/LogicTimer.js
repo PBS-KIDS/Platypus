@@ -1,7 +1,7 @@
 import createComponentClass from '../factory.js';
 
 export default (function () {
-    return createComponentClass(/** @lends LogicTimer.prototype */{
+    return createComponentClass(/** @lends platypus.components.LogicTimer.prototype */{
         id: 'LogicTimer',
 
         properties: {

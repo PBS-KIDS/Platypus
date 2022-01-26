@@ -23,7 +23,7 @@ import {arrayCache, greenSplice} from '../utils/array.js';
 import Vector from '../Vector.js';
 import createComponentClass from '../factory.js';
 
-export default createComponentClass(/** @lends Node.prototype */{
+export default createComponentClass(/** @lends platypus.components.Node.prototype */{
     
     id: 'Node',
 

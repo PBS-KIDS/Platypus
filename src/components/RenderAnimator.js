@@ -47,7 +47,7 @@ export default (function () {
             this.owner.triggerEvent('stop-animation', animation);
         };
 
-    return createComponentClass(/** @lends RenderAnimator.prototype */{
+    return createComponentClass(/** @lends platypus.components.RenderAnimator.prototype */{
         id: 'RenderAnimator',
 
         properties: {

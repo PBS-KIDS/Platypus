@@ -18,7 +18,7 @@ import DataMap from '../DataMap.js';
 import createComponentClass from '../factory.js';
 
 export default (function () {
-    return createComponentClass(/** @lends LogicPortal.prototype */{
+    return createComponentClass(/** @lends platypus.components.LogicPortal.prototype */{
         id: 'LogicPortal',
         
         /**

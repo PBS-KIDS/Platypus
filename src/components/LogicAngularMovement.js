@@ -2,7 +2,7 @@ import {arrayCache} from '../utils/array.js';
 import createComponentClass from '../factory.js';
 
 export default (function () {
-    return createComponentClass(/** @lends LogicAngularMovement.prototype */{
+    return createComponentClass(/** @lends platypus.components.LogicAngularMovement.prototype */{
         
         id: 'LogicAngularMovement',
         

@@ -14,7 +14,7 @@ const
     pointerInstances = {},
     orphanPointers = [];
 
-export default createComponentClass(/** @lends Interactive.prototype */{
+export default createComponentClass(/** @lends platypus.components.Interactive.prototype */{
     id: 'Interactive',
 
     properties: {

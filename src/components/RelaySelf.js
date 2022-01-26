@@ -14,7 +14,7 @@ export default (function () {
         owner.trigger.apply(owner, arguments);
     };
 
-    return createComponentClass(/** @lends RelaySelf.prototype */{
+    return createComponentClass(/** @lends platypus.components.RelaySelf.prototype */{
         id: 'RelaySelf',
         
         properties: {

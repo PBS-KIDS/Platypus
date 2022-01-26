@@ -6,7 +6,7 @@ import createComponentClass from '../factory.js';
 const
     claimHitArea = new Rectangle(-2000, -2000, 4000, 4000);
 
-export default createComponentClass(/** @lends LogicDragDrop.prototype */{
+export default createComponentClass(/** @lends platypus.components.LogicDragDrop.prototype */{
     id: 'LogicDragDrop',
     
     properties: {

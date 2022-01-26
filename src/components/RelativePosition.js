@@ -2,7 +2,7 @@ import AABB from '../AABB.js';
 import createComponentClass from '../factory.js';
 
 export default (function () {
-    return createComponentClass(/** @lends RelativePosition.prototype */{
+    return createComponentClass(/** @lends platypus.components.RelativePosition.prototype */{
         
         id: 'RelativePosition',
 

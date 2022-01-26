@@ -28,7 +28,7 @@ const
         this.trigger.apply(this, arguments);
     };
 
-export default createComponentClass(/** @lends Tween.prototype */{
+export default createComponentClass(/** @lends platypus.components.Tween.prototype */{
     id: 'Tween',
 
     properties: {

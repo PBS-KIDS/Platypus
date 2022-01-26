@@ -1,7 +1,7 @@
 import createComponentClass from '../factory.js';
 
 export default (function () {
-    return createComponentClass(/** @lends AIPacer.prototype */{
+    return createComponentClass(/** @lends platypus.components.AIPacer.prototype */{
         id: "AIPacer",
         
         properties: {
