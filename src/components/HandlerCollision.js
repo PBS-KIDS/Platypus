@@ -8,18 +8,6 @@ import Vector from '../Vector.js';
 import createComponentClass from '../factory.js';
 
 export default (function () {
-    /**
-     * When an entity collides with an entity of a listed collision-type, this message is triggered on the entity. * is the other entity's collision-type.
-     *
-     * @event 'hit-by-*'
-     * @param collision {Object}
-     * @param collision.entity {Entity} The entity with which the collision occurred.
-     * @param collision.target {Entity} The entity that's receiving the collision event.
-     * @param collision.type {String} The collision type of the other entity.
-     * @param collision.shape {CollisionShape} This is the shape of the other entity that caused the collision.
-     * @param collision.x {number} Returns -1, 0, or 1 indicating on which side of this entity the collision occurred: left, neither, or right respectively.
-     * @param collision.y {number} Returns -1, 0, or 1 indicating on which side of this entity the collision occurred: top, neither, or bottom respectively.
-     */
     var BIT_16 = 0xffff,
         combine = function (x, y) {
             return (x << 16) | (y & BIT_16);
@@ -56,7 +44,11 @@ export default (function () {
          * @memberof platypus.components
          * @uses platypus.Component
          * @constructs
+         * @listens platypus.Entity#add-collision-entity
          * @listens platypus.Entity#check-collision-group
+         * @listens platypus.Entity#remove-collision-entity
+         * @fires platypus.Entity#hit-by-*
+         * @fires platypus.Entity#relocate-entity
          */
         initialize: function () {
             this.againstGrid = Data.setUp();
@@ -90,12 +82,6 @@ export default (function () {
                 }
             },
             
-            /**
-             * On receiving this message, the component checks the entity to determine whether it listens for collision messages. If so, the entity is added to the collision group.
-             *
-             * @method 'add-collision-entity'
-             * @param entity {Entity} The entity to be added.
-             */
             "add-collision-entity": function (entity) {
                 this.addCollisionEntity(entity);
             },
@@ -110,12 +96,6 @@ export default (function () {
                 this.removeCollisionEntity(entity);
             },
             
-            /**
-             * On receiving this message, the component looks for the entity in its collision group and removes it.
-             *
-             * @method 'remove-collision-entity'
-             * @param message {platypus.Entity} The entity to be removed.
-             */
             "remove-collision-entity": function (entity) {
                 this.removeCollisionEntity(entity);
             },
@@ -359,14 +339,6 @@ export default (function () {
                     entity = nons[i];
                     if ((entity.position.x !== entity.previousPosition.x) || (entity.position.y !== entity.previousPosition.y)) {
                         msg.position.setVector(entity.position);
-
-                        /**
-                         * This message is triggered on an entity that has been repositioned due to a solid collision.
-                         *
-                         * @event 'relocate-entity'
-                         * @param object {Object}
-                         * @param object.position {Vector} The relocated position of the entity.
-                         */
                         entity.triggerEvent('relocate-entity', msg);
                         this.updateAgainst(entity);
                     }
@@ -374,6 +346,18 @@ export default (function () {
             },
             
             checkGroupCollisions: (function () {
+                /**
+                 * When an entity collides with an entity of a listed collision-type, this message is triggered on the entity. * is the other entity's collision-type.
+                 *
+                 * @event platypus.Entity#hit-by-*
+                 * @param collision {Object}
+                 * @param collision.entity {Entity} The entity with which the collision occurred.
+                 * @param collision.target {Entity} The entity that's receiving the collision event.
+                 * @param collision.type {String} The collision type of the other entity.
+                 * @param collision.shape {CollisionShape} This is the shape of the other entity that caused the collision.
+                 * @param collision.x {number} Returns -1, 0, or 1 indicating on which side of this entity the collision occurred: left, neither, or right respectively.
+                 * @param collision.y {number} Returns -1, 0, or 1 indicating on which side of this entity the collision occurred: top, neither, or bottom respectively.
+                 */
                 var triggerCollisionMessages = function (entity, otherEntity, thisType, thatType, x, y, hitType, vector) {
                     var msg = triggerMessage;
                     

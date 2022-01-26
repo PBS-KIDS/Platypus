@@ -23,6 +23,8 @@ export default (function () {
          * @uses platypus.Component
          * @constructs
          * @listens platypus.Entity#handle-logic
+         * @fires platypus.Entity#carry-me
+         * @fires platypus.Entity#release-me
          */
         initialize: function () {
             this.carrier = this.lastCarrier = null;
@@ -30,6 +32,7 @@ export default (function () {
                 entity: this.owner
             };
         },
+        
         events: {
             "handle-logic": function () {
                 var msg = this.message;
@@ -43,8 +46,8 @@ export default (function () {
                         /**
                          * This message is triggered on a potential carrying peer, notifying the peer that this entity is portable.
                          *
-                         * @event 'carry-me'
-                         * @param message.entity {platypus.Entity} This entity, requesting to be carried.
+                         * @event platypus.Entity#carry-me
+                         * @param {platypus.Entity} message.entity This entity, requesting to be carried.
                          */
                         this.carrier.triggerEvent('carry-me', msg);
                     }
@@ -55,8 +58,8 @@ export default (function () {
                     /**
                      * This message is triggered on the current carrier, notifying them to release this entity.
                      *
-                     * @event 'release-me'
-                     * @param message.entity {platypus.Entity} This entity, requesting to be released.
+                     * @event platypus.Entity#release-me
+                     * @param {platypus.Entity} message.entity This entity, requesting to be released.
                      */
                     this.carrier.triggerEvent('release-me', msg);
                     this.carrier = null;

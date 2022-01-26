@@ -1,7 +1,5 @@
 /**
 ### Local Broadcasts:
-- **relocate-entity** - Broadcasts the new location for the entity.
-  - @param message.x, message.y (number) - The position in world coordinates to set the teleport destination to.
 - **teleport-complete** - Triggered once the entity has been moved to the new location.
 
 ## JSON Definition
@@ -24,6 +22,7 @@ export default (function () {
          * @constructs
          * @param {*} definition 
          * @listens platypus.Entity#handle-logic
+         * @fires platypus.Entity#relocate-entity
          */
         initialize: function () {
             this.teleportDestination = Vector.setUp();

@@ -7,12 +7,6 @@ import Vector from '../Vector.js';
 import createComponentClass from '../factory.js';
 
 const
-    /**
-     * On receiving a 'hit-by' message, custom messages are triggered on the entity corresponding with the component's `solidCollisions` and `softCollisions` key/value mappings.
-     *
-     * @event *
-     * @param collision {Object} A list of key/value pairs describing the collision.
-     */
     entityBroadcast = (function () {
         var stringBroadcast = function (event, collisionType, solidOrSoft, value) {
                 if (value.myType === collisionType) {
@@ -175,6 +169,17 @@ const
 
                     msg.position = vector;
                     msg.unstick = v;
+
+                    /**
+                     * This message causes the entity's x,y coordinates to update. (Usually after collision checks, but can be used to avoid collision checks during logic handling.)
+                     *
+                     * @event platypus.Entity#relocate-entity
+                     * @param location {Object|platypus.Vector} The new coordinates.
+                     * @param [location.position] {platypus.Vector} If specified, this vector is used instead of the passed-in object as the location.
+                     * @param [location.relative=false] {boolean} Determines whether the provided x,y coordinates are relative to the entity's current position.
+                     * @param [location.unstick=null] {platypus.Vector} Where the entity should be moved to unstick from collision contact.
+                     * @param [relative] If `location.relative` is not specified, this parameter is also checked.
+                     */
                     this.triggerEvent('relocate-entity', msg);
                     
                     if (v) {
@@ -426,11 +431,18 @@ export default createComponentClass(/** @lends CollisionBasic.prototype */{
      * This component causes this entity to collide with other entities. It must be part of a collision group and will receive messages when colliding with other entities in the collision group.
      *
      * Multiple collision components may be added to a single entity if distinct messages should be triggered for certain collision areas on the entity or if the soft collision area is a different shape from the solid collision area. Be aware that too many additional collision areas may adversely affect performance.
+     * 
+     * On receiving a 'hit-by' message, custom messages may be triggered on the entity corresponding with the component's `solidCollisions` and `softCollisions` key/value mappings.
      *
      * @memberof platypus.components
      * @uses platypus.Component
      * @constructs
      * @listens platypus.Entity#handle-logic
+     * @listens platypus.Entity#hit-by-*
+     * @listens platypus.Entity#relocate-entity
+     * @fires platypus.Entity#add-collision-entity
+     * @fires platypus.Entity#relocate-entity
+     * @fires platypus.Entity#remove-collision-entity
      */
     initialize: function (definition) {
         var arr = null,
@@ -560,8 +572,8 @@ export default createComponentClass(/** @lends CollisionBasic.prototype */{
             /**
              * On receiving 'collide-on', this message is triggered on the parent to turn on collision.
              *
-             * @event 'add-collision-entity'
-             * @param entity {platypus.Entity} The entity this component is attached to.
+             * @event platypus.Entity#add-collision-entity
+             * @param {platypus.Entity} entity The entity this component is attached to.
              */
             if (!this.active && ((typeof type !== 'string') || (type === colType))) {
                 owner.parent.triggerEvent('remove-collision-entity', owner);
@@ -590,8 +602,8 @@ export default createComponentClass(/** @lends CollisionBasic.prototype */{
             /**
              * On receiving 'collide-off', this message is triggered on the parent to turn off collision.
              *
-             * @event 'remove-collision-entity'
-             * @param entity {platypus.Entity} The entity this component is attached to.
+             * @event platypus.Entity#remove-collision-entity
+             * @param {platypus.Entity} entity The entity this component is attached to.
              */
             if (this.active && ((typeof type !== 'string') || (type === colType))) {
                 parent.triggerEvent('remove-collision-entity', owner);
@@ -607,16 +619,6 @@ export default createComponentClass(/** @lends CollisionBasic.prototype */{
             }
         },
         
-        /**
-         * This message causes the entity's x,y coordinates to update. (Usually after collision checks, but can be used to avoid collision checks during logic handling.)
-         *
-         * @method 'relocate-entity'
-         * @param location {Object|platypus.Vector} The new coordinates.
-         * @param [location.position] {platypus.Vector} If specified, this vector is used instead of the passed-in object as the location.
-         * @param [location.relative=false] {boolean} Determines whether the provided x,y coordinates are relative to the entity's current position.
-         * @param [location.unstick=null] {platypus.Vector} Where the entity should be moved to unstick from collision contact.
-         * @param [relative] If `location.relative` is not specified, this parameter is also checked.
-         */
         "relocate-entity": function (location, relative) {
             var unstick = location.unstick,
                 um      = 0,

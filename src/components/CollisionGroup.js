@@ -1,10 +1,3 @@
-/**
- * This component groups other entities with this entity for collision checking. This is useful for carrying and moving platforms. It uses `EntityContainer` component messages if triggered to add to its collision list and also listens for explicit add/remove messages (useful in the absence of an `EntityContainer` component).
- *
- * @memberof platypus.components
- * @class CollisionGroup
- * @uses platypus.Component
- */
 import {arrayCache, greenSplice, union} from '../utils/array.js';
 import AABB from '../AABB.js';
 import DataMap from '../DataMap.js';
@@ -15,6 +8,16 @@ export default (function () {
     return createComponentClass(/** @lends CollisionGroup.prototype */{
         id: 'CollisionGroup',
         
+        /**
+         * This component groups other entities with this entity for collision checking. This is useful for carrying and moving platforms. It uses `EntityContainer` component messages if triggered to add to its collision list and also listens for explicit add/remove messages (useful in the absence of an `EntityContainer` component).
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @listens platypus.Entity#add-collision-entity
+         * @listens platypus.Entity#relocate-entity
+         * @listens platypus.Entity#remove-collision-entity
+         */
         initialize: function () {
             this.solidEntities = arrayCache.setUp();
             
@@ -98,12 +101,6 @@ export default (function () {
                 this.addCollisionEntity(entity);
             },
             
-            /**
-             * On receiving this message, the component checks the entity to determine whether it listens for collision messages. If so, the entity is added to the collision group.
-             *
-             * @method 'add-collision-entity'
-             * @param entity {platypus.Entity} The entity to be added.
-             */
             "add-collision-entity": function (entity) {
                 this.addCollisionEntity(entity);
             },
@@ -118,21 +115,10 @@ export default (function () {
                 this.removeCollisionEntity(entity);
             },
             
-            /**
-             * On receiving this message, the component looks for the entity in its collision group and removes it.
-             *
-             * @method 'remove-collision-entity'
-             * @param entity {platypus.Entity} The entity to be removed.
-             */
             "remove-collision-entity": function (entity) {
                 this.removeCollisionEntity(entity);
             },
             
-            /**
-             * When this message is triggered, the collision group updates its record of the owner's last (x, y) coordinate.
-             *
-             * @method 'relocate-entity'
-             */
             "relocate-entity": function () {
                 this.owner.previousPosition.setVector(this.owner.position);
                 this.updateAABB();

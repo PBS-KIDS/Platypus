@@ -155,6 +155,7 @@ export default (function () {
          * @constructs
          * @listens platypus.Entity#handle-logic
          * @listens platypus.Entity#load
+         * @fires platypus.Entity#relocate-entity
          */
         initialize: (function () {
             var setupOrientation = function (self, orientation) {
