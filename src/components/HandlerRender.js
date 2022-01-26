@@ -59,8 +59,12 @@ export default (function () {
          * @listens platypus.Entity#load
          * @listens platypus.Entity#pause-render
          * @listens platypus.Entity#unpause-render
+         * @fires platypus.Entity#handle-render-load
+         * @fires platypus.Entity#handle-render
+         * @fires platypus.Entity#input-on
          * @fires platypus.Entity#render-paused
          * @fires platypus.Entity#render-unpaused
+         * @fires platypus.Entity#render-world
          */
         initialize: function () {
             let definition = null;
@@ -92,7 +96,7 @@ export default (function () {
                 /**
                  * Once the entity is loaded, this component triggers "render-world" to notify other components about the entities' display container.
                  *
-                 * @event 'render-world'
+                 * @event platypus.Entity#render-world
                  * @param data {Object}
                  * @param data.world {PIXI.Container} Contains entities to be rendered.
                  */
@@ -103,7 +107,7 @@ export default (function () {
                 /**
                  * This event is triggered once HandlerRender is ready to handle interactivity.
                  *
-                 * @event 'input-on'
+                 * @event platypus.Entity#input-on
                  */
                 this.owner.triggerEvent('input-on');
             },
@@ -122,7 +126,7 @@ export default (function () {
                 /**
                  * Triggered on an entity added to the parent.
                  *
-                 * @event 'handle-render-load'
+                 * @event platypus.Entity#handle-render-load
                  * @param data {Object}
                  * @param data.delta {Number} The delta time for this tick.
                  * @param data.container {PIXI.Container} The display Container the entities display objects should be added to.
@@ -140,7 +144,7 @@ export default (function () {
                     /**
                      * Notifies children entities that rendering updates have been paused.
                      *
-                     * @event 'render-paused'
+                     * @event platypus.Entity#render-paused
                      */
                     this.owner.triggerEventOnChildren('render-paused');
                 }
@@ -152,7 +156,7 @@ export default (function () {
                     /**
                      * Notifies children entities that rendering updates have been unpaused.
                      *
-                     * @event 'render-unpaused'
+                     * @event platypus.Entity#render-unpaused
                      */
                     this.owner.triggerEventOnChildren('render-unpaused');
                 }
@@ -210,7 +214,7 @@ export default (function () {
                 /**
                  * Triggered every tick on owner and its children entities.
                  *
-                 * @event 'handle-render'
+                 * @event platypus.Entity#handle-render
                  * @param data {Object}
                  * @param data.delta {Number} The delta time for this tick as manipulated by the timeMultiplier.
                  * @param data.gameDelta {Number} The delta time for this tick. Unmanipulated by the timeMultiplier. Use for components that should always run according to actual time.

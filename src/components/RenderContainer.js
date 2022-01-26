@@ -290,6 +290,10 @@ export default (function () {
          * @uses platypus.Component
          * @constructs
          * @listens platypus.Entity#camera-update
+         * @listens platypus.Entity#handle-render
+         * @listens platypus.Entity#handle-render-load
+         * @fires platypus.Entity#cache-sprite
+         * @fires platypus.Entity#input-on
          */
         initialize: function () {
             const
@@ -314,12 +318,6 @@ export default (function () {
 
             this._tint = null;
 
-            /**
-             * The render update message updates the sprite.
-             *
-             * @method 'handle-render'
-             * @param [tick.tick.timeShift] {Boolean} Whether there has been a shift in time requiring interpolation.
-             */
             if (this.interpolation) { // handle interpolation if timeline changes.
                 const
                     updateUsingOwnerXY = () => {
@@ -448,7 +446,7 @@ export default (function () {
                     /**
                      * On receiving a "cache" event, this component triggers "cache-sprite" to cache its rendering into the background. This is an optimization for static images to reduce render calls.
                      *
-                     * @event 'cache-sprite'
+                     * @event platypus.Entity#cache-sprite
                      * @param entity {platypus.Entity} This component's owner.
                      */
                     owner.parent.triggerEventOnChildren('cache-sprite', owner);
@@ -464,20 +462,9 @@ export default (function () {
                 this.needsCameraCheck = true;
             },
             
-            /**
-             * A setup message used to add the sprite to the stage. On receiving this message, the component sets its parent container to the stage contained in the message if it doesn't already have one.
-             *
-             * @method 'handle-render-load'
-             * @param data.renderGroups {PIXI.Container[]} Containers to categorize display of groups of entities.
-             */
             "handle-render-load": function () {
                 const owner = this.owner;
 
-                /**
-                 * This event is triggered once the RenderSprite is ready to handle interactivity.
-                 *
-                 * @event 'input-on'
-                 */
                 owner.triggerEvent('input-on');
                 this.updateSprite(true, owner.x, owner.y);
             },

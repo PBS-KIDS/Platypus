@@ -30,7 +30,7 @@ export default (function () {
             /**
              * On entering a new animation-mapped state, this component triggers this event to play an animation.
              *
-             * @event 'play-animation'
+             * @event platypus.Entity#play-animation
              * @param animation {String} Describes the animation to play.
              * @param loop {Boolean} Whether to loop a playing animation.
              * @param restart {Boolean} Whether to restart a playing animation.
@@ -41,7 +41,7 @@ export default (function () {
             /**
              * On attaining an animation-mapped state, this component triggers this event to stop a previous animation.
              *
-             * @event 'stop-animation'
+             * @event platypus.Entity#stop-animation
              * @param animation {String} Describes the animation to stop.
              */
             this.owner.triggerEvent('stop-animation', animation);
@@ -126,19 +126,15 @@ export default (function () {
          * @memberof platypus.components
          * @uses platypus.Component
          * @constructs
+         * @listens platypus.Entity#animation-ended
          * @listens platypus.Entity#state-changed
+         * @listens platypus.Entity#update-animation
+         * @fires platypus.Entity#play-animation
+         * @fires platypus.Entity#stop-animation
          */
         initialize: (function () {
             const
                 trigger = function (animation, loop, restart) {
-                    /**
-                     * On receiving an animation-mapped event, this component triggers this event to play an animation.
-                     *
-                     * @event 'play-animation'
-                     * @param animation {String} Describes the animation to play.
-                     * @param loop {Boolean} Whether to loop a playing animation.
-                     * @param restart {Boolean} Whether to restart a playing animation.
-                     */
                     this.override = animation;
                     this.owner.triggerEvent('play-animation', animation, loop, restart);
                 },
@@ -211,12 +207,6 @@ export default (function () {
                 this.stateChange = true;
             },
 
-            /**
-             * On receiving this event, the component checks for any waiting animations and begins playing them if so.
-             *
-             * @method 'animation-ended'
-             * @param animation {String} The animation that completed.
-             */
             "animation-ended": function (animation) {
                 if (animation === this.currentAnimation) {
                     if (this.override && (animation === this.override)) {
@@ -237,12 +227,6 @@ export default (function () {
                 }
             },
 
-            /**
-             * This checks to determine whether another animation should begin playing.
-             *
-             * @method update-animation
-             * @param playing {Boolean} Whether the new animation should play or pause on the first frame.
-             */
             "update-animation": function (playing) {
                 var i = 0,
                     testCase = false;

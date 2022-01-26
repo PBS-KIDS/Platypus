@@ -360,7 +360,12 @@ export default (function () {
          * @memberof platypus.components
          * @uses platypus.Component
          * @constructs
+         * @listens platypus.Entity#handle-render
          * @listens platypus.Entity#state-changed
+         * @listens platypus.Entity#play-animation
+         * @listens platypus.Entity#stop-animation
+         * @fires platypus.Entity#animation-ended
+         * @fires platypus.Entity#update-animation
          */
         initialize: (function () {
             var
@@ -405,12 +410,6 @@ export default (function () {
                         }
                     }
 
-                    /**
-                     * This event fires each time an animation completes.
-                     *
-                     * @event 'animation-ended'
-                     * @param animation {String} The id of the animation that ended.
-                     */
                     this.owner.triggerEvent('animation-ended', animationName);
                 },
                 handleSpineEvent = function (entry, event) {
@@ -580,21 +579,8 @@ export default (function () {
         }()),
 
         events: {
-            /**
-             * The render update message updates the spine.
-             *
-             * @method 'handle-render'
-             * @param renderData {Object} Data from the render handler
-             * @param renderData.container {PIXI.Container} The parent container.
-             */
             "handle-render": function (renderData) {
                 if (this.spine) {
-                    /**
-                     * This event is triggered each tick to check for animation updates.
-                     *
-                     * @event 'update-animation'
-                     * @param playing {Boolean} Whether the animation is in a playing or paused state.
-                     */
                     this.owner.triggerEvent('update-animation', true);
 
                     this.spine.update(renderData.delta / 1000);
@@ -629,23 +615,10 @@ export default (function () {
                 this.visible = true;
             },
 
-            /**
-             * Stops the sprite's animation.
-             *
-             * @method 'stop-animation'
-             * @param [animation] {String} The animation to show and pause. If not specified, this method simply pauses the current animation.
-             */
             "stop-animation": function (animation) {
                 this.stopAnimation(animation);
             },
             
-            /**
-             * Starts the sprite's animation.
-             *
-             * @method 'play-animation'
-             * @param [animation] {String} The animation to play. If not specified, this method simply unpauses the current animation.
-             * @param [loop] {Boolean} Whether the played animation should be looped. Loops by default.
-             */
             "play-animation": function (animation, loop) {
                 this.playAnimation(animation, loop);
             }

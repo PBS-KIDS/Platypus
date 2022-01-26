@@ -132,6 +132,7 @@ export default (function () {
          * @uses platypus.Component
          * @constructs
          * @listens platypus.Entity#camera-update
+         * @listens platypus.Entity#handle-render
          * @listens platypus.Entity#load
          */
         initialize: function () {
@@ -162,11 +163,6 @@ export default (function () {
                 this.needsCameraCheck = true;
             },
 
-            /**
-             * Repositions the pieces of the component in preparation for rendering
-             *
-             * @method 'handle-render'
-             */
             "handle-render": function () {
                 var aabb = null,
                     offset = -0.5;

@@ -183,7 +183,7 @@ export default (function () {
              */
             "z": 0
         },
-        
+
         /**
          * This component controls the game camera deciding where and how it should move. The camera also broadcasts messages when the window resizes or its orientation changes.
          *
@@ -196,6 +196,7 @@ export default (function () {
          * @listens platypus.Entity#pointerdown
          * @listens platypus.Entity#pressmove
          * @listens platypus.Entity#pressup
+         * @listens platypus.Entity#render-world
          * @fires platypus.Entity#camera-loaded
          * @fires platypus.Entity#camera-update
          */
@@ -303,13 +304,6 @@ export default (function () {
                 this.resize();
             },
             
-            /**
-             * On receiving this message, the camera begins viewing the world.
-             *
-             * @method 'render-world'
-             * @param data {Object} Information about the world.
-             * @param data.world {PIXI.Container} The container containing world entities.
-             */
             "render-world": function (data) {
                 this.world = data.world;
                 this.container.addChild(this.world);

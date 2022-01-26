@@ -155,6 +155,7 @@ export default (function () {
          * @constructs
          * @listens platypus.Entity#handle-logic
          * @listens platypus.Entity#load
+         * @fires platypus.Entity#orientation-updated
          * @fires platypus.Entity#relocate-entity
          */
         initialize: (function () {
@@ -542,7 +543,7 @@ export default (function () {
                     /**
                      * Once a transform is complete, this event is triggered to notify the entity of the completed transformation.
                      *
-                     * @event 'orientation-updated'
+                     * @event platypus.Entity#orientation-updated
                      * @param matrix {Array} A 3x3 2D array describing the change in orientation.
                      */
                     this.owner.triggerEvent('orientation-updated', m);

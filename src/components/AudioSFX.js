@@ -253,6 +253,7 @@ export default createComponentClass(/** @lends AudioSFX.prototype */{
      * @uses platypus.Component
      * @constructs
      * @listens platypus.Entity#camera-update
+     * @listens platypus.Entity#handle-render
      * @listens platypus.Entity#state-changed
      * @fires platypus.Entity#clip-complete
      */
@@ -355,11 +356,6 @@ export default createComponentClass(/** @lends AudioSFX.prototype */{
     },
 
     events: {
-        /**
-         * On each `handle-render` message, this component checks its list of playing audio clips and stops any clips whose play length has been reached.
-         *
-         * @method 'handle-render'
-         */
         "handle-render": function () {
             var i = 0,
                 cs = null,

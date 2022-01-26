@@ -94,6 +94,9 @@ export default createComponentClass(/** @lends Interactive.prototype */{
      * @uses platypus.Component
      * @constructs
      * @listens platypus.Entity#camera-update
+     * @listens platypus.Entity#handle-render
+     * @listens platypus.Entity#input-off
+     * @listens platypus.Entity#input-on
      * @fires platypus.Entity#pressmove
      * @fires platypus.Entity#pressup
      * @fires platypus.Entity#pointerdown
@@ -118,11 +121,6 @@ export default createComponentClass(/** @lends Interactive.prototype */{
             this.camera.set(camera.viewport);
         },
 
-        /**
-         * Listens to this event to update whether the interactive element should be in button mode.
-         *
-         * @method 'handle-render'
-         */
         "handle-render": function () {
             if (this.buttonMode !== this.container.buttonMode) {
                 this.container.buttonMode = this.buttonMode;
@@ -139,22 +137,12 @@ export default createComponentClass(/** @lends Interactive.prototype */{
             this.sprite.dispatchEvent(this.sprite, event.event, event.data);
         },
         
-        /**
-         * Adds input event listeners to the sprite, enabling input.
-         *
-         * @method 'input-on'
-         */
         "input-on": function () {
             if (!this.removeInputListeners) {
                 this.addInputs();
             }
         },
         
-        /**
-         * Removes the input event listeners on the sprite, disabling input.
-         *
-         * @method 'input-off'
-         */
         "input-off": function () {
             if (this.removeInputListeners) {
                 this.removeInputListeners();

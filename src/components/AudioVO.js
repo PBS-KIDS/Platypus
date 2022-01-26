@@ -113,6 +113,7 @@ export default (function () {
          * @memberof platypus.components
          * @uses platypus.Component
          * @constructs
+         * @listens platypus.Entity#handle-render
          * @fires platypus.Entity#sequence-complete
          */
         initialize: function () {
@@ -142,11 +143,6 @@ export default (function () {
         },
 
         events: {
-            /**
-             * On each `handle-render` message, this component checks its list of playing audio clips and stops any clips whose play length has been reached.
-             *
-             * @method 'handle-render'
-             */
             "handle-render": function () {
                 if (!this.paused) {
                     this.checkTimeEvents(false);

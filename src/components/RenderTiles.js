@@ -250,8 +250,10 @@ export default (function () {
          * @memberof platypus.components
          * @uses platypus.Component
          * @constructs
+         * @listens platypus.Entity#cache-sprite
          * @listens platypus.Entity#camera-loaded
          * @listens platypus.Entity#camera-update
+         * @listens platypus.Entity#handle-render
          */
         initialize: function (definition) {
             var imgMap = this.imageMap;
@@ -313,12 +315,6 @@ export default (function () {
         },
 
         events: {
-            /**
-             * If this component should cache entities, it checks peers for a "renderCache" display object and adds the display object to its list of objects to render on top of the tile set.
-             *
-             * @method 'cache-sprite'
-             * @param entity {platypus.Entity} This is the peer entity to be checked for a renderCache.
-             */
             "cache-sprite": function (entity) {
                 this.cacheSprite(entity);
             },
@@ -381,11 +377,6 @@ export default (function () {
                 }
             },
 
-            /**
-             * On receiving this message, determines whether to update which tiles need to be rendered and caches the image.
-             *
-             * @method 'handle-render'
-             */
             "handle-render": function () {
                 if (this.updateCache) {
                     this.updateCache = false;
