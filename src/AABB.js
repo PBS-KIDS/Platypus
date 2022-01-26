@@ -1,15 +1,12 @@
-/**
- * This class defines an axis-aligned bounding box (AABB) which is used during the collision process to determine if two objects are colliding. This is used in a few places including [CollisionBasic](platypus.components.CollisionBasic.html) and [[Collision-Shape]].
- *
- * @memberof platypus
- * @class AABB
- */
 import config from 'config';
 import recycle from 'recycle';
 
 export default (function () {
     /**
-     * @constructor
+     * This class defines an axis-aligned bounding box (AABB) which is used during the collision process to determine if two objects are colliding. This is used in a few places including [CollisionBasic](platypus.components.CollisionBasic.html) and [[Collision-Shape]].
+     *
+     * @memberof platypus
+     * @class AABB
      * @param x {number} The x position of the AABB. The x is always located in the center of the object.
      * @param y {number} The y position of the AABB. The y is always located in the center of the object.
      * @param width {number} The width of the AABB.
