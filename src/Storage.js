@@ -1,13 +1,13 @@
+/* global platypus, window */
+import DataMap from './DataMap.js';
+import {UserData} from 'springroll';
+
 /**
  * This class is used to create the Platypus storage system accessible at `platypus.storage`. It uses Springroll UserData if available, with a fallback to local storage if not.
  *
  * @memberof platypus
  * @class Storage
  */
-/* global platypus, window */
-import DataMap from './DataMap.js';
-import {UserData} from 'springroll';
-
 export default class Storage {
     /**
      * @constructor

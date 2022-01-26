@@ -11,13 +11,10 @@ import Sound from 'pixi-sound';
  *
  * @memberof platypus
  * @extends platypus.Messenger
+ * @param {Game} game The game instance for which to play audio.
+ * @param {assetManager} assetCache The Platypus assetManager used to load and unload VO clips.
  */
 export default class VOPlayer extends Messenger {
-    /**
-     * @constructor
-     * @param {Game} game The game instance for which to play audio.
-     * @param {assetManager} assetCache The Platypus assetManager used to load and unload VO clips.
-     */
     constructor (game, assetCache) {
         super();
 
