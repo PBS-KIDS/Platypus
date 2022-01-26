@@ -190,6 +190,7 @@ export default (function () {
          * @uses platypus.Component
          * @constructs
          * @listens platypus.Entity#load
+         * @listens platypus.Entity#follow
          * @fires platypus.Entity#camera-loaded
          * @fires platypus.Entity#camera-update
          */
@@ -560,23 +561,6 @@ export default (function () {
                 };
             }()),
             
-            /**
-            * On receiving this message, the camera begins following the requested object.
-            *
-            * @method 'follow'
-            * @param message {Object}
-            * @param message.mode {String} Can be "locked", "forward", "bounding", "anchor-bound", or "static". "static" suspends following, but the other three settings require that the entity parameter be defined. Also set the bounding area parameters if sending "bounding" as the following method and the movement parameters if sending "forward" as the following method.
-            * @param [message.entity] {platypus.Entity} The entity that the camera should commence following.
-            * @param [message.top] {number} The top of a bounding box following an entity.
-            * @param [message.left] {number} The left of a bounding box following an entity.
-            * @param [message.width] {number} The width of a bounding box following an entity.
-            * @param [message.height] {number} The height of a bounding box following an entity.
-            * @param [message.movementX] {number} Movement multiplier for focusing the camera ahead of a moving entity in the horizontal direction.
-            * @param [message.movementY] {number} Movement multiplier for focusing the camera ahead of a moving entity in the vertical direction.
-            * @param [message.offsetX] {number} How far to offset the camera from the entity horizontally.
-            * @param [message.offsetY] {number} How far to offset the camera from the entity vertically.
-            * @param [message.time] {number} How many milliseconds to follow the entity.
-            **/
             "follow": function (def) {
                 this.follow(def);
             },

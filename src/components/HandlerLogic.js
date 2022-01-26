@@ -89,7 +89,11 @@ export default (function () {
          * @constructs
          * @param {*} definition 
          * @listens platypus.Entity#camera-update
+         * @listens platypus.Entity#pause-logic
+         * @listens platypus.Entity#unpause-logic
          * @fires platypus.Entity#handle-logic
+         * @fires platypus.Entity#logic-paused
+         * @fires platypus.Entity#logic-unpaused
          * @fires platypus.Entity#prepare-logic
          * @fires platypus.Entity#handle-movement
          * @fires platypus.Entity#check-collision-group
@@ -181,14 +185,6 @@ export default (function () {
                 }
             },
             
-            /**
-             * When this event is triggered, `handle-logic` messages cease to be triggered on each tick.
-             *
-             * @method 'pause-logic'
-             * @param [options] {Object}
-             * @param [options.time] {number} If set, this will pause the logic for this number of milliseconds. If not set, logic is paused until an `unpause-logic` message is triggered.
-             * @fires platypus.Entity#logic-paused
-             */
             "pause-logic": function (resp) {
                 if (resp && resp.time) {
                     this.paused = resp.time;
@@ -205,12 +201,6 @@ export default (function () {
                 }
             },
             
-            /**
-             * When this event is triggered, `handle-logic` messages begin firing each tick.
-             *
-             * @method 'unpause-logic'
-             * @fires platypus.Entity#logic-unpaused
-             */
             "unpause-logic": function () {
                 this.paused = 0;
                 if (this.owner.triggerEventOnChildren) {

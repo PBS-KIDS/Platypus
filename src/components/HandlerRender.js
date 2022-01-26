@@ -57,6 +57,10 @@ export default (function () {
          * @uses platypus.Component
          * @constructs
          * @listens platypus.Entity#load
+         * @listens platypus.Entity#pause-render
+         * @listens platypus.Entity#unpause-render
+         * @fires platypus.Entity#render-paused
+         * @fires platypus.Entity#render-unpaused
          */
         initialize: function () {
             let definition = null;
@@ -126,13 +130,6 @@ export default (function () {
                 entity.triggerEvent('handle-render-load', this.renderMessage);
             },
 
-            /**
-             * Pauses the children of this render Container. If a pause time is not provided. It remains paused until 'unpause-render' is called.
-             *
-             * @method 'pause-render'
-             * @param [data] {Object}
-             * @param data.time {Number} How long to pause.
-             */
             "pause-render": function (timeData) {
                 if (timeData && timeData.time) {
                     this.paused = timeData.time;
@@ -149,11 +146,6 @@ export default (function () {
                 }
             },
 
-            /**
-             * Unpauses the children of this render Container.
-             *
-             * @method 'unpause-render'
-             */
             "unpause-render": function () {
                 this.paused = 0;
                 if (this.owner.triggerEventOnChildren) {
