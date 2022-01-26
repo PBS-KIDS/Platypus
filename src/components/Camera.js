@@ -53,7 +53,7 @@ export default (function () {
             return event.clientY;
         };
     
-    return createComponentClass(/** @lends platypus.Camera.prototype */{
+    return createComponentClass(/** @lends Camera.prototype */{
         id: 'Camera',
         properties: {
             /**
@@ -1017,10 +1017,11 @@ export default (function () {
             }
         },
 
-        publicMethods: /** @lends platypus.Camera.prototype */{
+        publicMethods: {
             /**
              * Returns whether a particular display object intersects the camera's viewport on the canvas.
              *
+             * @memberof Camera.prototype
              * @method isOnCanvas
              * @param bounds {PIXI.Rectangle|Object} The bounds of the display object.
              * @param bounds.height {Number} The height of the display object.
