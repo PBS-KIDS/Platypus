@@ -46,6 +46,8 @@ export default createComponentClass(/** @lends platypus.components.HandlerCollis
      * @constructs
      * @listens platypus.Entity#add-collision-entity
      * @listens platypus.Entity#check-collision-group
+     * @listens platypus.Entity#child-entity-added
+     * @listens platypus.Entity#child-entity-removed
      * @listens platypus.Entity#child-entity-updated
      * @listens platypus.Entity#remove-collision-entity
      * @fires platypus.Entity#hit-by-*
@@ -71,12 +73,6 @@ export default createComponentClass(/** @lends platypus.components.HandlerCollis
     },
     
     events: {
-        /**
-         * On receiving this message, the component checks the entity to determine whether it listens for collision messages. If so, the entity is added to the collision group.
-         *
-         * @method 'child-entity-added'
-         * @param entity {Entity} The entity to be added.
-         */
         "child-entity-added": function (entity) {
             if (!entity.collideOff) {
                 this.addCollisionEntity(entity);
@@ -87,12 +83,6 @@ export default createComponentClass(/** @lends platypus.components.HandlerCollis
             this.addCollisionEntity(entity);
         },
         
-        /**
-         * On receiving this message, the component looks for the entity in its collision group and removes it.
-         *
-         * @method 'child-entity-removed'
-         * @param message {platypus.Entity} The entity to be removed.
-         */
         "child-entity-removed": function (entity) {
             this.removeCollisionEntity(entity);
         },

@@ -66,6 +66,7 @@ export default (function () {
          * @memberof platypus.components
          * @uses platypus.Component
          * @constructs
+         * @listens platypus.Entity#follow-me
          * @fires platypus.Entity#follow
          * @fires platypus.Entity#pause-logic
          * @fires platypus.Entity#pause-render
@@ -92,16 +93,16 @@ export default (function () {
             /**
              * On receiving this message, the component will trigger a message requesting that the parent camera begin following this entity.
              *
-             * @method 'follow-me'
-             * @param [options] {Object} A list of key/value paris describing camera options to set.
-             * @param [options.mode] {String} Camera following mode.
-             * @param [options.top] {number} The top of a bounding box.
-             * @param [options.left] {number} The left of a bounding box.
-             * @param [options.width] {number} The width of a bounding box.
-             * @param [options.height] {number} The height of a bounding box.
-             * @param [options.offsetX] {number} How far to offset the camera from the entity horizontally.
-             * @param [options.offsetY] {number} How far to offset the camera from the entity vertically.
-             * @param [options.time] {number} How many milliseconds to follow the entity.
+             * @event platypus.Entity#follow-me
+             * @param {Object} [options] A list of key/value paris describing camera options to set.
+             * @param {String} [options.mode] Camera following mode.
+             * @param {number} [options.top] The top of a bounding box.
+             * @param {number} [options.left] The left of a bounding box.
+             * @param {number} [options.width] The width of a bounding box.
+             * @param {number} [options.height] The height of a bounding box.
+             * @param {number} [options.offsetX] How far to offset the camera from the entity horizontally.
+             * @param {number} [options.offsetY] How far to offset the camera from the entity vertically.
+             * @param {number} [options.time] How many milliseconds to follow the entity.
              */
             "follow-me": function (options) {
                 var msg = null;

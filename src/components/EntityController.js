@@ -114,9 +114,11 @@ export default (function () {
          * @listens platypus.Entity#[event.code]:down
          * @listens platypus.Entity#[event.code]:up
          * @listens platypus.Entity#handle-controller
+         * @listens platypus.Entity#pause-controls
          * @listens platypus.Entity#pointerdown
          * @listens platypus.Entity#pressmove
          * @listens platypus.Entity#pressup
+         * @listens platypus.Entity#unpause-controls
          * @fires platypus.Entity#[active-state]
          * @fires platypus.Entity#joystick:down
          * @fires platypus.Entity#joystick:up
@@ -279,7 +281,7 @@ export default (function () {
             /**
              * This message will stop the controller from triggering messages until "unpause-controls" is triggered on the entity.
              *
-             * @method 'pause-controls'
+             * @event platypus.Entity#pause-controls
              */
             "pause-controls": function () {
                 this.paused = true;
@@ -288,7 +290,7 @@ export default (function () {
             /**
              * This message will allow the controller to trigger messages until "pause-controls" is triggered on the entity.
              *
-             * @method 'unpause-controls'
+             * @event platypus.Entity#unpause-controls
              */
             "unpause-controls": function () {
                 this.paused = false;

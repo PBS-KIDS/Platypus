@@ -4,12 +4,6 @@ import Gamepad from '../Gamepad.js';
 import createComponentClass from '../factory.js';
 
 const
-    /**
-     * Sends a 'handle-controller' message to all the entities the component is handling. If an entity does not handle the message, it's removed it from the entity list.
-     *
-     * @method 'broadcastHandleController'
-     * @param tick {Object} An object containing tick data.
-     */
     broadcastHandleController = function (tick) {
         if (hasGamepads) {
             const
@@ -135,6 +129,8 @@ export default createComponentClass(/** @lends platypus.components.HandlerContro
      * @uses platypus.Component
      * @constructs
      * @listens platypus.Entity#handle-logic
+     * @listens platypus.Entity#tick
+     * @listens platypus.Game#tick
      * @fires platypus.Entity#handle-controller
      * @fires platypus.Entity#[event.code]:down
      * @fires platypus.Entity#[event.code]:up

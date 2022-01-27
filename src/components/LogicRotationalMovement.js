@@ -53,6 +53,7 @@ export default (function () {
          * @listens platypus.Entity#stop
          * @listens platypus.Entity#go-forward
          * @listens platypus.Entity#go-backward
+         * @fires platypus.Entity#orientation-updated
          */
         initialize: function () {
             var state = this.owner.state;

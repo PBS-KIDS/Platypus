@@ -56,8 +56,12 @@ export default (function () {
          * @memberof platypus.components
          * @uses platypus.Component
          * @constructs
+         * @listens platypus.Entity#child-entity-added
          * @listens platypus.Entity#load
          * @listens platypus.Entity#pause-render
+         * @listens platypus.Entity#render-update
+         * @listens platypus.Entity#set-parent-render-container
+         * @listens platypus.Entity#tick
          * @listens platypus.Entity#unpause-render
          * @fires platypus.Entity#handle-render-load
          * @fires platypus.Entity#handle-render
@@ -112,12 +116,6 @@ export default (function () {
                 this.owner.triggerEvent('input-on');
             },
 
-            /**
-             * Called when a new entity has been added to the parent and should be considered for addition to the handler. Entities are sent a reference the Container that we're rendering to, so they can add their display objects to it and the delta from the lastest tick.
-             *
-             * @method 'child-entity-added'
-             * @param entity {platypus.Entity} The entity added to the parent.
-             */
             "child-entity-added": function (entity) {
                 if (entity.container) {
                     this.setParentRenderContainer(entity, entity.renderParent);
@@ -162,12 +160,6 @@ export default (function () {
                 }
             },
 
-            /**
-             * Sends a 'handle-render' message to all the children in the Container. The children in the Container are also paused/unpaused if needed and sorted according to their z value.
-             *
-             * @method 'tick'
-             * @param tick {Object} An object containing tick data.
-             */
             "tick": function (tick) {
                 if (this.paused > 0) {
                     this.paused -= tick.delta;
@@ -181,27 +173,13 @@ export default (function () {
                 }
             },
 
-            /**
-             * Sends a 'handle-render' message to all the children in the Container. This bypasses a render pause value and is useful for resizes happening outside the game loop.
-             *
-             * @method 'render-update'
-             * @param tick {Object} An object containing tick data.
-             */
             "render-update": function (tick) {
                 this.renderUpdate(tick);
             },
 
-            /**
-             * Sets the parent render container of an entity to that of the given entity or entity with the given id.
-             *
-             * @method 'set-parent-render-container'
-             * @param entity {Object} The entity to relocate.
-             * @param container {Entity|String|PIXI.Container} The entity, id of the entity, or PIXI.Container that will act as the parent container.
-             */
             "set-parent-render-container": function (entity, container) {
                 this.setParentRenderContainer(entity, container);
             }
-
         },
         methods: {
             renderUpdate: function (tick) {

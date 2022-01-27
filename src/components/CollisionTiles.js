@@ -1,10 +1,3 @@
-/**
- * This component causes the tile-map to collide with other entities. It must be part of a collision group and will cause "hit-by-tile" messages to fire on colliding entities.
- *
- * @memberof platypus.components
- * @class CollisionTiles
- * @uses platypus.Component
- */
 import AABB from '../AABB.js';
 import CollisionShape from '../CollisionShape.js';
 import Data from '../Data.js';
@@ -297,6 +290,16 @@ export default (function () {
              */
             tileHeight: 10
         },
+
+        /**
+         * This component causes the tile-map to collide with other entities. It must be part of a collision group and will cause "hit-by-tile" messages to fire on colliding entities.
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @listens platypus.Entity#transform
+         * @listens platypus.Entity#translate
+         */
         initialize: function () {
             this.tileOffsetLeft  = this.tileWidth / 2 + this.left;
             this.tileOffsetTop = this.tileHeight / 2 + this.top;
@@ -327,33 +330,10 @@ export default (function () {
         },
         
         events: {
-            /**
-             * Performs a transform of a subset of the collision tile grid.
-             *
-             * @method 'transform'
-             * @param [transform] {Object} A list of key/value pairs describing the transform.
-             * @param [transform.type="horizontal"] {String} The type of transform; one of the following: "horizontal", "vertical", "diagonal", "diagonal-inverse", "rotate-90", "rotate-180", "rotate-270". Height and width should match for diagonal flips and 90 degree rotations.
-             * @param [transform.left=0] {number} Grid coordinate for the left side of the bounding box.
-             * @param [transform.top=0] {number} Grid coordinate for the top of the bounding box.
-             * @param [transform.width=grid.width] {number} Cell width of the bounding box.
-             * @param [transform.height=grid.height] {number} Cell height of the bounding box.
-             */
             "transform": function (transform) {
                 this.transform(transform);
             },
 
-            /**
-             * Performs a translation of a subset of the collision tile grid.
-             *
-             * @method 'translate'
-             * @param [translate] {Object} A list of key/value pairs describing the translation.
-             * @param [translate.dx=0] {number} Movement in columns.
-             * @param [translate.dy=0] {number} Movement in rows.
-             * @param [translate.left=0] {number} Grid coordinate for the left side of the bounding box.
-             * @param [translate.top=0] {number} Grid coordinate for the top of the bounding box.
-             * @param [translate.width=grid.width] {number} Cell width of the bounding box.
-             * @param [translate.height=grid.height] {number} Cell height of the bounding box.
-             */
             "translate": function (translate) {
                 this.translate(translate);
             }

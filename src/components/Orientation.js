@@ -155,6 +155,12 @@ export default (function () {
          * @constructs
          * @listens platypus.Entity#handle-logic
          * @listens platypus.Entity#load
+         * @listens platypus.Entity#transform
+         * @listens platypus.Entity#translate
+         * @listens platypus.Entity#append-transform
+         * @listens platypus.Entity#prepend-transform
+         * @listens platypus.Entity#replace-transform
+         * @listens platypus.Entity#tween-transform
          * @fires platypus.Entity#orientation-updated
          * @fires platypus.Entity#relocate-entity
          */
@@ -389,88 +395,19 @@ export default (function () {
             },
             
             /**
-             * This message causes the component to begin tweening the entity's orientation over a span of time into the new orientation.
+             * This message performs a timed transform of the entity by performing the transformation via a prepended matrix multiplication.
              *
-             * @method 'tween-transform'
-             * @param options {Object} A list of key/value pairs describing the tween options.
-             * @param options.matrix {Array} A transformation matrix: only required if `transform` is not provided
-             * @param options.transform {String} A transformation type: only required if `matrix` is not provided.
-             * @param options.time {number} The time over which the tween occurs. 0 makes it instantaneous.
-             * @param [options.anchor] {platypus.Vector} The anchor of the orientation change. If not provided, the owner's position is used.
-             * @param [options.offset] {platypus.Vector} If an anchor is supplied, this vector describes the entity's distance from the anchor. It defaults to the entity's current position relative to the anchor position.
-             * @param [options.angle] {number} Angle in radians to transform. This is only valid for rotations and is derived from the transform if not provided.
-             * @param [options.tween] {Function} A function describing the transition. Performs a linear transition by default. See CreateJS Ease for other options.
-             * @param [options.beforeTick] {Function} A function that should be processed before each tick as the tween occurs. This function should return `true`, otherwise the tween doesn't take a step.
-             * @param [options.afterTick] {Function} A function that should be processed after each tick as the tween occurs.
-             * @param [options.onFinished] {Function} A function that should be run once the transition is complete.
+             * @event platypus.Entity#tween-transform
+             * @param transform {Array|String} A 3x3 @D Array or a string describing a transformation.
              */
-            "tween-transform": (function () {
-                var doNothing = function () {
-                        // Doing nothing!
-                    },
-                    returnTrue = function () {
-                        return true;
-                    },
-                    linearEase = function (t) {
-                        return t;
-                    };
-
-                return function (props) {
-                    var arr = null,
-                        angle  = props.angle || 0,
-                        matrix = props.matrix,
-                        tween  = Data.setUp(
-                            "transform", props.transform,
-                            "anchor", props.anchor,
-                            "endTime", props.time || 0,
-                            "time", 0,
-                            "tween", props.tween || linearEase,
-                            "onFinished", props.onFinished || doNothing,
-                            "beforeTick", props.beforeTick || returnTrue,
-                            "afterTick", props.afterTick || doNothing
-                        );
-                    
-                    if (!matrix) {
-                        matrix = matrices[props.transform];
-                    }
-                    tween.endMatrix = matrix;
-                    
-                    if (!angle && (props.transform.indexOf('rotate') === 0)) {
-                        switch (props.transform) {
-                        case 'rotate-90':
-                            angle = Math.PI / 2;
-                            break;
-                        case 'rotate-180':
-                            angle = Math.PI;
-                            break;
-                        case 'rotate-270':
-                            angle = -Math.PI / 2;
-                            break;
-                        default:
-                            arr = greenSplit(props.transform, '-');
-                            angle = (arr[1] / 180) * Math.PI;
-                            arrayCache.recycle(arr);
-                            break;
-                        }
-                    }
-                    tween.angle = angle;
-                    
-                    if (props.anchor) {
-                        tween.offset = props.offset;
-                        if (!tween.offset) {
-                            tween.offset = this.owner.position.copy().subtractVector(props.anchor, 2);
-                            tween.recycleOffset = true;
-                        }
-                    }
-                    
-                    this.tweens.push(tween);
-                };
-            }()),
+            "tween-transform": function (options) {
+                this.tweenTransform(options);
+            },
             
             /**
              * This message performs an immediate transform of the entity by performing the transformation via a prepended matrix multiplication.
              *
-             * @method 'transform'
+             * @event platypus.Entity#transform
              * @param transform {Array|String} A 3x3 @D Array or a string describing a transformation.
              */
             "transform": function (transform) {
@@ -480,7 +417,7 @@ export default (function () {
             /**
              * This message performs an immediate transform of the entity by performing the transformation via a prepended matrix multiplication.
              *
-             * @method 'prepend-transform'
+             * @event platypus.Entity#prepend-transform
              * @param transform {Array|String} A 3x3 @D Array or a string describing a transformation.
              */
             "prepend-transform": function (transform) {
@@ -490,7 +427,7 @@ export default (function () {
             /**
              * This message performs an immediate transform of the entity by performing the transformation via an appended matrix multiplication.
              *
-             * @method 'append-transform'
+             * @event platypus.Entity#append-transform
              * @param transform {Array|String} A 3x3 @D Array or a string describing a transformation.
              */
             "append-transform": function (transform) {
@@ -500,7 +437,7 @@ export default (function () {
             /**
              * This message performs an immediate transform of the entity by returning the entity to an identity transform before performing a matrix multiplication.
              *
-             * @method 'replace-transform'
+             * @event platypus.Entity#replace-transform
              * @param transform {Array|String} A 3x3 @D Array or a string describing a transformation.
              */
             "replace-transform": function (transform) {
@@ -678,6 +615,87 @@ export default (function () {
                 arrayCache.recycle(this.matrixTween, 2); this.matrixTween = null;
                 this.relocationMessage.recycle(); this.relocationMessage = null;
             }
+        },
+
+        publicMethods: {
+            /**
+             * This message causes the component to begin tweening the entity's orientation over a span of time into the new orientation.
+             *
+             * @method platypus.components.Orientation#tweenTransform
+             * @param {Object} options A list of key/value pairs describing the tween options.
+             * @param {Array} options.matrix A transformation matrix: only required if `transform` is not provided
+             * @param {String} options.transform A transformation type: only required if `matrix` is not provided.
+             * @param {number} options.time The time over which the tween occurs. 0 makes it instantaneous.
+             * @param {platypus.Vector} [options.anchor] The anchor of the orientation change. If not provided, the owner's position is used.
+             * @param {platypus.Vector} [options.offset] If an anchor is supplied, this vector describes the entity's distance from the anchor. It defaults to the entity's current position relative to the anchor position.
+             * @param {number} [options.angle] Angle in radians to transform. This is only valid for rotations and is derived from the transform if not provided.
+             * @param {Function} [options.tween] A function describing the transition. Performs a linear transition by default. See CreateJS Ease for other options.
+             * @param {Function} [options.beforeTick] A function that should be processed before each tick as the tween occurs. This function should return `true`, otherwise the tween doesn't take a step.
+             * @param {Function} [options.afterTick] A function that should be processed after each tick as the tween occurs.
+             * @param {Function} [options.onFinished] A function that should be run once the transition is complete.
+             */
+            tweenTransform: (function () {
+                var doNothing = function () {
+                        // Doing nothing!
+                    },
+                    returnTrue = function () {
+                        return true;
+                    },
+                    linearEase = function (t) {
+                        return t;
+                    };
+
+                return function (props) {
+                    var arr = null,
+                        angle  = props.angle || 0,
+                        matrix = props.matrix,
+                        tween  = Data.setUp(
+                            "transform", props.transform,
+                            "anchor", props.anchor,
+                            "endTime", props.time || 0,
+                            "time", 0,
+                            "tween", props.tween || linearEase,
+                            "onFinished", props.onFinished || doNothing,
+                            "beforeTick", props.beforeTick || returnTrue,
+                            "afterTick", props.afterTick || doNothing
+                        );
+                    
+                    if (!matrix) {
+                        matrix = matrices[props.transform];
+                    }
+                    tween.endMatrix = matrix;
+                    
+                    if (!angle && (props.transform.indexOf('rotate') === 0)) {
+                        switch (props.transform) {
+                        case 'rotate-90':
+                            angle = Math.PI / 2;
+                            break;
+                        case 'rotate-180':
+                            angle = Math.PI;
+                            break;
+                        case 'rotate-270':
+                            angle = -Math.PI / 2;
+                            break;
+                        default:
+                            arr = greenSplit(props.transform, '-');
+                            angle = (arr[1] / 180) * Math.PI;
+                            arrayCache.recycle(arr);
+                            break;
+                        }
+                    }
+                    tween.angle = angle;
+                    
+                    if (props.anchor) {
+                        tween.offset = props.offset;
+                        if (!tween.offset) {
+                            tween.offset = this.owner.position.copy().subtractVector(props.anchor, 2);
+                            tween.recycleOffset = true;
+                        }
+                    }
+                    
+                    this.tweens.push(tween);
+                };
+            }())
         }
     });
 }());

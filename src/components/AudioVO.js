@@ -114,6 +114,7 @@ export default (function () {
          * @uses platypus.Component
          * @constructs
          * @listens platypus.Entity#handle-render
+         * @listens platypus.Entity#stop-audio
          * @fires platypus.Entity#sequence-complete
          */
         initialize: function () {
@@ -127,13 +128,7 @@ export default (function () {
             if (this.audioMap) {
                 for (key in this.audioMap) {
                     if (this.audioMap.hasOwnProperty(key)) {
-
-                        /**
-                         * Listens for messages specified by the `audioMap` and on receiving them, begins playing corresponding audio clips.
-                         *
-                         * @method '*'
-                         * @param [message.events] {Array} Used to specify the list of events to trigger while playing this audio sequence.
-                         */
+                        // Listens for messages specified by the `audioMap` and on receiving them, begins playing corresponding audio clips.
                         this.addEventListener(key, this.playSound.bind(this, this.audioMap[key]));
                     }
                 }
@@ -158,11 +153,6 @@ export default (function () {
                 this.playSound(vo);
             },
 
-            /**
-             * On receiving this message, audio will stop playing.
-             *
-             * @method 'stop-audio'
-             */
             "stop-audio": function () {
                 this.player.stop();
                 this.player.voList = []; // Workaround to prevent a Springroll bug wherein stopping throws an error due to `voList` being `null`.

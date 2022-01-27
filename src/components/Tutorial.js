@@ -70,6 +70,12 @@ export default (function () {
                 tutorial = this.tutorials.splice(toPlayIndex, 1)[0];
                 if (this.playing) {
                     if (tutorial.priority > this.playing.priority) {
+                        /**
+                         * On receiving this message, audio will stop playing.
+                         *
+                         * @event platypus.Entity#stop-audio
+                         * @param audioId {String} If an audioId is provided, that particular sound instance is stopped. Otherwise all audio is stopped.
+                         */
                         this.owner.triggerEvent('stop-audio');
                         this.play(tutorial);
                     } else {
@@ -125,8 +131,11 @@ export default (function () {
          * @memberof platypus.components
          * @uses platypus.Component
          * @constructs
+         * @listens platypus.Entity#child-entity-added
+         * @listens platypus.Entity#child-entity-removed
          * @listens platypus.Entity#handle-logic
          * @listens platypus.Entity#sequence-complete
+         * @fires platypus.Entity#stop-audio
          */
         initialize: function () {
             var x = 0,
@@ -170,13 +179,6 @@ export default (function () {
         },
 
         events: {// These are messages that this component listens for
-            
-            /**
-             * Checks added entity to determine if it is one of the conditions for one of the tutorials. If so, we track it.
-             *
-             * @method 'child-entity-added'
-             * @param entity {Object} The added entity.
-             */
             "child-entity-added": entityAdded,
 
             /**
@@ -187,12 +189,6 @@ export default (function () {
              */
             "peer-entity-added": entityAdded,
 
-            /**
-             * Removes entities from the watch list when they are destroyed.
-             *
-             * @method 'child-entity-removed'
-             * @param entity {Object} The removed entity.
-             */
             "child-entity-removed": entityRemoved,
 
             /**

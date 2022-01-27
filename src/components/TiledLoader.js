@@ -678,6 +678,7 @@ export default (function () {
          * @listens platypus.Entity#camera-update
          * @listens platypus.Entity#layer-loaded
          * @listens platypus.Entity#load-level
+         * @listens platypus.Entity#tick
          * @fires platypus.Entity#world-loaded
          * @fires platypus.Entity#level-loading-progress
          */

@@ -168,6 +168,7 @@ export default createComponentClass(/** @lends platypus.components.Mover.prototy
      * @listens platypus.Entity#handle-movement
      * @listens platypus.Entity#handle-post-collision-logic
      * @listens platypus.Entity#load
+     * @listens platypus.Entity#orientation-updated
      */
     initialize: function () {
         var maxMagnitude = Infinity,
@@ -513,12 +514,6 @@ export default createComponentClass(/** @lends platypus.components.Mover.prototy
             this.paused = false;
         },
         
-        /**
-         * Handles velocity change if velocities should not be re-oriented.
-         *
-         * @method 'orientation-updated'
-         * @param matrix {Array} A 3x3 matrix describing the orientation change.
-         */
         "orientation-updated": function (matrix) {
             if (!this.reorientVelocities) {
                 this.lastVelocity.multiply(matrix);

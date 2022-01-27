@@ -1,10 +1,3 @@
-/**
- * This component sets up a NodeMap to be used by the [NodeResident](platypus.components.NodeResident.html) component on this entity's child entities.
- *
- * @memberof platypus.components
- * @class NodeMap
- * @uses platypus.Component
- */
 import {arrayCache, greenSplice} from '../utils/array.js';
 import Entity from '../Entity.js';
 import Vector from '../Vector.js';
@@ -127,6 +120,14 @@ export default (function () {
             map: []
         },
         
+        /**
+         * This component sets up a NodeMap to be used by the [NodeResident](platypus.components.NodeResident.html) component on this entity's child entities.
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @listens platypus.Entity#child-entity-added
+         */
         initialize: function () {
             var i   = 0,
                 map = this.map;
@@ -176,12 +177,6 @@ export default (function () {
                 }
             },
 
-            /**
-             * Checks the child entity for a nodeId and if found adds the child to the corresponding node.
-             *
-             * @method 'child-entity-added'
-             * @param entity {platypus.Entity} The entity that may be placed on a node, or if the entity is a node it is added to the map of nodes.
-             */
             "child-entity-added": function (entity) {
                 if (entity.isNode) {        // a node
                     this.owner.triggerEvent('add-node', entity);

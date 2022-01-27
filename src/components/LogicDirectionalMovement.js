@@ -79,6 +79,8 @@ export default (function () {
          * @listens platypus.Entity#go-east
          * @listens platypus.Entity#go-down-right
          * @listens platypus.Entity#go-southeast
+         * @fires platypus.Entity#replace-transform
+         * @fires platypus.Entity#transform
          */
         initialize: function () {
             var state = this.state = this.owner.state;

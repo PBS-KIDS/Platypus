@@ -63,11 +63,7 @@ export default (function () {
             if (this.componentMap) {
                 for (event in this.componentMap) {
                     if (this.componentMap.hasOwnProperty(event)) {
-                        /**
-                         * Message(s) listed by `componentMap` will add or remove components.
-                         *
-                         * @method '*'
-                         */
+                        // Message(s) listed by `componentMap` will add or remove components.
                         this.addEventListener(event, addSwitch.bind(this, event));
                     }
                 }

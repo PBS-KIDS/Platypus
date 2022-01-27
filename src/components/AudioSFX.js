@@ -254,8 +254,18 @@ export default createComponentClass(/** @lends platypus.components.AudioSFX.prot
      * @constructs
      * @listens platypus.Entity#camera-update
      * @listens platypus.Entity#handle-render
+     * @listens platypus.Entity#mute-audio
+     * @listens platypus.Entity#pause-audio
+     * @listens platypus.Entity#set-pan
+     * @listens platypus.Entity#set-volume
+     * @listens platypus.Entity#set-speed
      * @listens platypus.Entity#state-changed
+     * @listens platypus.Entity#stop-audio
+     * @listens platypus.Entity#toggle-mute
+     * @listens platypus.Entity#unmute-audio
+     * @listens platypus.Entity#unpause-audio
      * @fires platypus.Entity#clip-complete
+     * @fires platypus.Entity#set-volume
      */
     initialize: function () {
         var key      = '',
@@ -283,21 +293,6 @@ export default createComponentClass(/** @lends platypus.components.AudioSFX.prot
                         sound = sound.sound;
                     }
                     
-                    /**
-                     * Listens for messages specified by the `audioMap` and on receiving them, begins playing corresponding audio clips. Audio play message can optionally include several parameters, many of which correspond with SoundJS play parameters.
-                     *
-                     * @method '*'
-                     * @param message.interrupt (string) - Optional. Can be "any", "early", "late", or "none". Determines how to handle the audio when it's already playing but a new play request is received. Default is "any".
-                     * @param message.delay (integer) - Optional. Time in milliseconds to wait before playing audio once the message is received. Default is 0.
-                     * @param message.length (integer) - Optional. Time in milliseconds to play audio before stopping it. If 0 or not specified, play continues to the end of the audio clip.
-                     * @param message.loop (integer) - Optional. Determines how many more times to play the audio clip once it finishes. Set to -1 for an infinite loop. Default is 0.
-                     * @param message.muted {Boolean} Whether clip should start muted.
-                     * @param message.start (integer) - Optional. Time in seconds determining where in the audio clip to begin playback. Default is 0.
-                     * @param message.pan (float) - Optional. Used to specify the pan of audio on a range of -1 (left) to 1 (right). Default is 0.
-                     * @param message.playthrough {Boolean} Whether SFX should force completion of sound even when stopped prematurely.
-                     * @param message.speed (float) - Optional. Used to specify how fast to play audio. Default is 1.
-                     * @param message.volume (float) - Optional. Used to specify how loud to play audio on a range from 0 (mute) to 1 (full volume). Default is 1.
-                     */
                     if (this.eventBased) {
                         this.addEventListener(key, playClip);
                     }
@@ -347,6 +342,13 @@ export default createComponentClass(/** @lends platypus.components.AudioSFX.prot
                     lastPan = pan;
                 }
                 if (volume !== this.volume) {
+                    /**
+                     * This message sets the volume of playing audio.
+                     *
+                     * @event platypus.Entity#set-volume
+                     * @param volume {Number} A number from 0 to 1 that sets the volume.
+                     * @param [soundId] {String} If an soundId is provided, that particular sound instance's volume is set. Otherwise all audio volume is changed.
+                     */
                     this.owner.triggerEvent('set-volume', volume);
                 }
             });
@@ -382,7 +384,7 @@ export default createComponentClass(/** @lends platypus.components.AudioSFX.prot
         /**
          * On receiving this message, the audio will mute if unmuted, and unmute if muted.
          *
-         * @method 'toggle-mute'
+         * @event platypus.Entity#toggle-mute
          * @param audioId {String} If an audioId is provided, that particular sound instance is toggled. Otherwise all audio is toggled from mute to unmute or vice versa.
          */
         "toggle-mute": function (audioId) {
@@ -399,12 +401,6 @@ export default createComponentClass(/** @lends platypus.components.AudioSFX.prot
             });
         },
 
-        /**
-         * On receiving this message, audio will stop playing.
-         *
-         * @method 'stop-audio'
-         * @param audioId {String} If an audioId is provided, that particular sound instance is stopped. Otherwise all audio is stopped.
-         */
         "stop-audio": function (audioId) {
             if (!audioId) {
                 this.stopAudio();
@@ -418,7 +414,7 @@ export default createComponentClass(/** @lends platypus.components.AudioSFX.prot
         /**
          * On receiving this message all audio will mute, or a particular sound instance will mute if an id is specified.
          *
-         * @method 'mute-audio'
+         * @event platypus.Entity#mute-audio
          * @param audioId {String} If an audioId is provided, that particular sound instance will mute. Otherwise all audio is muted.
          */
         "mute-audio": function (audioId) {
@@ -433,7 +429,7 @@ export default createComponentClass(/** @lends platypus.components.AudioSFX.prot
         /**
          * On receiving this message all audio will unmute, or a particular sound instance will unmute if an id is specified.
          *
-         * @method 'unmute-audio'
+         * @event platypus.Entity#unmute-audio
          * @param audioId {String} If an audioId is provided, that particular sound instance will unmute. Otherwise all audio is unmuted.
          */
         "unmute-audio": function (audioId) {
@@ -448,7 +444,7 @@ export default createComponentClass(/** @lends platypus.components.AudioSFX.prot
         /**
          * On receiving this message all audio will pause, or a particular sound instance will pause if an id is specified.
          *
-         * @method 'pause-audio'
+         * @event platypus.Entity#pause-audio
          * @param audioId {String} If an audioId is provided, that particular sound instance will pause. Otherwise all audio is paused.
          */
         "pause-audio": function (audioId) {
@@ -462,7 +458,7 @@ export default createComponentClass(/** @lends platypus.components.AudioSFX.prot
         /**
          * On receiving this message all audio will unpause, or a particular sound instance will unpause if an id is specified.
          *
-         * @method 'unpause-audio'
+         * @event platypus.Entity#unpause-audio
          * @param audioId {String} If an audioId is provided, that particular sound instance will unpause. Otherwise all audio is unpaused.
          */
         "unpause-audio": function (audioId) {
@@ -476,7 +472,7 @@ export default createComponentClass(/** @lends platypus.components.AudioSFX.prot
         /**
          * This message sets the pan of playing audio.
          *
-         * @method 'set-pan'
+         * @event platypus.Entity#set-pan
          * @param pan {Number} A number from -1 to 1 that sets the pan.
          * @param [soundId] {String} If an soundId is provided, that particular sound instance's pan is set.
          */
@@ -495,13 +491,6 @@ export default createComponentClass(/** @lends platypus.components.AudioSFX.prot
             }
         },
             
-        /**
-         * This message sets the volume of playing audio.
-         *
-         * @method 'set-volume'
-         * @param volume {Number} A number from 0 to 1 that sets the volume.
-         * @param [soundId] {String} If an soundId is provided, that particular sound instance's volume is set. Otherwise all audio volume is changed.
-         */
         "set-volume": function (volume, soundId) {
             var id = soundId || '',
                 handler = (vol, clip) => {
@@ -521,7 +510,7 @@ export default createComponentClass(/** @lends platypus.components.AudioSFX.prot
         /**
          * This message sets the speed of playing audio.
          *
-         * @method 'set-speed'
+         * @event platypus.Entity#set-speed
          * @param speed {Number} A number that sets the speed.
          * @param [soundId] {String} If an soundId is provided, that particular sound instance's speed is set. Otherwise all audio speed is changed.
          */

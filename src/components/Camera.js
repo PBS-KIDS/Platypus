@@ -190,16 +190,22 @@ export default (function () {
          * @memberof platypus.components
          * @uses platypus.Component
          * @constructs
+         * @listens platypus.Entity#child-entity-added
          * @listens platypus.Entity#child-entity-updated
          * @listens platypus.Entity#follow
          * @listens platypus.Entity#load
          * @listens platypus.Entity#pointerdown
          * @listens platypus.Entity#pressmove
          * @listens platypus.Entity#pressup
+         * @listens platypus.Entity#relocate
          * @listens platypus.Entity#render-world
+         * @listens platypus.Entity#resize-camera
+         * @listens platypus.Entity#shake
+         * @listens platypus.Entity#tick
          * @listens platypus.Entity#world-loaded
          * @fires platypus.Entity#camera-loaded
          * @fires platypus.Entity#camera-update
+         * @fires platypus.Entity#render-update
          */
         initialize: function (definition) {
             var worldVP = AABB.setUp(this.x, this.y, this.width, this.height),
@@ -310,12 +316,6 @@ export default (function () {
                 this.container.addChild(this.world);
             },
             
-            /**
-             * The viewport is flagged to update when children are added.
-             *
-             * @method 'child-entity-added'
-             * @param entity {platypus.Entity} Expects an entity as the message object.
-              **/
             "child-entity-added": function (entity) {
                 this.viewportUpdate = true;
                 
@@ -393,13 +393,6 @@ export default (function () {
                 }
             },
             
-            /**
-             * On a "tick" step event, the camera updates its location according to its current state.
-             *
-             * @method 'tick'
-             * @param message {Object}
-             * @param message.delta {Number} If necessary, the current camera update function may require the length of the tick to adjust movement rate.
-             **/
             "tick": function (resp) {
                 if ((this.state === 'following') && this.followingFunction(this.following, resp.delta)) {
                     this.viewportUpdate = true;
@@ -450,12 +443,12 @@ export default (function () {
             /**
             * The camera listens for this event to change its world viewport size.
             *
-            * @method 'resize-camera'
-            * @param [dimensions] {Object} List of key/value pairs describing new viewport size
-            * @param dimensions.width {number} Width of the camera viewport
-            * @param dimensions.height {number} Height of the camera viewport
-            * @param dimensions.time {number} Time in millseconds over which to tween the scale change.
-            * @param [forceUpdate] {Boolean} Whether to update graphics.
+            * @event platypus.Entity#resize-camera
+            * @param {Object} [dimensions] List of key/value pairs describing new viewport size
+            * @param {number} dimensions.width Width of the camera viewport
+            * @param {number} dimensions.height Height of the camera viewport
+            * @param {number} dimensions.time Time in millseconds over which to tween the scale change.
+            * @param {Boolean} [forceUpdate] Whether to update graphics.
             **/
             "resize-camera": function (dimensions = {}, forceUpdate = false) {
                 const
@@ -486,6 +479,13 @@ export default (function () {
                 }
                 if (forcedUpdate) {
                     this.updateViewport();
+
+                    /**
+                     * Sends a 'handle-render' message to all the children in the Container. This bypasses a render pause value and is useful for resizes happening outside the game loop.
+                     *
+                     * @event platypus.Entity#render-update
+                     * @param tick {Object} An object containing tick data.
+                     */
                     this.owner.triggerEvent('render-update');
                 }
             },
@@ -493,12 +493,12 @@ export default (function () {
             /**
              * The camera listens for this event to change its position in the world.
              *
-             * @method 'relocate'
-             * @param location {Vector|Object} List of key/value pairs describing new location
-             * @param location.x {Number} New position along the x-axis.
-             * @param location.y {Number} New position along the y-axis.
-             * @param [location.time] {Number} The time to transition to the new location.
-             * @param [location.ease] {Function} The ease function to use. Defaults to a linear transition.
+             * @event platypus.Entity#relocate
+             * @param {Vector|Object} location List of key/value pairs describing new location
+             * @param {Number} location.x New position along the x-axis.
+             * @param {Number} location.y New position along the y-axis.
+             * @param {Number} [location.time] The time to transition to the new location.
+             * @param {Function} [location.ease] The ease function to use. Defaults to a linear transition.
              */
             "relocate": (function () {
                 var move = function (v) {
@@ -533,16 +533,16 @@ export default (function () {
             },
             
             /**
-            * On receiving this message, the camera will shake around its target location.
-            *
-            * @method 'shake'
-            * @param shake {Object}
-            * @param [shake.xMagnitude] {number} How much to move along the x axis.
-            * @param [shake.yMagnitude] {number} How much to move along the y axis.
-            * @param [shake.xFrequency] {number} How quickly to shake along the x axis.
-            * @param [shake.yFrequency] {number} How quickly to shake along the y axis.
-            * @param [shake.time] {number} How long the camera should shake.
-            **/
+             * On receiving this message, the camera will shake around its target location.
+             *
+             * @event platypus.Entity#shake
+             * @param {Object} shake
+             * @param {number} [shake.xMagnitude] How much to move along the x axis.
+             * @param {number} [shake.yMagnitude] How much to move along the y axis.
+             * @param {number} [shake.xFrequency] How quickly to shake along the x axis.
+             * @param {number} [shake.yFrequency] How quickly to shake along the y axis.
+             * @param {number} [shake.time] How long the camera should shake.
+             */
             "shake": function (shakeDef) {
                 var def = shakeDef || {},
                     xMag    = def.xMagnitude || 0,

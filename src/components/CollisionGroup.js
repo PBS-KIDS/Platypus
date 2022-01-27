@@ -15,6 +15,8 @@ export default (function () {
          * @uses platypus.Component
          * @constructs
          * @listens platypus.Entity#add-collision-entity
+         * @listens platypus.Entity#child-entity-added
+         * @listens platypus.Entity#child-entity-removed
          * @listens platypus.Entity#relocate-entity
          * @listens platypus.Entity#remove-collision-entity
          */
@@ -91,12 +93,6 @@ export default (function () {
         },
         
         events: {
-            /**
-             * On receiving this message, the component checks the entity to determine whether it listens for collision messages. If so, the entity is added to the collision group.
-             *
-             * @method 'child-entity-added'
-             * @param entity {platypus.Entity} The entity to be added.
-             */
             "child-entity-added": function (entity) {
                 this.addCollisionEntity(entity);
             },
@@ -105,12 +101,6 @@ export default (function () {
                 this.addCollisionEntity(entity);
             },
             
-            /**
-             * On receiving this message, the component looks for the entity in its collision group and removes it.
-             *
-             * @method 'child-entity-removed'
-             * @param entity {platypus.Entity} The entity to be removed.
-             */
             "child-entity-removed": function (entity) {
                 this.removeCollisionEntity(entity);
             },

@@ -123,6 +123,14 @@ export default createComponentClass(/** @lends platypus.components.LogicDragDrop
                 this.state.set('dragging', true);
                 if (this.dragRenderParent !== this.owner.renderParent) {
                     this.originalRenderParent = this.owner.renderParent;
+
+                    /**
+                     * Sets the parent render container of an entity to that of the given entity or entity with the given id.
+                     *
+                     * @method platypus.Entity#set-parent-render-container
+                     * @param entity {Object} The entity to relocate.
+                     * @param container {Entity|String|PIXI.Container} The entity, id of the entity, or PIXI.Container that will act as the parent container.
+                     */
                     this.owner.parent.triggerEvent("set-parent-render-container", this.owner, this.dragRenderParent);
                 }
                 this.owner.dragMode = true;

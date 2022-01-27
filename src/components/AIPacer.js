@@ -31,6 +31,7 @@ export default (function () {
          * @uses platypus.Component
          * @constructs
          * @listens platypus.Entity#handle-ai
+         * @listens platypus.Entity#turn-around
          * @fires platypus.Entity#stop
          * @fires platypus.Entity#go-left
          * @fires platypus.Entity#go-right
@@ -82,7 +83,7 @@ export default (function () {
             /**
              * On receiving this message, the component will check the collision side and re-orient itself accordingly.
              *
-             * @method 'turn-around'
+             * @event platypus.Entity#turn-around
              * @param collisionInfo {platypus.CollisionData} Uses direction of collision to determine whether to turn around.
              */
             "turn-around": function (collisionInfo) {

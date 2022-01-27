@@ -132,8 +132,11 @@ export default (function () {
          * @uses platypus.Component
          * @constructs
          * @listens platypus.Entity#camera-update
+         * @listens platypus.Entity#collide-off
+         * @listens platypus.Entity#collide-on
          * @listens platypus.Entity#handle-render
          * @listens platypus.Entity#load
+         * @listens platypus.Entity#orientation-updated
          */
         initialize: function () {
             this.container = new Container();
@@ -187,29 +190,14 @@ export default (function () {
                 this.update();
             },
             
-            /**
-             * On receiving this message, will re-orient itself on the next update.
-             *
-             * @method 'orientation-updated'
-             */
             "orientation-updated": function () {
                 this.isOutdated = true;
             },
             
-            /**
-             * On receiving this message, will update collision shapes.
-             *
-             * @method 'collide-on'
-             */
             "collide-on": function () {
                 this.isOutdated = true;
             },
             
-            /**
-             * On receiving this message, will update collision shapes.
-             *
-             * @method 'collide-off'
-             */
             "collide-off": function () {
                 this.isOutdated = true;
             }

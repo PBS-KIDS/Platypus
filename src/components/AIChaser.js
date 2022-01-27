@@ -106,7 +106,7 @@ export default (function () {
             /**
              * On receiving this message, the component will change its target and begin chasing the new entity.
              *
-             * @method 'set-target'
+             * @event platypus.Entity#set-target
              * @param entity {platypus.Entity} Sets this entity's target to the provided entity.
              */
             "set-target": function (entity) {
@@ -118,7 +118,7 @@ export default (function () {
             /**
              * On receiving this message, the component will change its target offset.
              *
-             * @method 'set-target-offset'
+             * @event platypus.Entity#set-target-offset
              * @param offset {Object|Vector} Sets the chased entity's offset to the provided offset.
              * @param offset.x {number} The offset along the x-axis.
              * @param offset.y {number} The offset along the y-axis.
@@ -131,7 +131,7 @@ export default (function () {
             /**
              * On receiving this message, the component will begin chasing the entity.
              *
-             * @method 'start-chasing'
+             * @event platypus.Entity#start-chasing
              * @param [entity] {platypus.Entity} Sets the entity if it's provided.
              */
             "start-chasing": function (entity) {
@@ -144,7 +144,7 @@ export default (function () {
             /**
              * On receiving this message, the component will cease chasing the entity.
              *
-             * @method 'stop-chasing'
+             * @event platypus.Entity#stop-chasing
              */
             "stop-chasing": function () {
                 this.chasing = false;

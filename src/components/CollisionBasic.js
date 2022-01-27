@@ -437,8 +437,11 @@ export default createComponentClass(/** @lends platypus.components.CollisionBasi
      * @memberof platypus.components
      * @uses platypus.Component
      * @constructs
+     * @listens platypus.Entity#collide-off
+     * @listens platypus.Entity#collide-on
      * @listens platypus.Entity#handle-logic
      * @listens platypus.Entity#hit-by-*
+     * @listens platypus.Entity#orientation-updated
      * @listens platypus.Entity#relocate-entity
      * @fires platypus.Entity#add-collision-entity
      * @fires platypus.Entity#relocate-entity
@@ -561,7 +564,7 @@ export default createComponentClass(/** @lends platypus.components.CollisionBasi
         /**
          * On receiving this message, the component triggers `add-collision-entity` on the parent.
          *
-         * @method 'collide-on'
+         * @event platypus.Entity#collide-on
          * @param type {String} If specified, only collision components of this type are added to the collision list.
          */
         "collide-on": function (type) {
@@ -589,7 +592,7 @@ export default createComponentClass(/** @lends platypus.components.CollisionBasi
         /**
          * On receiving this message, the component triggers `remove-collision-entity` on the parent.
          *
-         * @method 'collide-off'
+         * @event platypus.Entity#collide-off
          * @param type {String} If specified, only collision components of this type are removed from the collision list.
          */
         "collide-off": function (type) {
@@ -681,12 +684,6 @@ export default createComponentClass(/** @lends platypus.components.CollisionBasi
             }
         },
         
-        /**
-         * Collision shapes are updated to reflect the new orientation when this message occurs.
-         *
-         * @method 'orientation-updated'
-         * @param matrix {Array} A 2D matrix describing the new orientation.
-         */
         "orientation-updated": function (matrix) {
             var i = 0;
             

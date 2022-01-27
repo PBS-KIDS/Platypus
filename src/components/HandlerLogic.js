@@ -89,8 +89,11 @@ export default (function () {
          * @constructs
          * @param {*} definition 
          * @listens platypus.Entity#camera-update
+         * @listens platypus.Entity#child-entity-added
+         * @listens platypus.Entity#child-entity-removed
          * @listens platypus.Entity#child-entity-updated
          * @listens platypus.Entity#pause-logic
+         * @listens platypus.Entity#tick
          * @listens platypus.Entity#unpause-logic
          * @fires platypus.Entity#handle-ai
          * @fires platypus.Entity#handle-logic
@@ -147,12 +150,6 @@ export default (function () {
                 }
             },
 
-            /**
-             * Called when a new entity has been added and should be considered for addition to the handler. If the entity has a 'handle-logic' message id it's added to the list of entities.
-             *
-             * @method 'child-entity-added'
-             * @param entity {platypus.Entity} The entity that is being considered for addition to the handler.
-             */
             "child-entity-added": function (entity) {
                 if (entity.getMessageIds().some(hasLogic)) {
                     this.entities.push(entity);
@@ -164,12 +161,6 @@ export default (function () {
                 }
             },
 
-            /**
-             * Called when an entity should be removed from the list of logically updated entities.
-             *
-             * @method 'child-entity-removed'
-             * @param entity {platypus.Entity} The entity to be removed from the handler.
-             */
             "child-entity-removed": function (entity) {
                 var j = this.entities.indexOf(entity);
                 
@@ -224,13 +215,6 @@ export default (function () {
                 }
             },
             
-            /**
-             * Sends a 'handle-logic' message to all the entities the component is handling. If an entity does not handle the message, it's removed it from the entity list.
-             *
-             * @method 'tick'
-             * @param tick {Object} Tick information that is passed on to children entities via "handle-logic" events.
-             * @param tick.delta {number} The time passed since the last tick.
-             */
             "tick": function (resp) {
                 var i = 0,
                     j = 0,
