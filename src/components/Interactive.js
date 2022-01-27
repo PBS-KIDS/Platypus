@@ -94,9 +94,11 @@ export default createComponentClass(/** @lends platypus.components.Interactive.p
      * @uses platypus.Component
      * @constructs
      * @listens platypus.Entity#camera-update
+     * @listens platypus.Entity#dispatch-event
      * @listens platypus.Entity#handle-render
      * @listens platypus.Entity#input-off
      * @listens platypus.Entity#input-on
+     * @listens platypus.Entity#set-hit-area
      * @fires platypus.Entity#pressmove
      * @fires platypus.Entity#pressup
      * @fires platypus.Entity#pointerdown
@@ -130,7 +132,7 @@ export default createComponentClass(/** @lends platypus.components.Interactive.p
         /**
          * This event dispatches a PIXI.Event on this component's PIXI.Sprite. Useful for rerouting mouse/keyboard events.
          *
-         * @method 'dispatch-event'
+         * @event platypus.Entity#dispatch-event
          * @param event {Object | PIXI.Event} The event to dispatch.
          */
         "dispatch-event": function (event) {
@@ -149,21 +151,10 @@ export default createComponentClass(/** @lends platypus.components.Interactive.p
             }
         },
 
-        /**
-         * This component listens for its own "pointerdown" event to track pressed state to trigger "pressmove" and "pressup" events.
-         *
-         * @method 'pointerdown'
-         */
         "pointerdown": function () {
             this.pressed = true;
         },
 
-        /**
-         * This component listens for its own "pointermove" event to trigger "pressmove" events.
-         *
-         * @method 'pointermove'
-         * @param {Object} event
-         */
         "pointermove": function (event) {
             if (this.pressed && ((pointerInstances[getId(event.pixiEvent)] === this))) {
                 /**
@@ -180,12 +171,6 @@ export default createComponentClass(/** @lends platypus.components.Interactive.p
             }
         },
 
-        /**
-         * This component listens for its own "pointerup" event to track pressed state and trigger "pressup" events.
-         *
-         * @method 'pointerup'
-         * @param {Object} event
-         */
         "pointerup": function (event) {
             if (this.pressed) {
                 /**
@@ -203,12 +188,6 @@ export default createComponentClass(/** @lends platypus.components.Interactive.p
             }
         },
 
-        /**
-         * This component listens for its own "pointerupoutside" event to track pressed state and trigger "pressup" events.
-         *
-         * @method 'pointerupoutside'
-         * @param {Object} event
-         */
         "pointerupoutside": function (event) {
             if (this.pressed) {
                 this.owner.triggerEvent('pressup', event);
@@ -216,12 +195,6 @@ export default createComponentClass(/** @lends platypus.components.Interactive.p
             }
         },
 
-        /**
-         * This component listens for its own "pointercancel" event to track pressed state and trigger "pressup" events.
-         *
-         * @method 'pointercancel'
-         * @param {Object} event
-         */
         "pointercancel": function (event) {
             if (this.pressed) {
                 this.owner.triggerEvent('pressup', event);
@@ -253,7 +226,7 @@ export default createComponentClass(/** @lends platypus.components.Interactive.p
          *
          * Defaults to the container if set to `null`.
          *
-         * @method 'set-hit-area'
+         * @event platypus.Entity#set-hit-area
          * @param {Object} shape
          */
         "set-hit-area": function (shape) {

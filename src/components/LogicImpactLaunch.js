@@ -61,6 +61,7 @@ export default (function () {
          * @constructs
          * @listens platypus.Entity#component-added
          * @listens platypus.Entity#handle-logic
+         * @listens platypus.Entity#hit-solid
          */
         initialize: function (definition) {
             this.stunState = definition.state || "stunned";

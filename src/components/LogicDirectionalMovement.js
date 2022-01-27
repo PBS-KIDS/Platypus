@@ -60,7 +60,9 @@ export default (function () {
          * @memberof platypus.components
          * @uses platypus.Component
          * @constructs
+         * @listens platypus.Entity#accelerate
          * @listens platypus.Entity#component-added
+         * @listens platypus.Entity#face
          * @listens platypus.Entity#handle-logic
          * @listens platypus.Entity#stop
          * @listens platypus.Entity#go-down
@@ -276,7 +278,7 @@ export default (function () {
             /**
              * Set the direction the entity should face while stopped.
              *
-             * @method 'face'
+             * @event platypus.Entity#face
              * @param direction {String} A value such as "north" or "left" to point the entity in a particular direction.
              */
             "face": (function () {
@@ -307,7 +309,7 @@ export default (function () {
             /**
              * Changes the velocity of the Entity when in motion.
              *
-             * @method 'accelerate'
+             * @event platypus.Entity#accelerate
              * @param velocity {Number|platypus.Vector} The magnitude or Vector to multiply the current velocity by.
              */
             "accelerate": function (velocity) {

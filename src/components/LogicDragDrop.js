@@ -39,6 +39,7 @@ export default createComponentClass(/** @lends platypus.components.LogicDragDrop
      * @listens platypus.Entity#component-added
      * @listens platypus.Entity#handle-logic
      * @listens platypus.Entity#handle-post-collision-logic
+     * @listens platypus.Entity#no-drop
      * @listens platypus.Entity#pointerdown
      * @listens platypus.Entity#pointermove
      * @listens platypus.Entity#prepare-logic
@@ -176,7 +177,7 @@ export default createComponentClass(/** @lends platypus.components.LogicDragDrop
         /**
          * This message comes from the collision system letting us know the object is currently in a location that it cannot be dropped.
          *
-         * @method 'no-drop'
+         * @event platypus.Entity#no-drop
          */
         "no-drop": function () {
             this.hitSomething = true;

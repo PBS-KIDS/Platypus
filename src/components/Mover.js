@@ -167,6 +167,7 @@ export default createComponentClass(/** @lends platypus.components.Mover.prototy
      * @listens platypus.Entity#component-removed
      * @listens platypus.Entity#handle-movement
      * @listens platypus.Entity#handle-post-collision-logic
+     * @listens platypus.Entity#hit-solid
      * @listens platypus.Entity#load
      * @listens platypus.Entity#orientation-updated
      */
@@ -389,7 +390,7 @@ export default createComponentClass(/** @lends platypus.components.Mover.prototy
         /**
          * On receiving this message, this component stops all velocities along the axis of the collision direction and sets "grounded" to `true` if colliding with the ground.
          *
-         * @method 'hit-solid'
+         * @event platypus.Entity#hit-solid
          * @param collisionInfo {Object}
          * @param collisionInfo.direction {platypus.Vector} The direction of collision from the entity's position.
          */

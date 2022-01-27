@@ -55,6 +55,9 @@ export default (function () {
          * @uses platypus.Component
          * @constructs
          * @listens platypus.Entity#handle-logic
+         * @listens platypus.Entity#move
+         * @listens platypus.Entity#set-angle
+         * @listens platypus.Entity#set-max-velocity
          * @listens platypus.Entity#stop
          */
         initialize: function () {
@@ -112,16 +115,17 @@ export default (function () {
             /**
              * Sets the internal heading angle in the component.
              *
-             * @method 'set-angle'
+             * @event platypus.Entity#set-angle
              * @param angle {Number} The value you want to set the angle to.
              */
             "set-angle": function (angle) {
                 this.angle = angle;
             },
+
             /**
              * Start the entity accelerating toward the heading angle.
              *
-             * @method 'move'
+             * @event platypus.Entity#move
              */
             "move": function () {
                 this.moving = true;
@@ -132,10 +136,11 @@ export default (function () {
                 this.v[0] = 0;
                 this.v[1] = 0;
             },
+
             /**
              * Set the max velocity.
              *
-             * @method 'set-max-velocity'
+             * @event platypus.Entity#set-max-velocity
              * @param newMaxV {Number} The max velocity value.
              */
             "set-max-velocity": function (newMaxV) {

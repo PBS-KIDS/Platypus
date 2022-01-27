@@ -22,7 +22,9 @@ export default (function () {
          * @memberof platypus.components
          * @uses platypus.Component
          * @constructs
+         * @listens platypus.Entity#force-release
          * @listens platypus.Entity#handle-logic
+         * @listens platypus.Entity#hit-solid
          * @fires platypus.Entity#carry-me
          * @fires platypus.Entity#release-me
          */
@@ -67,14 +69,6 @@ export default (function () {
                 this.lastCarrier = this.carrier;
             },
 
-            /**
-             * On receiving this message, this component determines whether it is hitting its carrier or another entity. If it is hitting a new carrier, it will broadcast 'carry-me' on the next game step.
-             *
-             * @method 'hit-solid'
-             * @param collisionInfo.entity {platypus.Entity} The entity with which the collision occurred.
-             * @param collisionInfo.x {Number} -1, 0, or 1 indicating on which side of this entity the collision occurred: left, neither, or right respectively.
-             * @param collisionInfo.y {Number} -1, 0, or 1 indicating on which side of this entity the collision occurred: top, neither, or bottom respectively.
-             */
             "hit-solid": function (collisionInfo) {
                 if (collisionInfo.y > 0) {
                     this.updateCarrier(collisionInfo.entity, 'down');
@@ -90,7 +84,7 @@ export default (function () {
             /**
              * On receiving this message, this component immediately triggers 'release-me' on its owner's carrier.
              *
-             * @method 'force-release'
+             * @event platypus.Entity#force-release
              */
             "force-release": function () {
                 if (this.carrier) {

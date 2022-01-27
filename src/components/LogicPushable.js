@@ -29,6 +29,7 @@ export default (function () {
          * @constructs
          * @param {*} definition 
          * @listens platypus.Entity#handle-logic
+         * @listens platypus.Entity#hit-solid
          */
         initialize: function (definition) {
             this.yPush = definition.push || definition.yPush || 0;

@@ -92,6 +92,9 @@ export default (function () {
          * @memberof platypus.components
          * @uses platypus.Component
          * @constructs
+         * @listens platypus.Entity#attach
+         * @listens platypus.Entity#change-attachment-offset
+         * @listens platypus.Entity#detach
          * @listens platypus.Entity#handle-logic
          */
         initialize: function () {
@@ -178,25 +181,27 @@ export default (function () {
             /**
              * Creates and attaches the entity. The input value makes it possible to attach the entity on user input.
              *
-             * @method 'attach'
+             * @event platypus.Entity#attach
              * @param input {Object} An input object.
              * @param input.pressed {Boolean} If set to true, the entity is created and attached.
              */
             "attach": function (input) {
                 this.isAttached = !input || (input.pressed !== false);
             },
+
             /**
              * Detaches and removes the entity.
              *
-             * @method 'detach'
+             * @event platypus.Entity#detach
              */
             "detach": function () {
                 this.isAttached = false;
             },
+
             /**
              * Changes the x, y, and z offset of the attachment.
              *
-             * @method 'change-attachment-offset'
+             * @event platypus.Entity#change-attachment-offset
              * @param offset {Object} An object containing the offset values.
              * @param input.x {Number} The new X offset.
              * @param input.y {Number} The new Y offset.

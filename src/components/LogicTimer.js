@@ -94,6 +94,9 @@ export default (function () {
          * @uses platypus.Component
          * @constructs
          * @listens platypus.Entity#handle-logic
+         * @listens platypus.Entity#set-timer
+         * @listens platypus.Entity#start-timer
+         * @listens platypus.Entity#stop-timer
          */
         initialize: function () {
             this.prevTime = this.time;
@@ -143,7 +146,7 @@ export default (function () {
             /**
              * Sets time for alarm.
              *
-             * @method 'set-timer'
+             * @event platypus.Entity#set-timer
              * @param {Number} data.time Time to set for alarm.
              */
             "set-timer": function (data) {
@@ -153,7 +156,7 @@ export default (function () {
             /**
              * Starts the timer's countdown.
              *
-             * @method 'start-timer'
+             * @event platypus.Entity#start-timer
              */
             "start-timer": function () {
                 this.isOn = true;
@@ -162,7 +165,7 @@ export default (function () {
             /**
              * Stops the timer's countdown. If `resetOnStop` is `true`, resets timer.
              *
-             * @method 'stop-timer'
+             * @event platypus.Entity#stop-timer
              */
             "stop-timer": function () {
                 this.isOn = false;

@@ -30,6 +30,7 @@ export default (function () {
          * @memberof platypus.components
          * @uses platypus.Component
          * @constructs
+         * @listens platypus.Entity#destroy-me
          * @listens platypus.Entity#prepare-logic
          */
         initialize: function () {},
@@ -49,12 +50,11 @@ export default (function () {
             /**
              * This component will set the entity up for removal on receiving this message.
              *
-             * @method 'destroy-me'
+             * @event platypus.Entity#destroy-me
              */
             "destroy-me": function () {
                 this.destroyed = true;
-            }
-                   
+            }                   
         }
     });
 }());

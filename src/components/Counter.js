@@ -23,7 +23,10 @@ export default (function () {
          * @memberof platypus.components
          * @uses platypus.Component
          * @constructs
+         * @listens platypus.Entity#change-total
+         * @listens platypus.Entity#change-count
          * @listens platypus.Entity#handle-logic
+         * @listens platypus.Entity#increment-count
          * @fires platypus.Entity#update-content
          */
         initialize: function () {
@@ -70,7 +73,7 @@ export default (function () {
             /**
              * Changes the total to the given value.
              *
-             * @method 'change-total'
+             * @event platypus.Entity#change-total
              * @param data.total {number} The new total value.
              */
             "change-total": function (total) {
@@ -80,7 +83,7 @@ export default (function () {
             /**
              * Changes the count to the given value.
              *
-             * @method 'change-count'
+             * @event platypus.Entity#change-count
              * @param data.count {number} The new count value.
              */
             "change-count": function (count) {
@@ -90,7 +93,7 @@ export default (function () {
             /**
              * Increments the count by 1.
              *
-             * @method 'increment-count'
+             * @event platypus.Entity#increment-count
              */
             "increment-count": function () {
                 this.count += 1;

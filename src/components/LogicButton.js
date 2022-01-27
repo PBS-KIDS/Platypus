@@ -126,11 +126,17 @@ export default (function () {
          * @uses platypus.Component
          * @constructs
          * @listens platypus.Entity#camera-update
+         * @listens platypus.Entity#disable
+         * @listens platypus.Entity#enable
          * @listens platypus.Entity#handle-logic
+         * @listens platypus.Entity#highlight
          * @listens platypus.Entity#pointerdown
          * @listens platypus.Entity#pointerout
          * @listens platypus.Entity#pointerover
          * @listens platypus.Entity#pressup
+         * @listens platypus.Entity#toggle-disabled
+         * @listens platypus.Entity#toggle-highlight
+         * @listens platypus.Entity#unhighlight
          * @fires platypus.Entity#pressed
          * @fires platypus.Entity#cancelled
          * @fires platypus.Entity#released
@@ -287,7 +293,7 @@ export default (function () {
             /**
              * Disables the entity.
              *
-             * @method 'disable'
+             * @event platypus.Entity#disable
              */
             "disable": function () {
                 this.state.set('disabled', true);
@@ -297,7 +303,7 @@ export default (function () {
             /**
              * Enables the entity.
              *
-             * @method 'enable'
+             * @event platypus.Entity#enable
              */
             "enable": function () {
                 this.state.set('disabled', false);
@@ -307,7 +313,7 @@ export default (function () {
             /**
              * Toggles whether the entity is disabled.
              *
-             * @method 'toggle-disabled'
+             * @event platypus.Entity#toggle-disabled
              */
             "toggle-disabled": function () {
                 var value = this.state.get('disabled');
@@ -319,7 +325,7 @@ export default (function () {
             /**
              * Sets the entity's highlighted state to `true`.
              *
-             * @method 'highlight'
+             * @event platypus.Entity#highlight
              */
             "highlight": function () {
                 this.state.set('highlighted', true);
@@ -328,7 +334,7 @@ export default (function () {
             /**
              * Sets the entity's highlighted state to `false`.
              *
-             * @method 'unhighlight'
+             * @event platypus.Entity#unhighlight
              */
             "unhighlight": function () {
                 this.state.set('highlighted', false);
@@ -337,7 +343,7 @@ export default (function () {
             /**
              * Toggles the entity's highlighted state.
              *
-             * @method 'toggle-highlight'
+             * @event platypus.Entity#toggle-highlight
              */
             "toggle-highlight": function () {
                 var state = this.state;

@@ -53,6 +53,11 @@ export default (function () {
          * @listens platypus.Entity#stop
          * @listens platypus.Entity#go-forward
          * @listens platypus.Entity#go-backward
+         * @listens platypus.Entity#rotate
+         * @listens platypus.Entity#turn-right
+         * @listens platypus.Entity#turn-left
+         * @listens platypus.Entity#stop-moving
+         * @listens platypus.Entity#stop-turning
          * @fires platypus.Entity#orientation-updated
          */
         initialize: function () {
@@ -102,7 +107,7 @@ export default (function () {
             /**
              * This rotates the entity by a delta in radians.
              *
-             * @method 'rotate'
+             * @event platypus.Entity#rotate
              * @param angleDelta {Number} The change in angle.
              */
             "rotate": function (angleDelta) {
@@ -112,7 +117,7 @@ export default (function () {
             /**
              * On receiving this event, the entity turns right.
              *
-             * @method 'turn-right'
+             * @event platypus.Entity#turn-right
              * @param [state.pressed] {boolean} If `state` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new orientation.
              */
             "turn-right": function (state) {
@@ -126,7 +131,7 @@ export default (function () {
             /**
              * On receiving this event, the entity turns left.
              *
-             * @method 'turn-left'
+             * @event platypus.Entity#turn-left
              * @param [state.pressed] {boolean} If `state` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new orientation.
              */
             "turn-left": function (state) {
@@ -166,7 +171,7 @@ export default (function () {
             /**
              * Stops linear motion until movement messages are again received.
              *
-             * @method 'stop-moving'
+             * @event platypus.Entity#stop-moving
              * @param [state.pressed] {Boolean} If `state` is included, the component checks the value of `pressed`: a value of false will not stop the entity.
              */
             "stop-moving": function (state) {
@@ -178,7 +183,7 @@ export default (function () {
             /**
              * Stops rotational motion until movement messages are again received.
              *
-             * @method 'stop-turning'
+             * @event platypus.Entity#stop-turning
              * @param [state.pressed] {Boolean} If `state` is included, the component checks the value of `pressed`: a value of false will not stop the entity.
              */
             "stop-turning": function (state) {

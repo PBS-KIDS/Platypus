@@ -42,8 +42,10 @@ const
          * @extends platypus.Messenger
          * @uses platypus.Component
          * @constructs
+         * @listens platypus.Entity#add-entity
          * @listens platypus.Entity#child-entity-updated
          * @listens platypus.Entity#handle-logic
+         * @listens platypus.Entity#remove-entity
          */
         initialize: (function () {
             var
@@ -95,7 +97,7 @@ const
             /**
              * This message will added the given entity to this component's list of entities.
              *
-             * @method 'add-entity'
+             * @event platypus.Entity#add-entity
              * @param entity {platypus.Entity} This is the entity to be added as a child.
              * @param [callback] {Function} A function to run once all of the components on the Entity have been loaded.
              */
@@ -106,7 +108,7 @@ const
             /**
              * On receiving this message, the provided entity will be removed from the list of child entities.
              *
-             * @method 'remove-entity'
+             * @method platypus.Entity#remove-entity
              * @param entity {platypus.Entity} The entity to remove.
              */
             "remove-entity": function (entity) {

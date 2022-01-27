@@ -41,6 +41,7 @@ export default (function () {
          * @uses platypus.Component
          * @constructs
          * @listens platypus.Entity#handle-logic
+         * @listens platypus.Entity#hit-solid
          * @fires platypus.Entity#racing
          * @fires platypus.Entity#stopped-racing
          * @fires platypus.Entity#winding
@@ -145,12 +146,6 @@ export default (function () {
                 this.left  = this.state.get('left');
             },
             
-            /**
-             * On receiving this message, the entity stops racing.
-             *
-             * @method 'hit-solid'
-             * @param collision.x {Number} Either 1,0, or -1. 1 if we're colliding with an object on our right. -1 if on our left. 0 if not at all.
-             */
             "hit-solid": function (collision) {
                 if (collision.x) {
                     if (this.racing && ((this.right && (collision.x > 0)) || (this.left && (collision.x < 0)))) {
