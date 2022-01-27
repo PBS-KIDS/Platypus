@@ -1,10 +1,3 @@
-/**
- * This component allows an entity to communicate directly with one or more entities via the message model, by passing local messages directly to entities in the same family as new triggered events. This component is placed on a single entity and all entities created by this entity become part of its "family".
- *
- * @memberof platypus.components
- * @class RelayFamily
- * @uses platypus.Component
- */
 /* global platypus */
 import {arrayCache, greenSlice, greenSplice, union} from '../utils/array.js';
 import createComponentClass from '../factory.js';
@@ -29,6 +22,16 @@ export default (function () {
             events: null
         },
 
+        /**
+         * This component allows an entity to communicate directly with one or more entities via the message model, by passing local messages directly to entities in the same family as new triggered events. This component is placed on a single entity and all entities created by this entity become part of its "family".
+         *
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @listens platypus.Entity#entity-created
+         * @listens platypus.Entity#link-family
+         * @fires platypus.Entity#link-family
+         */
         initialize: function () {
             var event = '';
             
@@ -44,12 +47,6 @@ export default (function () {
         },
         
         events: {
-            /**
-             * Called when linking a new member to the family, this event accepts a list of family members from the new member and uses it to link all the family members together.
-             *
-             * @method 'link-family'
-             * @param links {Array|Entities} An array of entities.
-             */
             "link-family": function (links) {
                 var i = 0,
                     oldList = this.owner.familyLinks,
@@ -63,13 +60,13 @@ export default (function () {
                 arrayCache.recycle(oldList);
             },
             
-            /**
-             * Called when this entity spawns a new entity, this event links the newly created entity to this entity.
-             *
-             * @method 'entity-created'
-             * @param entity {platypus.Entity} The entity to link.
-             */
             "entity-created": function (entity) {
+                /**
+                 * Called when linking a new member to the family, this event accepts a list of family members from the new member and uses it to link all the family members together.
+                 *
+                 * @event platypus.Entity#link-family
+                 * @param links {Array|Entities} An array of entities.
+                 */
                 if (!entity.triggerEvent('link-family', this.owner.familyLinks)) {
                     entity.addComponent(new platypus.components.RelayFamily(entity, {}));
                     entity.triggerEvent('link-family', this.owner.familyLinks);

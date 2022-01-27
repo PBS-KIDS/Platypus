@@ -126,7 +126,9 @@ export default (function () {
          * @memberof platypus.components
          * @uses platypus.Component
          * @constructs
+         * @listens platypus.Entity#add-node
          * @listens platypus.Entity#child-entity-added
+         * @fires platypus.Entity#add-node
          */
         initialize: function () {
             var i   = 0,
@@ -142,18 +144,6 @@ export default (function () {
         },
 
         events: {
-            /**
-             * Expects a node definition to create a node in the NodeMap.
-             *
-             * @method 'add-node'
-             * @param definition {Object} Key/value pairs.
-             * @param definition.nodeId {String|Array} This value becomes the id of the Node. Arrays are joined using "|" to create the id string.
-             * @param definition.type {String} This determines the type of the node.
-             * @param definition.x {String} Sets the x axis position of the node.
-             * @param definition.y {String} Sets the y axis position of the node.
-             * @param definition.z {String} Sets the z axis position of the node.
-             * @param definition.neighbors {Object} A list of key/value pairs where the keys are directions from the node and values are node ids. For example: {"west": "node12"}.
-             */
             "add-node": function (nodeDefinition) {
                 var i = 0,
                     entity = null,
@@ -179,6 +169,18 @@ export default (function () {
 
             "child-entity-added": function (entity) {
                 if (entity.isNode) {        // a node
+                    /**
+                     * Expects a node definition to create a node in the NodeMap.
+                     *
+                     * @event platypus.Entity#add-node
+                     * @param definition {Object} Key/value pairs.
+                     * @param definition.nodeId {String|Array} This value becomes the id of the Node. Arrays are joined using "|" to create the id string.
+                     * @param definition.type {String} This determines the type of the node.
+                     * @param definition.x {String} Sets the x axis position of the node.
+                     * @param definition.y {String} Sets the y axis position of the node.
+                     * @param definition.z {String} Sets the z axis position of the node.
+                     * @param definition.neighbors {Object} A list of key/value pairs where the keys are directions from the node and values are node ids. For example: {"west": "node12"}.
+                     */
                     this.owner.triggerEvent('add-node', entity);
                 } else if (entity.nodeId) { // a NodeResident
                     entity.node = this.getNode(entity.nodeId);

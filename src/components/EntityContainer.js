@@ -1,12 +1,3 @@
-/**
-### Child Broadcasts:
-- **peer-entity-added** - This message is triggered when a new entity has been added to the parent's list of children entities.
-  - @param message ([[Entity]] object) - The entity that was just added.
-- **peer-entity-removed** - This message is triggered when an entity has been removed from the parent's list of children entities.
-  - @param message ([[Entity]] object) - The entity that was just removed.
-- **[Messages specified in definition]** - Listens for specified messages and on receiving them, re-triggers them on child entities.
-  - @param message (object) - sends the message object received by the original message.
-*/
 /* global platypus */
 import {arrayCache, greenSlice, greenSplice, union} from '../utils/array.js';
 import Async from '../Async.js';
@@ -330,6 +321,8 @@ const
              * @param [callback] {Function} A function to run once all of the components on the Entity have been loaded.
              * @return {platypus.Entity} The entity that was just added.
              * @fires platypus.Entity#child-entity-added
+             * @fires platypus.Entity#entity-created
+             * @fires platypus.Entity#peer-entity-added
              */
             addEntity: (function () {
                 var
@@ -340,6 +333,12 @@ const
 
                         entity.triggerEvent('adopted', entity);
                         
+                        /**
+                         * This message is triggered when a new entity has been added to the parent's list of children entities.
+                         * 
+                         * @event platypus.Entity#peer-entity-added
+                         * @param {platypus.Entity} entity The entity that was just added.
+                         */
                         while (i--) {
                             if (!entity.triggerEvent('peer-entity-added', entities[i])) {
                                 break;
@@ -379,6 +378,13 @@ const
                         } else {
                             entity = new Entity(platypus.game.settings.entities[newEntity.type], newEntity, whenReady.bind(this, callback), owner);
                         }
+
+                        /**
+                         * Called when this entity spawns a new entity, this event links the newly created entity to this entity.
+                         *
+                         * @event platypus.Entity#entity-created
+                         * @param entity {platypus.Entity} The entity to link.
+                         */
                         this.owner.triggerEvent('entity-created', entity);
                     }
 
@@ -395,6 +401,7 @@ const
              * @param {Entity} entity
              * @return {Entity}
              * @fires platypus.Entity#child-entity-removed
+             * @fires platypus.Entity#peer-entity-removed
              */
             removeEntity: function (entity) {
                 var i = this.entities.indexOf(entity);
@@ -402,6 +409,13 @@ const
                 if (i >= 0) {
                     this.removeChildEventListeners(entity);
                     greenSplice(this.entities, i);
+
+                    /**
+                     * This message is triggered when an entity has been removed from the parent's list of children entities.
+                     * 
+                     * @event platypus.Entity#peer-entity-removed
+                     * @param {platypus.Entity} entity The entity that was just removed.
+                     */
                     this.triggerEventOnChildren('peer-entity-removed', entity);
                     
                     /**

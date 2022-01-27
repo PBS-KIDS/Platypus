@@ -76,6 +76,7 @@ export default (function () {
          * @uses platypus.Component
          * @constructs
          * @listens platypus.Entity#handle-logic
+         * @listens platypus.Entity#stop-active-timelines
          */
         initialize: function () {
             var x = 0;
@@ -94,7 +95,7 @@ export default (function () {
             /**
              * Stops all timelines.
              *
-             * @method 'stop-active-timelines'
+             * @event platypus.Entity#stop-active-timelines
              */
             "stop-active-timelines": function () {
                 var instances = this.timelineInstances,

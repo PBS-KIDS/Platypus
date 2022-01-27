@@ -250,10 +250,13 @@ export default (function () {
          * @memberof platypus.components
          * @uses platypus.Component
          * @constructs
+         * @listens platypus.Entity#add-tiles
          * @listens platypus.Entity#cache-sprite
          * @listens platypus.Entity#camera-loaded
          * @listens platypus.Entity#camera-update
+         * @listens platypus.Entity#change-tile
          * @listens platypus.Entity#handle-render
+         * @listens platypus.Entity#peer-entity-added
          */
         initialize: function (definition) {
             var imgMap = this.imageMap;
@@ -319,12 +322,6 @@ export default (function () {
                 this.cacheSprite(entity);
             },
 
-            /**
-             * If this component should cache entities, it checks peers for a "renderCache" display object and adds the display object to its list of objects to render on top of the tile set.
-             *
-             * @method 'peer-entity-added'
-             * @param entity {platypus.Entity} This is the peer entity to be checked for a renderCache.
-             */
             "peer-entity-added": function (entity) {
                 this.cacheSprite(entity);
             },
@@ -332,7 +329,7 @@ export default (function () {
             /**
              * This event adds a layer of tiles to render on top of the existing layer of rendered tiles.
              *
-             * @method 'add-tiles'
+             * @event platypus.Entity#add-tiles
              * @param message.imageMap {Array} This is a 2D mapping of tile indexes to be rendered.
              */
             "add-tiles": function (definition) {
@@ -347,7 +344,7 @@ export default (function () {
             /**
              * This event edits the tile index of a rendered tile.
              *
-             * @method 'change-tile'
+             * @event platypus.Entity#change-tile
              * @param tile {String} A string representing the name of the tile to switch to.
              * @param x {Number} The column of the tile to edit.
              * @param y {Number} The row of the tile to edit.

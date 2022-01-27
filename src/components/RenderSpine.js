@@ -361,8 +361,11 @@ export default (function () {
          * @uses platypus.Component
          * @constructs
          * @listens platypus.Entity#handle-render
-         * @listens platypus.Entity#state-changed
+         * @listens platypus.Entity#hide
          * @listens platypus.Entity#play-animation
+         * @listens platypus.Entity#set-mix-times
+         * @listens platypus.Entity#show
+         * @listens platypus.Entity#state-changed
          * @listens platypus.Entity#stop-animation
          * @fires platypus.Entity#animation-ended
          * @fires platypus.Entity#update-animation
@@ -590,7 +593,7 @@ export default (function () {
             /**
              * This sets the mix times.
              *
-             * @method 'set-mix-times'
+             * @event platypus.Entity#set-mix-times
              * @param mixTimes {Object} This matches the syntax required for this component's `mixTimes` property
              */
             "set-mix-times": function (mixTimes) {
@@ -600,7 +603,7 @@ export default (function () {
             /**
              * This event makes the spine invisible.
              *
-             * @method 'hide'
+             * @event platypus.Entity#hide
              */
             "hide": function () {
                 this.visible = false;
@@ -609,7 +612,7 @@ export default (function () {
             /**
              * This event makes the spine visible.
              *
-             * @method 'show'
+             * @event platypus.Entity#show
              */
             "show": function () {
                 this.visible = true;

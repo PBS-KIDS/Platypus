@@ -134,6 +134,8 @@ export default (function () {
          * @listens platypus.Entity#child-entity-added
          * @listens platypus.Entity#child-entity-removed
          * @listens platypus.Entity#handle-logic
+         * @listens platypus.Entity#peer-entity-added
+         * @listens platypus.Entity#peer-entity-removed
          * @listens platypus.Entity#sequence-complete
          * @fires platypus.Entity#stop-audio
          */
@@ -181,22 +183,10 @@ export default (function () {
         events: {// These are messages that this component listens for
             "child-entity-added": entityAdded,
 
-            /**
-             * Checks added entity to determine if it is one of the conditions for one of the tutorials. If so, we track it.
-             *
-             * @method 'peer-entity-added'
-             * @param entity {Object} The added entity.
-             */
             "peer-entity-added": entityAdded,
 
             "child-entity-removed": entityRemoved,
 
-            /**
-             * Removes entities from the watch list when they are destroyed.
-             *
-             * @method 'peer-entity-removed'
-             * @param entity {Object} The removed entity.
-             */
             "peer-entity-removed": entityRemoved,
             
             "handle-logic": updateLogic,

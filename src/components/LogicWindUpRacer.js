@@ -42,6 +42,8 @@ export default (function () {
          * @constructs
          * @listens platypus.Entity#handle-logic
          * @listens platypus.Entity#hit-solid
+         * @listens platypus.Entity#stop-racing
+         * @listens platypus.Entity#wind-up
          * @fires platypus.Entity#racing
          * @fires platypus.Entity#stopped-racing
          * @fires platypus.Entity#winding
@@ -127,7 +129,7 @@ export default (function () {
             /**
              * Causes the entity to stop racing.
              *
-             * @method 'stop-racing'
+             * @event platypus.Entity#stop-racing
              */
             "stop-racing": function () {
                 this.racing = false;
@@ -137,7 +139,7 @@ export default (function () {
             /**
              * Causes the entity to wind up for a race.
              *
-             * @method 'wind-up'
+             * @event platypus.Entity#wind-up
              * @param message.pressed {Boolean} If `message` is included, the component checks the value of `pressed`: `false` causes winding to stop.
              */
             "wind-up": function (value) {

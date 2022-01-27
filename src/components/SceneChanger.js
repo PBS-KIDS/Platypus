@@ -1,10 +1,3 @@
-/**
- * This component allows the entity to initiate a change from the current scene to another scene.
- *
- * @memberof platypus.components
- * @class SceneChanger
- * @extends platypus.Component
- */
 /* global platypus */
 import Data from '../Data.js';
 import createComponentClass from '../factory.js';
@@ -51,6 +44,16 @@ export default (function () {
             persistentData: null
         },
         
+        /**
+         * This component allows the entity to initiate a change from the current scene to another scene.
+         *
+         * @memberof platypus.components
+         * @extends platypus.Component
+         * @constructs
+         * @listens platypus.Entity#new-scene
+         * @listens platypus.Entity#set-scene
+         * @listens platypus.Entity#set-persistent-scene-data
+         */
         initialize: function () {
             this.persistentData = Data.setUp(this.persistentData);
         },
@@ -59,7 +62,7 @@ export default (function () {
             /**
              * On receiving this message, a new scene is loaded according to provided parameters or previously determined component settings.
              *
-             * @method 'new-scene'
+             * @event platypus.Entity#new-scene
              * @param message.load {String} This is a label corresponding with a predefined layer.
              * @param message.persistentData {Object} Any values that should be passed to the layers' "layer-loaded" and "layer-live" events.
              */
@@ -88,7 +91,7 @@ export default (function () {
             /**
              * On receiving this message, a scene value is stored, waiting for a `new-scene` to make the transition.
              *
-             * @method 'set-scene'
+             * @event platypus.Entity#set-scene
              * @param scene {String} This is a label corresponding with a predefined scene.
              */
             "set-scene": function (scene) {
@@ -98,7 +101,7 @@ export default (function () {
             /**
              * On receiving this message, persistent data is stored, waiting for a `new-scene` to make the transition.
              *
-             * @method 'set-persistent-scene-data'
+             * @event platypus.Entity#set-persistent-scene-data
              * @param persistentData {Object} Any values that should be passed to the next scene via the "layer-loaded" and "layer-live" events.
              */
             "set-persistent-scene-data": function (data) {

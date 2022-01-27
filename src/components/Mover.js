@@ -169,7 +169,10 @@ export default createComponentClass(/** @lends platypus.components.Mover.prototy
      * @listens platypus.Entity#handle-post-collision-logic
      * @listens platypus.Entity#hit-solid
      * @listens platypus.Entity#load
+     * @listens platypus.Entity#pause-movment
      * @listens platypus.Entity#orientation-updated
+     * @listens platypus.Entity#set-mover
+     * @listens platypus.Entity#unpause-movment
      */
     initialize: function () {
         var maxMagnitude = Infinity,
@@ -482,7 +485,7 @@ export default createComponentClass(/** @lends platypus.components.Mover.prototy
         /**
          * Update mover properties.
          *
-         * @method 'set-mover'
+         * @event platypus.Entity#set-mover
          * @param mover {Object}
          * @param [mover.maxMagnitude] {Number|Object} New maximums for magnitude.
          * @param [mover.magnitude] {Number} Delta for the change in maximums.
@@ -500,7 +503,7 @@ export default createComponentClass(/** @lends platypus.components.Mover.prototy
         /**
          * Stops all movement on the Entity.
          *
-         * @method 'pause-movment'
+         * @event platypus.Entity#pause-movment
          */
         "pause-movement": function () {
             this.paused = true;
@@ -509,7 +512,7 @@ export default createComponentClass(/** @lends platypus.components.Mover.prototy
         /**
          * Unpauses all movement on the Entity.
          *
-         * @method 'unpause-movment'
+         * @event platypus.Entity#unpause-movment
          */
         "unpause-movement": function () {
             this.paused = false;

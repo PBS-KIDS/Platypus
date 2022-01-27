@@ -154,13 +154,18 @@ export default (function () {
          * @uses platypus.Component
          * @constructs
          * @listens platypus.Entity#handle-logic
+         * @listens platypus.Entity#append-transform
+         * @listens platypus.Entity#complete-tweens
+         * @listens platypus.Entity#drop-tweens
          * @listens platypus.Entity#load
          * @listens platypus.Entity#transform
          * @listens platypus.Entity#translate
-         * @listens platypus.Entity#append-transform
+         * @listens platypus.Entity#orient-vector
          * @listens platypus.Entity#prepend-transform
+         * @listens platypus.Entity#remove-vector
          * @listens platypus.Entity#replace-transform
          * @listens platypus.Entity#tween-transform
+         * @fires platypus.Entity#orient-vector
          * @fires platypus.Entity#orientation-updated
          * @fires platypus.Entity#relocate-entity
          */
@@ -240,6 +245,13 @@ export default (function () {
                 this.tweens   = arrayCache.setUp();
                 
                 this.orientationVector = setupOrientation(this, this.orientation);
+
+                /**
+                 * On receiving a vector via this event, the component will transform the vector using the current orientation matrix and then store the vector and continue manipulating it as the orientation matrix changes.
+                 *
+                 * @event platypus.Entity#orient-vector
+                 * @param vector {platypus.Vector} The vector whose orientation will be maintained.
+                 */
                 this.owner.triggerEvent('orient-vector', this.orientationVector);
                 
                 this.owner.state.set('reorienting', false);
@@ -325,7 +337,7 @@ export default (function () {
             /**
              * On receiving this message, any currently running orientation tweens are immediately completed to give the entity a new stable position.
              *
-             * @method 'complete-tweens'
+             * @event platypus.Entity#complete-tweens
              */
             "complete-tweens": function () {
                 var i = 0;
@@ -338,7 +350,7 @@ export default (function () {
             /**
              * On receiving this message, any currently running orientation tweens are discarded, returning the entity to its last stable position.
              *
-             * @method 'drop-tweens'
+             * @event platypus.Entity#drop-tweens
              */
             "drop-tweens": function () {
                 var i = 0;
@@ -357,12 +369,6 @@ export default (function () {
                 }
             },
             
-            /**
-             * On receiving a vector via this event, the component will transform the vector using the current orientation matrix and then store the vector and continue manipulating it as the orientation matrix changes.
-             *
-             * @method 'orient-vector'
-             * @param vector {platypus.Vector} The vector whose orientation will be maintained.
-             */
             "orient-vector": function (vector) {
                 var aligned = vector.aligned || false;
                 
@@ -379,12 +385,6 @@ export default (function () {
                 }
             },
             
-            /**
-             * On receiving this message, the maintained vector is immediately dropped from the list of maintained vectors.
-             *
-             * @method 'remove-vector'
-             * @param vector {platypus.Vector} The vector to be removed.
-             */
             "remove-vector": function (vector) {
                 var i = this.vectors.indexOf(vector);
                 

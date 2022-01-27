@@ -1,10 +1,3 @@
-/**
- * This component works in tandem with the [Mover](platypus.components.Mover.html) component by adding a vector of motion to the entity. This component is typically created by `Mover` and doesn't need to be added separately.
- *
- * @memberof platypus.components
- * @class Motion
- * @uses platypus.Component
- */
 import Vector from '../Vector.js';
 import createComponentClass from '../factory.js';
 
@@ -175,6 +168,25 @@ export default createComponentClass(/** @lends platypus.components.Motion.protot
         friction: -1
     },
     
+    /**
+     * This component works in tandem with the [Mover](platypus.components.Mover.html) component by adding a vector of motion to the entity. This component is typically created by `Mover` and doesn't need to be added separately.
+     *
+     * @memberof platypus.components
+     * @uses platypus.Component
+     * @constructs
+     * @listens platypus.Entity#control-velocity
+     * @listens platypus.Entity#stop-velocity
+     * @listens platypus.Entity#start-velocity
+     * @listens platypus.Entity#control-acceleration
+     * @listens platypus.Entity#stop-acceleration
+     * @listens platypus.Entity#start-acceleration
+     * @listens platypus.Entity#instant-motion
+     * @listens platypus.Entity#instant-begin
+     * @listens platypus.Entity#instant-end
+     * @listens platypus.Entity#set-motion
+     * @fires platypus.Entity#orient-vector
+     * @fires platypus.Entity#remove-vector
+     */
     initialize: function (definition) {
         if (!this.acceleration) {
             this.activeAcceleration = false;
@@ -209,7 +221,7 @@ export default createComponentClass(/** @lends platypus.components.Motion.protot
         /**
          * This event controls whether this velocity is active or inactive.
          *
-         * @method 'control-velocity'
+         * @event platypus.Entity#control-velocity
          * @param control {Object|boolean} If `true`, this motion becomes active. If `false` or `{pressed: false}`, the motion becomes inactive.
          */
         "control-velocity": function (control) {
@@ -219,7 +231,7 @@ export default createComponentClass(/** @lends platypus.components.Motion.protot
         /**
          * This event sets the velocity to inactive.
          *
-         * @method 'stop-velocity'
+         * @event platypus.Entity#stop-velocity
          */
         "stop-velocity": function () {
             this.activeVelocity = false;
@@ -228,7 +240,7 @@ export default createComponentClass(/** @lends platypus.components.Motion.protot
         /**
          * This event sets the velocity to active.
          *
-         * @method 'start-velocity'
+         * @event platypus.Entity#start-velocity
          */
         "start-velocity": function () {
             this.activeVelocity = true;
@@ -237,7 +249,7 @@ export default createComponentClass(/** @lends platypus.components.Motion.protot
         /**
          * This event controls whether the acceleration is active or inactive.
          *
-         * @method 'control-acceleration'
+         * @event platypus.Entity#control-acceleration
          * @param control {Object|boolean} If `true`, this motion becomes active. If `false` or `{pressed: false}`, the motion becomes inactive.
          */
         "control-acceleration": function (control) {
@@ -247,7 +259,7 @@ export default createComponentClass(/** @lends platypus.components.Motion.protot
         /**
          * This event sets the acceleration to inactive.
          *
-         * @method 'stop-acceleration'
+         * @event platypus.Entity#stop-acceleration
          */
         "stop-acceleration": function () {
             this.activeAcceleration = false;
@@ -256,7 +268,7 @@ export default createComponentClass(/** @lends platypus.components.Motion.protot
         /**
          * This event sets the acceleration to active.
          *
-         * @method 'start-acceleration'
+         * @event platypus.Entity#start-acceleration
          */
         "start-acceleration": function () {
             this.activeAcceleration = true;
@@ -265,7 +277,7 @@ export default createComponentClass(/** @lends platypus.components.Motion.protot
         /**
         * This event triggers an instant motion.
         *
-        * @method 'instant-motion'
+        * @event platypus.Entity#instant-motion
         * @param control {Object|boolean} If `true`, this motion becomes active. If `false` or `{triggered: false}`, the motion becomes inactive.
         */
         "instant-motion": function (control) {
@@ -275,7 +287,7 @@ export default createComponentClass(/** @lends platypus.components.Motion.protot
         /**
         * This event triggers the beginning of an instant motion.
         *
-        * @method 'instant-begin'
+        * @event platypus.Entity#instant-begin
         */
         "instant-begin": function () {
             this.enact = true;
@@ -284,7 +296,7 @@ export default createComponentClass(/** @lends platypus.components.Motion.protot
         /**
         * This event triggers the end of an instant motion.
         *
-        * @method 'instant-end'
+        * @event platypus.Entity#instant-end
         */
         "instant-end": function () {
             this.enact = false;
@@ -293,7 +305,7 @@ export default createComponentClass(/** @lends platypus.components.Motion.protot
         /**
         * This event modifies the properties of this Motion.
         *
-        * @method 'set-motion'
+        * @event platypus.Entity#set-motion
         * @param motion {Object} A list of key/value pairs corresponding to motion values.
         * @param [motion.maxMagnitude] {Number} A value describing the maximum velocity or acceleration the motion vector can exert on the Entity.
         */
@@ -337,6 +349,12 @@ export default createComponentClass(/** @lends platypus.components.Motion.protot
         
         destroy: function () {
             if (this.orient) {
+                /**
+                 * On receiving this message, the maintained vector is immediately dropped from the list of maintained vectors.
+                 *
+                 * @event platypus.Entity#remove-vector
+                 * @param vector {platypus.Vector} The vector to be removed.
+                 */
                 this.owner.triggerEvent('remove-vector', this.acceleration);
                 this.owner.triggerEvent('remove-vector', this.velocity);
             }

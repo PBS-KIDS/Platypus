@@ -80,6 +80,10 @@ export default createComponentClass(/** @lends platypus.components.Tween.prototy
      * @uses platypus.Component
      * @constructs
      * @listens platypus.Entity#handle-logic
+     * @listens platypus.Entity#pause-tween
+     * @listens platypus.Entity#stop-tween
+     * @listens platypus.Entity#tween
+     * @listens platypus.Entity#unpause-tween
      */
     initialize: function () {
         var event = '',
@@ -117,7 +121,7 @@ export default createComponentClass(/** @lends platypus.components.Tween.prototy
         /**
          * Trigger this event to play a tween using the same spec used for a tween on this component's `events` property.
          *
-         * @method 'tween'
+         * @event platypus.Entity#tween
          * @param {Object|Array} tween
          */
         'tween': function (tween) {
@@ -134,7 +138,7 @@ export default createComponentClass(/** @lends platypus.components.Tween.prototy
         /**
          * This event stops all running tweens on this component.
          *
-         * @method 'stop-tween'
+         * @event platypus.Entity#stop-tween
          */
         'stop-tween': function () {
             this.group.removeAll();
@@ -143,7 +147,7 @@ export default createComponentClass(/** @lends platypus.components.Tween.prototy
         /**
          * This event pauses all running tweens on this component.
          *
-         * @method 'pause-tween'
+         * @event platypus.Entity#pause-tween
          */
         "pause-tween": function () {
             this.paused = true;
@@ -152,7 +156,7 @@ export default createComponentClass(/** @lends platypus.components.Tween.prototy
         /**
          * This event unpauses all running tweens on this component.
          *
-         * @method 'unpause-tween'
+         * @event platypus.Entity#unpause-tween
          */
         "unpause-tween": function () {
             this.paused = false;

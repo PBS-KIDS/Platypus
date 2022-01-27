@@ -1,8 +1,4 @@
 /**
-### Local Broadcasts:
-- **new-scene** - Calls the 'SceneChanger' component to tell it to change scenes.
-  - @param object.destination (string) - The id of the scene that we want to go to.
-
 ### Peer Broadcasts:
 - **portal-waiting** - Informs another object that the portal is waiting on it to send the activate message.
   - @param entity - This is the portal entity. To be used so that the object can communicate with it directly.

@@ -1,16 +1,5 @@
 /**
-# COMPONENT **LogicTeleporter**
-This component listens for redirected collision messages and fires a message on the colliding entity to specify where the colliding entity should relocate itself.
-
-## Dependencies:
-- [[Collision-Basic]] (on entity) - This component listens for collision messages on the entity.
-- [[Entity-Container]] (on entity's parent) - This component listens for new peer entities being added on its parent to find its teleport destination.
-
-## Messages
-
 ### Listens for:
-- **peer-entity-added** - This teleporter listens as other entities are added so it can recognize the entity it should teleport colliding objects to.
-  - @param message (object) - expects an entity as the message object in order to determine whether it is the requested teleportation destination.
 - **teleport-entity** - On receiving this message, the component will fire `teleport` on the colliding entity, sending this.destination. The colliding entity must handle the `teleport` message and relocate itself.
   - @param message.x (integer) - uses `x` to determine if collision occurred on the left (-1) or right (1) of this entity.
   - @param message.y (integer) - uses `y` to determine if collision occurred on the top (-1) or bottom (1) of this entity.
@@ -38,6 +27,15 @@ export default (function () {
     return createComponentClass(/** @lends platypus.components.LogicTeleporter.prototype */{
         id: 'LogicTeleporter',
 
+        /**
+         * This component listens for redirected collision messages and fires a message on the colliding entity to specify where the colliding entity should relocate itself.
+         * 
+         * @memberof platypus.components
+         * @uses platypus.Component
+         * @constructs
+         * @param {*} definition
+         * @listens platypus.Entity#peer-entity-added
+         */
         initialize: function (definition) {
             
             this.destination = null;

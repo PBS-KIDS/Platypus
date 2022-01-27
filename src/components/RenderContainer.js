@@ -289,9 +289,13 @@ export default (function () {
          * @memberof platypus.components
          * @uses platypus.Component
          * @constructs
+         * @listens platypus.Entity#cache
          * @listens platypus.Entity#camera-update
          * @listens platypus.Entity#handle-render
          * @listens platypus.Entity#handle-render-load
+         * @listens platypus.Entity#hide-sprite
+         * @listens platypus.Entity#set-mask
+         * @listens platypus.Entity#show-sprite
          * @fires platypus.Entity#cache-sprite
          * @fires platypus.Entity#input-on
          */
@@ -434,7 +438,7 @@ export default (function () {
             /**
              * On receiving a "cache" event, this component triggers "cache-sprite" to cache its rendering into the background. This is an optimization for static images to reduce render calls.
              *
-             * @method 'cache'
+             * @event platypus.Entity#cache
              */
             "cache": function () {
                 const owner = this.owner;
@@ -472,7 +476,7 @@ export default (function () {
             /**
              * This event makes the sprite invisible.
              *
-             * @method 'hide-sprite'
+             * @event platypus.Entity#hide-sprite
              */
             "hide-sprite": function () {
                 this.visible = false;
@@ -481,7 +485,7 @@ export default (function () {
             /**
              * This event makes the sprite visible.
              *
-             * @method 'show-sprite'
+             * @event platypus.Entity#show-sprite
              */
             "show-sprite": function () {
                 this.visible = true;
@@ -490,7 +494,7 @@ export default (function () {
             /**
              * Defines the mask on the container/sprite. If no mask is specified, the mask is set to null.
              *
-             * @method 'set-mask'
+             * @event platypus.Entity#set-mask
              * @param mask {Object} The mask. This can specified the same way as the 'mask' parameter on the component.
              */
             "set-mask": function (mask) {
