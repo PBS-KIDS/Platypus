@@ -1,3 +1,7 @@
+# Repository Moved!
+
+This repository is no longer being updated. Please see the [forked repository in the PBS organization](https://github.com/pbs/Platypus) for the latest and greatest!
+
 [![Platypus](http://platypus.gopherwoodstudios.com/assets/platypus-title.png)](https://github.com/PBS-KIDS/Platypus)
 ========
 
